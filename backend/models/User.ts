@@ -16,7 +16,7 @@ export interface IUser extends Document {
   referredBy?: string;
   address: object;
   resetPasswordToken: string | undefined;
-  resetPasswordExpire: string | undefined;
+  resetPasswordExpire: number | undefined;
 }
 
 const userSchema = new Schema<IUser>(

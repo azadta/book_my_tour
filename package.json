@@ -1,7 +1,7 @@
 {
   "name": "book-my-tour",
   "version": "1.0.0",
-  "type":"module",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "tsx -r dotenv/config backend/index.ts ",
@@ -28,6 +28,7 @@
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.6.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   }

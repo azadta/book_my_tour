@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
+import userRouter from "./routes/userRoutes";
+import operatorRouter from "./routes/operatorRoutes";
 
 mongoose
   .connect(process.env.MONGO as string)
@@ -27,3 +29,6 @@ app.use(cookieParser());
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
+
+app.use("/api/user", userRouter);
+app.use("/api/operator", operatorRouter);

@@ -12,6 +12,10 @@ import { TokenService } from "../services/tokenService.js";
 import { UserService } from "../services/userService.js";
 import { AuthMiddleware } from "../utils/verifyRole.js";
 
+import { OperatorRepository } from "../repositories/operatorRepository.js";
+import { OperatorService } from "../services/operatorService.js";
+import { OperatorController } from "../controllers/operatorController.js";
+
 export const securityService = new SecurityService();
 const mailService = new MailService();
 const hashService = new BcryptHashService();
@@ -30,7 +34,21 @@ const userService = new UserService(
 );
 export const userController = new UserController(userService);
 
+
+
+const operatorRepository = new OperatorRepository();
+const operatorService = new OperatorService(
+  operatorRepository,
+  mailService,
+  hashService,
+  securityService,
+  tokenService,
+  resetTokenHasher,
+);
+export const operatorController = new OperatorController(operatorService);
+
 export const authMiddleware = new AuthMiddleware(
   securityService,
   userRepository,
+  operatorRepository
 );

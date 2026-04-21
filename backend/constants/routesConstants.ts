@@ -15,4 +15,21 @@ export const ROUTES = {
     PACKAGES_HOME: "/packages/home",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
   },
+   OPERATOR: {
+    REGISTER: "/register",
+    VERIFY_OTP: "/verify-otp",
+    RESEND_OTP: "/resend-otp",
+    LOGIN: "/login",
+
+    FORGOT_PASSWORD: "/forgot-password",
+    RESET_PASSWORD: "/reset-password/:token",
+    LOGOUT: "/logout",
+    UPDATE_IMAGE: "/update-profile-image",
+    UPDATE: "/update/:id",
+
+    CREATE_PACKAGE: "/create-package",
+    DESTINATIONS: "/destinations",
+    PACKAGE_CATEGORIES: "/package-categories",
+    RESET_PASSWORD_AUTH: "/reset-password-authenticated",
+  },
 } as const;

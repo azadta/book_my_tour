@@ -4,6 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { ISecurityService } from "../interfaces/ISecurityService.js";
 import { IUserRepository } from "../interfaces/IUserRepository.js";
 import { CustomError } from "./customError.js";
+import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
 
 declare global {
   namespace Express {
@@ -17,6 +18,7 @@ export class AuthMiddleware {
   constructor(
     private securityService: ISecurityService,
     private userRepository: IUserRepository,
+    private operatorRepository: IOperatorRepository,
   ) {}
 
   verifyRole = (...allowedRoles: string[]) => {
@@ -39,6 +41,12 @@ export class AuthMiddleware {
           const user = await this.userRepository.findById(decoded.id);
           if (!user) return next(new CustomError("User not found", 404));
           if (user.isBlocked)
+            return next(new CustomError("Account is blocked", 403));
+        } else if (decoded.role === "operator") {
+          const operator = await this.operatorRepository.findById(decoded.id);
+          if (!operator)
+            return next(new CustomError("Operator not found", 404));
+          if (operator.isBlocked)
             return next(new CustomError("Account is blocked", 403));
         }
 

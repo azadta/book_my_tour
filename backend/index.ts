@@ -5,6 +5,7 @@ import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRoutes";
+import operatorRouter from "./routes/operatorRoutes";
 
 mongoose
   .connect(process.env.MONGO as string)
@@ -30,3 +31,4 @@ app.listen(PORT, () => {
 });
 
 app.use("/api/user", userRouter);
+app.use("/api/operator", operatorRouter);

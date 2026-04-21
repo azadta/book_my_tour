@@ -5,6 +5,7 @@ import { ISecurityService } from "../interfaces/ISecurityService.js";
 import { IUserRepository } from "../interfaces/IUserRepository.js";
 import { CustomError } from "./customError.js";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
+import { IAdminRepository } from "../interfaces/IAdminRepository.js";
 
 declare global {
   namespace Express {
@@ -19,6 +20,7 @@ export class AuthMiddleware {
     private securityService: ISecurityService,
     private userRepository: IUserRepository,
     private operatorRepository: IOperatorRepository,
+    private adminRepository: IAdminRepository,
   ) {}
 
   verifyRole = (...allowedRoles: string[]) => {
@@ -48,6 +50,9 @@ export class AuthMiddleware {
             return next(new CustomError("Operator not found", 404));
           if (operator.isBlocked)
             return next(new CustomError("Account is blocked", 403));
+        } else if (decoded.role === "admin") {
+          const admin = await this.adminRepository.findById(decoded.id);
+          if (!admin) return next(new CustomError("Admin not found", 404));
         }
 
         req.user = decoded;

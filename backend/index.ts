@@ -6,6 +6,10 @@ import express from "express";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRoutes";
 import operatorRouter from "./routes/operatorRoutes";
+import adminRouter from "./routes/adminRoutes.js";
+import commonAuthRouter from "./routes/commonAuthRoutes.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import { morganMiddleware } from "./middlewares/morgan.js";
 
 mongoose
   .connect(process.env.MONGO as string)
@@ -26,9 +30,13 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(morganMiddleware)
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
 
 app.use("/api/user", userRouter);
 app.use("/api/operator", operatorRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/auth", commonAuthRouter);
+app.use(errorHandler);

@@ -15,7 +15,7 @@ export const ROUTES = {
     PACKAGES_HOME: "/packages/home",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
   },
-   OPERATOR: {
+  OPERATOR: {
     REGISTER: "/register",
     VERIFY_OTP: "/verify-otp",
     RESEND_OTP: "/resend-otp",
@@ -31,5 +31,33 @@ export const ROUTES = {
     DESTINATIONS: "/destinations",
     PACKAGE_CATEGORIES: "/package-categories",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
+  },
+  ADMIN: {
+    LOGIN: "/login",
+    LOGOUT: "/logout",
+    UPDATE_IMAGE: "/update-profile-image",
+    UPDATE: "/update/:id",
+
+    OPS_VERIFICATION_REQS: "/operators/get-verification-requests",
+    OPS_VERIFY: "/operators/verify-operator/:id",
+    OPS_LIST: "/operators",
+    OPS_BLOCK: "/operators/block/:id",
+    OPS_DELETE: "/operators/delete/:id",
+    OPS_SINGLE: "/operators/single-operator/:id",
+    OPS_UPDATE: "/operators/update/:id",
+
+    USERS_LIST: "/users",
+    USERS_BLOCK: "/users/block/:id",
+    USERS_DELETE: "/users/delete/:id",
+    USERS_SINGLE: "/users/single-user/:id",
+    USERS_UPDATE: "/users/update/:id",
+
+    CREATE_CATEGORY: "/create-package-category",
+    CREATE_DESTINATION: "/create-destination",
+    PACKAGES_LIST: "/packages",
+    RESET_PASSWORD_AUTH: "/reset-password-authenticated",
+  },
+    COMMON: {
+    REFRESH: "/refresh",
   },
 } as const;

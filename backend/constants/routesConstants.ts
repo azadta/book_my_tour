@@ -57,4 +57,7 @@ export const ROUTES = {
     PACKAGES_LIST: "/packages",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
   },
+    COMMON: {
+    REFRESH: "/refresh",
+  },
 } as const;

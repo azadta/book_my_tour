@@ -15,6 +15,11 @@ import { AuthMiddleware } from "../utils/verifyRole.js";
 import { OperatorRepository } from "../repositories/operatorRepository.js";
 import { OperatorService } from "../services/operatorService.js";
 import { OperatorController } from "../controllers/operatorController.js";
+import { AdminController } from "../controllers/adminController.js";
+import { AdminService } from "../services/adminService.js";
+import { AdminRepository } from "../repositories/adminRepository.js";
+import { CommonAuthController } from "../controllers/commonAuthController.js";
+import { CommonAuthService } from "../services/commonAuthService.js";
 
 export const securityService = new SecurityService();
 const mailService = new MailService();
@@ -47,8 +52,27 @@ const operatorService = new OperatorService(
 );
 export const operatorController = new OperatorController(operatorService);
 
+const adminRepository = new AdminRepository();
+const adminService = new AdminService(
+  adminRepository,
+  mailService,
+  hashService,
+  securityService,
+  tokenService,
+);
+export const adminController = new AdminController(adminService);
+
 export const authMiddleware = new AuthMiddleware(
   securityService,
   userRepository,
-  operatorRepository
+  operatorRepository,
+  adminRepository
 );
+
+const commonAuthService = new CommonAuthService(
+  securityService,
+  userRepository,
+  operatorRepository,
+  adminRepository,
+);
+export const commonAuthController = new CommonAuthController(commonAuthService);

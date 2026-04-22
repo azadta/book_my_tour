@@ -1,4 +1,3 @@
-import { securityService } from "../config/container.js";
 import { IAdminRepository } from "../interfaces/IAdminRepository.js";
 import { ICommonAuthService } from "../interfaces/ICommonAuthService.js";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";

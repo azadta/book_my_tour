@@ -4,7 +4,9 @@ import operatorReducer from "./operator/operatorSlice";
 import adminReducer from "./admin/adminSlice.js";
 import packageReducer from "./package/packageSlice.js";
 
-import storage from "redux-persist/lib/storage";
+import storageImport from "redux-persist/lib/storage";
+const storage = (storageImport as any).default || storageImport;
+
 import { persistReducer, persistStore } from "redux-persist";
 import {
   FLUSH,
@@ -24,8 +26,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   operator: operatorReducer,
-   admin: adminReducer,
-    package: packageReducer,
+  admin: adminReducer,
+  package: packageReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

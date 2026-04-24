@@ -5,15 +5,6 @@ import { CustomError } from "../utils/customError.js";
 import { IUserService } from "../interfaces/IUserService.js";
 import { logger } from "../utils/logger.js";
 import { StatusCode } from "../constants/statusCodeConstants.js";
-import { JwtPayload } from "jsonwebtoken";
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: JwtPayload & { id: string; role: string };
-    }
-  }
-}
 
 export class UserController {
   constructor(private userService: IUserService) {}
@@ -25,7 +16,9 @@ export class UserController {
         action: "REGISTER",
       });
       const result = await this.userService.registerUser(req.body);
-      res.status(StatusCode.CREATED).json({ success: true, message: "OTP sent", ...result });
+      res
+        .status(StatusCode.CREATED)
+        .json({ success: true, message: "OTP sent", ...result });
     } catch (error: any) {
       next(error);
     }

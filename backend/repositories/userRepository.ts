@@ -4,7 +4,7 @@ import PackageCategory, {
   IPackageCategory,
 } from "../models/PackageCategory.js";
 import User, { IUser } from "../models/User.js";
-import { flatten } from "../utils/flattenObject.js";
+import { flattenObjects } from "../utils/flattenObject.js";
 
 export class UserRepository implements IUserRepository {
   async create(data: Partial<IUser>): Promise<IUser> {
@@ -31,7 +31,7 @@ export class UserRepository implements IUserRepository {
     });
   }
   async updateById(id: string, data: Partial<IUser>) {
-    const flattenedData = flatten(data);
+    const flattenedData = flattenObjects(data);
 
     return User.findByIdAndUpdate(id, { $set: flattenedData }, { new: true });
   }

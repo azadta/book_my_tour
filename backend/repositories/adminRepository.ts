@@ -7,7 +7,7 @@ import PackageCategory, {
   IPackageCategory,
 } from "../models/PackageCategory.js";
 import User, { IUser } from "../models/User.js";
-import { flatten } from "../utils/flattenObject.js";
+import { flattenObjects } from "../utils/flattenObject.js";
 
 export class AdminRepository implements IAdminRepository {
   async findByEmail(email: string): Promise<IAdmin | null> {
@@ -111,7 +111,7 @@ export class AdminRepository implements IAdminRepository {
     return Operator.findById(id);
   }
   async updateUserById(id: string, data: Partial<IUser>) {
-    const flattenedData = flatten(data);
+    const flattenedData = flattenObjects(data);
 
     return User.findByIdAndUpdate(id, { $set: flattenedData }, { new: true });
   }

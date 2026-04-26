@@ -22,3 +22,10 @@
 2026-04-26 11:47:36:438 [31merror[39m [31mInvalid or expired OTP[39m
 2026-04-26 11:47:36:440 [32mhttp[39m [32mPOST /api/user/verify-otp 400 69 - 37.655 ms[39m
 2026-04-26 11:47:38:730 [32mhttp[39m [32mPOST /api/user/verify-otp 200 54 - 74.465 ms[39m
+2026-04-26 13:08:44:654 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 13:08:44:809 [31merror[39m [31mInvalid credentials[39m
+2026-04-26 13:08:44:813 [32mhttp[39m [32mPOST /api/user/login 401 66 - 157.555 ms[39m
+2026-04-26 13:08:52:812 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 13:08:52:972 [32mhttp[39m [32mPOST /api/user/login 200 354 - 160.385 ms[39m
+2026-04-26 13:09:14:642 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.919 ms[39m
+2026-04-26 13:09:45:143 [32mhttp[39m [32mPOST /api/user/forgot-password 200 39 - 4278.617 ms[39m

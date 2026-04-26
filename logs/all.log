@@ -14,3 +14,11 @@
 2026-04-26 08:24:54:706 [32mhttp[39m [32mPOST /api/user/register 400 90 - 45.375 ms[39m
 2026-04-26 08:25:15:533 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
 2026-04-26 08:25:19:337 [32mhttp[39m [32mPOST /api/user/register 201 99 - 3805.866 ms[39m
+2026-04-26 11:46:20:275 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-04-26 11:46:24:434 [32mhttp[39m [32mPOST /api/user/register 201 99 - 4162.866 ms[39m
+2026-04-26 11:46:35:129 [31merror[39m [31mInvalid or expired OTP[39m
+2026-04-26 11:46:35:131 [32mhttp[39m [32mPOST /api/user/verify-otp 400 69 - 49.057 ms[39m
+2026-04-26 11:47:21:144 [32mhttp[39m [32mPOST /api/user/resend-otp 201 74 - 3403.727 ms[39m
+2026-04-26 11:47:36:438 [31merror[39m [31mInvalid or expired OTP[39m
+2026-04-26 11:47:36:440 [32mhttp[39m [32mPOST /api/user/verify-otp 400 69 - 37.655 ms[39m
+2026-04-26 11:47:38:730 [32mhttp[39m [32mPOST /api/user/verify-otp 200 54 - 74.465 ms[39m

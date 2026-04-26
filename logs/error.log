@@ -1,3 +1,5 @@
 2026-04-25 20:40:25:051 [31merror[39m [31mUnauthorized: No token provided[39m
 2026-04-25 20:40:42:071 [31merror[39m [31mUnauthorized: No token provided[39m
 2026-04-26 08:24:54:693 [31merror[39m [31mPassword must be at least 8 characters long[39m
+2026-04-26 11:46:35:129 [31merror[39m [31mInvalid or expired OTP[39m
+2026-04-26 11:47:36:438 [31merror[39m [31mInvalid or expired OTP[39m

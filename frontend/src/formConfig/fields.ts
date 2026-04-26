@@ -81,3 +81,14 @@ export const userFields: FormField[] = [
     readOnly: true,
   },
 ];
+
+export const userRegisterfields = [
+  { id: "name", type: "text", placeholder: "Name" },
+  { id: "email", type: "email", placeholder: "Email" },
+  { id: "password", type: "password", placeholder: "Password" },
+  {
+    id: "confirmPassword",
+    type: "password",
+    placeholder: "Confirm Password",
+  },
+];

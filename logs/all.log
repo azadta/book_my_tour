@@ -1,1 +1,16 @@
 2026-04-24 20:30:48:717 [32mhttp[39m [32mPOST /api/user/google 200 372 - 234.041 ms[39m
+2026-04-25 20:40:25:051 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-25 20:40:25:078 [32mhttp[39m [32mPOST /api/user/update-profile-image 401 78 - 34.475 ms[39m
+2026-04-25 20:40:42:071 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-25 20:40:42:074 [32mhttp[39m [32mPOST /api/user/update-profile-image 401 78 - 3.417 ms[39m
+2026-04-25 20:41:22:478 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 4.350 ms[39m
+2026-04-25 20:41:47:247 [32mhttp[39m [32mPOST /api/user/google 200 372 - 530.956 ms[39m
+2026-04-25 20:42:09:278 [32mhttp[39m [32mPOST /api/user/update-profile-image 200 449 - 138.620 ms[39m
+2026-04-25 20:42:33:846 [32mhttp[39m [32mPOST /api/user/update/69eb85a0a176b59a7eb70dfb 200 507 - 86.524 ms[39m
+2026-04-25 20:42:48:523 [32mhttp[39m [32mPOST /api/user/update-profile-image 200 580 - 72.979 ms[39m
+2026-04-25 20:43:39:815 [32mhttp[39m [32mPOST /api/user/update/69eb85a0a176b59a7eb70dfb 200 515 - 577.363 ms[39m
+2026-04-25 20:57:33:762 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 3.328 ms[39m
+2026-04-26 08:24:54:693 [31merror[39m [31mPassword must be at least 8 characters long[39m
+2026-04-26 08:24:54:706 [32mhttp[39m [32mPOST /api/user/register 400 90 - 45.375 ms[39m
+2026-04-26 08:25:15:533 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-04-26 08:25:19:337 [32mhttp[39m [32mPOST /api/user/register 201 99 - 3805.866 ms[39m

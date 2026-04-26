@@ -9,8 +9,8 @@ export interface IBusinessAddress {
 }
 
 export interface IVerificationDetails {
-  buildingNo?: string;
-  liscenceNo?: string;
+  companyName?: string;
+  licenseNo?: string;
   businessAddress?: IBusinessAddress;
   submittedAt?: Date;
 }

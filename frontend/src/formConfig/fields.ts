@@ -204,3 +204,83 @@ export const operatorLoginFields: FormField[] = [
   },
 ];
 
+export const operatorProfileFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Name",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "Email",
+  },
+  {
+    id: "mobile",
+    type: "text",
+    placeholder: "Mobile No",
+  },
+  {
+    id: "image",
+    type: "file",
+    placeholder: "Profile Image",
+  },
+  {
+    id: "isPremium",
+    type: "text",
+    placeholder: "Premium",
+    readOnly: true,
+  },
+  {
+    id: "referralCode",
+    type: "text",
+    placeholder: "Referral Code",
+    readOnly: true,
+  },
+  {
+    id: "referredBy",
+    type: "text",
+    placeholder: "Referred By",
+    readOnly: true,
+  },
+  {
+    id: "verificationDetails.companyName",
+    type: "text",
+    placeholder: "Company Name",
+  },
+  {
+    id: "verificationDetails.licenseNo",
+    type: "text",
+    placeholder: "License NO",
+  },
+  {
+    id: "verificationDetails.businessAddress.buildingNo",
+    type: "text",
+    placeholder: "Building No",
+  },
+  {
+    id: "verificationDetails.businessAddress.landmark",
+    type: "text",
+    placeholder: "Landmark",
+  },
+  {
+    id: "verificationDetails.businessAddress.city",
+    type: "text",
+    placeholder: "City",
+  },
+  {
+    id: "verificationDetails.businessAddress.state",
+    type: "text",
+    placeholder: "State",
+  },
+  {
+    id: "verificationDetails.businessAddress.country",
+    type: "text",
+    placeholder: "Country",
+  },
+  {
+    id: "verificationDetails.businessAddress.postalCode",
+    type: "text",
+    placeholder: "Postal Code",
+  },
+];

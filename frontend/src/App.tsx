@@ -14,6 +14,7 @@ import OperatorRegister from "./pages/operator/OperatorRegister";
 import OperatorLogin from "./pages/operator/OperatorLogin";
 import OperatorProfile from "./pages/operator/OperatorProfile";
 import OperatorOtpVerification from "./pages/operator/OperatorOtpVerification";
+import OperatorForgotPassword from "./pages/operator/OperatorForgotPassword";
 
 const App = () => {
   return (
@@ -39,11 +40,15 @@ const App = () => {
 
         <Route path="/operator/register" element={<OperatorRegister />} />
         <Route path="/operator/login" element={<OperatorLogin />} />
-        <Route path="/operator/profile" element={<OperatorProfile/>} />
-           <Route
-            path="/operator/otp-verification/:operatorId"
-            element={<OperatorOtpVerification/>}
-          />
+        <Route path="/operator/profile" element={<OperatorProfile />} />
+        <Route
+          path="/operator/otp-verification/:operatorId"
+          element={<OperatorOtpVerification />}
+        />
+        <Route
+          path="/operator/forgot-password"
+          element={<OperatorForgotPassword />}
+        />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

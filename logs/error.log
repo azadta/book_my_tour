@@ -23,3 +23,4 @@
 2026-04-26 17:43:12:730 [31merror[39m [31mUnauthorized: No token provided[39m
 2026-04-26 17:49:57:921 [31merror[39m [31mInvalid or expired token[39m
 2026-04-26 18:01:34:717 [31merror[39m [31mInvalid or expired token[39m
+2026-04-26 18:26:13:033 [31merror[39m [31mOtp is expired or invalid[39m

@@ -6,6 +6,7 @@ import Login from "./pages/user/Login";
 import Profile from "./pages/user/Profile";
 import { ToastContainer } from "react-toastify";
 import Register from "./pages/user/Register";
+import VerifyOtp from "./pages/user/VerifyOtp";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/user/login" element={<Login />} />
           <Route path="/user/profile" element={<Profile />} />
           <Route path="/user/register" element={<Register />} />
+          <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
         </Route>
       </Routes>
       <ToastContainer position="top-center" />

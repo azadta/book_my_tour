@@ -5,6 +5,7 @@ import { About } from "./pages/user/About";
 import Login from "./pages/user/Login";
 import Profile from "./pages/user/Profile";
 import { ToastContainer } from "react-toastify";
+import Register from "./pages/user/Register";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/user/about" element={<About />} />
           <Route path="/user/login" element={<Login />} />
           <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/register" element={<Register />} />
         </Route>
       </Routes>
       <ToastContainer position="top-center" />

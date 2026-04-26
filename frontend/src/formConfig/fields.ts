@@ -107,3 +107,24 @@ export const userResetPasswordfields = [
     label: "Confirm Password",
   },
 ];
+
+export const resetAuthenticatedPasswordFields = [
+  {
+    id: "oldPassword",
+    type: "password",
+    placeholder: "Enter old  password",
+    label: "Old Password",
+  },
+  {
+    id: "newPassword",
+    type: "password",
+    placeholder: "Enter new  password",
+    label: "New Password",
+  },
+  {
+    id: "confirmPassword",
+    type: "password",
+    placeholder: "Confirm password",
+    label: "Confirm Password",
+  },
+];

@@ -92,3 +92,18 @@ export const userRegisterfields = [
     placeholder: "Confirm Password",
   },
 ];
+
+export const userResetPasswordfields = [
+  {
+    id: "newPassword",
+    type: "password",
+    placeholder: "Enter new password",
+    label: "New Password",
+  },
+  {
+    id: "confirmPassword",
+    type: "password",
+    placeholder: "Confirm new password",
+    label: "Confirm Password",
+  },
+];

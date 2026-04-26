@@ -284,3 +284,18 @@ export const operatorProfileFields: FormField[] = [
     placeholder: "Postal Code",
   },
 ];
+
+export const OperatorResetPasswordFields: FormField[] = [
+  {
+    id: "newPassword",
+    type: "password",
+    placeholder: "Enter new password",
+    label: "New Password",
+  },
+  {
+    id: "confirmPassword",
+    type: "password",
+    placeholder: "Confirm password",
+    label: "Confirm Password",
+  },
+];

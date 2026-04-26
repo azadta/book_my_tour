@@ -29,3 +29,32 @@
 2026-04-26 13:08:52:972 [32mhttp[39m [32mPOST /api/user/login 200 354 - 160.385 ms[39m
 2026-04-26 13:09:14:642 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.919 ms[39m
 2026-04-26 13:09:45:143 [32mhttp[39m [32mPOST /api/user/forgot-password 200 39 - 4278.617 ms[39m
+2026-04-26 14:44:04:011 [31merror[39m [31mToken invalid or expired[39m
+2026-04-26 14:44:04:020 [32mhttp[39m [32mPOST /api/user/reset-password/ce15624827d6158efd8ba75049c6c13c4276f51b 400 71 - 358.122 ms[39m
+2026-04-26 14:44:30:010 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 14:44:30:356 [32mhttp[39m [32mPOST /api/user/login 200 478 - 346.335 ms[39m
+2026-04-26 14:45:09:129 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 1.261 ms[39m
+2026-04-26 14:45:35:023 [32mhttp[39m [32mPOST /api/user/forgot-password 200 39 - 4040.180 ms[39m
+2026-04-26 14:46:04:436 [32mhttp[39m [32mPOST /api/user/reset-password/813450b1ab08c4f6dbc31d91d8cd14291e387056 200 43 - 155.717 ms[39m
+2026-04-26 15:51:10:981 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 15:51:11:139 [31merror[39m [31mInvalid credentials[39m
+2026-04-26 15:51:11:143 [32mhttp[39m [32mPOST /api/user/login 401 66 - 161.339 ms[39m
+2026-04-26 15:51:20:890 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 15:51:21:011 [31merror[39m [31mInvalid credentials[39m
+2026-04-26 15:51:21:012 [32mhttp[39m [32mPOST /api/user/login 401 66 - 122.488 ms[39m
+2026-04-26 15:51:28:515 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 15:51:28:635 [31merror[39m [31mInvalid credentials[39m
+2026-04-26 15:51:28:637 [32mhttp[39m [32mPOST /api/user/login 401 66 - 121.199 ms[39m
+2026-04-26 15:51:31:505 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 15:51:31:627 [32mhttp[39m [32mPOST /api/user/login 200 354 - 121.484 ms[39m
+2026-04-26 16:04:48:677 [31merror[39m [31mInvalid or expired token[39m
+2026-04-26 16:04:48:679 [32mhttp[39m [32mPOST /api/user/reset-password-authenticated 403 71 - 6.258 ms[39m
+2026-04-26 16:05:55:250 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.687 ms[39m
+2026-04-26 16:06:01:609 [32minfo[39m [32mUser login attempt[39m
+2026-04-26 16:06:01:733 [32mhttp[39m [32mPOST /api/user/login 200 354 - 123.407 ms[39m
+2026-04-26 16:06:11:473 [31merror[39m [31mPlease enter all fields[39m
+2026-04-26 16:06:11:475 [32mhttp[39m [32mPOST /api/user/reset-password-authenticated 400 70 - 56.602 ms[39m
+2026-04-26 16:06:23:291 [31merror[39m [31mOld password is incorrect[39m
+2026-04-26 16:06:23:292 [32mhttp[39m [32mPOST /api/user/reset-password-authenticated 400 72 - 151.060 ms[39m
+2026-04-26 16:06:28:277 [32mhttp[39m [32mPOST /api/user/reset-password-authenticated 200 43 - 389.456 ms[39m
+2026-04-26 16:06:41:692 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.380 ms[39m

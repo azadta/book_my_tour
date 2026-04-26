@@ -9,6 +9,7 @@ import Register from "./pages/user/Register";
 import VerifyOtp from "./pages/user/VerifyOtp";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import { ResetPassword } from "./pages/user/ResetPassword";
+import ResetPasswordAuthenticated from "./pages/user/ResetPasswordAuthenticated";
 
 const App = () => {
   return (
@@ -23,8 +24,12 @@ const App = () => {
           <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
           <Route path="/user/forgot-password" element={<ForgotPassword />} />
           <Route
+            path="/user/reset-password"
+            element={<ResetPasswordAuthenticated />}
+          />
+          <Route
             path="/user/reset-password/:token"
-            element={<ResetPassword/>}
+            element={<ResetPassword />}
           />
         </Route>
       </Routes>

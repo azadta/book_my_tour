@@ -12,6 +12,7 @@ import { ResetPassword } from "./pages/user/ResetPassword";
 import ResetPasswordAuthenticated from "./pages/user/ResetPasswordAuthenticated";
 import OperatorRegister from "./pages/operator/OperatorRegister";
 import OperatorLogin from "./pages/operator/OperatorLogin";
+import OperatorProfile from "./pages/operator/OperatorProfile";
 
 const App = () => {
   return (
@@ -36,7 +37,8 @@ const App = () => {
         </Route>
 
         <Route path="/operator/register" element={<OperatorRegister />} />
-        <Route path="/operator/login" element={<OperatorLogin/>} />
+        <Route path="/operator/login" element={<OperatorLogin />} />
+        <Route path="/operator/profile" element={<OperatorProfile/>} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

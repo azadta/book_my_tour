@@ -1,0 +1,229 @@
+import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { operatorProfileFields } from "../../formConfig/fields.ts";
+
+import {
+  updateOperatorStart,
+  updateOperatorSuccess,
+  updateOperatorFailure,
+  logoutOperatorSuccess,
+  logoutOperatorStart,
+  logoutOperatorFailure,
+} from "../../redux/operator/operatorSlice.ts";
+
+import { useApi } from "../../hooks/useApi.js";
+import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
+import type { RootState } from "../../redux/store.ts";
+
+interface FormDataType {
+  [key: string]: any;
+}
+
+const OperatorProfile = () => {
+  const { currentOperator, loading, error } = useSelector(
+    (state: RootState) => state.operator,
+  );
+  const [formData, setFormData] = useState<FormDataType>({
+    name: "",
+    email: "",
+    mobile: "",
+    image: "",
+    isPremium: false,
+    isBlocked: false,
+
+    referralCode: "",
+    referredBy: "",
+    verificationDetails: {
+      companyName: "",
+      licenseNo: "",
+      businessAddress: {
+        buildingNo: "",
+        landmark: "",
+        city: "",
+        state: "",
+        country: "",
+        postalCode: "",
+      },
+    },
+  });
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [imageUploading, setImageUploadig] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { post, del } = useApi();
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { id, value } = e.target;
+
+    setFormData((prevForm) => {
+      const keys = id.split(".");
+      const newForm = { ...prevForm };
+      let prevNested = prevForm;
+
+      let nested = newForm;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const key = keys[i];
+
+        nested[key] = { ...(prevNested?.[key] || {}) };
+        nested = nested[key];
+        prevNested = prevNested?.[key] || {};
+      }
+
+      nested[keys[keys.length - 1]] = value;
+
+      return { ...newForm };
+    });
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+    setImageUploadig(true);
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append(
+      "upload_preset",
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    );
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+        }/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const imgData = await res.json();
+      await post("/operator/update-profile-image", {
+        image: imgData.secure_url,
+      });
+      dispatch(
+        updateOperatorSuccess({
+          ...currentOperator!,
+          image: imgData.secure_url,
+        }),
+      );
+    } catch (error: any) {
+      console.error("Cloudinary upload Error", error);
+      dispatch(
+        updateOperatorFailure(error.response?.data?.message || error.message),
+      );
+    } finally {
+      setImageUploadig(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      dispatch(updateOperatorStart());
+      const updatedUser = await post(
+        `/operator/update/${currentOperator?._id}`,
+        formData,
+      );
+
+      dispatch(updateOperatorSuccess(updatedUser));
+
+      setUpdateSuccess(true);
+    } catch (error: any) {
+      dispatch(
+        updateOperatorFailure(error.response?.data?.message || error.message),
+      );
+    }
+  };
+
+  const handleLogOut = async () => {
+    try {
+      dispatch(logoutOperatorStart());
+      await del("/operator/logout");
+      dispatch(logoutOperatorSuccess());
+      navigate("/operator/login", { replace: true });
+    } catch (error: any) {
+      dispatch(
+        logoutOperatorFailure(error.response?.data?.message || error.message),
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (currentOperator) {
+      setFormData({
+        name: currentOperator?.name || "",
+
+        email: currentOperator?.email || "",
+        mobile: currentOperator?.mobile || "",
+        image: currentOperator?.image || "",
+        isPremium: currentOperator?.isPremium || false,
+        isBlocked: currentOperator?.isBlocked || false,
+
+        referralCode: currentOperator?.referralCode || "",
+        referredBy: currentOperator?.referredBy || "",
+        verificationDetails: {
+          companyName: currentOperator.verificationDetails?.companyName || "",
+          licenseNo: currentOperator.verificationDetails?.licenseNo|| "",
+          businessAddress: {
+            buildingNo:
+              currentOperator.verificationDetails?.businessAddress
+                ?.buildingNo || "",
+            landmark:
+              currentOperator.verificationDetails?.businessAddress?.landmark ||
+              "",
+            city:
+              currentOperator.verificationDetails?.businessAddress?.city || "",
+            state:
+              currentOperator.verificationDetails?.businessAddress?.state || "",
+            country:
+              currentOperator.verificationDetails?.businessAddress?.country ||
+              "",
+            postalCode:
+              currentOperator.verificationDetails?.businessAddress
+                ?.postalCode || "",
+          },
+        },
+      });
+    }
+  }, [currentOperator]);
+
+  return (
+    <div className="p-3 max-w-lg mx-auto">
+      <h1 className="text-3xl font-semibold text-center my-7 text-green-500">
+        Profile
+      </h1>
+      <ProfileForm
+        currentUser={currentOperator}
+        formData={formData}
+        fields={operatorProfileFields}
+        handleChange={handleChange}
+        handleFileChange={handleFileChange}
+        handleSubmit={handleSubmit}
+        loading={loading}
+        fileRef={fileRef}
+        imageUploading={imageUploading}
+      />
+      <div className="flex justify-between mt-5">
+        <span onClick={handleLogOut} className="text-red-700 cursor-pointer">
+          Log Out
+        </span>
+        <span
+          onClick={() => navigate("/operator/reset-password")}
+          className="text-blue-700 cursor-pointer"
+        >
+          Reset Password
+        </span>
+      </div>
+      <p className="text-red-700 mt-5">{error}</p>
+      <p className="text-green-700 mt-5">
+        {updateSuccess ? "Operator updated successfully" : ""}
+      </p>
+    </div>
+  );
+};
+
+export default OperatorProfile;

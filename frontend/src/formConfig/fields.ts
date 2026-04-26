@@ -128,3 +128,69 @@ export const resetAuthenticatedPasswordFields = [
     label: "Confirm Password",
   },
 ];
+
+export const operatorRegisterFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Name",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "Email",
+  },
+  {
+    id: "password",
+    type: "password",
+    placeholder: "Password",
+  },
+  { id: "confirmPassword", type: "password", placeholder: "Confirm Password" },
+  {
+    id: "mobile",
+    type: "text",
+    placeholder: "Mobile No",
+  },
+
+  {
+    id: "verificationDetails.companyName",
+    type: "text",
+    placeholder: "Company Name",
+  },
+  {
+    id: "verificationDetails.licenseNo",
+    type: "text",
+    placeholder: "License No",
+  },
+  {
+    id: "verificationDetails.businessAddress.BuildingNo",
+    type: "text",
+    placeholder: "Building No",
+  },
+  {
+    id: "verificationDetails.businessAddress.landmark",
+    type: "text",
+    placeholder: "Landmark",
+  },
+  {
+    id: "verificationDetails.businessAddress.city",
+    type: "text",
+    placeholder: "City",
+  },
+  {
+    id: "verificationDetails.businessAddress.state",
+    type: "text",
+    placeholder: "State",
+  },
+  {
+    id: "verificationDetails.businessAddress.country",
+    type: "text",
+    placeholder: "Country",
+  },
+  {
+    id: "verificationDetails.businessAddress.postalCode",
+    type: "text",
+    placeholder: "Postal Code",
+  },
+];
+

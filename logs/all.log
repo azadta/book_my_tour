@@ -140,3 +140,9 @@
 2026-04-26 18:09:06:387 [32minfo[39m [32mOperator login attempt[39m
 2026-04-26 18:09:06:514 [32mhttp[39m [32mPOST /api/operator/login 200 650 - 126.970 ms[39m
 2026-04-26 18:09:43:735 [32mhttp[39m [32mPOST /api/operator/update/69edefcc84a6eacf4f2aa34c 200 644 - 98.973 ms[39m
+2026-04-26 18:24:46:940 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-04-26 18:24:51:175 [32mhttp[39m [32mPOST /api/operator/register 201 103 - 4241.292 ms[39m
+2026-04-26 18:26:13:033 [31merror[39m [31mOtp is expired or invalid[39m
+2026-04-26 18:26:13:036 [32mhttp[39m [32mPOST /api/operator/verify-otp 400 72 - 48.630 ms[39m
+2026-04-26 18:26:24:123 [32mhttp[39m [32mPOST /api/operator/verify-otp 200 54 - 83.312 ms[39m
+2026-04-26 19:38:43:434 [32mhttp[39m [32mPOST /api/operator/forgot-password 200 39 - 5213.186 ms[39m

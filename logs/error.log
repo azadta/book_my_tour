@@ -11,3 +11,8 @@
 2026-04-26 16:04:48:677 [31merror[39m [31mInvalid or expired token[39m
 2026-04-26 16:06:11:473 [31merror[39m [31mPlease enter all fields[39m
 2026-04-26 16:06:23:291 [31merror[39m [31mOld password is incorrect[39m
+2026-04-26 16:21:54:399 [31merror[39m [31mPassword is required[39m
+2026-04-26 16:23:00:044 [31merror[39m [31mMobile must be at least 10 digits and contain only numbers[39m
+2026-04-26 16:23:12:983 [31merror[39m [31mMobile must be at least 10 digits and contain only numbers[39m
+2026-04-26 16:23:25:201 [31merror[39m [31mMobile must be at least 10 digits and contain only numbers[39m
+2026-04-26 16:40:06:122 [31merror[39m [31mInvalid Credentials[39m

@@ -58,3 +58,20 @@
 2026-04-26 16:06:23:292 [32mhttp[39m [32mPOST /api/user/reset-password-authenticated 400 72 - 151.060 ms[39m
 2026-04-26 16:06:28:277 [32mhttp[39m [32mPOST /api/user/reset-password-authenticated 200 43 - 389.456 ms[39m
 2026-04-26 16:06:41:692 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.380 ms[39m
+2026-04-26 16:21:54:399 [31merror[39m [31mPassword is required[39m
+2026-04-26 16:21:54:407 [32mhttp[39m [32mPOST /api/operator/register 400 67 - 15.489 ms[39m
+2026-04-26 16:23:00:044 [31merror[39m [31mMobile must be at least 10 digits and contain only numbers[39m
+2026-04-26 16:23:00:045 [32mhttp[39m [32mPOST /api/operator/register 400 105 - 3.053 ms[39m
+2026-04-26 16:23:12:983 [31merror[39m [31mMobile must be at least 10 digits and contain only numbers[39m
+2026-04-26 16:23:12:985 [32mhttp[39m [32mPOST /api/operator/register 400 105 - 2.615 ms[39m
+2026-04-26 16:23:25:201 [31merror[39m [31mMobile must be at least 10 digits and contain only numbers[39m
+2026-04-26 16:23:25:202 [32mhttp[39m [32mPOST /api/operator/register 400 105 - 1.898 ms[39m
+2026-04-26 16:23:56:332 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-04-26 16:24:00:212 [32mhttp[39m [32mPOST /api/operator/register 201 103 - 3879.345 ms[39m
+2026-04-26 16:28:20:598 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-04-26 16:28:24:089 [32mhttp[39m [32mPOST /api/operator/register 201 103 - 3491.910 ms[39m
+2026-04-26 16:40:05:978 [32minfo[39m [32mOperator login attempt[39m
+2026-04-26 16:40:06:122 [31merror[39m [31mInvalid Credentials[39m
+2026-04-26 16:40:06:126 [32mhttp[39m [32mPOST /api/operator/login 401 66 - 147.677 ms[39m
+2026-04-26 16:40:17:531 [32minfo[39m [32mOperator login attempt[39m
+2026-04-26 16:40:17:659 [32mhttp[39m [32mPOST /api/operator/login 200 401 - 128.414 ms[39m

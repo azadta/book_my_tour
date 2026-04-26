@@ -194,3 +194,13 @@ export const operatorRegisterFields: FormField[] = [
   },
 ];
 
+export const operatorLoginFields: FormField[] = [
+  { id: "email", type: "email", placeholder: "Email", label: "Email" },
+  {
+    id: "password",
+    type: "password",
+    placeholder: "Password",
+    label: "Password",
+  },
+];
+

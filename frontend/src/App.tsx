@@ -19,6 +19,7 @@ import OperatorResetPassword from "./pages/operator/OperatorResetPassword";
 import OperatorResetPasswordAuthenticated from "./pages/operator/OperatorResetPasswordAuthenticated";
 import OperatorDashboard from "./pages/operator/OperatorDashboard";
 import CreatePackage from "./pages/operator/CreatePackage";
+import AdminLogin from "./pages/admin/AdminLogin";
 
 const App = () => {
   return (
@@ -63,6 +64,8 @@ const App = () => {
         />
         <Route path="/operator/dashboard" element={<OperatorDashboard />} />
         <Route path="/operator/create-package" element={<CreatePackage />} />
+
+        <Route path="/admin/login" element={<AdminLogin />} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

@@ -344,3 +344,13 @@ export const createPackageFields: FormField[] = [
     placeholder: "Select Category",
   },
 ];
+
+export const adminLoginFields: FormField[] = [
+  { id: "email", type: "email", placeholder: "Email", label: "Email" },
+  {
+    id: "password",
+    type: "password",
+    placeholder: "Password",
+    label: "Password",
+  },
+];

@@ -146,3 +146,22 @@
 2026-04-26 18:26:13:036 [32mhttp[39m [32mPOST /api/operator/verify-otp 400 72 - 48.630 ms[39m
 2026-04-26 18:26:24:123 [32mhttp[39m [32mPOST /api/operator/verify-otp 200 54 - 83.312 ms[39m
 2026-04-26 19:38:43:434 [32mhttp[39m [32mPOST /api/operator/forgot-password 200 39 - 5213.186 ms[39m
+2026-04-26 19:48:22:572 [32mhttp[39m [32mPOST /api/operator/reset-password/61a98e64268008af0d7b09da2101eaf43e0b2469 200 43 - 158.231 ms[39m
+2026-04-27 10:44:11:506 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 10:44:11:671 [31merror[39m [31mOperator not verified by the admin[39m
+2026-04-27 10:44:11:677 [32mhttp[39m [32mPOST /api/operator/login 403 81 - 170.020 ms[39m
+2026-04-27 10:47:47:835 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 10:47:47:985 [32mhttp[39m [32mPOST /api/operator/login 200 360 - 150.468 ms[39m
+2026-04-27 10:48:07:720 [31merror[39m [31mOld password is incorrect[39m
+2026-04-27 10:48:07:722 [32mhttp[39m [32mPOST /api/operator/reset-password-authenticated 400 72 - 213.825 ms[39m
+2026-04-27 10:48:14:237 [31merror[39m [31mIllegal arguments: undefined, string[39m
+2026-04-27 10:48:14:239 [32mhttp[39m [32mPOST /api/operator/reset-password-authenticated 500 83 - 192.040 ms[39m
+2026-04-27 10:49:10:706 [31merror[39m [31mPassword do not match[39m
+2026-04-27 10:49:10:708 [32mhttp[39m [32mPOST /api/operator/reset-password-authenticated 400 68 - 151.554 ms[39m
+2026-04-27 10:49:14:048 [32mhttp[39m [32mPOST /api/operator/reset-password-authenticated 200 43 - 259.393 ms[39m
+2026-04-27 10:49:34:510 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 0.578 ms[39m
+2026-04-27 10:49:38:667 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 10:49:38:776 [31merror[39m [31mInvalid Credentials[39m
+2026-04-27 10:49:38:776 [32mhttp[39m [32mPOST /api/operator/login 401 66 - 109.063 ms[39m
+2026-04-27 10:49:42:936 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 10:49:43:047 [32mhttp[39m [32mPOST /api/operator/login 200 360 - 110.825 ms[39m

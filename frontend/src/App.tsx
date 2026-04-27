@@ -16,6 +16,7 @@ import OperatorProfile from "./pages/operator/OperatorProfile";
 import OperatorOtpVerification from "./pages/operator/OperatorOtpVerification";
 import OperatorForgotPassword from "./pages/operator/OperatorForgotPassword";
 import OperatorResetPassword from "./pages/operator/OperatorResetPassword";
+import OperatorResetPasswordAuthenticated from "./pages/operator/OperatorResetPasswordAuthenticated";
 
 const App = () => {
   return (
@@ -50,10 +51,14 @@ const App = () => {
           path="/operator/forgot-password"
           element={<OperatorForgotPassword />}
         />
-             <Route
-            path="/operator/reset-password/:token"
-            element={<OperatorResetPassword />}
-          />
+        <Route
+          path="/operator/reset-password/:token"
+          element={<OperatorResetPassword />}
+        />
+        <Route
+          path="/operator/reset-password"
+          element={<OperatorResetPasswordAuthenticated />}
+        />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

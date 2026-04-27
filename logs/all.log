@@ -165,3 +165,50 @@
 2026-04-27 10:49:38:776 [32mhttp[39m [32mPOST /api/operator/login 401 66 - 109.063 ms[39m
 2026-04-27 10:49:42:936 [32minfo[39m [32mOperator login attempt[39m
 2026-04-27 10:49:43:047 [32mhttp[39m [32mPOST /api/operator/login 200 360 - 110.825 ms[39m
+2026-04-27 15:02:43:090 [32mhttp[39m [32mGET /api/operator/package-categories 200 2 - 1400.381 ms[39m
+2026-04-27 15:02:43:134 [32mhttp[39m [32mGET /api/operator/destinations 200 2 - 33.635 ms[39m
+2026-04-27 15:09:33:154 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 29.897 ms[39m
+2026-04-27 15:09:33:202 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 45.266 ms[39m
+2026-04-27 15:09:33:467 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 305.855 ms[39m
+2026-04-27 15:09:33:502 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 31.573 ms[39m
+2026-04-27 15:12:10:307 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 132.075 ms[39m
+2026-04-27 15:12:10:379 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 69.533 ms[39m
+2026-04-27 15:12:10:383 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 68.209 ms[39m
+2026-04-27 15:12:10:436 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 49.351 ms[39m
+2026-04-27 15:12:34:532 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-27 15:12:34:534 [32mhttp[39m [32mPOST /api/operator/create-package 401 78 - 19.811 ms[39m
+2026-04-27 15:12:44:468 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 1.352 ms[39m
+2026-04-27 15:12:48:140 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 15:12:48:321 [31merror[39m [31mInvalid Credentials[39m
+2026-04-27 15:12:48:323 [32mhttp[39m [32mPOST /api/operator/login 401 66 - 182.404 ms[39m
+2026-04-27 15:12:52:354 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 15:12:52:548 [31merror[39m [31mInvalid Credentials[39m
+2026-04-27 15:12:52:549 [32mhttp[39m [32mPOST /api/operator/login 401 66 - 195.178 ms[39m
+2026-04-27 15:12:55:968 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 15:12:57:869 [32mhttp[39m [32mPOST /api/operator/login 200 360 - 1899.872 ms[39m
+2026-04-27 15:13:01:414 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 47.038 ms[39m
+2026-04-27 15:13:01:460 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 42.313 ms[39m
+2026-04-27 15:13:01:463 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 40.576 ms[39m
+2026-04-27 15:13:01:501 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 35.300 ms[39m
+2026-04-27 15:13:03:495 [31merror[39m [31mPackage name is required[39m
+2026-04-27 15:13:03:496 [32mhttp[39m [32mPOST /api/operator/create-package 400 71 - 69.666 ms[39m
+2026-04-27 15:15:14:495 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 39.763 ms[39m
+2026-04-27 15:15:14:554 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 54.285 ms[39m
+2026-04-27 15:15:14:556 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 59.285 ms[39m
+2026-04-27 15:15:14:609 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 42.359 ms[39m
+2026-04-27 15:16:17:544 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 47.348 ms[39m
+2026-04-27 15:16:17:588 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 40.210 ms[39m
+2026-04-27 15:16:17:951 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 329.912 ms[39m
+2026-04-27 15:16:17:996 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 41.647 ms[39m
+2026-04-27 15:20:50:653 [31merror[39m [31mInvalid or expired token[39m
+2026-04-27 15:20:50:655 [32mhttp[39m [32mPOST /api/operator/create-package 403 71 - 4.397 ms[39m
+2026-04-27 15:21:03:526 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 1.041 ms[39m
+2026-04-27 15:21:07:594 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 15:21:08:230 [32mhttp[39m [32mPOST /api/operator/login 200 360 - 635.447 ms[39m
+2026-04-27 15:21:09:946 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 38.242 ms[39m
+2026-04-27 15:21:09:988 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 37.866 ms[39m
+2026-04-27 15:21:09:990 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 41.798 ms[39m
+2026-04-27 15:21:10:035 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 41.136 ms[39m
+2026-04-27 15:21:51:248 [31merror[39m [31mEach destination must be a valid mongo Id[39m
+2026-04-27 15:21:51:249 [32mhttp[39m [32mPOST /api/operator/create-package 400 88 - 58.163 ms[39m
+2026-04-27 15:22:24:841 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 0.393 ms[39m

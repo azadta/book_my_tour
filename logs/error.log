@@ -29,3 +29,9 @@
 2026-04-27 10:48:14:237 [31merror[39m [31mIllegal arguments: undefined, string[39m
 2026-04-27 10:49:10:706 [31merror[39m [31mPassword do not match[39m
 2026-04-27 10:49:38:776 [31merror[39m [31mInvalid Credentials[39m
+2026-04-27 15:12:34:532 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-27 15:12:48:321 [31merror[39m [31mInvalid Credentials[39m
+2026-04-27 15:12:52:548 [31merror[39m [31mInvalid Credentials[39m
+2026-04-27 15:13:03:495 [31merror[39m [31mPackage name is required[39m
+2026-04-27 15:20:50:653 [31merror[39m [31mInvalid or expired token[39m
+2026-04-27 15:21:51:248 [31merror[39m [31mEach destination must be a valid mongo Id[39m

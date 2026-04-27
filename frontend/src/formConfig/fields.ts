@@ -10,6 +10,11 @@ export interface FormField {
   optionsEndPoint?: string;
 }
 
+export interface Option {
+  label: string;
+  value: string;
+}
+
 export const userFields: FormField[] = [
   {
     id: "name",
@@ -297,5 +302,45 @@ export const OperatorResetPasswordFields: FormField[] = [
     type: "password",
     placeholder: "Confirm password",
     label: "Confirm Password",
+  },
+];
+
+export const createPackageFields: FormField[] = [
+  { id: "name", label: "Name", type: "text", placeholder: "Enter Name" },
+  {
+    id: "amount",
+    label: "Amount",
+    type: "number",
+    placeholder: "Enter Amount",
+  },
+  {
+    id: "destinations",
+    label: "Destinations",
+    type: "select",
+    placeholder: "Select destinations",
+    multiple: true,
+  },
+  {
+    id: "specifications",
+    label: "Specifications",
+    type: "text",
+    placeholder: "Enter specifications",
+  },
+  { id: "expiryDate", label: "Expiry Date", type: "date" },
+  { id: "remark", label: "Remark", type: "text" },
+  { id: "discount", label: "Discount (%)", type: "number" },
+  {
+    id: "availableSlots",
+    label: "Available Slots",
+    type: "text",
+    placeholder: "Enter slots",
+  },
+  { id: "images", label: "Upload Images", type: "file", multiple: true },
+  { id: "isCustomizable", label: "Customizable", type: "checkbox" },
+  {
+    id: "category",
+    label: "Package Category",
+    type: "select",
+    placeholder: "Select Category",
   },
 ];

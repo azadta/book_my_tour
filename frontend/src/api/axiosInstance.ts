@@ -9,11 +9,11 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === "403" && !originalRequest._retry) {
+    if (error.response?.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         await axios.post(
-          `http://localhost:3000/api/auth/refresh`,
+          `http://localhost:4000/api/auth/refresh`,
           {},
           { withCredentials: true },
         );

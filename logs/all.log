@@ -212,3 +212,15 @@
 2026-04-27 15:21:51:248 [31merror[39m [31mEach destination must be a valid mongo Id[39m
 2026-04-27 15:21:51:249 [32mhttp[39m [32mPOST /api/operator/create-package 400 88 - 58.163 ms[39m
 2026-04-27 15:22:24:841 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 0.393 ms[39m
+2026-04-27 16:36:20:017 [32minfo[39m [32mOperator login attempt[39m
+2026-04-27 16:36:20:494 [32mhttp[39m [32mPOST /api/operator/login 200 360 - 484.568 ms[39m
+2026-04-27 16:41:38:819 [31merror[39m [31mInvalid or expired token[39m
+2026-04-27 16:41:38:820 [32mhttp[39m [32mPOST /api/operator/update/69ee0b17d0edbe655343fdf0 403 71 - 8.756 ms[39m
+2026-04-27 16:44:08:759 [31merror[39m [31mInvalid or expired token[39m
+2026-04-27 16:44:08:764 [32mhttp[39m [32mPOST /api/operator/update/69ee0b17d0edbe655343fdf0 403 71 - 7.977 ms[39m
+2026-04-27 16:49:48:425 [31merror[39m [31mInvalid or expired token[39m
+2026-04-27 16:49:48:431 [32mhttp[39m [32mPOST /api/operator/update/69ee0b17d0edbe655343fdf0 403 71 - 19.792 ms[39m
+2026-04-27 16:49:49:504 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 494.430 ms[39m
+2026-04-27 16:49:49:715 [32mhttp[39m [32mPOST /api/operator/update/69ee0b17d0edbe655343fdf0 200 564 - 95.061 ms[39m
+2026-04-27 16:50:11:711 [32mhttp[39m [32mPOST /api/operator/update/69ee0b17d0edbe655343fdf0 200 565 - 86.410 ms[39m
+2026-04-27 16:50:41:622 [32mhttp[39m [32mPOST /api/operator/update/69ee0b17d0edbe655343fdf0 200 570 - 76.688 ms[39m

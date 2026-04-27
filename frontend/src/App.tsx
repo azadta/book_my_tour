@@ -22,6 +22,7 @@ import CreatePackage from "./pages/operator/CreatePackage";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AdminResetPasswordAuthenticated from "./pages/admin/AdminResetPasswordAuthenticated";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 const App = () => {
   return (
@@ -73,6 +74,7 @@ const App = () => {
           path="/admin/reset-password"
           element={<AdminResetPasswordAuthenticated />}
         />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

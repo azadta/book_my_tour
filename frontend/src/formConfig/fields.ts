@@ -354,3 +354,51 @@ export const adminLoginFields: FormField[] = [
     label: "Password",
   },
 ];
+
+export const adminProfileFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Name",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "Email",
+  },
+  {
+    id: "mobile",
+    type: "text",
+    placeholder: "Mobile No",
+  },
+  {
+    id: "image",
+    type: "file",
+    placeholder: "Profile Image",
+  },
+  {
+    id: "address.houseNo",
+    type: "text",
+    placeholder: "House NO",
+  },
+  {
+    id: "address.city",
+    type: "text",
+    placeholder: "City",
+  },
+  {
+    id: "address.state",
+    type: "text",
+    placeholder: "State",
+  },
+  {
+    id: "address.country",
+    type: "text",
+    placeholder: "Country",
+  },
+  {
+    id: "address.postalCode",
+    type: "text",
+    placeholder: "Postal Code",
+  },
+];

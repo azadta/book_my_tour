@@ -232,3 +232,11 @@
 2026-04-27 17:20:44:152 [32mhttp[39m [32mPOST /api/admin/login 401 66 - 137.770 ms[39m
 2026-04-27 17:20:48:924 [32minfo[39m [32mAdmin login attempt[39m
 2026-04-27 17:20:49:073 [32mhttp[39m [32mPOST /api/admin/login 200 273 - 149.640 ms[39m
+2026-04-27 17:37:13:801 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-27 17:37:13:805 [32mhttp[39m [32mPOST /api/admin/update-profile-image 401 78 - 5.188 ms[39m
+2026-04-27 17:38:12:383 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 3.076 ms[39m
+2026-04-27 17:38:18:773 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-27 17:38:18:923 [32mhttp[39m [32mPOST /api/admin/login 200 273 - 149.523 ms[39m
+2026-04-27 17:38:39:320 [32mhttp[39m [32mPOST /api/admin/update-profile-image 200 276 - 551.067 ms[39m
+2026-04-27 17:39:32:033 [32mhttp[39m [32mPOST /api/admin/update/69ef4d19754452282c03265e 200 387 - 74.734 ms[39m
+2026-04-27 17:40:07:221 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 0.434 ms[39m

@@ -240,3 +240,15 @@
 2026-04-27 17:38:39:320 [32mhttp[39m [32mPOST /api/admin/update-profile-image 200 276 - 551.067 ms[39m
 2026-04-27 17:39:32:033 [32mhttp[39m [32mPOST /api/admin/update/69ef4d19754452282c03265e 200 387 - 74.734 ms[39m
 2026-04-27 17:40:07:221 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 0.434 ms[39m
+2026-04-27 17:52:00:541 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-27 17:52:00:695 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 155.409 ms[39m
+2026-04-27 17:53:54:004 [31merror[39m [31mOld password is incorrect[39m
+2026-04-27 17:53:54:006 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 400 72 - 167.688 ms[39m
+2026-04-27 17:54:04:995 [31merror[39m [31mIllegal arguments: undefined, string[39m
+2026-04-27 17:54:04:997 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 500 83 - 173.926 ms[39m
+2026-04-27 17:54:23:032 [31merror[39m [31mPassword do not match[39m
+2026-04-27 17:54:23:033 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 400 68 - 197.283 ms[39m
+2026-04-27 17:54:29:014 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 200 43 - 307.274 ms[39m
+2026-04-27 17:54:42:109 [31merror[39m [31mIllegal arguments: undefined, string[39m
+2026-04-27 17:54:42:110 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 500 83 - 162.304 ms[39m
+2026-04-27 17:54:50:609 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 200 43 - 306.311 ms[39m

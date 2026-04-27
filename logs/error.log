@@ -40,3 +40,4 @@
 2026-04-27 16:49:48:425 [31merror[39m [31mInvalid or expired token[39m
 2026-04-27 17:12:15:756 [31merror[39m [31mAdmin not found[39m
 2026-04-27 17:20:44:148 [31merror[39m [31mInvalid credentials[39m
+2026-04-27 17:37:13:801 [31merror[39m [31mUnauthorized: No token provided[39m

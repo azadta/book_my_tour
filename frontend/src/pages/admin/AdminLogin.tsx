@@ -1,0 +1,36 @@
+import { useNavigate } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+
+import ReusableForm from "../../components/forms/ReUsableForm.js";
+
+import type { RootState } from "../../redux/store";
+
+import { adminLoginFields } from "../../formConfig/fields.js";
+import { useAdminLogin } from "../../hooks/useAdminLogin.js";
+
+const AdminLogin = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useSelector((state: RootState) => state.admin);
+  const loginHandler = useAdminLogin(dispatch, navigate);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="p-6 max-w-lg w-full bg-white runded-lg shadow-md">
+        <h1 className="text-3xl text-center font-semibold my-7">
+          Admin Log In
+        </h1>
+        <ReusableForm
+          fields={adminLoginFields}
+          loading={loading}
+          buttonText="Log In"
+          onSubmit={loginHandler}
+        />
+        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+      </div>
+    </div>
+  );
+};
+
+export default AdminLogin;
+

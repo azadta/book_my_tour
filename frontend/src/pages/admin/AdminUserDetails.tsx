@@ -1,11 +1,5 @@
-import BackToDashboard from "../../components/BackToDashboard"
-
 const AdminUserDetails = () => {
-  return (
-    <div>
-        <BackToDashboard/>
-    </div>
-  )
-}
+  return <div></div>;
+};
 
-export default AdminUserDetails
+export default AdminUserDetails;

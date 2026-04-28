@@ -252,3 +252,9 @@
 2026-04-27 17:54:42:109 [31merror[39m [31mIllegal arguments: undefined, string[39m
 2026-04-27 17:54:42:110 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 500 83 - 162.304 ms[39m
 2026-04-27 17:54:50:609 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 200 43 - 306.311 ms[39m
+2026-04-27 19:57:29:586 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 1.727 ms[39m
+2026-04-27 19:57:37:610 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-27 19:57:37:827 [31merror[39m [31mInvalid credentials[39m
+2026-04-27 19:57:37:828 [32mhttp[39m [32mPOST /api/admin/login 401 66 - 218.026 ms[39m
+2026-04-27 19:57:42:056 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-27 19:57:42:190 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 133.285 ms[39m

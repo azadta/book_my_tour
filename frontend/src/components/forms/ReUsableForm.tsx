@@ -126,8 +126,8 @@ const ReUsableForm = ({
                 }}
                 value={
                   field.multiple
-                    ? formData[field.id] || []
-                    : formData[field.id] || ""
+                    ? (formData[field.id] ?? [])
+                    : (formData[field.id] ?? "")
                 }
                 className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${field.multiple ? "min-h-[100px]" : ""}`}
                 disabled={field.disabled}

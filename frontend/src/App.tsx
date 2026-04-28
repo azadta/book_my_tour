@@ -26,6 +26,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUserDetails from "./pages/admin/AdminUserDetails";
 import EditUser from "./pages/admin/EditUser";
 import AdminOperatorDetails from "./pages/admin/AdminOperatorDetails";
+import EditOperator from "./pages/admin/EditOperator";
 
 const App = () => {
   return (
@@ -81,6 +82,7 @@ const App = () => {
         <Route path="/admin/users" element={<AdminUserDetails />} />
         <Route path="/admin/edit-user/:id" element={<EditUser />} />
         <Route path="/admin/operators" element={<AdminOperatorDetails />} />
+        <Route path="/admin/edit-operator/:id" element={<EditOperator/>} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

@@ -1,4 +1,4 @@
-interface ConfirmationModelProps {
+interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -10,7 +10,7 @@ const ConfirmationModel = ({
   message,
   onClose,
   onConfirm,
-}: ConfirmationModelProps) => {
+}: ConfirmationModalProps) => {
   if (!isOpen) return null;
 
   return (

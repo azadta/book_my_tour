@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackToDashboard from "../../components/BackToDashboard";
-import ConfirmationModel from "../../components/ConfirmationModel";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import Pagination from "../../components/Pagination";
 import type { ActionButton, Column } from "../../components/ReUsableTable";
 import ReUsableTable from "../../components/ReUsableTable";
@@ -101,7 +101,7 @@ const AdminUserDetails = () => {
         onPageChange={handlePageChange}
         totalPages={totalPages}
       />
-      <ConfirmationModel
+      <ConfirmationModal
         isOpen={modalOpen}
         message={modalMessage}
         onClose={() => setModalOpen(false)}

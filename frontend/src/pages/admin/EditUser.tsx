@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { adminUpdateUserFields } from "../../formConfig/fields";
-import ConfirmationModel from "../../components/ConfirmationModel";
+import ConfirmationModel from "../../components/ConfirmationModal";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string }>();

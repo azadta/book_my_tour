@@ -4,8 +4,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: "user";
-  otp?: string;
-  otpExpire?: number;
+  otp?: string | undefined;
+  otpExpire?: number | undefined;
   isEmailVerified?: boolean;
   image?: string;
   isBlocked?: boolean;

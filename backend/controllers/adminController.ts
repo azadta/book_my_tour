@@ -51,7 +51,7 @@ export class AdminController {
 
     try {
       const updatedAdmin = await this.adminService.updateAdminService(
-        req.params.id,
+        req.params.id as string,
         req.body,
       );
       if (!updatedAdmin) return next(new CustomError("Admin not found", 404));

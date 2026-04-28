@@ -134,7 +134,7 @@ export class UserController {
     }
     try {
       const updatedUser = await this.userService.updateUserService(
-        req.params.id,
+        req.params.id as string,
         req.body,
       );
       if (!updatedUser) {
@@ -153,7 +153,7 @@ export class UserController {
       return next(new CustomError("unauthorized", 401));
     }
     try {
-      await this.userService.deleteUserService(req.params.id);
+      await this.userService.deleteUserService(req.params.id as string);
       res.clearCookie("access_token");
       res.status(StatusCode.OK).json({ message: "User has been deleted" });
     } catch (error) {

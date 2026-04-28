@@ -28,6 +28,7 @@ import EditUser from "./pages/admin/EditUser";
 import AdminOperatorDetails from "./pages/admin/AdminOperatorDetails";
 import EditOperator from "./pages/admin/EditOperator";
 import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
+import AdminPackageDetails from "./pages/admin/AdminPackageDetails";
 
 const App = () => {
   return (
@@ -86,8 +87,9 @@ const App = () => {
         <Route path="/admin/edit-operator/:id" element={<EditOperator />} />
         <Route
           path="/admin/operator-verification"
-          element={<AdminOperatorVerification/>}
+          element={<AdminOperatorVerification />}
         />
+        <Route path="/admin/packages" element={<AdminPackageDetails />} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

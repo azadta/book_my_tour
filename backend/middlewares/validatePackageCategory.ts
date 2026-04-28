@@ -23,7 +23,7 @@ export const validatePackageCategory: (ValidationChain | RequestHandler)[] = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const firstError = errors.array()[0];
-      return next(new CustomError(firstError.msg, 400));
+      return next(new CustomError(firstError!.msg, 400));
     }
     next();
   },

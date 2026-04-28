@@ -24,6 +24,7 @@ import AdminProfile from "./pages/admin/AdminProfile";
 import AdminResetPasswordAuthenticated from "./pages/admin/AdminResetPasswordAuthenticated";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUserDetails from "./pages/admin/AdminUserDetails";
+import EditUser from "./pages/admin/EditUser";
 
 const App = () => {
   return (
@@ -77,6 +78,7 @@ const App = () => {
         />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AdminUserDetails />} />
+        <Route path="/admin/edit-user/:id" element={<EditUser />} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

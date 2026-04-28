@@ -1,4 +1,4 @@
-export function unFlattenObjects(obj: Record<string, any>) {
+export function unFlattenObject(obj: Record<string, any>) {
   const result: any = {};
   for (const flatKey in obj) {
     const keys = flatKey.split(".");

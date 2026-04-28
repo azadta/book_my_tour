@@ -139,7 +139,7 @@ export class OperatorController {
     }
     try {
       const updatedUser = await this.operatorService.updateOperatorService(
-        req.params.id,
+        req.params.id as string,
         req.body,
       );
       if (!updatedUser) {

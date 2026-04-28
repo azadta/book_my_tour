@@ -402,3 +402,100 @@ export const adminProfileFields: FormField[] = [
     placeholder: "Postal Code",
   },
 ];
+
+export const adminUpdateUserFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Name",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "Email",
+    disabled: true,
+  },
+
+  {
+    id: "mobile",
+    type: "text",
+    placeholder: "Mobile No",
+  },
+  {
+    id: "coinsEarned",
+    type: "text",
+    placeholder: "Coins Earned",
+  },
+  {
+    id: "referralCode",
+    type: "text",
+    placeholder: "Referral Code",
+  },
+  {
+    id: "referredBy",
+    type: "text",
+    placeholder: "Referred By",
+  },
+
+  {
+    id: "address.houseNo",
+    type: "text",
+    placeholder: "House No",
+  },
+  {
+    id: "address.landmark",
+    type: "text",
+    placeholder: "Landmark",
+  },
+  {
+    id: "address.city",
+    type: "text",
+    placeholder: "City",
+  },
+  {
+    id: "address.state",
+    type: "text",
+    placeholder: "State",
+  },
+  {
+    id: "address.country",
+    type: "text",
+    placeholder: "Country",
+  },
+  {
+    id: "address.postalCode",
+    type: "text",
+    placeholder: "Postal Code",
+  },
+
+  {
+    id: "isPremium",
+    type: "select",
+    label: "Is Premium",
+    options: [
+      {
+        label: "True",
+        value: "true",
+      },
+      {
+        label: "False",
+        value: "false",
+      },
+    ],
+  },
+  {
+    id: "isEmailVerified",
+    type: "select",
+    label: "Is Email Verified",
+    options: [
+      {
+        label: "True",
+        value: "true",
+      },
+      {
+        label: "False",
+        value: "false",
+      },
+    ],
+  },
+];

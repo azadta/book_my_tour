@@ -25,6 +25,7 @@ import AdminResetPasswordAuthenticated from "./pages/admin/AdminResetPasswordAut
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUserDetails from "./pages/admin/AdminUserDetails";
 import EditUser from "./pages/admin/EditUser";
+import AdminOperatorDetails from "./pages/admin/AdminOperatorDetails";
 
 const App = () => {
   return (
@@ -79,6 +80,7 @@ const App = () => {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AdminUserDetails />} />
         <Route path="/admin/edit-user/:id" element={<EditUser />} />
+        <Route path="/admin/operators" element={<AdminOperatorDetails />} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

@@ -690,3 +690,59 @@
 2026-04-28 17:14:26:100 [32mhttp[39m [32mDELETE /api/admin/users/delete/69f0734162e35e975ff77440 200 39 - 104.717 ms[39m
 2026-04-28 17:14:26:697 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 27 - 90.287 ms[39m
 2026-04-28 17:14:27:287 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 97.738 ms[39m
+2026-04-28 17:32:41:379 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 17:32:41:386 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 6.368 ms[39m
+2026-04-28 17:32:41:969 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 17:32:41:972 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 4.652 ms[39m
+2026-04-28 17:33:14:230 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 1.244 ms[39m
+2026-04-28 17:33:23:048 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 17:33:23:205 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 156.921 ms[39m
+2026-04-28 17:33:27:598 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 601 - 84.445 ms[39m
+2026-04-28 17:33:28:176 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 69.862 ms[39m
+2026-04-28 17:33:36:942 [32mhttp[39m [32mPUT /api/admin/operators/block/69ee0b17d0edbe655343fdf0 200 685 - 85.374 ms[39m
+2026-04-28 17:33:37:536 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 600 - 91.215 ms[39m
+2026-04-28 17:34:06:679 [32mhttp[39m [32mPUT /api/admin/operators/block/69ee0b17d0edbe655343fdf0 200 688 - 341.845 ms[39m
+2026-04-28 17:34:07:026 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 601 - 87.666 ms[39m
+2026-04-28 17:34:12:586 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 68.741 ms[39m
+2026-04-28 17:34:13:182 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 70.111 ms[39m
+2026-04-28 17:34:27:078 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 68.681 ms[39m
+2026-04-28 17:34:27:667 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 74.625 ms[39m
+2026-04-28 17:38:08:537 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 83.463 ms[39m
+2026-04-28 17:38:09:097 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 75.297 ms[39m
+2026-04-28 17:42:38:580 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 17:42:38:582 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 403 71 - 4.863 ms[39m
+2026-04-28 17:42:39:146 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 17:42:39:148 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 403 71 - 3.346 ms[39m
+2026-04-28 17:42:39:220 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 38.420 ms[39m
+2026-04-28 17:42:39:783 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 37.515 ms[39m
+2026-04-28 17:42:39:834 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 601 - 66.352 ms[39m
+2026-04-28 17:42:40:427 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 73.253 ms[39m
+2026-04-28 17:43:09:489 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 64.636 ms[39m
+2026-04-28 17:43:10:338 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 327.452 ms[39m
+2026-04-28 17:44:22:630 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 200 644 - 80.878 ms[39m
+2026-04-28 17:44:23:215 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 78.041 ms[39m
+2026-04-28 17:44:34:052 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 645 - 182.554 ms[39m
+2026-04-28 17:44:47:543 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 200 645 - 80.205 ms[39m
+2026-04-28 17:44:48:132 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 79.792 ms[39m
+2026-04-28 17:45:08:626 [32mhttp[39m [32mPUT /api/admin/operators/block/69ee0b17d0edbe655343fdf0 200 686 - 78.236 ms[39m
+2026-04-28 17:45:09:234 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 601 - 81.093 ms[39m
+2026-04-28 17:45:09:820 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 82.420 ms[39m
+2026-04-28 17:45:14:214 [32mhttp[39m [32mPUT /api/admin/operators/block/69ee0b17d0edbe655343fdf0 200 689 - 78.467 ms[39m
+2026-04-28 17:45:14:809 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 602 - 82.257 ms[39m
+2026-04-28 17:45:16:884 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 200 645 - 84.333 ms[39m
+2026-04-28 17:45:17:478 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 89.724 ms[39m
+2026-04-28 17:45:22:624 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 646 - 427.903 ms[39m
+2026-04-28 17:45:34:961 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 200 646 - 79.674 ms[39m
+2026-04-28 17:45:35:555 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 78.379 ms[39m
+2026-04-28 17:46:13:779 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 645 - 162.806 ms[39m
+2026-04-28 17:46:41:576 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 646 - 255.395 ms[39m
+2026-04-28 17:51:54:079 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 17:51:54:085 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 403 71 - 9.303 ms[39m
+2026-04-28 17:51:54:659 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 17:51:54:662 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 403 71 - 4.986 ms[39m
+2026-04-28 17:51:54:736 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 50.199 ms[39m
+2026-04-28 17:51:55:303 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 39.993 ms[39m
+2026-04-28 17:51:55:351 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 200 646 - 82.854 ms[39m
+2026-04-28 17:51:55:950 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 88.094 ms[39m
+2026-04-28 17:52:02:757 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 645 - 159.485 ms[39m
+2026-04-28 17:52:10:233 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 646 - 398.616 ms[39m

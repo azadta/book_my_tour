@@ -746,3 +746,88 @@
 2026-04-28 17:51:55:950 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 88.094 ms[39m
 2026-04-28 17:52:02:757 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 645 - 159.485 ms[39m
 2026-04-28 17:52:10:233 [32mhttp[39m [32mPUT /api/admin/operators/update/69ee0b17d0edbe655343fdf0 200 646 - 398.616 ms[39m
+2026-04-28 17:54:30:179 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 200 646 - 96.040 ms[39m
+2026-04-28 17:54:30:994 [32mhttp[39m [32mGET /api/admin/operators/single-operator/69ee0b17d0edbe655343fdf0 304 - - 334.163 ms[39m
+2026-04-28 20:13:28:604 [32minfo[39m [32mUser login attempt[39m
+2026-04-28 20:13:28:971 [31merror[39m [31mUser not found[39m
+2026-04-28 20:13:28:979 [32mhttp[39m [32mPOST /api/user/login 404 61 - 378.886 ms[39m
+2026-04-28 20:13:46:362 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 20:13:46:580 [31merror[39m [31mInvalid credentials[39m
+2026-04-28 20:13:46:581 [32mhttp[39m [32mPOST /api/admin/login 401 66 - 222.148 ms[39m
+2026-04-28 20:13:50:026 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 20:13:50:171 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 144.285 ms[39m
+2026-04-28 20:13:54:913 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 603 - 293.981 ms[39m
+2026-04-28 20:13:55:009 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 86.981 ms[39m
+2026-04-28 20:13:58:373 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 200 648 - 74.673 ms[39m
+2026-04-28 20:13:58:449 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.954 ms[39m
+2026-04-28 20:14:31:986 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 76.653 ms[39m
+2026-04-28 20:14:36:334 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.904 ms[39m
+2026-04-28 20:14:40:630 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 72.317 ms[39m
+2026-04-28 20:14:44:395 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.811 ms[39m
+2026-04-28 20:14:50:123 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 72.993 ms[39m
+2026-04-28 20:14:51:117 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 74.598 ms[39m
+2026-04-28 20:15:06:210 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 72.750 ms[39m
+2026-04-28 20:15:08:914 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.266 ms[39m
+2026-04-28 20:15:27:870 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.221 ms[39m
+2026-04-28 20:15:29:474 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 73.998 ms[39m
+2026-04-28 20:15:32:926 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 68.591 ms[39m
+2026-04-28 20:15:38:901 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.848 ms[39m
+2026-04-28 20:15:43:420 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 73.535 ms[39m
+2026-04-28 20:15:53:920 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.579 ms[39m
+2026-04-28 20:15:55:119 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 67.858 ms[39m
+2026-04-28 20:16:04:340 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.335 ms[39m
+2026-04-28 20:16:10:893 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 62.192 ms[39m
+2026-04-28 20:16:15:390 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.406 ms[39m
+2026-04-28 20:16:18:317 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 72.345 ms[39m
+2026-04-28 20:16:21:758 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 65.114 ms[39m
+2026-04-28 20:16:28:707 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 77.403 ms[39m
+2026-04-28 20:16:35:436 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 73.019 ms[39m
+2026-04-28 20:16:50:370 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.636 ms[39m
+2026-04-28 20:16:52:472 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.629 ms[39m
+2026-04-28 20:16:58:955 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.423 ms[39m
+2026-04-28 20:17:01:270 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 181.344 ms[39m
+2026-04-28 20:17:04:948 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.251 ms[39m
+2026-04-28 20:17:10:912 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 68.341 ms[39m
+2026-04-28 20:17:16:771 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 77.817 ms[39m
+2026-04-28 20:17:21:753 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.087 ms[39m
+2026-04-28 20:17:24:897 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 73.202 ms[39m
+2026-04-28 20:19:09:178 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 20:19:09:180 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 403 71 - 5.065 ms[39m
+2026-04-28 20:19:09:182 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 20:19:09:183 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 403 71 - 1.711 ms[39m
+2026-04-28 20:19:09:220 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 31.317 ms[39m
+2026-04-28 20:19:09:222 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 36.230 ms[39m
+2026-04-28 20:19:09:296 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 200 648 - 72.010 ms[39m
+2026-04-28 20:19:09:367 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.252 ms[39m
+2026-04-28 20:19:10:468 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 74.635 ms[39m
+2026-04-28 20:19:10:542 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.674 ms[39m
+2026-04-28 20:19:16:117 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 76.412 ms[39m
+2026-04-28 20:19:16:444 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 323.768 ms[39m
+2026-04-28 20:19:28:616 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.011 ms[39m
+2026-04-28 20:19:28:691 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.846 ms[39m
+2026-04-28 20:19:30:186 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.777 ms[39m
+2026-04-28 20:21:40:488 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 76.183 ms[39m
+2026-04-28 20:21:45:579 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.234 ms[39m
+2026-04-28 20:21:48:333 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 68.329 ms[39m
+2026-04-28 20:21:50:951 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.117 ms[39m
+2026-04-28 20:21:54:110 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.261 ms[39m
+2026-04-28 20:22:00:905 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 78.826 ms[39m
+2026-04-28 20:22:05:639 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 77.067 ms[39m
+2026-04-28 20:22:06:058 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 68.707 ms[39m
+2026-04-28 20:22:19:364 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.423 ms[39m
+2026-04-28 20:22:26:112 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 327.944 ms[39m
+2026-04-28 20:22:31:516 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 69.022 ms[39m
+2026-04-28 20:22:47:738 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 71.258 ms[39m
+2026-04-28 20:22:54:757 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 82.288 ms[39m
+2026-04-28 20:22:54:869 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 109.583 ms[39m
+2026-04-28 20:22:56:930 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 81.193 ms[39m
+2026-04-28 20:23:00:461 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 75.481 ms[39m
+2026-04-28 20:23:05:473 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.031 ms[39m
+2026-04-28 20:23:05:549 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 73.123 ms[39m
+2026-04-28 20:23:14:074 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 70.303 ms[39m
+2026-04-28 20:23:23:454 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 325.917 ms[39m
+2026-04-28 20:26:41:189 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 20:26:41:190 [32mhttp[39m [32mPUT /api/admin/operators/verify-operator/69ee0b17d0edbe655343fdf0 403 71 - 4.143 ms[39m
+2026-04-28 20:26:41:236 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 40.344 ms[39m
+2026-04-28 20:26:45:072 [32mhttp[39m [32mPUT /api/admin/operators/verify-operator/69ee0b17d0edbe655343fdf0 200 31 - 3831.450 ms[39m
+2026-04-28 20:26:45:147 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 200 2 - 67.733 ms[39m

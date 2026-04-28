@@ -15,7 +15,7 @@ export interface ActionButton<T> {
 interface ReUsableTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  actions: ActionButton<T>[];
+  actions?: ActionButton<T>[];
   loading?: boolean;
   noDataText?: string;
 }

@@ -1,10 +1,10 @@
-interface Column<T> {
+export interface Column<T> {
   label: string;
   render: (item: T) => React.ReactNode;
 }
 
-interface ActionButton<T> {
-  label: string;
+export interface ActionButton<T> {
+  label:(item:T)=> string;
   onClick: (item: T) => void;
   className: string;
   disabled: (item: T) => boolean;
@@ -72,7 +72,7 @@ const ReUsableTable = <T,>({
                     >
                       {loading
                         ? action.loadingText || "Processing"
-                        : action.label}
+                        : action.label(item)}
                     </button>
                   );
                 })}

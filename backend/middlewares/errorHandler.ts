@@ -20,7 +20,7 @@ const errorHandler = (
     stack: err.stack,
     user: req.user,
   });
-  // console.error("💥 Stack Trace:", err.stack);
+  console.error("💥 Stack Trace:", err.stack);
   res.status(statusCode).json({
     success: false,
     statusCode,

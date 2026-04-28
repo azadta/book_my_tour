@@ -22,7 +22,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
   }, [page, limit]);
 
   const blockUser = async (id: string, isBlocked: boolean) => {
-    await axiosInstance.put(`/admin/users/block/${id}`, isBlocked);
+    await axiosInstance.put(`/admin/users/block/${id}`, { isBlocked });
     fetchUsers();
   };
 

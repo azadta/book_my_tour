@@ -252,3 +252,275 @@
 2026-04-27 17:54:42:109 [31merror[39m [31mIllegal arguments: undefined, string[39m
 2026-04-27 17:54:42:110 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 500 83 - 162.304 ms[39m
 2026-04-27 17:54:50:609 [32mhttp[39m [32mPOST /api/admin/reset-password-authenticated 200 43 - 306.311 ms[39m
+2026-04-27 19:57:29:586 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 1.727 ms[39m
+2026-04-27 19:57:37:610 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-27 19:57:37:827 [31merror[39m [31mInvalid credentials[39m
+2026-04-27 19:57:37:828 [32mhttp[39m [32mPOST /api/admin/login 401 66 - 218.026 ms[39m
+2026-04-27 19:57:42:056 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-27 19:57:42:190 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 133.285 ms[39m
+2026-04-28 09:10:57:477 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 09:10:57:859 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 381.558 ms[39m
+2026-04-28 11:17:18:329 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:17:18:340 [32mhttp[39m [32mGET /api/admin/users?page=undefined&limit=undefined 401 78 - 33.637 ms[39m
+2026-04-28 11:17:18:343 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:17:18:345 [32mhttp[39m [32mGET /api/admin/users?page=undefined&limit=undefined 401 78 - 2.895 ms[39m
+2026-04-28 11:17:29:442 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:17:29:444 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=undefined 401 78 - 1.169 ms[39m
+2026-04-28 11:17:29:445 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:17:29:447 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=undefined 401 78 - 1.128 ms[39m
+2026-04-28 11:17:46:686 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:17:46:687 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.182 ms[39m
+2026-04-28 11:17:46:688 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:17:46:689 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.009 ms[39m
+2026-04-28 11:22:52:508 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:22:52:509 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.938 ms[39m
+2026-04-28 11:22:53:708 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:22:53:709 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.938 ms[39m
+2026-04-28 11:22:55:541 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:22:55:542 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.279 ms[39m
+2026-04-28 11:22:57:259 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:22:57:260 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.764 ms[39m
+2026-04-28 11:22:58:387 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:22:58:388 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.806 ms[39m
+2026-04-28 11:22:59:279 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:22:59:280 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.944 ms[39m
+2026-04-28 11:23:06:733 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:23:06:734 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.038 ms[39m
+2026-04-28 11:23:09:670 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:23:09:671 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.724 ms[39m
+2026-04-28 11:24:23:309 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:24:23:311 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.297 ms[39m
+2026-04-28 11:24:23:313 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:24:23:313 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.867 ms[39m
+2026-04-28 11:29:26:088 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:26:089 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.269 ms[39m
+2026-04-28 11:29:26:091 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:26:092 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.870 ms[39m
+2026-04-28 11:29:28:135 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:28:136 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.275 ms[39m
+2026-04-28 11:29:28:140 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:28:141 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.172 ms[39m
+2026-04-28 11:29:38:199 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:38:200 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.802 ms[39m
+2026-04-28 11:29:38:202 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:38:202 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.703 ms[39m
+2026-04-28 11:29:45:131 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:45:132 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.957 ms[39m
+2026-04-28 11:29:45:133 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:29:45:134 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.711 ms[39m
+2026-04-28 11:33:18:837 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:33:18:840 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.962 ms[39m
+2026-04-28 11:33:18:841 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:33:18:841 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.620 ms[39m
+2026-04-28 11:42:53:300 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:42:53:301 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.989 ms[39m
+2026-04-28 11:42:53:302 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:42:53:303 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.758 ms[39m
+2026-04-28 11:43:10:978 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:43:10:979 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.998 ms[39m
+2026-04-28 11:43:10:980 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:43:10:981 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.871 ms[39m
+2026-04-28 11:44:08:663 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:44:08:664 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.865 ms[39m
+2026-04-28 11:44:08:665 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:44:08:666 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.638 ms[39m
+2026-04-28 11:46:40:489 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:46:40:489 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.810 ms[39m
+2026-04-28 11:46:40:490 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:46:40:491 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.623 ms[39m
+2026-04-28 11:56:01:063 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:56:01:064 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.979 ms[39m
+2026-04-28 11:56:01:066 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 11:56:01:067 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.942 ms[39m
+2026-04-28 12:11:38:923 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:11:38:926 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 4.858 ms[39m
+2026-04-28 12:11:38:930 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:11:38:933 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 2.060 ms[39m
+2026-04-28 12:11:44:019 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:11:44:021 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.677 ms[39m
+2026-04-28 12:11:44:022 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:11:44:023 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.032 ms[39m
+2026-04-28 12:11:48:295 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:11:48:297 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 2.394 ms[39m
+2026-04-28 12:11:48:300 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:11:48:301 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.165 ms[39m
+2026-04-28 12:16:43:818 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:16:43:819 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.239 ms[39m
+2026-04-28 12:16:43:822 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:16:43:823 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.359 ms[39m
+2026-04-28 12:18:06:096 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:18:06:099 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 2.159 ms[39m
+2026-04-28 12:18:06:103 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:18:06:104 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.846 ms[39m
+2026-04-28 12:29:34:322 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:29:34:325 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 3.662 ms[39m
+2026-04-28 12:29:34:326 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:29:34:327 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.623 ms[39m
+2026-04-28 12:37:30:162 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:37:30:163 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.066 ms[39m
+2026-04-28 12:37:30:165 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:37:30:166 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.761 ms[39m
+2026-04-28 12:39:02:217 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:39:02:218 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.409 ms[39m
+2026-04-28 12:39:02:220 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:39:02:221 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.858 ms[39m
+2026-04-28 12:42:32:449 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:42:32:455 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 6.712 ms[39m
+2026-04-28 12:42:32:457 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 12:42:32:459 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.607 ms[39m
+2026-04-28 12:43:02:768 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 12:43:02:921 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 152.509 ms[39m
+2026-04-28 12:43:05:121 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 519 - 81.311 ms[39m
+2026-04-28 12:43:05:203 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 78.632 ms[39m
+2026-04-28 12:43:58:301 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 73.985 ms[39m
+2026-04-28 12:43:58:379 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 75.640 ms[39m
+2026-04-28 12:44:17:024 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 69.182 ms[39m
+2026-04-28 12:44:17:100 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 73.687 ms[39m
+2026-04-28 12:44:23:618 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 72.873 ms[39m
+2026-04-28 12:44:23:687 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 64.972 ms[39m
+2026-04-28 12:44:32:803 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 86.367 ms[39m
+2026-04-28 12:44:32:876 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 70.510 ms[39m
+2026-04-28 12:44:53:523 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 70.166 ms[39m
+2026-04-28 12:44:53:590 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 65.691 ms[39m
+2026-04-28 12:45:09:538 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 72.964 ms[39m
+2026-04-28 12:45:09:608 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 67.933 ms[39m
+2026-04-28 12:46:36:410 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 73.326 ms[39m
+2026-04-28 12:47:07:334 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 72.102 ms[39m
+2026-04-28 12:47:07:930 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 70.665 ms[39m
+2026-04-28 12:47:34:096 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 72.493 ms[39m
+2026-04-28 12:47:34:687 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 81.116 ms[39m
+2026-04-28 12:47:46:338 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 68.238 ms[39m
+2026-04-28 12:47:47:183 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 332.790 ms[39m
+2026-04-28 12:47:54:590 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 531.297 ms[39m
+2026-04-28 12:47:54:985 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 331.057 ms[39m
+2026-04-28 12:49:52:163 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 12:49:52:164 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 2.069 ms[39m
+2026-04-28 12:49:52:751 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 12:49:52:754 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 5.819 ms[39m
+2026-04-28 12:49:52:811 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 35.042 ms[39m
+2026-04-28 12:49:53:387 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 36.266 ms[39m
+2026-04-28 12:49:53:427 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 519 - 70.026 ms[39m
+2026-04-28 12:49:54:020 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 70.652 ms[39m
+2026-04-28 12:51:45:780 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 69.682 ms[39m
+2026-04-28 12:51:46:373 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 79.944 ms[39m
+2026-04-28 12:51:59:559 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 74.491 ms[39m
+2026-04-28 12:52:00:347 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 271.881 ms[39m
+2026-04-28 12:53:53:772 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 768.823 ms[39m
+2026-04-28 12:53:53:851 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 73.245 ms[39m
+2026-04-28 12:54:08:738 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 74.352 ms[39m
+2026-04-28 12:54:09:321 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 74.697 ms[39m
+2026-04-28 12:55:59:660 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 12:55:59:661 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 2.134 ms[39m
+2026-04-28 12:56:00:256 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 12:56:00:258 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 4.141 ms[39m
+2026-04-28 12:56:00:328 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 46.467 ms[39m
+2026-04-28 12:56:00:905 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 41.136 ms[39m
+2026-04-28 12:56:00:940 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 519 - 73.595 ms[39m
+2026-04-28 12:56:01:556 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 94.376 ms[39m
+2026-04-28 12:56:19:670 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 96.813 ms[39m
+2026-04-28 12:56:20:234 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 76.545 ms[39m
+2026-04-28 12:56:50:174 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 12:56:50:192 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 12:56:50:194 [32mhttp[39m [32mPUT /api/admin/users/block/69edadb4ba51b46bb64b3d43 500 104 - 115.917 ms[39m
+2026-04-28 12:58:27:914 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 106.745 ms[39m
+2026-04-28 12:58:28:723 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 338.536 ms[39m
+2026-04-28 12:58:43:990 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 12:58:43:998 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 12:58:44:000 [32mhttp[39m [32mPUT /api/admin/users/block/69edadb4ba51b46bb64b3d43 500 104 - 60.620 ms[39m
+2026-04-28 13:07:59:486 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 13:07:59:494 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 10.014 ms[39m
+2026-04-28 13:08:00:073 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 13:08:00:075 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 4.264 ms[39m
+2026-04-28 13:08:00:154 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 51.242 ms[39m
+2026-04-28 13:08:00:717 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 40.805 ms[39m
+2026-04-28 13:08:02:454 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 519 - 1774.733 ms[39m
+2026-04-28 13:08:02:593 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 119.489 ms[39m
+2026-04-28 13:08:30:317 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 13:08:30:321 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 13:08:30:324 [32mhttp[39m [32mPUT /api/admin/users/block/69edadb4ba51b46bb64b3d43 500 104 - 57.584 ms[39m
+2026-04-28 13:14:36:332 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 13:14:36:334 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 3.256 ms[39m
+2026-04-28 13:14:36:930 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 13:14:36:932 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 4.782 ms[39m
+2026-04-28 13:14:37:196 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 240.854 ms[39m
+2026-04-28 13:14:37:567 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 36.288 ms[39m
+2026-04-28 13:14:37:603 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 519 - 68.451 ms[39m
+2026-04-28 13:14:38:199 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 74.918 ms[39m
+2026-04-28 13:15:43:096 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 68.034 ms[39m
+2026-04-28 13:15:43:696 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 80.502 ms[39m
+2026-04-28 13:16:13:977 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 64.393 ms[39m
+2026-04-28 13:16:14:575 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 69.866 ms[39m
+2026-04-28 13:16:38:894 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 68.038 ms[39m
+2026-04-28 13:16:39:811 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 389.977 ms[39m
+2026-04-28 13:56:20:553 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 13:56:20:565 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 12.367 ms[39m
+2026-04-28 13:56:21:121 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 13:56:21:124 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 3.300 ms[39m
+2026-04-28 14:10:21:186 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 14:10:21:193 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 6.745 ms[39m
+2026-04-28 14:10:21:776 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 14:10:21:779 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 3.938 ms[39m
+2026-04-28 14:11:10:492 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 14:11:10:495 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 2.855 ms[39m
+2026-04-28 14:11:11:072 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 14:11:11:075 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 2.722 ms[39m
+2026-04-28 14:11:31:788 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 1.146 ms[39m
+2026-04-28 14:11:36:938 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 14:11:37:074 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 136.436 ms[39m
+2026-04-28 14:11:40:710 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 78.384 ms[39m
+2026-04-28 14:11:41:301 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 73.561 ms[39m
+2026-04-28 14:11:48:506 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 335.380 ms[39m
+2026-04-28 14:11:49:354 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 591.326 ms[39m
+2026-04-28 14:11:55:145 [32mhttp[39m [32mDELETE /api/admin/users/delete/69edadb4ba51b46bb64b3d43 200 39 - 76.060 ms[39m
+2026-04-28 14:11:55:738 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 27 - 73.428 ms[39m
+2026-04-28 14:13:06:111 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 0.459 ms[39m
+2026-04-28 14:13:45:175 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-04-28 14:13:49:023 [32mhttp[39m [32mPOST /api/user/register 201 99 - 3854.102 ms[39m
+2026-04-28 14:14:02:336 [32mhttp[39m [32mPOST /api/user/verify-otp 200 54 - 88.494 ms[39m
+2026-04-28 14:14:02:495 [31merror[39m [31mAlready verified[39m
+2026-04-28 14:14:02:498 [32mhttp[39m [32mPOST /api/user/verify-otp 400 63 - 41.144 ms[39m
+2026-04-28 14:14:17:337 [32minfo[39m [32mUser login attempt[39m
+2026-04-28 14:14:17:452 [32mhttp[39m [32mPOST /api/user/login 200 354 - 115.569 ms[39m
+2026-04-28 14:14:34:247 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.872 ms[39m
+2026-04-28 14:15:09:375 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-28 14:15:09:562 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 186.895 ms[39m
+2026-04-28 14:15:12:380 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 381 - 69.468 ms[39m
+2026-04-28 14:15:12:984 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 76.295 ms[39m
+2026-04-28 14:15:17:287 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:15:17:289 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 14:15:17:290 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 500 104 - 38.219 ms[39m
+2026-04-28 14:16:45:939 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:16:45:940 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 14:16:45:941 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 500 104 - 36.816 ms[39m
+2026-04-28 14:17:17:114 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 83.607 ms[39m
+2026-04-28 14:17:17:692 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 72.598 ms[39m
+2026-04-28 14:17:22:600 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:17:22:605 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 14:17:22:607 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 500 104 - 47.186 ms[39m
+2026-04-28 14:17:35:788 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:17:35:789 [31merror[39m [31mCannot read properties of undefined (reading 'isBlocked')[39m
+2026-04-28 14:17:35:790 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 500 104 - 36.778 ms[39m
+2026-04-28 14:19:16:304 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:19:16:365 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 200 461 - 98.992 ms[39m
+2026-04-28 14:19:16:961 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 380 - 113.411 ms[39m
+2026-04-28 14:19:23:256 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:19:23:296 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 200 464 - 80.151 ms[39m
+2026-04-28 14:19:23:887 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 381 - 70.408 ms[39m
+2026-04-28 14:19:32:043 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:19:32:083 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 200 461 - 306.969 ms[39m
+2026-04-28 14:19:32:434 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 380 - 71.510 ms[39m
+2026-04-28 14:19:36:488 [33mwarn[39m [33mAdmin is blocking a user[39m
+2026-04-28 14:19:36:581 [32mhttp[39m [32mPUT /api/admin/users/block/69f0734162e35e975ff77440 200 464 - 125.512 ms[39m
+2026-04-28 14:19:37:134 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 381 - 82.346 ms[39m
+2026-04-28 14:19:43:274 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 107.977 ms[39m
+2026-04-28 14:19:43:860 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 101.352 ms[39m
+2026-04-28 14:23:06:172 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 14:23:06:173 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 2.859 ms[39m
+2026-04-28 14:23:06:753 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 14:23:06:754 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 403 71 - 2.345 ms[39m
+2026-04-28 14:23:06:839 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 55.975 ms[39m
+2026-04-28 14:23:07:398 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 38.707 ms[39m
+2026-04-28 14:23:07:437 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 200 381 - 74.610 ms[39m
+2026-04-28 14:23:08:034 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 76.927 ms[39m
+2026-04-28 14:23:20:124 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 65.088 ms[39m
+2026-04-28 14:23:20:730 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 304 - - 77.634 ms[39m

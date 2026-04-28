@@ -7,14 +7,6 @@ import { CustomError } from "./customError.js";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
 import { IAdminRepository } from "../interfaces/IAdminRepository.js";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: JwtPayload & { id: string; role: string };
-    }
-  }
-}
-
 export class AuthMiddleware {
   constructor(
     private securityService: ISecurityService,

@@ -627,3 +627,19 @@ export const createDestinationFields: FormField[] = [
   },
   { id: "images", type: "file", label: "Upload Images", multiple: true },
 ];
+
+export const createPackageCategoryFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Enter Name",
+    label: "Name",
+  },
+
+  {
+    id: "description",
+    type: "textarea",
+    placeholder: "Enter Description",
+    label: "Description",
+  },
+];

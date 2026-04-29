@@ -163,3 +163,14 @@
 2026-04-29 09:55:58:740 [31merror[39m [31mLongitude is required[39m
 2026-04-29 09:56:13:021 [31merror[39m [31mLatitude must be number between -90 to 90[39m
 2026-04-29 11:22:51:722 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-29 11:47:17:548 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 11:47:31:305 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 11:47:38:440 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 11:48:55:233 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 16:07:42:313 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 16:08:46:276 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 16:08:56:323 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 16:11:06:064 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 16:11:16:091 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 16:14:35:091 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 16:14:45:139 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m

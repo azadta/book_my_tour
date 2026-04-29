@@ -4,6 +4,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { axiosInstance } from "../../api/axiosInstance";
 
 export interface IPackage {
   _id: string;
@@ -35,9 +36,11 @@ export const fetchPackages = createAsyncThunk<
   { rejectValue: string }
 >("package/fetch", async ({ page, limit }, { rejectWithValue }) => {
   try {
-    const res = await axios.get(
-      `/api/user/packages/home?page=${page}&limit=${limit}`
+    const res = await axiosInstance.get(
+      `/user/packages/home?page=${page}&limit=${limit}`
     );
+
+    console.log('res.data:',res.data)
     return res.data;
   } catch (error: any) {
     const message = error.response?.data?.message || "failed to fetch packages";

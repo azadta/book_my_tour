@@ -30,6 +30,7 @@ import EditOperator from "./pages/admin/EditOperator";
 import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
 import AdminPackageDetails from "./pages/admin/AdminPackageDetails";
 import CreateDestination from "./pages/admin/CreateDestination";
+import CreatePackageCategory from "./pages/admin/CreatePackageCategory";
 
 const App = () => {
   return (
@@ -94,6 +95,10 @@ const App = () => {
         <Route
           path="/admin/create-destination"
           element={<CreateDestination />}
+        />
+        <Route
+          path="/admin/create-package-category"
+          element={<CreatePackageCategory />}
         />
       </Routes>
       <ToastContainer position="top-center" />

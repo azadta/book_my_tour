@@ -605,3 +605,25 @@ export const adminUpdateOperatorFields: FormField[] = [
     ],
   },
 ];
+
+export const createDestinationFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    label: "Destination Name",
+    placeholder: "Enter destination name",
+  },
+  {
+    id: "latitude",
+    type: "number",
+    label: "Latitude",
+    placeholder: "Enter latitude",
+  },
+  {
+    id: "longitude",
+    type: "number",
+    label: "Longitude",
+    placeholder: "Enter longitude",
+  },
+  { id: "images", type: "file", label: "Upload Images", multiple: true },
+];

@@ -29,6 +29,7 @@ import AdminOperatorDetails from "./pages/admin/AdminOperatorDetails";
 import EditOperator from "./pages/admin/EditOperator";
 import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
 import AdminPackageDetails from "./pages/admin/AdminPackageDetails";
+import CreateDestination from "./pages/admin/CreateDestination";
 
 const App = () => {
   return (
@@ -90,6 +91,10 @@ const App = () => {
           element={<AdminOperatorVerification />}
         />
         <Route path="/admin/packages" element={<AdminPackageDetails />} />
+        <Route
+          path="/admin/create-destination"
+          element={<CreateDestination />}
+        />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

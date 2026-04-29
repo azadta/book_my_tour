@@ -864,3 +864,52 @@
 2026-04-28 21:32:57:991 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 36.911 ms[39m
 2026-04-28 21:34:10:693 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 36.996 ms[39m
 2026-04-28 21:34:10:732 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 37.776 ms[39m
+2026-04-28 21:51:32:085 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:32:093 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 8.901 ms[39m
+2026-04-28 21:51:32:095 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:32:096 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 1.645 ms[39m
+2026-04-28 21:51:35:001 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:35:002 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.459 ms[39m
+2026-04-28 21:51:35:005 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:35:007 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 2.535 ms[39m
+2026-04-28 21:51:39:041 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 200 30 - 44.586 ms[39m
+2026-04-28 21:51:39:082 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 38.221 ms[39m
+2026-04-28 21:51:41:442 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:41:444 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 1.498 ms[39m
+2026-04-28 21:51:41:446 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:41:447 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 1.173 ms[39m
+2026-04-28 21:54:20:523 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:20:525 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 1.885 ms[39m
+2026-04-28 21:54:20:527 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:20:528 [32mhttp[39m [32mGET /api/admin/users?page=1&limit=5 401 78 - 0.898 ms[39m
+2026-04-28 21:54:27:213 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:27:215 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 2.065 ms[39m
+2026-04-28 21:54:27:216 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:27:217 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 1.097 ms[39m
+2026-04-28 21:55:38:439 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:55:38:441 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 1.149 ms[39m
+2026-04-28 21:55:38:442 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:55:38:443 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 401 78 - 0.842 ms[39m
+2026-04-29 09:31:53:781 [32minfo[39m [32mUser login attempt[39m
+2026-04-29 09:31:53:876 [31merror[39m [31mUser not found[39m
+2026-04-29 09:31:53:884 [32mhttp[39m [32mPOST /api/user/login 404 61 - 102.538 ms[39m
+2026-04-29 09:32:32:503 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-29 09:32:32:682 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 178.565 ms[39m
+2026-04-29 09:32:35:106 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 37.176 ms[39m
+2026-04-29 09:32:35:148 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 38.284 ms[39m
+2026-04-29 09:54:46:053 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-29 09:54:46:062 [32mhttp[39m [32mPOST /api/admin/create-destination 401 78 - 30.248 ms[39m
+2026-04-29 09:55:05:778 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 51.557 ms[39m
+2026-04-29 09:55:05:819 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 38.930 ms[39m
+2026-04-29 09:55:20:418 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 1.266 ms[39m
+2026-04-29 09:55:25:885 [32minfo[39m [32mAdmin login attempt[39m
+2026-04-29 09:55:26:014 [32mhttp[39m [32mPOST /api/admin/login 200 387 - 128.276 ms[39m
+2026-04-29 09:55:27:988 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 40.108 ms[39m
+2026-04-29 09:55:28:028 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 37.585 ms[39m
+2026-04-29 09:55:58:740 [31merror[39m [31mLongitude is required[39m
+2026-04-29 09:55:58:741 [32mhttp[39m [32mPOST /api/admin/create-destination 400 68 - 96.228 ms[39m
+2026-04-29 09:56:13:021 [31merror[39m [31mLatitude must be number between -90 to 90[39m
+2026-04-29 09:56:13:022 [32mhttp[39m [32mPOST /api/admin/create-destination 400 88 - 56.409 ms[39m
+2026-04-29 09:56:37:401 [32mhttp[39m [32mPOST /api/admin/create-destination 201 387 - 163.898 ms[39m
+2026-04-29 09:56:37:446 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 32.850 ms[39m
+2026-04-29 09:56:37:483 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 35.197 ms[39m

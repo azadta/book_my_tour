@@ -1,0 +1,71 @@
+import axios from "axios";
+import { useState } from "react";
+import { axiosInstance } from "../api/axiosInstance";
+import { toast } from "react-toastify";
+
+export interface CreateDestinationFormData {
+  name: string;
+  latitude: string | number;
+  longitude: string | number;
+  images?: FileList | File[];
+}
+
+export interface DestinationPayload {
+  name: string;
+  latitude: number;
+  longitude: number;
+  images: string[];
+}
+
+export const useCreateDestination = (onSuccess: () => void) => {
+  const [loading, setLoading] = useState(false);
+
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    );
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const { data } = await axios.post(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      formData,
+    );
+
+    return data.secure_url;
+  };
+
+  const createDestination = async (formData: CreateDestinationFormData) => {
+    setLoading(true);
+    try {
+      const latitude = Number(formData.latitude);
+      const longitude = Number(formData.longitude);
+      let uploadedImages: string[] = [];
+      if (formData.images && formData.images.length > 0) {
+        const files = Array.from(formData.images);
+        uploadedImages = await Promise.all(files.map(uploadToCloudinary));
+      }
+      const payload: DestinationPayload = {
+        name: formData.name.trim(),
+        latitude,
+        longitude,
+        images: uploadedImages,
+      };
+
+      await axiosInstance.post(`/admin/create-destination`, payload);
+      toast.success("Destination created successfully");
+      onSuccess?.();
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message || error.response?.data?.error?.message;
+      error.message || "Failed to create destination.";
+      toast.error(message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createDestination, loading };
+};

@@ -146,3 +146,19 @@
 2026-04-28 20:19:09:178 [31merror[39m [31mInvalid or expired token[39m
 2026-04-28 20:19:09:182 [31merror[39m [31mInvalid or expired token[39m
 2026-04-28 20:26:41:189 [31merror[39m [31mInvalid or expired token[39m
+2026-04-28 21:51:32:085 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:32:095 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:35:001 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:35:005 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:41:442 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:51:41:446 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:20:523 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:20:527 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:27:213 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:54:27:216 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:55:38:439 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-28 21:55:38:442 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-29 09:31:53:876 [31merror[39m [31mUser not found[39m
+2026-04-29 09:54:46:053 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-04-29 09:55:58:740 [31merror[39m [31mLongitude is required[39m
+2026-04-29 09:56:13:021 [31merror[39m [31mLatitude must be number between -90 to 90[39m

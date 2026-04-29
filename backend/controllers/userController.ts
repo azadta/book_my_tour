@@ -210,6 +210,7 @@ export class UserController {
   };
 
   getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
+        console.log('from controller')
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;

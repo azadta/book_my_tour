@@ -174,3 +174,12 @@
 2026-04-29 16:11:16:091 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
 2026-04-29 16:14:35:091 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
 2026-04-29 16:14:45:139 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-29 19:55:22:569 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 19:55:31:230 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 19:55:33:756 [31merror[39m [31mInvalid Credentials[39m
+2026-04-29 20:01:58:010 [31merror[39m [31mInvalid or expired token[39m
+2026-04-30 08:37:23:901 [31merror[39m [31mInvalid Credentials[39m
+2026-04-30 08:37:27:462 [31merror[39m [31mInvalid Credentials[39m
+2026-04-30 08:37:30:897 [31merror[39m [31mInvalid Credentials[39m
+2026-04-30 08:37:36:679 [31merror[39m [31mInvalid Credentials[39m
+2026-04-30 08:37:39:230 [31merror[39m [31mInvalid Credentials[39m

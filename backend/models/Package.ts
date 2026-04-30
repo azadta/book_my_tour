@@ -3,6 +3,10 @@ export interface Ipackage extends Document {
   name: string;
   amount: number;
   destinations: Types.ObjectId[];
+  duration: {
+    day: number;
+    night: number;
+  };
   specifications: string;
   expiryDate: Date;
   remark: string;
@@ -33,6 +37,16 @@ const packageSchema = new Schema<Ipackage>(
         required: true,
       },
     ],
+    duration: {
+      day: {
+        type: Number,
+        required: true,
+      },
+      night: {
+        type: Number,
+        required: true,
+      },
+    },
     specifications: { type: String },
     expiryDate: {
       type: Date,
@@ -57,7 +71,7 @@ const packageSchema = new Schema<Ipackage>(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model<Ipackage>("Package", packageSchema);

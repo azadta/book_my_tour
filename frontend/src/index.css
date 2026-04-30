@@ -1,5 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Outfit:wght@100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Outfit:wght@100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Satisfy&display=swap');
+
 @import "tailwindcss";
 
-body{
-    background-color: rgb(241,245, 241);
+body {
+  @apply bg-emerald-50
+}
+
+@theme{
+    --font-outfit:"Outfit", sans-serif;
+    --font-rethik:"Rethink Sans", sans-serif;
+    --font-dosis:"Dosis", sans-serif;
+    --font-satisfy:"Satisfy", cursive;
 }

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../redux/store";
+import Pagination from "../../components/Pagination";
 import { usePackageCategories } from "../../hooks/usePackageCategories";
 import { fetchPackages, type IPackage } from "../../redux/package/packageSlice";
-import Pagination from "../../components/Pagination";
+import type { AppDispatch, RootState } from "../../redux/store";
+import PackageCard from "../../components/PackageCard";
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,28 +41,12 @@ const Home = () => {
 
     return (
       <div className="mb-16" key={category._id}>
-        <h2 className="text-2xl font-bold text-black bg-linear-to-r from-green-200 to-blue-200 rounded-lg shadow px-6 py-2 mb-6 capitalize ">
+        <h2 className="text-2xl font-bold text-emerald-800 bg-linear-to-r from-emerald-200 to-sky-200 rounded-lg shadow px-6 py-2 mb-6 capitalize font-dosis ">
           {category.name.replace("-", " ")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filtered.map((pkg) => (
-            <div
-              key={pkg._id}
-              className="bg-white shadow rounded-xl overflow-hidden "
-            >
-              <img
-                src={pkg.images?.[0]}
-                alt={pkg.name}
-                className="w-full h-60 object-cover"
-              />
-              <div className="p-4 bg-green-100">
-                <h3 className="text-lg font-semibold">{pkg.name}</h3>
-                <p>Rs. {pkg.amount}</p>
-              </div>
-            </div>
-          ))}
+          {filtered.map((pkg) => <PackageCard pkg={pkg}/>)}
         </div>
-        <div></div>
       </div>
     );
   };

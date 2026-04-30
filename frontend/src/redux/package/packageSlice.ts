@@ -6,11 +6,20 @@ import {
 import axios from "axios";
 import { axiosInstance } from "../../api/axiosInstance";
 
+interface Destination {
+  name: string;
+  _id: string;
+}
+
 export interface IPackage {
   _id: string;
   name: string;
   amount: number;
-  destinations: string[];
+  destinations: Destination[];
+  duration: {
+    day: number;
+    night: number;
+  };
   specifications?: string[];
   expiryDate?: string;
   operatorId?: string;
@@ -20,7 +29,7 @@ export interface IPackage {
   discount?: number;
   availableSlots?: string[];
   images: string[];
-  category?: string|{[key:string]:any}
+  category?: string | { [key: string]: any };
 }
 
 interface PackageState {
@@ -37,10 +46,10 @@ export const fetchPackages = createAsyncThunk<
 >("package/fetch", async ({ page, limit }, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.get(
-      `/user/packages/home?page=${page}&limit=${limit}`
+      `/user/packages/home?page=${page}&limit=${limit}`,
     );
 
-    console.log('res.data:',res.data)
+    console.log("res.data:", res.data);
     return res.data;
   } catch (error: any) {
     const message = error.response?.data?.message || "failed to fetch packages";
@@ -68,12 +77,12 @@ const packageSlice = createSlice({
         fetchPackages.fulfilled,
         (
           state,
-          action: PayloadAction<{ packages: IPackage[]; totalCount: number }>
+          action: PayloadAction<{ packages: IPackage[]; totalCount: number }>,
         ) => {
           state.status = "succeeded";
           state.data = action.payload.packages;
           state.totalCount = action.payload.totalCount;
-        }
+        },
       )
       .addCase(fetchPackages.rejected, (state, action) => {
         state.status = "failed";

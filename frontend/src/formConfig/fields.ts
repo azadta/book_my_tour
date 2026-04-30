@@ -321,6 +321,18 @@ export const createPackageFields: FormField[] = [
     multiple: true,
   },
   {
+    id: "duration.day",
+    label: "Number of days",
+    type: "number",
+    placeholder: "Enter number of days",
+  },
+  {
+    id: "duration.night",
+    label: "Number of nights",
+    type: "number",
+    placeholder: "Enter number of nights",
+  },
+  {
     id: "specifications",
     label: "Specifications",
     type: "text",

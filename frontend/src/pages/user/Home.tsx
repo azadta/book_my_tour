@@ -41,7 +41,7 @@ const Home = () => {
 
     return (
       <div className="mb-16" key={category._id}>
-        <h2 className="text-2xl font-bold text-emerald-800 bg-linear-to-r from-emerald-200 to-sky-200 rounded-lg shadow px-6 py-2 mb-6 capitalize font-dosis ">
+        <h2 className="text-2xl font-bold text-emerald-800 bg-linear-to-r from-emerald-200 to-sky-200 rounded-lg shadow px-6 py-2 mb-6 capitalize font-caveat ">
           {category.name.replace("-", " ")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

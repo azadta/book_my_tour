@@ -1,15 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Outfit:wght@100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Outfit:wght@100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Satisfy&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dosis:wght@200..800&family=Satisfy&family=Outfit:wght@100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap");
 
 @import "tailwindcss";
 
 body {
-  @apply bg-emerald-50
+  @apply bg-sky-50;
 }
 
-@theme{
-    --font-outfit:"Outfit", sans-serif;
-    --font-rethik:"Rethink Sans", sans-serif;
-    --font-dosis:"Dosis", sans-serif;
-    --font-satisfy:"Satisfy", cursive;
+@theme {
+  --font-outfit: "Outfit", sans-serif;
+  --font-rethik: "Rethink Sans", sans-serif;
+  --font-dosis: "Dosis", sans-serif;
+  --font-satisfy: "Satisfy", cursive;
+  --font-caveat: "Caveat", cursive;
 }

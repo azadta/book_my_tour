@@ -2,6 +2,7 @@ import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 
 export const useRegister = () => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,11 +19,16 @@ export const useRegister = () => {
 
       onSuccess(data.userId, data.otpExpire);
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+        setLoading(false);
+        return;
+      }
       setError(error.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  return { registerUser, loading, error };
+  return { registerUser, loading, error,fieldError,setFieldError };
 };

@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 
 const OperatorRegister = () => {
   const navigate = useNavigate();
-  const { registerOperator, loading, error } = useOperatorRegister();
+  const { registerOperator, loading, error, fieldError, setFieldError } =
+    useOperatorRegister();
   if (error) {
     toast.error(error);
   }
@@ -26,7 +27,7 @@ const OperatorRegister = () => {
   };
 
   return (
-    <div className="p-3 max-w-xl mx-auto">
+    <div className="p-3 max-w-2xl mx-auto">
       <h1 className="text-3xl font-semibold my-7 text-center">
         Operator Register
       </h1>
@@ -35,6 +36,8 @@ const OperatorRegister = () => {
         fields={operatorRegisterFields}
         loading={loading}
         onSubmit={handleSubmit}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
     </div>
   );

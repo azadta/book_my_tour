@@ -5,6 +5,7 @@ import { OperatorResetPasswordFields } from "../../formConfig/fields";
 import { useState } from "react";
 
 const OperatorResetPassword: React.FC = () => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const [message, setMessage] = useState<string | null>(null);
@@ -12,7 +13,7 @@ const OperatorResetPassword: React.FC = () => {
   const { resetPassword, loading } = useOperatorResetPassword();
 
   const handleSubmit = async (formData: any) => {
-    setError(null), setMessage(null);
+    (setError(null), setMessage(null));
     const { newPassword, confirmPassword } = formData;
 
     if (newPassword !== confirmPassword) {
@@ -24,6 +25,11 @@ const OperatorResetPassword: React.FC = () => {
       setMessage("Password updated! Redirecting...");
       setTimeout(() => navigate("/operator/login"), 2000);
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+
+        return;
+      }
       setError(error.response?.data?.message || error.message);
     }
   };
@@ -39,6 +45,8 @@ const OperatorResetPassword: React.FC = () => {
           onSubmit={handleSubmit}
           loading={loading}
           buttonText="Reset Password"
+          fieldError={fieldError}
+          setFieldError={setFieldError}
         />
         {message && (
           <p className="bg-green-100 text-green-700 border border-green-400 rounded px-4 py-2 mt-4 text-center  ">

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import ReusableForm from "../../components/forms/ReUsableForm.js";
 
@@ -12,7 +12,10 @@ const AdminLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.admin);
-  const loginHandler = useAdminLogin(dispatch, navigate);
+  const { adminLogin, fieldError, setFieldError } = useAdminLogin(
+    dispatch,
+    navigate,
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -24,7 +27,9 @@ const AdminLogin = () => {
           fields={adminLoginFields}
           loading={loading}
           buttonText="Log In"
-          onSubmit={loginHandler}
+          onSubmit={adminLogin}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
         />
         {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
       </div>
@@ -33,4 +38,3 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-

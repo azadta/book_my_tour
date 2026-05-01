@@ -6,7 +6,7 @@ import { createDestinationFields } from "../../formConfig/fields";
 
 const CreateDestination = () => {
   const navigate = useNavigate();
-  const { createDestination, loading } = useCreateDestination(() => {
+  const { createDestination, loading,fieldError,setFieldError } = useCreateDestination(() => {
     navigate(`/admin/packages`);
   });
   const handleSubmit = async (formData: any) => {
@@ -25,6 +25,8 @@ const CreateDestination = () => {
         onSubmit={handleSubmit}
         loading={loading}
         buttonText="Create Destination"
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
     </div>
   );

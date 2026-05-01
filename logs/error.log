@@ -183,3 +183,44 @@
 2026-04-30 08:37:30:897 [31merror[39m [31mInvalid Credentials[39m
 2026-04-30 08:37:36:679 [31merror[39m [31mInvalid Credentials[39m
 2026-04-30 08:37:39:230 [31merror[39m [31mInvalid Credentials[39m
+2026-04-30 13:48:23:224 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:29:831 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:44:107 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:50:149 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:55:639 [31merror[39m [31mUser not found[39m
+2026-04-30 19:29:15:089 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:15:099 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:35:023 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:35:028 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 21:51:39:009 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:39:019 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:49:038 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:49:042 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:22:327 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:22:337 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:32:344 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:32:348 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:30:10:783 [31merror[39m [31mUser not found[39m
+2026-05-01 08:56:07:521 [31merror[39m [31mUser not found[39m
+2026-05-01 09:01:57:968 [31merror[39m [31mValidation Error[39m
+2026-05-01 09:02:36:290 [31merror[39m [31mValidation Error[39m
+2026-05-01 09:02:52:939 [31merror[39m [31mValidation Error[39m
+2026-05-01 09:09:36:914 [31merror[39m [31mUser not found[39m
+2026-05-01 09:15:58:706 [31merror[39m [31mUser not found[39m
+2026-05-01 09:16:19:923 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 09:16:28:646 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 09:16:44:757 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 10:48:11:271 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:17:793 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:21:295 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:25:705 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:50:32:506 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 10:50:36:812 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 10:50:39:365 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 11:40:52:149 [31merror[39m [31mValidation Error[39m
+2026-05-01 11:42:15:677 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 11:42:23:782 [31merror[39m [31mInvalid email or password[39m

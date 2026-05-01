@@ -1,11 +1,13 @@
 import { toast } from "react-toastify";
 import {
   createPackageFields,
-  type FormField,
+
   type Option,
 } from "../../formConfig/fields";
 import { useCreatePackage } from "../../hooks/useCreatePackage";
 import ReUsableForm from "../../components/forms/ReUsableForm";
+import { useState } from "react";
+import type { FormField } from "../../interfaces/interfaces";
 
 interface IOptions {
   category: Option[];
@@ -13,6 +15,7 @@ interface IOptions {
 }
 
 const CreatePackage = () => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { categories, createPackage, destinations, loading } =
     useCreatePackage();
   const options: IOptions = {
@@ -25,6 +28,11 @@ const CreatePackage = () => {
       await createPackage(formData);
       toast.success("Package created successfully");
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+
+        return;
+      }
       toast.error(error.response?.data?.message || "Failed to create package");
       console.error(error);
     }
@@ -43,6 +51,8 @@ const CreatePackage = () => {
         buttonText="Create Package"
         loading={loading}
         onSubmit={handleSubmit}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
     </div>
   );

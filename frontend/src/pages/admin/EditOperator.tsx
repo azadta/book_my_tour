@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 
 const EditOperator = () => {
   const { id } = useParams<{ id: string }>();
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const navigate = useNavigate();
   const {
     fetchOperator,
@@ -52,6 +53,10 @@ const EditOperator = () => {
       await updateOperator(id, nestedData);
       alert("Operator updated successfully");
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+        return;
+      }
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -60,7 +65,7 @@ const EditOperator = () => {
     if (!id) return;
     try {
       setModalMessage(
-        formData.isBlocked ? "Unblock this operator?" : "Block this operator?"
+        formData.isBlocked ? "Unblock this operator?" : "Block this operator?",
       );
       setModalAction(() => async () => {
         await blockOperator(id, !formData.isBlocked);
@@ -95,6 +100,8 @@ const EditOperator = () => {
         loading={loading}
         buttonText="Update Operator"
         initialData={formData}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
       <div className="flex gap-4 mt-4 justify-center">
         <button

@@ -89,9 +89,9 @@ export class UserService implements IUserService {
 
   async loginUser(email: string, password: string) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new CustomError("User not found", 404);
+    if (!user) throw new CustomError("Invalid email or password", 401);
     const isPasswordValid = this.hashService.compare(password, user.password);
-    if (!isPasswordValid) throw new CustomError("Invalid credentials", 401);
+    if (!isPasswordValid) throw new CustomError("Invalid email or password", 401);
     if (user.isBlocked)
       throw new CustomError(
         "Your account has been blocked ,Please contact support",

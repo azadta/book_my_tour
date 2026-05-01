@@ -6,17 +6,27 @@ import {
   logInStart,
   logInSuccess,
 } from "../redux/user/userSlice.js";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const useLogin = (dispatch: AppDispatch, navigate: NavigateFunction) => {
-  return async (formData: { email: string; password: string }) => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const login= async (formData: { email: string; password: string }) => {
     try {
       dispatch(logInStart());
       const res = await axiosInstance.post("/user/login", formData);
       dispatch(logInSuccess(res.data));
       navigate("/", { replace: true });
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+        return;
+      }
       const errMsg = error.response?.data?.message || "Something went wrong ";
+      toast.error(errMsg)
       dispatch(logInFailure(errMsg));
     }
   };
+
+  return {login,fieldError,setFieldError}
 };

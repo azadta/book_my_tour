@@ -9,7 +9,7 @@ import ReusableForm from "../../components/forms/ReUsableForm";
 const OperatorLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginHandler = useOperatorLogin(dispatch, navigate);
+  const {login,fieldError,setFieldError} = useOperatorLogin(dispatch, navigate);
   const { error, loading } = useSelector((state: RootState) => state.operator);
 
   return (
@@ -19,9 +19,11 @@ const OperatorLogin = () => {
       </h1>
       <ReusableForm
         fields={operatorLoginFields}
-        onSubmit={loginHandler}
+        onSubmit={login}
         loading={loading}
         buttonText="Log In"
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
 
       <div className="flex justify-between items-center mt-4">

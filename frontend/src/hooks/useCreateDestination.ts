@@ -18,6 +18,7 @@ export interface DestinationPayload {
 }
 
 export const useCreateDestination = (onSuccess: () => void) => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const uploadToCloudinary = async (file: File): Promise<string> => {
@@ -57,6 +58,10 @@ export const useCreateDestination = (onSuccess: () => void) => {
       toast.success("Destination created successfully");
       onSuccess?.();
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+        return;
+      }
       const message =
         error?.response?.data?.message || error.response?.data?.error?.message;
       error.message || "Failed to create destination.";
@@ -67,5 +72,5 @@ export const useCreateDestination = (onSuccess: () => void) => {
     }
   };
 
-  return { createDestination, loading };
+  return { createDestination, loading,fieldError,setFieldError };
 };

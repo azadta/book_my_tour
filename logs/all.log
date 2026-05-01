@@ -1523,3 +1523,144 @@
 2026-04-30 12:36:46:968 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 68.931 ms[39m
 2026-04-30 12:36:46:970 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 32.146 ms[39m
 2026-04-30 12:36:47:041 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 70.652 ms[39m
+2026-04-30 13:48:23:180 [32minfo[39m [32mUser login attempt[39m
+2026-04-30 13:48:23:224 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:23:229 [32mhttp[39m [32mPOST /api/user/login 404 61 - 48.617 ms[39m
+2026-04-30 13:48:29:796 [32minfo[39m [32mUser login attempt[39m
+2026-04-30 13:48:29:831 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:29:833 [32mhttp[39m [32mPOST /api/user/login 404 61 - 36.708 ms[39m
+2026-04-30 13:48:44:031 [32minfo[39m [32mUser login attempt[39m
+2026-04-30 13:48:44:107 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:44:110 [32mhttp[39m [32mPOST /api/user/login 404 61 - 78.218 ms[39m
+2026-04-30 13:48:50:109 [32minfo[39m [32mUser login attempt[39m
+2026-04-30 13:48:50:149 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:50:151 [32mhttp[39m [32mPOST /api/user/login 404 61 - 41.792 ms[39m
+2026-04-30 13:48:55:604 [32minfo[39m [32mUser login attempt[39m
+2026-04-30 13:48:55:639 [31merror[39m [31mUser not found[39m
+2026-04-30 13:48:55:641 [32mhttp[39m [32mPOST /api/user/login 404 61 - 36.078 ms[39m
+2026-04-30 19:29:15:089 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:15:097 [32mhttp[39m [32mGET /api/user/package-categories 500 213 - 30049.590 ms[39m
+2026-04-30 19:29:15:099 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:15:101 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 500 213 - 30030.955 ms[39m
+2026-04-30 19:29:35:023 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:35:026 [32mhttp[39m [32mGET /api/user/package-categories 500 213 - 30009.159 ms[39m
+2026-04-30 19:29:35:028 [31merror[39m [31m8C230000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80[39m
+[31m[39m
+2026-04-30 19:29:35:032 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 500 213 - 30012.206 ms[39m
+2026-04-30 21:51:39:009 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:39:017 [32mhttp[39m [32mGET /api/user/package-categories 500 117 - 10017.001 ms[39m
+2026-04-30 21:51:39:019 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:39:021 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 500 108 - 10017.009 ms[39m
+2026-04-30 21:51:49:038 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:49:040 [32mhttp[39m [32mGET /api/user/package-categories 500 117 - 10016.808 ms[39m
+2026-04-30 21:51:49:042 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 21:51:49:045 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 500 108 - 10019.428 ms[39m
+2026-04-30 22:26:22:327 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:22:335 [32mhttp[39m [32mGET /api/user/package-categories 500 117 - 10019.520 ms[39m
+2026-04-30 22:26:22:337 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:22:339 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 500 108 - 10019.791 ms[39m
+2026-04-30 22:26:32:344 [31merror[39m [31mOperation `packagecategories.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:32:347 [32mhttp[39m [32mGET /api/user/package-categories 500 117 - 10005.496 ms[39m
+2026-04-30 22:26:32:348 [31merror[39m [31mOperation `packages.find()` buffering timed out after 10000ms[39m
+2026-04-30 22:26:32:350 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 500 108 - 10007.601 ms[39m
+2026-04-30 22:29:13:037 [32mhttp[39m [32mGET /api/user/package-categories 200 135 - 63.254 ms[39m
+2026-04-30 22:29:13:099 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 200 1715 - 123.210 ms[39m
+2026-04-30 22:29:13:106 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 54.003 ms[39m
+2026-04-30 22:29:13:213 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 111.646 ms[39m
+2026-04-30 22:30:10:720 [32minfo[39m [32mUser login attempt[39m
+2026-04-30 22:30:10:783 [31merror[39m [31mUser not found[39m
+2026-04-30 22:30:10:788 [32mhttp[39m [32mPOST /api/user/login 404 75 - 66.929 ms[39m
+2026-05-01 08:50:32:129 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 53.941 ms[39m
+2026-05-01 08:50:32:178 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 35.089 ms[39m
+2026-05-01 08:50:32:185 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 105.584 ms[39m
+2026-05-01 08:50:32:268 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 81.450 ms[39m
+2026-05-01 08:56:07:482 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 08:56:07:521 [31merror[39m [31mUser not found[39m
+2026-05-01 08:56:07:523 [32mhttp[39m [32mPOST /api/user/login 404 75 - 40.969 ms[39m
+2026-05-01 09:01:57:968 [31merror[39m [31mValidation Error[39m
+2026-05-01 09:01:57:969 [32mhttp[39m [32mPOST /api/user/register 400 150 - 12.914 ms[39m
+2026-05-01 09:02:36:290 [31merror[39m [31mValidation Error[39m
+2026-05-01 09:02:36:292 [32mhttp[39m [32mPOST /api/user/register 400 139 - 3.697 ms[39m
+2026-05-01 09:02:52:939 [31merror[39m [31mValidation Error[39m
+2026-05-01 09:02:52:940 [32mhttp[39m [32mPOST /api/user/register 400 131 - 1.804 ms[39m
+2026-05-01 09:09:36:862 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 09:09:36:914 [31merror[39m [31mUser not found[39m
+2026-05-01 09:09:36:917 [32mhttp[39m [32mPOST /api/user/login 404 75 - 54.162 ms[39m
+2026-05-01 09:15:58:660 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 09:15:58:706 [31merror[39m [31mUser not found[39m
+2026-05-01 09:15:58:707 [32mhttp[39m [32mPOST /api/user/login 404 75 - 47.305 ms[39m
+2026-05-01 09:16:19:878 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 09:16:19:923 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 09:16:19:927 [32mhttp[39m [32mPOST /api/user/login 401 86 - 48.903 ms[39m
+2026-05-01 09:16:28:606 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 09:16:28:646 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 09:16:28:648 [32mhttp[39m [32mPOST /api/user/login 401 86 - 41.876 ms[39m
+2026-05-01 09:16:44:717 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 09:16:44:757 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 09:16:44:759 [32mhttp[39m [32mPOST /api/user/login 401 86 - 41.032 ms[39m
+2026-05-01 09:20:17:754 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 42.126 ms[39m
+2026-05-01 09:20:17:797 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 39.457 ms[39m
+2026-05-01 09:20:17:813 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 98.624 ms[39m
+2026-05-01 09:20:17:893 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.109 ms[39m
+2026-05-01 09:21:31:500 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 40.232 ms[39m
+2026-05-01 09:21:31:540 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 37.470 ms[39m
+2026-05-01 09:21:31:543 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 81.483 ms[39m
+2026-05-01 09:21:31:623 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 77.616 ms[39m
+2026-05-01 09:24:20:084 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 36.021 ms[39m
+2026-05-01 09:24:20:127 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 37.636 ms[39m
+2026-05-01 09:24:20:132 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 82.905 ms[39m
+2026-05-01 09:24:20:213 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.503 ms[39m
+2026-05-01 09:24:59:851 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 49.960 ms[39m
+2026-05-01 09:24:59:903 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 97.599 ms[39m
+2026-05-01 09:24:59:905 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 41.367 ms[39m
+2026-05-01 09:24:59:987 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 80.525 ms[39m
+2026-05-01 09:25:02:901 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 36.514 ms[39m
+2026-05-01 09:25:02:947 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 43.749 ms[39m
+2026-05-01 09:25:02:952 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 85.343 ms[39m
+2026-05-01 09:25:03:033 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.834 ms[39m
+2026-05-01 09:55:46:985 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 73.652 ms[39m
+2026-05-01 09:55:47:020 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 92.027 ms[39m
+2026-05-01 09:55:47:025 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 34.504 ms[39m
+2026-05-01 09:55:47:110 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 87.672 ms[39m
+2026-05-01 10:48:11:135 [32minfo[39m [32mOperator login attempt[39m
+2026-05-01 10:48:11:271 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:11:273 [32mhttp[39m [32mPOST /api/operator/login 401 80 - 140.725 ms[39m
+2026-05-01 10:48:17:659 [32minfo[39m [32mOperator login attempt[39m
+2026-05-01 10:48:17:793 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:17:794 [32mhttp[39m [32mPOST /api/operator/login 401 80 - 134.850 ms[39m
+2026-05-01 10:48:21:159 [32minfo[39m [32mOperator login attempt[39m
+2026-05-01 10:48:21:295 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:21:297 [32mhttp[39m [32mPOST /api/operator/login 401 80 - 137.584 ms[39m
+2026-05-01 10:48:25:569 [32minfo[39m [32mOperator login attempt[39m
+2026-05-01 10:48:25:705 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 10:48:25:707 [32mhttp[39m [32mPOST /api/operator/login 401 80 - 137.458 ms[39m
+2026-05-01 10:50:32:463 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 10:50:32:506 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 10:50:32:508 [32mhttp[39m [32mPOST /api/user/login 401 86 - 45.213 ms[39m
+2026-05-01 10:50:36:775 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 10:50:36:812 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 10:50:36:813 [32mhttp[39m [32mPOST /api/user/login 401 86 - 38.225 ms[39m
+2026-05-01 10:50:39:328 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 10:50:39:365 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 10:50:39:367 [32mhttp[39m [32mPOST /api/user/login 401 86 - 38.090 ms[39m
+2026-05-01 11:40:52:149 [31merror[39m [31mValidation Error[39m
+2026-05-01 11:40:52:157 [32mhttp[39m [32mPOST /api/user/register 400 150 - 49.118 ms[39m
+2026-05-01 11:41:20:203 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-05-01 11:41:25:754 [32mhttp[39m [32mPOST /api/user/register 201 99 - 5552.324 ms[39m
+2026-05-01 11:41:49:409 [32mhttp[39m [32mPOST /api/user/verify-otp 200 54 - 103.110 ms[39m
+2026-05-01 11:42:15:561 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 11:42:15:677 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 11:42:15:678 [32mhttp[39m [32mPOST /api/user/login 401 86 - 116.209 ms[39m
+2026-05-01 11:42:23:668 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 11:42:23:782 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 11:42:23:783 [32mhttp[39m [32mPOST /api/user/login 401 86 - 114.501 ms[39m
+2026-05-01 11:42:36:560 [32minfo[39m [32mUser login attempt[39m
+2026-05-01 11:42:36:699 [32mhttp[39m [32mPOST /api/user/login 200 354 - 138.216 ms[39m
+2026-05-01 11:42:36:766 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 43.233 ms[39m
+2026-05-01 11:42:36:833 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 41.569 ms[39m
+2026-05-01 11:42:37:338 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 613.247 ms[39m
+2026-05-01 11:42:37:439 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 98.051 ms[39m
+2026-05-01 11:43:03:064 [32mhttp[39m [32mPOST /api/user/update-profile-image 200 430 - 116.171 ms[39m

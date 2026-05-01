@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger.js";
-
-interface CustomError extends Error {
-  statusCode?: number;
-}
+import { CustomError } from "../utils/customError.js";
 
 const errorHandler = (
   err: CustomError,
@@ -25,6 +22,7 @@ const errorHandler = (
     success: false,
     statusCode,
     message,
+    errors: err.errors,
   });
 };
 

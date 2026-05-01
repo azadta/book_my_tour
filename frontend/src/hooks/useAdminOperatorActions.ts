@@ -1,13 +1,15 @@
-
 import { useCallback, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 
 export const useAdminOperatorActions = () => {
   const [loading, setLoading] = useState(false);
+
   const fetchOperator = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(`/admin/operators/single-operator/${id}`);
+      const res = await axiosInstance.get(
+        `/admin/operators/single-operator/${id}`,
+      );
       return res.data;
     } finally {
       setLoading(false);

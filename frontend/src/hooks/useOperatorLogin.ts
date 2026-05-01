@@ -8,12 +8,14 @@ import type { AppDispatch } from "../redux/store";
 
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
+import { useState } from "react";
 
 export const useOperatorLogin = (
   dispatch: AppDispatch,
   navigate: NavigateFunction
 ) => {
-  return async (formData: { email: string; password: string }) => {
+    const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const login= async (formData: { email: string; password: string }) => {
     try {
       dispatch(operatorLoginStart());
       const res = await axiosInstance.post("/operator/login", formData, {
@@ -29,10 +31,16 @@ export const useOperatorLogin = (
 
       navigate("/operator/dashboard", { replace: true });
     } catch (error: any) {
+         if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+        return;
+      }
       const errmsg =
         error.response?.data?.message || "Login failed, please try again";
       toast.error(errmsg);
       dispatch(operatorLoginFailure(errmsg));
     }
   };
+
+  return {login,fieldError,setFieldError}
 };

@@ -4,7 +4,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createPackageCategoryFields } from "../../formConfig/fields";
 
 const CreatePackageCategory = () => {
-  const { createPackageCategory } = useCreatePackageCategory();
+  const { createPackageCategory,fieldError,setFieldError } = useCreatePackageCategory();
 
   const handleSubmit = async (formData: any) => {
     await createPackageCategory(formData);
@@ -22,6 +22,8 @@ const CreatePackageCategory = () => {
         onSubmit={handleSubmit}
         loading={false}
         buttonText="Create"
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
     </div>
   );

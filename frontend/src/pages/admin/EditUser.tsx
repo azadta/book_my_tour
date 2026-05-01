@@ -8,6 +8,7 @@ import { adminUpdateUserFields } from "../../formConfig/fields";
 import ConfirmationModel from "../../components/ConfirmationModal";
 
 const EditUser = () => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { fetchUser, blockUser, deleteUser, loading, updateUser } =
@@ -47,6 +48,10 @@ const EditUser = () => {
       await updateUser(id, nestedData);
       alert("User updated successfully");
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+        return;
+      }
       toast.error(error.response?.data?.message || error.message);
     }
   };
@@ -92,6 +97,8 @@ const EditUser = () => {
         loading={loading}
         buttonText="Update User"
         initialData={formData}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
       <div className="flex gap-4 mt-4 justify-center">
         <button

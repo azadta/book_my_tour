@@ -5,6 +5,7 @@ import ReusableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 
 const OperatorResetPasswordAuthenticated: React.FC = () => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const endPoint: string = "/operator/reset-password-authenticated";
@@ -20,6 +21,11 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
       setMessage("Password updated successfully");
       setTimeout(() => navigate("/operator/profile"), 2000);
     } catch (error: any) {
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+
+        return;
+      }
       setError(error.response?.data?.message || error.message);
     }
   };
@@ -35,6 +41,8 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
           buttonText="Update Password"
           loading={loading}
           onSubmit={handleSubmit}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
         />
         {message && (
           <p className="bg-green-100 text-green-700 border border-green-400 rounded px-4 py-2 mt-4 text-center">

@@ -50,4 +50,6 @@ export interface IAdminRepository {
     id: string,
     operatorData: Partial<IOperator>,
   ): Promise<IOperator | null>;
+  getSignupCountToday(start: Date, end: Date): Promise<number>
+  getPendingOperatorsCount(): Promise<number>
 }

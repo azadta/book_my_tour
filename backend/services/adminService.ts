@@ -230,4 +230,16 @@ export class AdminService implements IAdminService {
   ): Promise<IAdmin | null> {
     return this.adminRepository.updateProfieImage(id, image);
   }
+
+  async getSignupCountTodayService(){
+    const startOfDay=new Date()
+    startOfDay.setHours(0,0,0,0)
+    const  endOfDay=new Date()
+    endOfDay.setHours(23,59,59,999)
+    return this.adminRepository.getSignupCountToday(startOfDay,endOfDay)
+  }
+
+  async getPendingOperatorsCountService(){
+     return await this.adminRepository.getPendingOperatorsCount()
+  }
 }

@@ -137,4 +137,27 @@ export class AdminRepository implements IAdminRepository {
       { new: true },
     );
   }
+
+  async getSignupCountToday(start: Date, end: Date): Promise<number> {
+    const [operators, users] = await Promise.all([
+      User.countDocuments({
+        createdAt: {
+          $gte: start,
+          $lte: end,
+        },
+      }),
+      Operator.countDocuments({
+        createdAt: {
+          $gte: start,
+          $lte: end,
+        },
+      }),
+    ]);
+
+    return operators + users;
+  }
+
+  getPendingOperatorsCount(): Promise<number> {
+    return Operator.countDocuments({ isVerified: false });
+  }
 }

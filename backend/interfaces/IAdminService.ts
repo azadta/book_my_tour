@@ -67,4 +67,6 @@ export interface IAdminService {
   updateOperatorService(id: string, data: any): Promise<IOperator | null>;
   updateProfieImageService(id: string, image: string): Promise<IAdmin | null>;
   deleteUserService(id: string): Promise<IUser | null>;
+  getSignupCountTodayService(): Promise<number>;
+  getPendingOperatorsCountService(): Promise<number>;
 }

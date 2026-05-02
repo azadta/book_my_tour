@@ -9,8 +9,11 @@ import ReusableForm from "../../components/forms/ReUsableForm";
 const OperatorLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {login,fieldError,setFieldError} = useOperatorLogin(dispatch, navigate);
-  const { error, loading } = useSelector((state: RootState) => state.operator);
+  const { login, fieldError, setFieldError } = useOperatorLogin(
+    dispatch,
+    navigate,
+  );
+  const { loading } = useSelector((state: RootState) => state.operator);
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -40,7 +43,6 @@ const OperatorLogin = () => {
           </a>
         </p>
       </div>
-      {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
     </div>
   );
 };

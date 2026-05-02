@@ -5,22 +5,22 @@ export interface Option {
   value: string;
 }
 
- export  const userLoginfields = [
-    {
-      id: "email",
-      type: "email",
-      placeholder: "Email",
-      label: "Email",
-      required: true,
-    },
-    {
-      id: "password",
-      type: "password",
-      placeholder: "Password",
-      label: "Password",
-      required: true,
-    },
-  ];
+export const userLoginfields = [
+  {
+    id: "email",
+    type: "email",
+    placeholder: "Email",
+    label: "Email",
+    required: true,
+  },
+  {
+    id: "password",
+    type: "password",
+    placeholder: "Password",
+    label: "Password",
+    required: true,
+  },
+];
 
 export const userFields: FormField[] = [
   {
@@ -28,54 +28,63 @@ export const userFields: FormField[] = [
     type: "text",
     placeholder: "Name",
     required: true,
+    label: "Name",
   },
   {
     id: "email",
     type: "email",
     placeholder: "Email",
     required: true,
+    label: "Email",
   },
   {
     id: "mobile",
     type: "text",
     placeholder: "Mobile No",
     required: false,
+    label: "Mobile",
   },
   {
     id: "image",
     type: "file",
     placeholder: "Profile Image",
     required: false,
+    label: "Image",
   },
   {
     id: "address.houseNo",
     type: "text",
     placeholder: "House NO",
     required: false,
+    label: "House No",
   },
   {
     id: "address.city",
     type: "text",
     placeholder: "City",
     required: false,
+    label: "City",
   },
   {
     id: "address.state",
     type: "text",
     placeholder: "State",
     required: false,
+    label: "State",
   },
   {
     id: "address.country",
     type: "text",
     placeholder: "Country",
     required: false,
+    label: "Country",
   },
   {
     id: "address.postalCode",
     type: "text",
     placeholder: "Postal Code",
     required: false,
+    label: "Postal Code",
   },
   {
     id: "coinsEarned",
@@ -83,6 +92,7 @@ export const userFields: FormField[] = [
     placeholder: "Coins Earned",
     readOnly: true,
     required: false,
+    label: "Coins Earned",
   },
   {
     id: "isPremium",
@@ -90,6 +100,7 @@ export const userFields: FormField[] = [
     placeholder: "Premium",
     readOnly: true,
     required: false,
+    label: "Is Premium",
   },
   {
     id: "referralCode",
@@ -97,6 +108,7 @@ export const userFields: FormField[] = [
     placeholder: "Referral Code",
     readOnly: true,
     required: false,
+    label: "Referral Code",
   },
   {
     id: "referredBy",
@@ -104,18 +116,38 @@ export const userFields: FormField[] = [
     placeholder: "Referred By",
     readOnly: true,
     required: false,
+    label: "Referred By",
   },
 ];
 
 export const userRegisterfields: FormField[] = [
-  { id: "name", type: "text", placeholder: "Name", required: true },
-  { id: "email", type: "email", placeholder: "Email", required: true },
-  { id: "password", type: "password", placeholder: "Password", required: true },
+  {
+    id: "name",
+    type: "text",
+    placeholder: "Name",
+    required: true,
+    label: "Name",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "Email",
+    required: true,
+    label: "Email",
+  },
+  {
+    id: "password",
+    type: "password",
+    placeholder: "Password",
+    required: true,
+    label: "Password",
+  },
   {
     id: "confirmPassword",
     type: "password",
     placeholder: "Confirm Password",
     required: true,
+    label: "Confirm Password",
   },
 ];
 
@@ -166,30 +198,35 @@ export const operatorRegisterFields: FormField[] = [
     type: "text",
     placeholder: "Name",
     required: true,
+    label: "Name",
   },
   {
     id: "email",
     type: "email",
     placeholder: "Email",
     required: true,
+    label: "Email",
   },
   {
     id: "password",
     type: "password",
     placeholder: "Password",
     required: true,
+    label: "Password",
   },
   {
     id: "confirmPassword",
     type: "password",
     placeholder: "Confirm Password",
     required: true,
+    label: "Confirm Password",
   },
   {
     id: "mobile",
     type: "text",
     placeholder: "Mobile No",
     required: true,
+    label: "Mobile",
   },
 
   {
@@ -204,42 +241,49 @@ export const operatorRegisterFields: FormField[] = [
     type: "text",
     placeholder: "License No",
     required: true,
+    label: "LIcense No",
   },
   {
     id: "verificationDetails.businessAddress.BuildingNo",
     type: "text",
     placeholder: "Building No",
     required: true,
+    label: "Building No",
   },
   {
     id: "verificationDetails.businessAddress.landmark",
     type: "text",
     placeholder: "Landmark",
     required: false,
+    label: "Landmark",
   },
   {
     id: "verificationDetails.businessAddress.city",
     type: "text",
     placeholder: "City",
     required: true,
+    label: "City",
   },
   {
     id: "verificationDetails.businessAddress.state",
     type: "text",
     placeholder: "State",
     required: true,
+    label: "State",
   },
   {
     id: "verificationDetails.businessAddress.country",
     type: "text",
     placeholder: "Country",
     required: true,
+    label: "Country",
   },
   {
     id: "verificationDetails.businessAddress.postalCode",
     type: "text",
     placeholder: "Postal Code",
     required: true,
+    label: "Postal Code",
   },
 ];
 
@@ -266,24 +310,28 @@ export const operatorProfileFields: FormField[] = [
     type: "text",
     placeholder: "Name",
     required: true,
+    label: "Name",
   },
   {
     id: "email",
     type: "email",
     placeholder: "Email",
     required: true,
+    label: "Email",
   },
   {
     id: "mobile",
     type: "text",
     placeholder: "Mobile No",
     required: true,
+    label: "Mobile",
   },
   {
     id: "image",
     type: "file",
     placeholder: "Profile Image",
     required: false,
+    label: "Image",
   },
   {
     id: "isPremium",
@@ -291,6 +339,7 @@ export const operatorProfileFields: FormField[] = [
     placeholder: "Premium",
     readOnly: true,
     required: false,
+    label: "IsPremium",
   },
   {
     id: "referralCode",
@@ -298,6 +347,7 @@ export const operatorProfileFields: FormField[] = [
     placeholder: "Referral Code",
     readOnly: true,
     required: false,
+    label: "Referral Code",
   },
   {
     id: "referredBy",
@@ -305,54 +355,63 @@ export const operatorProfileFields: FormField[] = [
     placeholder: "Referred By",
     readOnly: true,
     required: false,
+    label: "Refered By",
   },
   {
     id: "verificationDetails.companyName",
     type: "text",
     placeholder: "Company Name",
     required: true,
+    label: "Company Name",
   },
   {
     id: "verificationDetails.licenseNo",
     type: "text",
     placeholder: "License NO",
     required: true,
+    label: "License No",
   },
   {
     id: "verificationDetails.businessAddress.buildingNo",
     type: "text",
     placeholder: "Building No",
     required: true,
+    label: "Building No",
   },
   {
     id: "verificationDetails.businessAddress.landmark",
     type: "text",
     placeholder: "Landmark",
     required: false,
+    label: "Landmark",
   },
   {
     id: "verificationDetails.businessAddress.city",
     type: "text",
     placeholder: "City",
     required: true,
+    label: "City",
   },
   {
     id: "verificationDetails.businessAddress.state",
     type: "text",
     placeholder: "State",
     required: true,
+    label: "State",
   },
   {
     id: "verificationDetails.businessAddress.country",
     type: "text",
     placeholder: "Country",
     required: true,
+    label: "Country",
   },
   {
     id: "verificationDetails.businessAddress.postalCode",
     type: "text",
     placeholder: "Postal Code",
     required: true,
+    label: "Postal Code",
   },
 ];
 
@@ -472,54 +531,63 @@ export const adminProfileFields: FormField[] = [
     type: "text",
     placeholder: "Name",
     required: true,
+    label: "Name",
   },
   {
     id: "email",
     type: "email",
     placeholder: "Email",
     required: true,
+    label: "Email",
   },
   {
     id: "mobile",
     type: "text",
     placeholder: "Mobile No",
     required: false,
+    label: "Mobile",
   },
   {
     id: "image",
     type: "file",
     placeholder: "Profile Image",
     required: false,
+    label: "Image",
   },
   {
     id: "address.houseNo",
     type: "text",
     placeholder: "House NO",
     required: false,
+    label: "House No",
   },
   {
     id: "address.city",
     type: "text",
     placeholder: "City",
     required: false,
+    label: "City",
   },
   {
     id: "address.state",
     type: "text",
     placeholder: "State",
     required: false,
+    label: "State",
   },
   {
     id: "address.country",
     type: "text",
     placeholder: "Country",
     required: false,
+    label: "Country",
   },
   {
     id: "address.postalCode",
     type: "text",
     placeholder: "Postal Code",
     required: false,
+    label: "Postal Code",
   },
 ];
 
@@ -529,6 +597,7 @@ export const adminUpdateUserFields: FormField[] = [
     type: "text",
     placeholder: "Name",
     required: true,
+    label: "Name",
   },
   {
     id: "email",
@@ -536,6 +605,7 @@ export const adminUpdateUserFields: FormField[] = [
     placeholder: "Email",
     disabled: true,
     required: true,
+    label: "Email",
   },
 
   {
@@ -543,24 +613,28 @@ export const adminUpdateUserFields: FormField[] = [
     type: "text",
     placeholder: "Mobile No",
     required: false,
+    label: "Mobile",
   },
   {
     id: "coinsEarned",
     type: "text",
     placeholder: "Coins Earned",
     required: false,
+    label: "Coins Earned",
   },
   {
     id: "referralCode",
     type: "text",
     placeholder: "Referral Code",
     required: false,
+    label: "Referral Code",
   },
   {
     id: "referredBy",
     type: "text",
     placeholder: "Referred By",
     required: false,
+    label: "Referred By",
   },
 
   {
@@ -568,36 +642,42 @@ export const adminUpdateUserFields: FormField[] = [
     type: "text",
     placeholder: "House No",
     required: false,
+    label: "House No",
   },
   {
     id: "address.landmark",
     type: "text",
     placeholder: "Landmark",
     required: false,
+    label: "Landmark",
   },
   {
     id: "address.city",
     type: "text",
     placeholder: "City",
     required: false,
+    label: "City",
   },
   {
     id: "address.state",
     type: "text",
     placeholder: "State",
     required: false,
+    label: "State",
   },
   {
     id: "address.country",
     type: "text",
     placeholder: "Country",
     required: false,
+    label: "Country",
   },
   {
     id: "address.postalCode",
     type: "text",
     placeholder: "Postal Code",
     required: false,
+    label: "Postal Code",
   },
 
   {
@@ -640,6 +720,7 @@ export const adminUpdateOperatorFields: FormField[] = [
     type: "text",
     placeholder: "Name",
     required: true,
+    label: "Name",
   },
   {
     id: "email",
@@ -647,6 +728,7 @@ export const adminUpdateOperatorFields: FormField[] = [
     placeholder: "Email",
     disabled: true,
     required: true,
+    label: "Email",
   },
 
   {
@@ -654,6 +736,7 @@ export const adminUpdateOperatorFields: FormField[] = [
     type: "text",
     placeholder: "Mobile No",
     required: true,
+    label: "Mobile",
   },
 
   {
@@ -661,48 +744,56 @@ export const adminUpdateOperatorFields: FormField[] = [
     type: "text",
     placeholder: "Company Name",
     required: true,
+    label: "Company Name",
   },
   {
     id: "verificationDetails.licenseNo",
     type: "text",
     placeholder: "License No",
     required: true,
+    label: "License No",
   },
   {
     id: "verificationDetails.businessAddress.BuildingNo",
     type: "text",
     placeholder: "Building No",
     required: true,
+    label: "Building No",
   },
   {
     id: "verificationDetails.businessAddress.landmark",
     type: "text",
     placeholder: "Landmark",
     required: false,
+    label: "Landmark",
   },
   {
     id: "verificationDetails.businessAddress.city",
     type: "text",
     placeholder: "City",
     required: true,
+    label: "City",
   },
   {
     id: "verificationDetails.businessAddress.state",
     type: "text",
     placeholder: "State",
     required: true,
+    label: "State",
   },
   {
     id: "verificationDetails.businessAddress.country",
     type: "text",
     placeholder: "Country",
     required: true,
+    label: "Country",
   },
   {
     id: "verificationDetails.businessAddress.postalCode",
     type: "text",
     placeholder: "Postal Code",
     required: true,
+    label: "Postal Code",
   },
   {
     id: "isVerified",

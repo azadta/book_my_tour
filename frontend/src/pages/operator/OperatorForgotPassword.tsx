@@ -4,16 +4,19 @@ import { useState } from "react";
 
 const OperatorForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
+
   const { sendResetEmail, loading } = useOperatorForgotPassword();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+
     try {
       await sendResetEmail(email);
       toast.success("Password reset link sent!, Please check your email");
     } catch (error: any) {
-      setError(error.response.data.message || error.message);
+      toast.error(
+        error.response.data.message ||
+          "Failed to process forgot password request.",
+      );
     }
   };
 
@@ -40,11 +43,9 @@ const OperatorForgotPassword: React.FC = () => {
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
-
-        {error && <p className={"text-red-600 mt-4 text-center"}>{error}</p>}
       </div>
     </div>
   );
 };
 
-export default OperatorForgotPassword
+export default OperatorForgotPassword;

@@ -2,7 +2,7 @@ export interface FormField {
   id: string;
   type: string;
   placeholder?: string;
-  label?: string;
+  label: string;
   options?: { label: string; value: string }[];
   multiple?: boolean;
   disabled?: boolean;

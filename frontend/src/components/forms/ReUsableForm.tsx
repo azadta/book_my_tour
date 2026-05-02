@@ -100,11 +100,11 @@ const ReUsableForm = ({
   }, [initialData]);
 
   return (
-    <div>
+    <div className={`${fields.length > 3 ? "max-w-2xl " : "max-w-lg"} `}>
       <form
         id="reUsableForm"
         onSubmit={handleSubmit}
-        className={`space-y-6 bg-white shadow-lg rounded-2xl px-6 py-4 w-full mx-auto ${fields.length > 3 ? "max-w-2xl  grid grid-cols-1 md:grid-cols-2 gap-2" : "max-w-lg"} `}
+        className={`space-y-6 bg-white shadow-lg rounded-2xl px-6 py-4 w-full mx-auto ${fields.length > 3 ? "  grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center" : ""} `}
       >
         {fields.map((field) => {
           if (field.type === "select") {
@@ -115,6 +115,9 @@ const ReUsableForm = ({
                   className="mb-2 font-medium text-gray-700"
                 >
                   {field.label}
+                  {field.required && (
+                    <span className="text-red-500 font-bold">*</span>
+                  )}
                 </label>
                 <select
                   id={field.id}
@@ -174,7 +177,12 @@ const ReUsableForm = ({
                   checked={formData[field.id] || false}
                   onChange={handleChange}
                 />
-                <label htmlFor={field.id}>{field.label}</label>
+                <label htmlFor={field.id}>
+                  {field.label}{" "}
+                  {field.required && (
+                    <span className="text-red-500 font-bold">*</span>
+                  )}
+                </label>
                 {fieldError[field.id] && (
                   <p className="text-red-500 text-sm mt-1">
                     {fieldError[field.id]}
@@ -191,6 +199,9 @@ const ReUsableForm = ({
                 className="mb-2 font-medium text-gray-700"
               >
                 {field.label || field.placeholder}
+                {field.required && (
+                  <span className="text-red-500 font-bold">*</span>
+                )}
               </label>
               {field.type === "file" ? (
                 <>
@@ -260,7 +271,7 @@ const ReUsableForm = ({
         form="reUsableForm"
         type="submit"
         disabled={loading}
-        className="mt-5 px-5  bg-sky-400 text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-sky-500 transition-all disabled:opacity-60"
+        className="mt-5 px-4  bg-sky-400 text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-sky-500 transition-all disabled:opacity-60"
       >
         {loading ? "Loading..." : buttonText}
       </button>

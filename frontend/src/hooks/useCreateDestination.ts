@@ -66,11 +66,10 @@ export const useCreateDestination = (onSuccess: () => void) => {
         error?.response?.data?.message || error.response?.data?.error?.message;
       error.message || "Failed to create destination.";
       toast.error(message);
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  return { createDestination, loading,fieldError,setFieldError };
+  return { createDestination, loading, fieldError, setFieldError };
 };

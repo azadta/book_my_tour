@@ -5,7 +5,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userRegisterfields } from "../../formConfig/fields";
 
 const Register = () => {
-  const { registerUser, error, loading,fieldError,setFieldError } = useRegister();
+  const { registerUser,  loading,fieldError,setFieldError } = useRegister();
   const navigate = useNavigate();
 
   const handleSubmit = (formData: {
@@ -36,7 +36,7 @@ const Register = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
-      {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+
     </div>
   );
 };

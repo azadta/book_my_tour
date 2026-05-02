@@ -23,6 +23,7 @@ interface FormDataType {
 }
 
 const Profile = () => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { currentUser, loading, error } = useSelector(
     (state: RootState) => state.user,
   );
@@ -45,7 +46,6 @@ const Profile = () => {
     },
   });
 
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -98,18 +98,20 @@ const Profile = () => {
       dispatch(
         updateUserSuccess({ ...currentUser!, image: imgData.secure_url }),
       );
+      toast.success("Image uploaded successfully");
     } catch (error: any) {
       console.error("Cloudinary upload Error", error);
       dispatch(
         updateUserFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error uploading image");
     } finally {
       setImageUploading(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+
 
     try {
       dispatch(updateUserStart());
@@ -120,11 +122,17 @@ const Profile = () => {
 
       dispatch(updateUserSuccess(updatedUser));
 
-      setUpdateSuccess(true);
+      toast.success("User updated successfully");
     } catch (error: any) {
       dispatch(
         updateUserFailure(error.response?.data?.message || error.message),
       );
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+
+        return;
+      }
+      toast.error(error.response?.data?.message || "Error updating user");
     }
   };
   const handleDeleteUser = async () => {
@@ -138,6 +146,7 @@ const Profile = () => {
       dispatch(
         deleteUserFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error deleting user");
     }
   };
   const handleLogOut = async () => {
@@ -150,6 +159,7 @@ const Profile = () => {
       dispatch(
         logoutUserFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error logout user");
     }
   };
 
@@ -179,7 +189,7 @@ const Profile = () => {
   }, [currentUser]);
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-2xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-5 text-green-500">
         Profile
       </h1>
@@ -193,6 +203,8 @@ const Profile = () => {
         loading={loading}
         fileRef={fileRef}
         imageUploading={imageUploading}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
       <div className="flex justify-between mt-5">
         <span
@@ -211,10 +223,6 @@ const Profile = () => {
           Log Out
         </span>
       </div>
-      <p className="text-red-700 mt-5">{error}</p>
-      <p className="text-green-700 mt-5">
-        {updateSuccess ? "User updated successfully" : ""}
-      </p>
     </div>
   );
 };

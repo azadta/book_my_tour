@@ -224,3 +224,39 @@
 2026-05-01 11:40:52:149 [31merror[39m [31mValidation Error[39m
 2026-05-01 11:42:15:677 [31merror[39m [31mInvalid email or password[39m
 2026-05-01 11:42:23:782 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 12:01:37:967 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-01 15:00:43:378 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 15:04:23:408 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 15:04:28:828 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 15:04:31:749 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 15:04:35:988 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 15:04:38:309 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 15:04:41:068 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 15:15:59:178 [31merror[39m [31mUser not found[39m
+2026-05-01 15:17:34:797 [31merror[39m [31mUser not found[39m
+2026-05-01 15:21:53:272 [31merror[39m [31mInvalid email or password[39m
+2026-05-01 15:30:37:613 [31merror[39m [31mInvalid or expired token[39m
+2026-05-01 15:42:56:652 [31merror[39m [31mUser not found[39m
+2026-05-01 15:44:39:680 [31merror[39m [31mOld password is incorrect[39m
+2026-05-01 15:50:36:904 [31merror[39m [31mInvalid or expired token[39m
+2026-05-01 15:50:37:121 [31merror[39m [31mOld password is incorrect[39m
+2026-05-01 16:56:57:056 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 16:58:03:379 [31merror[39m [31mInvalid Credentials[39m
+2026-05-01 22:00:57:049 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-01 22:13:02:887 [31merror[39m [31mAdmin not found[39m
+2026-05-01 22:13:05:851 [31merror[39m [31mAdmin not found[39m
+2026-05-02 09:29:31:477 [31merror[39m [31mInvalid credentials[39m
+2026-05-02 09:29:45:522 [31merror[39m [31mAdmin not found[39m
+2026-05-02 09:29:55:729 [31merror[39m [31mAdmin not found[39m
+2026-05-02 09:30:05:994 [31merror[39m [31mInvalid credentials[39m
+2026-05-02 09:33:48:696 [31merror[39m [31mOld password is incorrect[39m
+2026-05-02 09:46:46:081 [31merror[39m [31mInvalid or expired token[39m
+2026-05-02 09:52:44:132 [31merror[39m [31mInvalid or expired token[39m
+2026-05-02 14:25:03:856 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:25:03:868 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:26:47:279 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:26:47:283 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:26:58:298 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:26:58:301 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:48:13:926 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-02 14:48:13:931 [31merror[39m [31mUnauthorized: No token provided[39m

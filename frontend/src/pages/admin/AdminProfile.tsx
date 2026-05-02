@@ -13,16 +13,18 @@ import {
 } from "../../redux/admin/adminSlice.js";
 
 import { useApi } from "../../hooks/useApi.js";
-import {ProfileForm} from "../../components/forms/ProfileForm.js";
+import { ProfileForm } from "../../components/forms/ProfileForm.js";
 import type { RootState } from "../../redux/store.js";
+import { toast } from "react-toastify";
 
 interface FormDataType {
   [key: string]: any;
 }
 
 const AdminProfile = () => {
-  const { currentAdmin, error, loading } = useSelector(
-    (state: RootState) => state.admin
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const { currentAdmin, loading } = useSelector(
+    (state: RootState) => state.admin,
   );
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
@@ -38,14 +40,14 @@ const AdminProfile = () => {
       postalCode: "",
     },
   });
-  const [updateSuccess, setUpdateSuccess] = useState(false);
+
   const [imageUploading, setImageUploading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { post, del } = useApi();
   const fileRef = useRef<HTMLInputElement>(null);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { id, value } = e.target;
     if (id.includes(".")) {
@@ -70,7 +72,7 @@ const AdminProfile = () => {
     formData.append("file", selectedFile);
     formData.append(
       "upload_preset",
-      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
     );
     try {
       const res = await fetch(
@@ -80,39 +82,44 @@ const AdminProfile = () => {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       const imgData = await res.json();
       await post("/admin/update-profile-image", { image: imgData.secure_url });
       dispatch(
-        updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url })
+        updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url }),
       );
+      toast.success("Image uploaded successfully");
     } catch (error: any) {
       console.error("Cloudinary upload Error", error);
       dispatch(
-        updateAdminFailure(error.response?.data?.message || error.message)
+        updateAdminFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error uploading image");
     } finally {
       setImageUploading(false);
     }
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     try {
       dispatch(updateAdminStart());
       const updatedAdmin = await post(
         `/admin/update/${currentAdmin?._id}`,
-        formData
+        formData,
       );
 
       dispatch(updateAdminSuccess(updatedAdmin));
-
-      setUpdateSuccess(true);
+      toast.success("admin updated successfully");
     } catch (error: any) {
       dispatch(
-        updateAdminFailure(error.response?.data?.message || error.message)
+        updateAdminFailure(error.response?.data?.message || error.message),
       );
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+
+        return;
+      }
+      toast.error(error.response?.data?.message || "Error updating admin");
     }
   };
 
@@ -124,8 +131,9 @@ const AdminProfile = () => {
       navigate("/admin/login", { replace: true });
     } catch (error: any) {
       dispatch(
-        adminLogoutFailure(error.response?.data?.message || error.message)
+        adminLogoutFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error logout admin");
     }
   };
 
@@ -151,7 +159,7 @@ const AdminProfile = () => {
   }, [currentAdmin]);
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-2xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7  text-green-500">
         Admin Profile
       </h1>
@@ -165,6 +173,8 @@ const AdminProfile = () => {
         loading={loading}
         fileRef={fileRef}
         imageUploading={imageUploading}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
       <div className="flex justify-between mt-5">
         <span onClick={handleLogOut} className="text-red-700 cursor-pointer">
@@ -177,10 +187,6 @@ const AdminProfile = () => {
           Reset Password
         </span>
       </div>
-      <p className="text-red-700 mt-5">{error}</p>
-      <p className="text-green-700 mt-5">
-        {updateSuccess ? "Admin updated successfully" : ""}
-      </p>
     </div>
   );
 };

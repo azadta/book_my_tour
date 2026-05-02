@@ -15,13 +15,15 @@ import {
 import { useApi } from "../../hooks/useApi.js";
 import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
 import type { RootState } from "../../redux/store.ts";
+import { toast } from "react-toastify";
 
 interface FormDataType {
   [key: string]: any;
 }
 
 const OperatorProfile = () => {
-  const { currentOperator, loading, error } = useSelector(
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const { currentOperator, loading } = useSelector(
     (state: RootState) => state.operator,
   );
   const [formData, setFormData] = useState<FormDataType>({
@@ -47,7 +49,7 @@ const OperatorProfile = () => {
       },
     },
   });
-  const [updateSuccess, setUpdateSuccess] = useState(false);
+
   const [imageUploading, setImageUploadig] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -109,19 +111,19 @@ const OperatorProfile = () => {
           image: imgData.secure_url,
         }),
       );
+      toast.success("Image uploaded successfully");
     } catch (error: any) {
       console.error("Cloudinary upload Error", error);
       dispatch(
         updateOperatorFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error uploading image");
     } finally {
       setImageUploadig(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     try {
       dispatch(updateOperatorStart());
       const updatedUser = await post(
@@ -131,11 +133,18 @@ const OperatorProfile = () => {
 
       dispatch(updateOperatorSuccess(updatedUser));
 
-      setUpdateSuccess(true);
+      toast.success("Operator updated successfully");
     } catch (error: any) {
       dispatch(
         updateOperatorFailure(error.response?.data?.message || error.message),
       );
+      if (error.response?.data?.errors) {
+        setFieldError(error.response?.data?.errors);
+
+        return;
+      }
+
+      toast.error(error.response?.data?.message || "Error updating user");
     }
   };
 
@@ -149,6 +158,7 @@ const OperatorProfile = () => {
       dispatch(
         logoutOperatorFailure(error.response?.data?.message || error.message),
       );
+      toast.error(error.response?.data?.message || "Error logout operator");
     }
   };
 
@@ -167,7 +177,7 @@ const OperatorProfile = () => {
         referredBy: currentOperator?.referredBy || "",
         verificationDetails: {
           companyName: currentOperator.verificationDetails?.companyName || "",
-          licenseNo: currentOperator.verificationDetails?.licenseNo|| "",
+          licenseNo: currentOperator.verificationDetails?.licenseNo || "",
           businessAddress: {
             buildingNo:
               currentOperator.verificationDetails?.businessAddress
@@ -192,7 +202,7 @@ const OperatorProfile = () => {
   }, [currentOperator]);
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-2xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7 text-green-500">
         Profile
       </h1>
@@ -206,6 +216,8 @@ const OperatorProfile = () => {
         loading={loading}
         fileRef={fileRef}
         imageUploading={imageUploading}
+        fieldError={fieldError}
+        setFieldError={setFieldError}
       />
       <div className="flex justify-between mt-5">
         <span onClick={handleLogOut} className="text-red-700 cursor-pointer">
@@ -218,10 +230,6 @@ const OperatorProfile = () => {
           Reset Password
         </span>
       </div>
-      <p className="text-red-700 mt-5">{error}</p>
-      <p className="text-green-700 mt-5">
-        {updateSuccess ? "Operator updated successfully" : ""}
-      </p>
     </div>
   );
 };

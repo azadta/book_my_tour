@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export const useRegister = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
 
   const registerUser = async (
     formData: any,
     onSuccess: (userId: string, otpExpire: string) => void,
   ) => {
     setLoading(true);
-    setError(null);
+   
     const { confirmPassword, ...userData } = formData;
     try {
       const res = await axiosInstance.post("/user/register", userData);
@@ -24,11 +25,11 @@ export const useRegister = () => {
         setLoading(false);
         return;
       }
-      setError(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || "Error registering user");
     } finally {
       setLoading(false);
     }
   };
 
-  return { registerUser, loading, error,fieldError,setFieldError };
+  return { registerUser, loading, fieldError,setFieldError };
 };

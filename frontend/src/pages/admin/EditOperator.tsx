@@ -29,7 +29,9 @@ const EditOperator = () => {
         const data = await fetchOperator(id);
         setFormData(data);
       } catch (error: any) {
-        toast.error(error.response?.data?.message || error.message);
+        toast.error(
+          error.response?.data?.message || "Failed to fetching operators",
+        );
       }
     };
     getOperator();
@@ -51,13 +53,13 @@ const EditOperator = () => {
       const nestedData = unFlattenObject(data);
 
       await updateOperator(id, nestedData);
-      alert("Operator updated successfully");
+      toast.success("Operator updated successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
         return;
       }
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || "Failed to update operator");
     }
   };
 
@@ -73,7 +75,10 @@ const EditOperator = () => {
       });
       setModalOpen(true);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to uddate operator block status",
+      );
     }
   };
 
@@ -87,12 +92,12 @@ const EditOperator = () => {
       });
       setModalOpen(true);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || "Error deleting operator");
     }
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-center mb-6">Edit Operator</h2>
       <ReusableForm
         fields={adminUpdateOperatorFields}
@@ -103,7 +108,7 @@ const EditOperator = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
-      <div className="flex gap-4 mt-4 justify-center">
+      <div className="flex gap-4 mt-4 justify-end">
         <button
           onClick={handleBlockToggle}
           className={`px-4 py-2 text-white rounded ${

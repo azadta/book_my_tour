@@ -3,22 +3,20 @@ import { useAuthenticatedPasswordReset } from "../../hooks/useAuthenticatedPassw
 import { useNavigate } from "react-router-dom";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
+import { toast } from "react-toastify";
 
 const ResetPasswordAuthenticated = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+
   const endPoint = "/user/reset-password-authenticated";
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 
   const handleSubmit = async (formData: any) => {
-    setError(null);
-    setMessage(null);
     const { oldPassword, newPassword, confirmPassword } = formData;
     try {
       await resetPassword(oldPassword, newPassword, confirmPassword);
-      setMessage("Password updated successfully");
+      toast.success("Password updated successfully");
       setTimeout(() => navigate(`/user/profile`), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -26,7 +24,7 @@ const ResetPasswordAuthenticated = () => {
 
         return;
       }
-      setError(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || "Error reseting password");
     }
   };
 
@@ -43,16 +41,6 @@ const ResetPasswordAuthenticated = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
-      {message && (
-        <p className="bg-green-100 text-green-700 border border-green-400 rounded px-4 py-2 mt-4 text-center">
-          {message}
-        </p>
-      )}
-      {error && (
-        <p className="bg-red-100 text-red-700 border border-red-400 rounded px-4 py-2 mt-4 text-center">
-          {error}
-        </p>
-      )}
     </div>
   );
 };

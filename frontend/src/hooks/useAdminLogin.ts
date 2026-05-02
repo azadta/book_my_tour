@@ -8,10 +8,14 @@ import {
 import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
 
-export const useAdminLogin = (dispatch: AppDispatch, navigate: NavigateFunction) => {
+export const useAdminLogin = (
+  dispatch: AppDispatch,
+  navigate: NavigateFunction,
+) => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const adminLogin = async (formData: { email: string; password: string }) => {
     try {
+  
       dispatch(adminLoginStart());
       const res = await axiosInstance.post(`/admin/login`, formData);
       dispatch(adminLoginSuccess(res.data));

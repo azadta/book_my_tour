@@ -73,7 +73,7 @@ const AdminUserDetails = () => {
   ];
   return (
     <div className="p-6">
-      <BackToDashboard />
+      <BackToDashboard path="/admin/dashboard" />
       <h1 className="text-3xl font-bold mb-6 text-center ">User Management</h1>
       <div className="flex flex-col gap-3 p-4 bg-gray-50 rounded shadow w-full max-w-72 mb-6">
         <input

@@ -755,7 +755,7 @@ export const adminUpdateOperatorFields: FormField[] = [
     label: "License No",
   },
   {
-    id: "verificationDetails.businessAddress.BuildingNo",
+    id: "verificationDetails.businessAddress.buildingNo",
     type: "text",
     placeholder: "Building No",
     required: true,

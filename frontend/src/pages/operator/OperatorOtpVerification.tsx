@@ -54,15 +54,17 @@ const OperatorOtpVerification = () => {
   }, [otp]);
 
   return (
-    <OtpForm
-      otp={otp}
-      error={error}
-      onResend={resendOtp}
-      onSubmit={verifyOtp}
-      setOtp={setOtp}
-      timeLeft={timeLeft}
-      resendLoading={resendLoading}
-    />
+    <div className="pt-10">
+      <OtpForm
+        otp={otp}
+        error={error}
+        onResend={resendOtp}
+        onSubmit={verifyOtp}
+        setOtp={setOtp}
+        timeLeft={timeLeft}
+        resendLoading={resendLoading}
+      />
+    </div>
   );
 };
 

@@ -60,7 +60,7 @@ const AdminPackageDetails = () => {
   ];
   return (
     <div className="p-6 ">
-      <BackToDashboard />
+      <BackToDashboard path="/admin/dashboard" />
       <h1 className="text-3xl font-bold mb-6 text-center">
         Package Management
       </h1>

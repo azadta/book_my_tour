@@ -8,6 +8,7 @@ import { adminController, authMiddleware } from "../config/container.js";
 import { validateDestination } from "../middlewares/validateDestination.js";
 import { validatePackageCategory } from "../middlewares/validatePackageCategory.js";
 import { ROUTES } from "../constants/routesConstants.js";
+import { resetPasswordValidator } from "../middlewares/resetPasswordValidator.js";
 
 const router = express.Router();
 
@@ -108,6 +109,7 @@ router.get(ROUTES.ADMIN.PACKAGES_LIST, adminController.getAllPackages);
 router.post(
   ROUTES.ADMIN.RESET_PASSWORD_AUTH,
   authMiddleware.verifyRole("admin"),
+  resetPasswordValidator,
   adminController.resetPasswordAuthenticated,
 );
 

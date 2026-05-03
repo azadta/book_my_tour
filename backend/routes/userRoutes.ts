@@ -4,6 +4,7 @@ import { authMiddleware, userController } from "../config/container.js";
 import { validateUpdateUser } from "../middlewares/userUpdateValidator.js";
 import { validateUser } from "../middlewares/userValidator.js";
 import { ROUTES } from "../constants/routesConstants.js";
+import { resetPasswordValidator } from "../middlewares/resetPasswordValidator.js";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.post(ROUTES.USER.RESEND_OTP, userController.resendOtp);
 router.post(ROUTES.USER.LOGIN, userController.login);
 router.post(ROUTES.USER.GOOGLE, userController.google);
 router.post(ROUTES.USER.FORGOT_PASSWORD, userController.forgotPassword);
-router.post(ROUTES.USER.RESET_PASSWORD, userController.resetPassword);
+router.post(ROUTES.USER.RESET_PASSWORD,resetPasswordValidator, userController.resetPassword);
 router.delete(ROUTES.USER.LOGOUT, userController.logout);
 
 router.post(
@@ -41,6 +42,7 @@ router.get(ROUTES.USER.PACKAGES_HOME, userController.getAllPackages);
 router.post(
   ROUTES.USER.RESET_PASSWORD_AUTH,
   authMiddleware.verifyRole("user"),
+  resetPasswordValidator,
   userController.resetPasswordAuthenticated,
 );
 

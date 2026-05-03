@@ -318,6 +318,7 @@ export const operatorProfileFields: FormField[] = [
     placeholder: "Email",
     required: true,
     label: "Email",
+    readOnly:true
   },
   {
     id: "mobile",

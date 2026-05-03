@@ -16,6 +16,7 @@ import { useApi } from "../../hooks/useApi.js";
 import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
 import type { RootState } from "../../redux/store.ts";
 import { toast } from "react-toastify";
+import BackToDashboard from "../../components/BackToDashboard.tsx";
 
 interface FormDataType {
   [key: string]: any;
@@ -202,8 +203,9 @@ const OperatorProfile = () => {
   }, [currentOperator]);
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7 text-green-500">
+    <div className="p-3 max-w-2xl mx-auto mt-10 mb-10">
+    <BackToDashboard path="/operator/dashboard" />
+      <h1 className="text-3xl font-semibold text-center my-7  text-emerald-500">
         Profile
       </h1>
       <ProfileForm
@@ -225,7 +227,7 @@ const OperatorProfile = () => {
         </span>
         <span
           onClick={() => navigate("/operator/reset-password")}
-          className="text-blue-700 cursor-pointer"
+          className="text-sky-700 cursor-pointer"
         >
           Reset Password
         </span>

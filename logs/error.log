@@ -260,3 +260,85 @@
 2026-05-02 14:26:58:301 [31merror[39m [31mUnauthorized: No token provided[39m
 2026-05-02 14:48:13:926 [31merror[39m [31mUnauthorized: No token provided[39m
 2026-05-02 14:48:13:931 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-03 08:35:33:132 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 08:35:40:394 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 08:35:47:959 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 08:36:13:552 [31merror[39m [31mValidation Error[39m
+2026-05-03 08:36:39:963 [31merror[39m [31mEmail already exists[39m
+2026-05-03 08:37:44:096 [31merror[39m [31mInvalid or expired OTP[39m
+2026-05-03 08:38:00:998 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 08:38:09:613 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 08:38:18:803 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 09:45:33:469 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-03 09:49:07:429 [31merror[39m [31mValidation Error[39m
+2026-05-03 09:50:14:008 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 09:50:16:623 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 09:51:06:825 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 09:51:20:600 [31merror[39m [31mPassword do not match[39m
+2026-05-03 09:56:15:074 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 09:57:29:572 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 09:57:56:432 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:09:00:589 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 10:09:00:833 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:14:42:154 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 10:24:32:823 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 10:24:33:052 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:24:42:847 [31merror[39m [31mPassword do not match[39m
+2026-05-03 10:25:05:285 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:31:18:726 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 10:34:40:252 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:39:36:179 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:47:39:519 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 10:47:40:316 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:48:24:176 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:48:33:488 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:48:49:195 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:49:15:859 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:49:26:795 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:49:27:997 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:49:48:336 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:49:56:047 [31merror[39m [31mPassword do not match[39m
+2026-05-03 10:50:03:883 [31merror[39m [31mPassword do not match[39m
+2026-05-03 10:50:20:187 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:50:55:143 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:53:11:096 [31merror[39m [31mInvalid Credentials[39m
+2026-05-03 10:53:36:974 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:54:32:793 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:54:47:693 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:55:51:700 [31merror[39m [31mValidation Error[39m
+2026-05-03 10:57:10:872 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 10:57:56:811 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:00:11:104 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:00:34:183 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:00:41:262 [31merror[39m [31mPassword do not match[39m
+2026-05-03 11:00:47:579 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:00:51:805 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:00:56:781 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:05:396 [31merror[39m [31mPassword do not match[39m
+2026-05-03 11:01:07:905 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:10:949 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:16:879 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:19:792 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:25:583 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:29:376 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:01:42:404 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:02:09:777 [31merror[39m [31mInvalid or expired token[39m
+2026-05-03 11:02:09:988 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:02:16:425 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:08:39:361 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:09:01:568 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:09:13:062 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:26:44:015 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:27:15:665 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:27:30:439 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:28:29:908 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 11:29:11:227 [31merror[39m [31mInvalid Credentials[39m
+2026-05-03 11:30:13:320 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:48:34:226 [31merror[39m [31mInvalid or expired OTP[39m
+2026-05-03 11:48:42:672 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 11:50:11:808 [31merror[39m [31mAdmin not found[39m
+2026-05-03 11:50:16:927 [31merror[39m [31mAdmin not found[39m
+2026-05-03 11:51:41:420 [31merror[39m [31mValidation Error[39m
+2026-05-03 11:51:51:903 [31merror[39m [31mOld password is incorrect[39m
+2026-05-03 11:53:58:672 [31merror[39m [31mValidation Error[39m
+2026-05-03 12:20:06:037 [31merror[39m [31mUnauthorized: No token provided[39m

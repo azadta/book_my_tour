@@ -44,7 +44,7 @@ const CreatePackage = () => {
   }));
 
   return (
-    <div className="p-6 text-center">
+    <div className="p-6 text-center max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold mb-4">Create Package</h2>
       <ReUsableForm
         fields={enrichedFields}

@@ -62,7 +62,10 @@ const ReUsableForm = ({
     const newErrors: Record<string, string> = {};
     fields.map((field) => {
       if (field.required) {
-        if (!formData[field.id]) {
+        if (
+          !formData[field.id] ||
+          (Array.isArray(formData[field.id]) && formData[field.id].length === 0)
+        ) {
           newErrors[field.id] = `${field.label || field.id} is required`;
         }
       }
@@ -251,7 +254,7 @@ const ReUsableForm = ({
                     id={field.id}
                     placeholder={field.placeholder || field.label}
                     onChange={handleChange}
-                    className="border p-3 rounded-lg "
+                    className={`border p-3 rounded-lg ${field.readOnly ? "bg-gray-200 cursor-not-allowed" : ""}`}
                     multiple={field.multiple}
                     value={formData[field.id] || ""}
                     disabled={field.disabled}

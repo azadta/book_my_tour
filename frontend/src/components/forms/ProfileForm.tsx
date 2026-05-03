@@ -163,7 +163,7 @@ export const ProfileForm = ({
                 onChange={changeHandler}
                 readOnly={field.readOnly}
                 multiple={field.multiple}
-                className="border p-3 rounded-lg"
+                className={`border p-3 rounded-lg   ${field.readOnly ? "bg-gray-100  text-gray-700 " : "focus:outline-none focus:ring-2 focus:ring-sky-500"}`}
                 value={
                   field.id.includes(".")
                     ? getNestedValue(formData, field.id)

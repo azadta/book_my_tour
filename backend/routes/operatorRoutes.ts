@@ -5,6 +5,7 @@ import { validateUpdateOperator } from "../middlewares/operatorUpdateValidator.j
 import { validateOperator } from "../middlewares/operatorValidator.js";
 import { validatePackage } from "../middlewares/validatePackage.js";
 import { ROUTES } from "../constants/routesConstants.js";
+import { resetPasswordValidator } from "../middlewares/resetPasswordValidator.js";
 
 const router = express.Router();
 
@@ -25,6 +26,7 @@ router.post(
 );
 router.post(
   ROUTES.OPERATOR.RESET_PASSWORD,
+  resetPasswordValidator,
   operatorController.resetOperatorPassword,
 );
 router.delete(ROUTES.OPERATOR.LOGOUT, operatorController.operatorLogout);
@@ -56,6 +58,7 @@ router.get(
 router.post(
   ROUTES.OPERATOR.RESET_PASSWORD_AUTH,
   authMiddleware.verifyRole("operator"),
+  resetPasswordValidator,
   operatorController.resetPasswordAuthenticated,
 );
 router.get(

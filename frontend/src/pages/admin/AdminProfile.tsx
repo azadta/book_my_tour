@@ -16,6 +16,7 @@ import { useApi } from "../../hooks/useApi.js";
 import { ProfileForm } from "../../components/forms/ProfileForm.js";
 import type { RootState } from "../../redux/store.js";
 import { toast } from "react-toastify";
+import BackToDashboard from "../../components/BackToDashboard.js";
 
 interface FormDataType {
   [key: string]: any;
@@ -159,8 +160,9 @@ const AdminProfile = () => {
   }, [currentAdmin]);
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7  text-green-500">
+    <div className="p-3 max-w-2xl mx-auto mt-10 mb-10">
+      <BackToDashboard path="/admin/dashboard"/>
+      <h1 className="text-3xl font-semibold text-center my-7  text-emerald-500">
         Admin Profile
       </h1>
       <ProfileForm

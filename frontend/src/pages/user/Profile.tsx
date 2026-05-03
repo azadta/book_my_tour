@@ -189,8 +189,8 @@ const Profile = () => {
   }, [currentUser]);
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-5 text-green-500">
+    <div className="p-3 max-w-2xl mx-auto mt-2 mb-10">
+      <h1 className="text-3xl font-semibold text-center my-5 text-emerald-500">
         Profile
       </h1>
       <ProfileForm
@@ -215,7 +215,7 @@ const Profile = () => {
         </span>
         <span
           onClick={() => navigate("/user/reset-password")}
-          className="text-blue-700 cursor-pointer"
+          className="text-sky-700 cursor-pointer"
         >
           Reset Password
         </span>

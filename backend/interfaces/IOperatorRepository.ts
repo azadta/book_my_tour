@@ -27,4 +27,5 @@ export interface IOperatorRepository {
   findAllPackageCategory(): Promise<IPackageCategory[]>;
   findAllDestinations(): Promise<IDestination[]>;
   getPackageByName(name: string): Promise<Ipackage | null>;
+  countPackagesByOperatorId(operatorId: string): Promise<number>;
 }

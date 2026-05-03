@@ -61,5 +61,10 @@ router.post(
   resetPasswordValidator,
   operatorController.resetPasswordAuthenticated,
 );
+router.get(
+  ROUTES.OPERATOR.MY_PACKAGES_COUNT,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getMyPackagesCount,
+);
 
 export default router;

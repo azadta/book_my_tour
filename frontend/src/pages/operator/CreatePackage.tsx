@@ -1,9 +1,5 @@
 import { toast } from "react-toastify";
-import {
-  createPackageFields,
-
-  type Option,
-} from "../../formConfig/fields";
+import { createPackageFields, type Option } from "../../formConfig/fields";
 import { useCreatePackage } from "../../hooks/useCreatePackage";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { useState } from "react";

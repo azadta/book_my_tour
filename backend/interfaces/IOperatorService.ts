@@ -56,4 +56,5 @@ export interface IOperatorService {
   }>;
   getAllCategories(): Promise<IPackageCategory[]>;
   getAllDestinationsServise(): Promise<IDestination[]>;
+  getMyPackagesCountService(operatorId: string): Promise<number>;
 }

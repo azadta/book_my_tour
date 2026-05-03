@@ -230,4 +230,7 @@ export class OperatorService implements IOperatorService {
   getAllDestinationsServise(): Promise<IDestination[]> {
     return this.operatorRepository.findAllDestinations();
   }
+  getMyPackagesCountService(operatorId: string): Promise<number> {
+    return this.operatorRepository.countPackagesByOperatorId(operatorId);
+  }
 }

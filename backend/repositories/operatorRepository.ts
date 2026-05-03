@@ -81,4 +81,7 @@ export class OperatorRepository implements IOperatorRepository {
   findAllDestinations(): Promise<IDestination[]> {
     return Destination.find();
   }
+  async countPackagesByOperatorId(operatorId:string):Promise<number>{
+    return Package.countDocuments({operatorId})
+  }
 }

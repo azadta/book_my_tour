@@ -55,7 +55,7 @@ const AdminOperatorVerification = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <BackToDashboard />
+      <BackToDashboard path="/admin/dashboard" />
       <h1 className="text-3xl font-bold  mb-4 text-center">
         Operator Verification Requests
       </h1>

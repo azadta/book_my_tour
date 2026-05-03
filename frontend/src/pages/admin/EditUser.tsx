@@ -6,6 +6,7 @@ import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { adminUpdateUserFields } from "../../formConfig/fields";
 import ConfirmationModel from "../../components/ConfirmationModal";
+import BackToDashboard from "../../components/BackToDashboard";
 
 const EditUser = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -46,7 +47,7 @@ const EditUser = () => {
       const nestedData = unFlattenObject(data);
 
       await updateUser(id, nestedData);
-      alert("User updated successfully");
+      toast.success("User updated successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
@@ -90,6 +91,7 @@ const EditUser = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
+      <BackToDashboard path='/admin/dashboard'/>
       <h2 className="text-2xl font-bold text-center mb-6">Edit User</h2>
       <ReUsableForm
         fields={adminUpdateUserFields}

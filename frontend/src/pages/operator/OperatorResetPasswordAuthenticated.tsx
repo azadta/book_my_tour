@@ -3,6 +3,7 @@ import { useAuthenticatedPasswordReset } from "../../hooks/useAuthenticatedPassw
 import { useNavigate } from "react-router-dom";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
+import BackToDashboard from "../../components/BackToDashboard";
 
 const OperatorResetPasswordAuthenticated: React.FC = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -31,8 +32,9 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 ">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen   px-4 w-full max-w-lg mx-auto pt-10 ">
+      <BackToDashboard path="/operator/dashboard" />
+      <div className="pt-10">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Change Password
         </h2>

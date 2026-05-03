@@ -251,4 +251,19 @@ export class OperatorController {
       next(error);
     }
   };
+
+  getMyPackagesCount = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const operatorId = req.user?.id;
+      const totalPakagesCount =
+        await this.operatorService.getMyPackagesCountService(operatorId as string);
+      res.status(StatusCode.OK).json({ success: true, totalPakagesCount });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

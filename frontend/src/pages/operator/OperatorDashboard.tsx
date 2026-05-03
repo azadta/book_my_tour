@@ -1,10 +1,15 @@
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../redux/store";
+import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
 
 const OperatorDashboard = () => {
   const navigate = useNavigate();
   const { currentOperator } = useSelector((state: RootState) => state.operator);
+  const { PackagesCount, loading } = useOperatorDashboard();
+  if (loading) {
+    return <p>Loading....</p>;
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white shadow p-4 border-b border-gray-200 ">
@@ -44,22 +49,9 @@ const OperatorDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-xl font-semibold mb-2">My Packages</h2>
-              <p className="text-2xl font-bold text-gray-700">42</p>
-            </div>
-
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-xl font-semibold mb-2">Total Bookings</h2>
-              <p className="text-2xl font-bold text-gray-700">389</p>
-            </div>
-
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-xl font-semibold mb-2">Today's Bookings</h2>
-              <p className="text-2xl font-bold text-gray-700">11</p>
-            </div>
-
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-xl font-semibold mb-2">Pending Requests</h2>
-              <p className="text-2xl font-bold text-gray-700">6</p>
+              <p className="text-2xl font-bold text-gray-700">
+                {PackagesCount}
+              </p>
             </div>
           </div>
         </main>

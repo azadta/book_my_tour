@@ -15,7 +15,7 @@ const Login = () => {
 
   return (
     <div className="p-3 max-w-lg mx-auto ">
-      <h1 className="text-3xl text-center font-semibold my-3  ">Log In</h1>
+      <h1 className="text-3xl text-center font-semibold my-3">Log In</h1>
 
       <ReUsableForm
         fields={userLoginfields}

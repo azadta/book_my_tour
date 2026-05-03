@@ -3062,3 +3062,169 @@
 2026-05-03 15:17:29:275 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 94.128 ms[39m
 2026-05-03 15:17:29:325 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 73.311 ms[39m
 2026-05-03 15:17:29:372 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 95.144 ms[39m
+2026-05-03 15:42:57:156 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 15:42:57:304 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 15:42:57:308 [32mhttp[39m [32mPOST /api/user/login 401 86 - 152.148 ms[39m
+2026-05-03 15:43:04:155 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 15:43:04:276 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 15:43:04:277 [32mhttp[39m [32mPOST /api/user/login 401 86 - 121.712 ms[39m
+2026-05-03 15:43:16:724 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 15:43:16:847 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 15:43:16:850 [32mhttp[39m [32mPOST /api/user/login 401 86 - 125.356 ms[39m
+2026-05-03 15:43:22:574 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 15:43:22:692 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 15:43:22:693 [32mhttp[39m [32mPOST /api/user/login 401 86 - 119.004 ms[39m
+2026-05-03 15:50:20:177 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-05-03 15:50:23:936 [32mhttp[39m [32mPOST /api/user/register 201 99 - 3757.611 ms[39m
+2026-05-03 15:50:36:215 [32mhttp[39m [32mPOST /api/user/verify-otp 200 54 - 358.298 ms[39m
+2026-05-03 15:50:43:086 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 15:50:43:214 [32mhttp[39m [32mPOST /api/user/login 200 354 - 127.248 ms[39m
+2026-05-03 15:50:43:265 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 35.833 ms[39m
+2026-05-03 15:50:43:304 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 37.918 ms[39m
+2026-05-03 15:50:43:322 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 89.843 ms[39m
+2026-05-03 15:50:43:395 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 71.149 ms[39m
+2026-05-03 15:50:53:848 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 39.742 ms[39m
+2026-05-03 15:50:53:889 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.865 ms[39m
+2026-05-03 15:50:53:891 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 39.592 ms[39m
+2026-05-03 15:50:53:969 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 75.892 ms[39m
+2026-05-03 15:51:22:778 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.493 ms[39m
+2026-05-03 17:06:12:809 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 7.023 ms[39m
+2026-05-03 17:14:59:338 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 17:14:59:495 [31merror[39m [31mInvalid email or password[39m
+2026-05-03 17:14:59:499 [32mhttp[39m [32mPOST /api/user/login 401 86 - 160.028 ms[39m
+2026-05-03 17:15:07:542 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 17:15:07:690 [32mhttp[39m [32mPOST /api/user/login 200 354 - 147.785 ms[39m
+2026-05-03 17:15:07:757 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 37.825 ms[39m
+2026-05-03 17:15:07:797 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 33.617 ms[39m
+2026-05-03 17:15:07:804 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 80.087 ms[39m
+2026-05-03 17:15:07:881 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 73.858 ms[39m
+2026-05-03 17:15:26:090 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 41.209 ms[39m
+2026-05-03 17:15:26:124 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 72.479 ms[39m
+2026-05-03 17:15:26:126 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 34.121 ms[39m
+2026-05-03 17:15:26:206 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.999 ms[39m
+2026-05-03 17:15:33:973 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 42.245 ms[39m
+2026-05-03 17:15:34:010 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.249 ms[39m
+2026-05-03 17:15:34:014 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 38.564 ms[39m
+2026-05-03 17:15:34:090 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 74.637 ms[39m
+2026-05-03 17:15:51:731 [32mhttp[39m [32mPOST /api/user/update-profile-image 200 430 - 140.531 ms[39m
+2026-05-03 17:15:55:259 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 200 493 - 99.199 ms[39m
+2026-05-03 17:15:58:855 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.462 ms[39m
+2026-05-03 17:19:40:817 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 17:19:40:930 [32mhttp[39m [32mPOST /api/user/login 200 493 - 112.725 ms[39m
+2026-05-03 17:19:40:983 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 33.550 ms[39m
+2026-05-03 17:19:41:024 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 39.315 ms[39m
+2026-05-03 17:19:41:027 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 75.546 ms[39m
+2026-05-03 17:19:41:104 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 74.232 ms[39m
+2026-05-03 17:19:44:908 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.295 ms[39m
+2026-05-03 17:22:49:626 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 40.225 ms[39m
+2026-05-03 17:22:49:671 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 76.764 ms[39m
+2026-05-03 17:22:49:704 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 36.466 ms[39m
+2026-05-03 17:22:49:747 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 73.460 ms[39m
+2026-05-03 17:23:34:653 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 17:23:34:765 [32mhttp[39m [32mPOST /api/user/login 200 493 - 111.254 ms[39m
+2026-05-03 17:23:34:825 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 33.933 ms[39m
+2026-05-03 17:23:34:859 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 69.118 ms[39m
+2026-05-03 17:23:34:864 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 35.320 ms[39m
+2026-05-03 17:23:34:930 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 69.343 ms[39m
+2026-05-03 17:23:38:202 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.293 ms[39m
+2026-05-03 17:24:45:657 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:24:45:706 [31merror[39m [31mOperator not found[39m
+2026-05-03 17:24:45:707 [32mhttp[39m [32mPOST /api/operator/login 404 79 - 52.785 ms[39m
+2026-05-03 17:24:54:243 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:24:54:282 [31merror[39m [31mOperator not found[39m
+2026-05-03 17:24:54:284 [32mhttp[39m [32mPOST /api/operator/login 404 79 - 40.177 ms[39m
+2026-05-03 17:25:03:384 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:25:03:423 [31merror[39m [31mOperator not found[39m
+2026-05-03 17:25:03:431 [32mhttp[39m [32mPOST /api/operator/login 404 79 - 46.604 ms[39m
+2026-05-03 17:26:49:110 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:26:49:244 [31merror[39m [31mInvalid Credentials[39m
+2026-05-03 17:26:49:247 [32mhttp[39m [32mPOST /api/operator/login 401 80 - 135.042 ms[39m
+2026-05-03 17:28:52:623 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m
+2026-05-03 17:28:57:520 [32mhttp[39m [32mPOST /api/operator/register 201 103 - 4898.107 ms[39m
+2026-05-03 17:29:18:414 [32mhttp[39m [32mPOST /api/operator/verify-otp 200 54 - 93.933 ms[39m
+2026-05-03 17:29:18:485 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 38.580 ms[39m
+2026-05-03 17:29:18:523 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 200 4861 - 74.418 ms[39m
+2026-05-03 17:29:18:526 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 38.707 ms[39m
+2026-05-03 17:29:18:601 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 71.824 ms[39m
+2026-05-03 17:29:51:566 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:29:51:672 [31merror[39m [31mOperator not verified by the admin[39m
+2026-05-03 17:29:51:673 [32mhttp[39m [32mPOST /api/operator/login 403 95 - 107.157 ms[39m
+2026-05-03 17:29:51:679 [31merror[39m [31mNo refresh token[39m
+2026-05-03 17:29:51:680 [32mhttp[39m [32mPOST /api/auth/refresh 401 77 - 1.992 ms[39m
+2026-05-03 17:30:22:907 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:30:23:026 [31merror[39m [31mOperator not verified by the admin[39m
+2026-05-03 17:30:23:027 [32mhttp[39m [32mPOST /api/operator/login 403 95 - 120.211 ms[39m
+2026-05-03 17:30:23:033 [31merror[39m [31mNo refresh token[39m
+2026-05-03 17:30:23:035 [32mhttp[39m [32mPOST /api/auth/refresh 401 77 - 1.383 ms[39m
+2026-05-03 17:31:00:125 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:31:00:239 [31merror[39m [31mOperator not verified by the admin[39m
+2026-05-03 17:31:00:240 [32mhttp[39m [32mPOST /api/operator/login 403 95 - 114.358 ms[39m
+2026-05-03 17:31:00:743 [31merror[39m [31mNo refresh token[39m
+2026-05-03 17:31:00:744 [32mhttp[39m [32mPOST /api/auth/refresh 401 77 - 1.332 ms[39m
+2026-05-03 17:39:46:972 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:39:47:137 [31merror[39m [31mOperator not verified by the admin[39m
+2026-05-03 17:39:47:140 [32mhttp[39m [32mPOST /api/operator/login 401 95 - 167.790 ms[39m
+2026-05-03 17:40:42:993 [32minfo[39m [32mAdmin login attempt[39m
+2026-05-03 17:40:43:104 [32mhttp[39m [32mPOST /api/admin/login 200 376 - 111.276 ms[39m
+2026-05-03 17:40:43:211 [32mhttp[39m [32mGET /api/admin/users/total-count 200 31 - 82.259 ms[39m
+2026-05-03 17:40:43:214 [32mhttp[39m [32mGET /api/admin/operators/total-count 200 35 - 73.252 ms[39m
+2026-05-03 17:40:43:218 [32mhttp[39m [32mGET /api/admin/users/signup-today 200 37 - 80.832 ms[39m
+2026-05-03 17:40:43:220 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 200 26 - 78.125 ms[39m
+2026-05-03 17:40:43:301 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 304 - - 73.935 ms[39m
+2026-05-03 17:40:43:305 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 82.906 ms[39m
+2026-05-03 17:40:43:307 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 83.031 ms[39m
+2026-05-03 17:40:43:310 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 93.644 ms[39m
+2026-05-03 17:40:52:621 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 82.417 ms[39m
+2026-05-03 17:40:52:624 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 304 - - 77.033 ms[39m
+2026-05-03 17:40:52:627 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 81.891 ms[39m
+2026-05-03 17:40:52:633 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 89.935 ms[39m
+2026-05-03 17:40:52:700 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 74.751 ms[39m
+2026-05-03 17:40:52:703 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 66.958 ms[39m
+2026-05-03 17:40:52:707 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 304 - - 78.252 ms[39m
+2026-05-03 17:40:52:709 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 74.530 ms[39m
+2026-05-03 17:40:58:302 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 200 4861 - 92.745 ms[39m
+2026-05-03 17:40:58:385 [32mhttp[39m [32mGET /api/admin/packages?page=1&limit=6 304 - - 80.513 ms[39m
+2026-05-03 17:41:01:135 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 96.044 ms[39m
+2026-05-03 17:41:01:136 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 99.399 ms[39m
+2026-05-03 17:41:01:137 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 304 - - 97.080 ms[39m
+2026-05-03 17:41:01:141 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 106.323 ms[39m
+2026-05-03 17:41:01:221 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 75.684 ms[39m
+2026-05-03 17:41:01:227 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 89.062 ms[39m
+2026-05-03 17:41:01:228 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 88.846 ms[39m
+2026-05-03 17:41:01:231 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 304 - - 88.751 ms[39m
+2026-05-03 17:41:02:163 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 200 1219 - 84.756 ms[39m
+2026-05-03 17:41:02:269 [32mhttp[39m [32mGET /api/admin/operators?page=1&limit=5 304 - - 102.009 ms[39m
+2026-05-03 17:41:04:329 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 200 641 - 82.206 ms[39m
+2026-05-03 17:41:04:418 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 304 - - 84.580 ms[39m
+2026-05-03 17:41:09:953 [32mhttp[39m [32mPUT /api/admin/operators/verify-operator/69f7387c1881b9dddcf0c42f 200 31 - 3670.459 ms[39m
+2026-05-03 17:41:10:038 [32mhttp[39m [32mGET /api/admin/operators/get-verification-requests 200 2 - 78.511 ms[39m
+2026-05-03 17:41:14:651 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 200 26 - 71.300 ms[39m
+2026-05-03 17:41:14:654 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 78.718 ms[39m
+2026-05-03 17:41:14:656 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 77.526 ms[39m
+2026-05-03 17:41:14:658 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 80.707 ms[39m
+2026-05-03 17:41:14:734 [32mhttp[39m [32mGET /api/admin/operators/total-count 304 - - 69.237 ms[39m
+2026-05-03 17:41:14:738 [32mhttp[39m [32mGET /api/admin/users/total-count 304 - - 76.241 ms[39m
+2026-05-03 17:41:14:740 [32mhttp[39m [32mGET /api/admin/operators/pending-verification-count 304 - - 80.731 ms[39m
+2026-05-03 17:41:14:743 [32mhttp[39m [32mGET /api/admin/users/signup-today 304 - - 79.654 ms[39m
+2026-05-03 17:41:17:974 [32mhttp[39m [32mDELETE /api/admin/logout 200 39 - 0.349 ms[39m
+2026-05-03 17:41:35:028 [32minfo[39m [32mOperator login attempt[39m
+2026-05-03 17:41:35:134 [32mhttp[39m [32mPOST /api/operator/login 200 564 - 106.926 ms[39m
+2026-05-03 17:41:35:248 [32mhttp[39m [32mGET /api/operator/my-packages-count 200 38 - 86.402 ms[39m
+2026-05-03 17:41:35:331 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 79.908 ms[39m
+2026-05-03 17:41:43:854 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 77.883 ms[39m
+2026-05-03 17:41:43:942 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 84.687 ms[39m
+2026-05-03 17:41:50:307 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 86.719 ms[39m
+2026-05-03 17:41:50:393 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 83.601 ms[39m
+2026-05-03 17:41:55:417 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 77.617 ms[39m
+2026-05-03 17:41:55:514 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 93.602 ms[39m
+2026-05-03 17:42:00:231 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 82.483 ms[39m
+2026-05-03 17:42:00:317 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 82.776 ms[39m
+2026-05-03 17:42:13:421 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 90.895 ms[39m
+2026-05-03 17:42:13:505 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 80.372 ms[39m
+2026-05-03 17:42:14:654 [32mhttp[39m [32mGET /api/operator/package-categories 200 263 - 39.574 ms[39m
+2026-05-03 17:42:14:694 [32mhttp[39m [32mGET /api/operator/destinations 200 684 - 36.644 ms[39m
+2026-05-03 17:42:14:698 [32mhttp[39m [32mGET /api/operator/package-categories 304 - - 42.675 ms[39m
+2026-05-03 17:42:14:747 [32mhttp[39m [32mGET /api/operator/destinations 304 - - 42.125 ms[39m
+2026-05-03 17:42:19:271 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 77.664 ms[39m
+2026-05-03 17:42:19:350 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 76.077 ms[39m
+2026-05-03 17:42:23:779 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 0.297 ms[39m

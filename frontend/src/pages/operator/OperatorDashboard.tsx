@@ -2,13 +2,14 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../redux/store";
 import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
+import Loading from "../../components/Loading";
 
 const OperatorDashboard = () => {
   const navigate = useNavigate();
   const { currentOperator } = useSelector((state: RootState) => state.operator);
   const { PackagesCount, loading } = useOperatorDashboard();
   if (loading) {
-    return <p>Loading....</p>;
+    return <Loading/>;
   }
   return (
     <div className="min-h-screen flex flex-col">

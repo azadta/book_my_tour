@@ -1,9 +1,5 @@
 import { toast } from "react-toastify";
-import {
-  createPackageFields,
-
-  type Option,
-} from "../../formConfig/fields";
+import { createPackageFields, type Option } from "../../formConfig/fields";
 import { useCreatePackage } from "../../hooks/useCreatePackage";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { useState } from "react";
@@ -44,7 +40,7 @@ const CreatePackage = () => {
   }));
 
   return (
-    <div className="p-6 text-center">
+    <div className="p-6  max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold mb-4">Create Package</h2>
       <ReUsableForm
         fields={enrichedFields}

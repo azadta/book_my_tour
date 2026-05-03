@@ -386,16 +386,24 @@ export class AdminController {
     res: Response,
     next: NextFunction,
   ) => {
-    const usersCount = await this.adminService.getTotalUsersCount();
-    res.status(StatusCode.OK).json({ success: true, usersCount });
+    try {
+      const usersCount = await this.adminService.getTotalUsersCount();
+      res.status(StatusCode.OK).json({ success: true, usersCount });
+    } catch (error) {
+      next(error);
+    }
   };
   getTotalOperatorsCount = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
-    const totalOperatorCount = await this.adminService.getTotalOperatorsCount();
-    res.status(StatusCode.OK).json({ success: true, totalOperatorCount });
+    try {
+      const operatorsCount = await this.adminService.getTotalOperatorsCount();
+      res.status(StatusCode.OK).json({ success: true, operatorsCount });
+    } catch (error) {
+      next(error);
+    }
   };
 
   todaySignupCount = async (
@@ -403,8 +411,13 @@ export class AdminController {
     res: Response,
     next: NextFunction,
   ) => {
-    const totalCount = await this.adminService.getSignupCountTodayService();
-    res.status(StatusCode.OK).json({ success: true, totalCount });
+    try {
+      const todaySignupCount =
+        await this.adminService.getSignupCountTodayService();
+      res.status(StatusCode.OK).json({ success: true, todaySignupCount });
+    } catch (error) {
+      next(error);
+    }
   };
 
   getPendingOperatorsCount = async (
@@ -412,7 +425,11 @@ export class AdminController {
     res: Response,
     next: NextFunction,
   ) => {
-    const count = await this.adminService.getPendingOperatorsCountService();
-    res.status(StatusCode.OK).json({ success: true, count });
+    try {
+      const count = await this.adminService.getPendingOperatorsCountService();
+      res.status(StatusCode.OK).json({ success: true, count });
+    } catch (error) {
+      next(error);
+    }
   };
 }

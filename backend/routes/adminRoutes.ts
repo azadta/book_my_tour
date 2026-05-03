@@ -110,5 +110,25 @@ router.post(
   authMiddleware.verifyRole("admin"),
   adminController.resetPasswordAuthenticated,
 );
+router.get(
+  ROUTES.ADMIN.USER_COUNT,
+  authMiddleware.verifyRole("admin"),
+  adminController.getTotalUsersCount,
+);
+router.get(
+  ROUTES.ADMIN.OPS_COUNT,
+  authMiddleware.verifyRole("admin"),
+  adminController.getTotalOperatorsCount,
+);
+router.get(
+  ROUTES.ADMIN.OPS_PENDING_COUNT,
+  authMiddleware.verifyRole("admin"),
+  adminController.getPendingOperatorsCount,
+);
+router.get(
+  ROUTES.ADMIN.SIGNUP_TODAY,
+  authMiddleware.verifyRole("admin"),
+  adminController.todaySignupCount,
+);
 
 export default router;

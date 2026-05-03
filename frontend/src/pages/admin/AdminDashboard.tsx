@@ -1,10 +1,21 @@
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../redux/store";
+import { useAdminDashboard } from "../../hooks/useAdminDashboard";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { currentAdmin } = useSelector((state: RootState) => state.admin);
+  const {
+    loading,
+    operatorsCount,
+    pendingVerificationsCount,
+    todaySignups,
+    usersCount,
+  } = useAdminDashboard();
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white shadow p-4 border-b border-gray-200">
@@ -54,21 +65,25 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-xl font-semibold mb-2">Total users</h2>
-              <p className="text-2xl font-bold text-gray-700">1,024</p>
+              <p className="text-2xl font-bold text-gray-700">{usersCount}</p>
             </div>
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-xl font-semibold mb-2">Total Operators</h2>
-              <p className="text-2xl font-bold text-gray-700">245</p>
+              <p className="text-2xl font-bold text-gray-700">
+                {operatorsCount}
+              </p>
             </div>
             <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-xl font-semibold mb-2">New Signups Today </h2>
-              <p className="text-2xl font-bold text-gray-700">18</p>
+              <h2 className="text-xl font-semibold mb-2">Today Signups </h2>
+              <p className="text-2xl font-bold text-gray-700">{todaySignups}</p>
             </div>
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-xl font-semibold mb-2">
                 Pending verifications
               </h2>
-              <p className="text-2xl font-bold text-gray-700">5</p>
+              <p className="text-2xl font-bold text-gray-700">
+                {pendingVerificationsCount}
+              </p>
             </div>
           </div>
         </main>

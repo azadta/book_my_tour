@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../redux/store";
 import { useAdminDashboard } from "../../hooks/useAdminDashboard";
+import Loading from "../../components/Loading";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const AdminDashboard = () => {
     usersCount,
   } = useAdminDashboard();
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loading/>;
   }
   return (
     <div className="min-h-screen flex flex-col">

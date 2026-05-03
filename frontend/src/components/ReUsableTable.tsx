@@ -1,10 +1,12 @@
+import Loading from "../components/Loading";
+
 export interface Column<T> {
   label: string;
   render: (item: T) => React.ReactNode;
 }
 
 export interface ActionButton<T> {
-  label:(item:T)=> string;
+  label: (item: T) => string;
   onClick: (item: T) => void;
   className: string;
   disabled: (item: T) => boolean;
@@ -27,7 +29,7 @@ const ReUsableTable = <T,>({
   loading,
   noDataText = "No data available",
 }: ReUsableTableProps<T>) => {
-  if (loading) return <p className="text-center">Loading...</p>;
+  if (loading) return <Loading />;
   if (data.length === 0) return <p className="text-center">{noDataText}</p>;
   return (
     <table className="min-w-full table-auto border border-gray-500">

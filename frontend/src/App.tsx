@@ -31,6 +31,7 @@ import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
 import AdminPackageDetails from "./pages/admin/AdminPackageDetails";
 import CreateDestination from "./pages/admin/CreateDestination";
 import CreatePackageCategory from "./pages/admin/CreatePackageCategory";
+import Loading from "./components/Loading";
 
 const App = () => {
   return (

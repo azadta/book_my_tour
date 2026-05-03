@@ -95,7 +95,7 @@ export class OperatorService implements IOperatorService {
     if (!operator.isVerified)
       throw new CustomError(
         "Operator not verified by the admin",
-        StatusCode.FORBIDDEN,
+        StatusCode.UNAUTHORIZED,
       );
     if (operator.isBlocked)
       throw new CustomError(

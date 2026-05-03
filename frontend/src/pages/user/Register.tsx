@@ -25,7 +25,7 @@ const Register = () => {
 
   return (
     <div className="p-3 max-w-2xl mx-auto">
-      <h1 className="text-3xl text-center font-semibold mb-7  pt-10 ">
+      <h1 className="text-3xl text-center font-semibold mb-7   ">
         Register
       </h1>
       <ReUsableForm
@@ -36,6 +36,12 @@ const Register = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
+      <p className="text-end">
+          Already have an account?{" "}
+          <a href="/user/login" className="text-sky-500 ml-3">
+            Login
+          </a>
+        </p>
 
     </div>
   );

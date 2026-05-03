@@ -32,13 +32,13 @@ const OperatorLogin = () => {
       <div className="flex justify-between items-center mt-4">
         <a
           href="/operator/forgot-password"
-          className="text-sm text-blue-500 hover:underline"
+          className="text-sm text-sky-500 hover:underline"
         >
           Forgot Password?
         </a>
         <p>
           New Operator?
-          <a href="/operator/register" className="text-blue-700 ml-3">
+          <a href="/operator/register" className="text-sky-700 ml-3">
             Register
           </a>
         </p>

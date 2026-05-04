@@ -9,7 +9,7 @@ const pkgCard = ({ pkg }: packageCardProps) => {
   return (
     <div
       key={pkg._id}
-      className=" shadow rounded-xl overflow-hidden p-3 bg-sky-200 transition-all duration-300 hover:scale-103 cursor-pointer"
+      className=" shadow-lg rounded-xl overflow-hidden p-3 bg-sky-200 transition-all duration-300 hover:scale-103 cursor-pointer"
     >
       <div className="flex gap-2 text-sky-600">
         <p>Explores:</p>

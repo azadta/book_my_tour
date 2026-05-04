@@ -3228,3 +3228,67 @@
 2026-05-03 17:42:19:271 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 77.664 ms[39m
 2026-05-03 17:42:19:350 [32mhttp[39m [32mGET /api/operator/my-packages-count 304 - - 76.077 ms[39m
 2026-05-03 17:42:23:779 [32mhttp[39m [32mDELETE /api/operator/logout 200 42 - 0.297 ms[39m
+2026-05-03 21:19:43:437 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 459.504 ms[39m
+2026-05-03 21:19:43:502 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 34.962 ms[39m
+2026-05-03 21:19:43:709 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 689.782 ms[39m
+2026-05-03 21:19:43:793 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 76.540 ms[39m
+2026-05-03 21:21:03:057 [32minfo[39m [32mUser login attempt[39m
+2026-05-03 21:21:03:231 [32mhttp[39m [32mPOST /api/user/login 200 493 - 173.656 ms[39m
+2026-05-03 21:21:03:294 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 34.668 ms[39m
+2026-05-03 21:21:03:337 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 36.413 ms[39m
+2026-05-03 21:21:03:858 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 595.531 ms[39m
+2026-05-03 21:21:03:941 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 79.447 ms[39m
+2026-05-03 21:25:58:575 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 200 493 - 128.937 ms[39m
+2026-05-04 12:52:36:669 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 55.116 ms[39m
+2026-05-04 12:52:36:728 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 106.738 ms[39m
+2026-05-04 12:52:36:732 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 47.242 ms[39m
+2026-05-04 12:52:36:828 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 93.083 ms[39m
+2026-05-04 12:52:43:358 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 1.383 ms[39m
+2026-05-04 12:52:50:735 [32minfo[39m [32mUser login attempt[39m
+2026-05-04 12:52:50:979 [32mhttp[39m [32mPOST /api/user/login 200 493 - 244.125 ms[39m
+2026-05-04 12:52:51:058 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 43.480 ms[39m
+2026-05-04 12:52:51:109 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 91.156 ms[39m
+2026-05-04 12:52:51:114 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 46.536 ms[39m
+2026-05-04 12:52:51:208 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 91.156 ms[39m
+2026-05-04 13:01:44:523 [31merror[39m [31mInvalid or expired token[39m
+2026-05-04 13:01:44:525 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 403 85 - 6.170 ms[39m
+2026-05-04 13:07:00:534 [31merror[39m [31mInvalid or expired token[39m
+2026-05-04 13:07:00:535 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 403 85 - 2.906 ms[39m
+2026-05-04 13:07:54:181 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-04 13:07:54:186 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 401 92 - 7.844 ms[39m
+2026-05-04 13:07:54:861 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 73.182 ms[39m
+2026-05-04 13:07:55:519 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 200 493 - 119.034 ms[39m
+2026-05-04 13:08:08:911 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 0.534 ms[39m
+2026-05-04 13:08:54:531 [32minfo[39m [32mUser login attempt[39m
+2026-05-04 13:08:54:775 [32mhttp[39m [32mPOST /api/user/login 200 493 - 242.999 ms[39m
+2026-05-04 13:08:54:888 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 65.145 ms[39m
+2026-05-04 13:08:54:933 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 127.536 ms[39m
+2026-05-04 13:08:54:938 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 47.368 ms[39m
+2026-05-04 13:08:55:042 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 100.893 ms[39m
+2026-05-04 13:38:19:894 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 76.353 ms[39m
+2026-05-04 13:38:19:982 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 85.043 ms[39m
+2026-05-04 13:38:19:987 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 161.125 ms[39m
+2026-05-04 13:38:20:093 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 - - - - ms[39m
+2026-05-04 14:00:23:632 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 871.810 ms[39m
+2026-05-04 14:00:23:699 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 64.802 ms[39m
+2026-05-04 14:00:24:047 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 1274.498 ms[39m
+2026-05-04 14:00:24:528 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 476.975 ms[39m
+2026-05-04 14:36:09:144 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 276.606 ms[39m
+2026-05-04 14:36:09:197 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 44.393 ms[39m
+2026-05-04 14:36:09:200 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 324.566 ms[39m
+2026-05-04 14:36:09:402 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 199.741 ms[39m
+2026-05-04 15:53:28:019 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 483.474 ms[39m
+2026-05-04 15:53:28:070 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 43.955 ms[39m
+2026-05-04 15:53:28:278 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 743.141 ms[39m
+2026-05-04 15:53:28:700 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 418.251 ms[39m
+2026-05-04 16:17:01:707 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-04 16:17:01:713 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 401 92 - 13.442 ms[39m
+2026-05-04 16:17:02:685 [32mhttp[39m [32mPOST /api/auth/refresh 200 16 - 376.691 ms[39m
+2026-05-04 16:17:03:039 [32mhttp[39m [32mPOST /api/user/update/69f721641881b9dddcf0c42e 200 493 - 123.842 ms[39m
+2026-05-04 21:38:11:562 [32mhttp[39m [32mDELETE /api/user/logout 200 38 - 3.976 ms[39m 
+2026-05-04 21:38:29:549 [32minfo[39m [32mUser login attempt[39m {"layer":"CONTROLLER","module":"USER","action":"LOGIN","email":"abdulkareemazad@gmail.com"}
+2026-05-04 21:38:29:779 [32mhttp[39m [32mPOST /api/user/login 200 493 - 230.605 ms[39m 
+2026-05-04 21:38:30:057 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 229.327 ms[39m 
+2026-05-04 21:38:30:138 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 314.332 ms[39m 
+2026-05-04 21:38:30:141 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 80.322 ms[39m 
+2026-05-04 21:38:30:574 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 430.469 ms[39m 

@@ -425,3 +425,7 @@
 2026-05-03 17:31:00:239 [31merror[39m [31mOperator not verified by the admin[39m
 2026-05-03 17:31:00:743 [31merror[39m [31mNo refresh token[39m
 2026-05-03 17:39:47:137 [31merror[39m [31mOperator not verified by the admin[39m
+2026-05-04 13:01:44:523 [31merror[39m [31mInvalid or expired token[39m
+2026-05-04 13:07:00:534 [31merror[39m [31mInvalid or expired token[39m
+2026-05-04 13:07:54:181 [31merror[39m [31mUnauthorized: No token provided[39m
+2026-05-04 16:17:01:707 [31merror[39m [31mUnauthorized: No token provided[39m

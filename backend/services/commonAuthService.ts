@@ -16,7 +16,7 @@ export class CommonAuthService implements ICommonAuthService {
   refreshToken = async (token: string) => {
     const decoded = this.securityService.verifyRefreshToken(token);
     if (!decoded) {
-      throw new CustomError("Invalid refresh token", 401);
+      throw new CustomError("UnAuthorized, Please login again", 401);
     }
     let user;
     if (decoded.role === "user") {

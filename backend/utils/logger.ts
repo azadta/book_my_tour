@@ -1,4 +1,5 @@
 import path from "path";
+import { json } from "stream/consumers";
 import winston from "winston";
 
 const levels = {
@@ -17,18 +18,19 @@ class AppLogger {
       winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:SSS" }),
       winston.format.colorize({ all: true }),
       winston.format.printf(
-        (info) => `${info.timestamp} ${info.level} ${info.message}`,
+        (info) =>
+          `${info.timestamp} ${info.level} ${info.message} ${info.meta ? JSON.stringify(info.meta) : ""}`,
       ),
     );
 
     const transports = [
       new winston.transports.Console(),
       new winston.transports.File({
-        filename: path.join(process.cwd(), "logs",'error.log'),
+        filename: path.join(process.cwd(), "logs", "error.log"),
         level: "error",
       }),
       new winston.transports.File({
-        filename: path.join(process.cwd(), "logs",'all.log'),
+        filename: path.join(process.cwd(), "logs", "all.log"),
       }),
     ];
 
@@ -41,19 +43,19 @@ class AppLogger {
   }
 
   info(message: string, meta?: any) {
-    this.logger.info(message, { ...meta });
+    this.logger.info(message, { meta });
   }
   error(message: string, meta?: any) {
-    this.logger.error(message, { ...meta });
+    this.logger.error(message, { meta });
   }
   warn(message: string, meta?: any) {
-    this.logger.warn(message, { ...meta });
+    this.logger.warn(message, { meta });
   }
   http(message: string) {
     this.logger.http(message);
   }
   debug(message: string, meta?: any) {
-    this.logger.debug(message, { ...meta });
+    this.logger.debug(message, { meta });
   }
 }
 

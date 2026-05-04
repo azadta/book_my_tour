@@ -27,7 +27,7 @@ const OperatorRegister = () => {
   };
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
+    <div className="p-3 max-w-2xl mx-auto mb-10">
       <h1 className="text-3xl font-semibold my-7 text-center">
         Operator Register
       </h1>
@@ -39,6 +39,12 @@ const OperatorRegister = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
+             <p className="text-end">
+          Already  have an account?
+          <a href="/operator/login" className="text-sky-700 ml-3 ">
+            Login
+          </a>
+        </p>
     </div>
   );
 };

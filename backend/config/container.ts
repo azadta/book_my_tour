@@ -10,7 +10,7 @@ import { MailService } from "../services/mailService.js";
 import { SecurityService } from "../services/securityService.js";
 import { TokenService } from "../services/tokenService.js";
 import { UserService } from "../services/userService.js";
-import { AuthMiddleware } from "../utils/verifyRole.js";
+import { AuthMiddleware } from "../middlewares/authMiddleware.js";
 
 import { OperatorRepository } from "../repositories/operatorRepository.js";
 import { OperatorService } from "../services/operatorService.js";
@@ -39,8 +39,6 @@ const userService = new UserService(
 );
 export const userController = new UserController(userService);
 
-
-
 const operatorRepository = new OperatorRepository();
 const operatorService = new OperatorService(
   operatorRepository,
@@ -66,7 +64,7 @@ export const authMiddleware = new AuthMiddleware(
   securityService,
   userRepository,
   operatorRepository,
-  adminRepository
+  adminRepository,
 );
 
 const commonAuthService = new CommonAuthService(

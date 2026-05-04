@@ -3,7 +3,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 import { ISecurityService } from "../interfaces/ISecurityService.js";
 import { IUserRepository } from "../interfaces/IUserRepository.js";
-import { CustomError } from "./customError.js";
+import { CustomError } from "../utils/customError.js";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
 import { IAdminRepository } from "../interfaces/IAdminRepository.js";
 
@@ -51,7 +51,7 @@ export class AuthMiddleware {
 
         next();
       } catch (error) {
-        return next(new CustomError("Invalid or expired token", 403));
+        return next(new CustomError("Invalid or expired token", 401));
       }
     };
   };

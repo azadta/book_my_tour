@@ -108,7 +108,7 @@ export class AdminRepository implements IAdminRepository {
   }
 
   async findOperatorById(id: string): Promise<IOperator | null> {
-    return Operator.findById(id);
+    return Operator.findById(id).select('-password')
   }
   async updateUserById(id: string, data: Partial<IUser>) {
     const flattenedData = flattenObjects(data);

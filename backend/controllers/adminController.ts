@@ -23,7 +23,7 @@ export class AdminController {
         await this.adminService.loginAdminService(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 15 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
@@ -46,7 +46,7 @@ export class AdminController {
 
   updateAdmin = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || req.user.id !== req.params.id) {
-      return next(new CustomError("Unauthorized", 401));
+      return next(new CustomError("Unauthorized", StatusCode.UNAUTHORIZED));
     }
 
     try {
@@ -54,7 +54,8 @@ export class AdminController {
         req.params.id as string,
         req.body,
       );
-      if (!updatedAdmin) return next(new CustomError("Admin not found", 404));
+      if (!updatedAdmin)
+        return next(new CustomError("Admin not found", StatusCode.NOT_FOUND));
       const { password, ...rest } = updatedAdmin.toObject();
       res.status(StatusCode.OK).json(rest);
     } catch (error) {

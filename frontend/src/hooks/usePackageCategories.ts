@@ -14,6 +14,7 @@ export const usePackageCategories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true);
         const res = await axiosInstance.get(`/user/package-categories`);
         setCategories(res.data);
       } catch (error: any) {

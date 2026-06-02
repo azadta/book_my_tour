@@ -9,14 +9,16 @@ export class CommonAuthController {
     try {
       const refreshToken = req.cookies.refresh_token;
       if (!refreshToken) {
-        return next(new CustomError("No refresh token", 401));
+        return next(
+          new CustomError("No refresh token", StatusCode.UNAUTHORIZED),
+        );
       }
       const { newAccessToken } =
         await this.commonAuthService.refreshToken(refreshToken);
       res.cookie("access_token", newAccessToken, {
         httpOnly: true,
 
-        maxAge: 15 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.status(StatusCode.OK).json({ success: true });
     } catch (error) {

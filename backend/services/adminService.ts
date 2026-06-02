@@ -39,7 +39,7 @@ export class AdminService implements IAdminService {
     return { accessToken, refreshToken, adminData };
   }
 
-  async updateAdminService(id: string, data: any) {
+  async updateAdminService(id: string, data:Partial<IAdmin>) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }

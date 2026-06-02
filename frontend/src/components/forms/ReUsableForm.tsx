@@ -76,6 +76,8 @@ const ReUsableForm = ({
       return;
     }
     onSubmit(formData);
+    setFormData({})
+    setImagePreviews({})
   };
 
   const handleRemoveImage = (fieldId: string, index: number) => {

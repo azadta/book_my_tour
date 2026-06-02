@@ -76,7 +76,7 @@ export class OperatorController {
         await this.operatorService.operatorLoginService(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 15 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
@@ -260,7 +260,9 @@ export class OperatorController {
     try {
       const operatorId = req.user?.id;
       const totalPakagesCount =
-        await this.operatorService.getMyPackagesCountService(operatorId as string);
+        await this.operatorService.getMyPackagesCountService(
+          operatorId as string,
+        );
       res.status(StatusCode.OK).json({ success: true, totalPakagesCount });
     } catch (error) {
       next(error);

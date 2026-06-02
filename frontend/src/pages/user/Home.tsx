@@ -29,7 +29,7 @@ const Home = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
-  console.log("packages", packages);
+ 
 
   const renderCategory = (category: { _id: string; name: string }) => {
     const filtered = packages.filter((pkg: IPackage) =>

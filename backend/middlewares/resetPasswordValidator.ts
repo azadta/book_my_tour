@@ -21,7 +21,7 @@ export const resetPasswordValidator: (ValidationChain | RequestHandler)[] = [
     ),
 
   (req: Request, res: Response, next: NextFunction) => {
-    console.log('From validator')
+  
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       let formattedError: Record<string, string> = {};

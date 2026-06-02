@@ -36,6 +36,7 @@ export const userFields: FormField[] = [
     placeholder: "Email",
     required: true,
     label: "Email",
+    readOnly: true,
   },
   {
     id: "mobile",
@@ -318,7 +319,7 @@ export const operatorProfileFields: FormField[] = [
     placeholder: "Email",
     required: true,
     label: "Email",
-    readOnly:true
+    readOnly: true,
   },
   {
     id: "mobile",

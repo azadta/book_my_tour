@@ -25,8 +25,8 @@ export interface IOperator extends Document {
   isVerified: boolean;
   isBlocked: boolean;
   isPremium: boolean;
-  otp: string|undefined
-  otpExpire: number|undefined
+  otp: string | undefined;
+  otpExpire: number | undefined;
   resetPasswordToken: string | undefined;
   resetPasswordExpire: number | undefined;
   createdAt: Date;

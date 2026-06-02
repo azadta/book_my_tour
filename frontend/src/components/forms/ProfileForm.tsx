@@ -48,7 +48,7 @@ export const ProfileForm = ({
     });
 
     setFieldError(newErrors);
-    console.log("fieldError", fieldError);
+  
     if (Object.keys(newErrors).length > 0) {
       return;
     }
@@ -59,7 +59,7 @@ export const ProfileForm = ({
   const changeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    console.log("changeHandler:", e.target.id);
+
     handleChange(e);
     const { id } = e.target;
 
@@ -81,7 +81,7 @@ export const ProfileForm = ({
           type="file"
           ref={fileRef}
           hidden
-          accept="/image*"
+          accept="image/*"
           onChange={imageChangeHandler}
         />
         <img

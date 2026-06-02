@@ -11,7 +11,6 @@ import { CustomError } from "../utils/customError.js";
 import { IHashGenerator } from "../interfaces/IHashGenerator.js";
 import { StatusCode } from "../constants/statusCodeConstants.js";
 
-
 export class UserService implements IUserService {
   constructor(
     private userRepository: IUserRepository,
@@ -89,9 +88,17 @@ export class UserService implements IUserService {
 
   async loginUser(email: string, password: string) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new CustomError("Invalid email or password", 401);
+    if (!user)
+      throw new CustomError(
+        "Invalid email or password",
+        StatusCode.UNAUTHORIZED,
+      );
     const isPasswordValid = this.hashService.compare(password, user.password);
-    if (!isPasswordValid) throw new CustomError("Invalid email or password", 401);
+    if (!isPasswordValid)
+      throw new CustomError(
+        "Invalid email or password",
+        StatusCode.UNAUTHORIZED,
+      );
     if (user.isBlocked)
       throw new CustomError(
         "Your account has been blocked ,Please contact support",
@@ -163,11 +170,17 @@ export class UserService implements IUserService {
   async forgotPasswordService(email: string) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new CustomError("User not found", StatusCode.NOT_FOUND);
+    if (user.isBlocked) {
+      throw new CustomError(
+        "User is blocked, please contact support",
+        StatusCode.FORBIDDEN,
+      );
+    }
     const { resetToken, hashedToken, expireTime } =
       this.tokenService.getPasswordResetToken();
     user.resetPasswordToken = hashedToken;
     user.resetPasswordExpire = expireTime;
-    await user.save();
+    await this.userRepository.save(user);
     const resetUrl = `${process.env.FRONTEND_URL}/user/reset-password/${resetToken}`;
     await this.mailService.sendEmail(
       user.email,
@@ -186,7 +199,7 @@ export class UserService implements IUserService {
     user.password = this.hashService.hash(newPassword);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
-    await user.save();
+    await this.userRepository.save(user)
     return { message: "Password updated successfully" };
   }
 

@@ -49,7 +49,6 @@ export const fetchPackages = createAsyncThunk<
       `/user/packages/home?page=${page}&limit=${limit}`,
     );
 
-    console.log("res.data:", res.data);
     return res.data;
   } catch (error: any) {
     const message = error.response?.data?.message || "failed to fetch packages";

@@ -7,7 +7,7 @@ import type { RootState } from "../redux/store";
 const Header = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   return (
-    <div className="bg-sky-600  shadow-md w-full fixed">
+    <div className="bg-sky-600  shadow-md w-full fixed z-50">
       <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
         <Link to="/">
           <h1 className=" font-bold text-sm sm:text-xl flex flex-wrap">

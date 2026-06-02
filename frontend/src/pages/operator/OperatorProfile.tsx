@@ -204,7 +204,7 @@ const OperatorProfile = () => {
 
   return (
     <div className="p-3 max-w-2xl mx-auto mt-10 mb-10">
-    <BackToDashboard path="/operator/dashboard" />
+      <BackToDashboard path="/operator/dashboard" />
       <h1 className="text-3xl font-semibold text-center my-7  text-emerald-500">
         Profile
       </h1>

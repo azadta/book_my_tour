@@ -41,7 +41,7 @@ export class UserController {
       const { userId } = req.body;
       const data = await this.userService.resendUserOtp(userId);
       res
-        .status(StatusCode.CREATED)
+        .status(StatusCode.OK)
         .json({ success: true, message: "OTP resent to email", ...data });
     } catch (error) {
       next(error);
@@ -62,7 +62,7 @@ export class UserController {
         await this.userService.loginUser(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 15 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
@@ -81,7 +81,7 @@ export class UserController {
         await this.userService.googleLogin(name, email);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 15 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
@@ -210,7 +210,7 @@ export class UserController {
   };
 
   getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
-        console.log('from controller')
+
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;

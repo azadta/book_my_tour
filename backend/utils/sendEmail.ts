@@ -19,7 +19,7 @@ const sendEmail = async ({
     },
   } );
   const mailOptions = {
-    from: `"Book My tour"<${process.env.SMTP_USER}>`,
+    from: `"Book My Tour"<${process.env.SMTP_USER}>`,
     to,
     subject,
     html: `<p>${message}</p>`,

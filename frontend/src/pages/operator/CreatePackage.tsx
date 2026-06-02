@@ -23,6 +23,7 @@ const CreatePackage = () => {
   const handleSubmit = async (formData: any) => {
     try {
       await createPackage(formData);
+      
       toast.success("Package created successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {

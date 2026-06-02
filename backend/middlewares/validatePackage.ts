@@ -32,7 +32,7 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
     .isString()
     .withMessage("Remark must be valid string"),
   body("discount")
-    .optional()
+    .optional({ values: "falsy" })
     .isFloat({ min: 0 })
     .withMessage("Discount must be non negative number"),
   body("availableSlots")

@@ -3,9 +3,10 @@ import { useRegister } from "../../hooks/useRegister";
 import { toast } from "react-toastify";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userRegisterfields } from "../../formConfig/fields";
+import { useEffect } from "react";
 
 const Register = () => {
-  const { registerUser,  loading,fieldError,setFieldError } = useRegister();
+  const { registerUser, loading, fieldError, setFieldError } = useRegister();
   const navigate = useNavigate();
 
   const handleSubmit = (formData: {
@@ -23,11 +24,16 @@ const Register = () => {
     });
   };
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
     <div className="p-3 max-w-2xl mx-auto">
-      <h1 className="text-3xl text-center font-semibold mb-7   ">
-        Register
-      </h1>
+      <h1 className="text-3xl text-center font-semibold mb-7   ">Register</h1>
       <ReUsableForm
         fields={userRegisterfields}
         onSubmit={handleSubmit}
@@ -37,12 +43,11 @@ const Register = () => {
         setFieldError={setFieldError}
       />
       <p className="text-end">
-          Already have an account?{" "}
-          <a href="/user/login" className="text-sky-500 ml-3">
-            Login
-          </a>
-        </p>
-
+        Already have an account?{" "}
+        <a href="/user/login" className="text-sky-500 ml-3">
+          Login
+        </a>
+      </p>
     </div>
   );
 };

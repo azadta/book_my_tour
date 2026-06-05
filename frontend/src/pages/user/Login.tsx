@@ -5,6 +5,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { useLogin } from "../../hooks/useLogin";
 import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 import { userLoginfields } from "../../formConfig/fields";
+import { useEffect } from "react";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,12 @@ const Login = () => {
   const { loading } = useSelector((state: RootState) => state.user);
   const handleGoogleLogin = useGoogleLogin(dispatch, navigate);
   const { login, fieldError, setFieldError } = useLogin(dispatch, navigate);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   return (
     <div className="p-3 max-w-lg mx-auto ">

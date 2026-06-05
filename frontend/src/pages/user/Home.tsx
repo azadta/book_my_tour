@@ -5,6 +5,7 @@ import { usePackageCategories } from "../../hooks/usePackageCategories";
 import { fetchPackages, type IPackage } from "../../redux/package/packageSlice";
 import type { AppDispatch, RootState } from "../../redux/store";
 import PackageCard from "../../components/PackageCard";
+import Search from "../../components/Search";
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,6 +53,8 @@ const Home = () => {
   };
 
   return (
+    <>
+    <Search/>
     <div className="container mx-auto p-4">
       {status === "loading" && <p>...Loading packages</p>}
       {status === "failed" && <p>...Failed to load packages.</p>}
@@ -65,6 +68,7 @@ const Home = () => {
         onPageChange={setCurrentPage}
       />
     </div>
+    </>
   );
 };
 

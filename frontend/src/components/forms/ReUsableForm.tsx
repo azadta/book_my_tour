@@ -76,8 +76,8 @@ const ReUsableForm = ({
       return;
     }
     onSubmit(formData);
-    setFormData({})
-    setImagePreviews({})
+    setFormData({});
+    setImagePreviews({});
   };
 
   const handleRemoveImage = (fieldId: string, index: number) => {
@@ -105,11 +105,13 @@ const ReUsableForm = ({
   }, [initialData]);
 
   return (
-    <div className={`${fields.length > 3 ? "max-w-2xl " : "max-w-lg"} `}>
+    <div
+      className={` w-full mx-auto ${fields.length > 4 ? "max-w-2xl " : "max-w-lg"} `}
+    >
       <form
         id="reUsableForm"
         onSubmit={handleSubmit}
-        className={`space-y-6 bg-white shadow-lg rounded-2xl px-6 py-4 w-full mx-auto ${fields.length > 3 ? "  grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center" : ""} `}
+        className={`space-y-6 bg-white shadow-lg rounded-2xl px-6 py-4  ${fields.length > 4 ? "  grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center" : ""} `}
       >
         {fields.map((field) => {
           if (field.type === "select") {
@@ -276,7 +278,7 @@ const ReUsableForm = ({
         form="reUsableForm"
         type="submit"
         disabled={loading}
-        className="mt-5 px-4  bg-sky-400 text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-sky-500 transition-all disabled:opacity-60"
+        className={`mt-5 px-4   bg-[#634C9F] text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-[#583c9f] transition-all disabled:opacity-60 ${fields.length < 5 && "w-full"}`}
       >
         {loading ? "Loading..." : buttonText}
       </button>

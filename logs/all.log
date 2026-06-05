@@ -5196,3 +5196,55 @@
 2026-06-05 17:11:02:707 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 317.224 ms[39m 
 2026-06-05 17:11:02:754 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 45.669 ms[39m 
 2026-06-05 17:11:02:814 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 98.228 ms[39m 
+2026-06-05 17:17:07:918 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 49.617 ms[39m 
+2026-06-05 17:17:07:988 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 113.787 ms[39m 
+2026-06-05 17:17:08:487 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 43.753 ms[39m 
+2026-06-05 17:17:08:539 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 79.517 ms[39m 
+2026-06-05 17:30:59:174 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 259.573 ms[39m 
+2026-06-05 17:30:59:458 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 529.745 ms[39m 
+2026-06-05 17:30:59:540 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 42.463 ms[39m 
+2026-06-05 17:30:59:822 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 323.391 ms[39m 
+2026-06-05 19:28:54:774 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 441.768 ms[39m 
+2026-06-05 19:28:54:818 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 38.134 ms[39m 
+2026-06-05 19:28:55:111 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 713.810 ms[39m 
+2026-06-05 19:28:55:424 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 311.877 ms[39m 
+2026-06-05 19:41:50:179 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 51.166 ms[39m 
+2026-06-05 19:41:50:252 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 116.272 ms[39m 
+2026-06-05 19:41:50:701 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 35.607 ms[39m 
+2026-06-05 19:41:50:764 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 84.827 ms[39m 
+2026-06-05 19:41:54:513 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 58.000 ms[39m 
+2026-06-05 19:41:54:850 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 393.504 ms[39m 
+2026-06-05 19:41:55:081 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 34.982 ms[39m 
+2026-06-05 19:41:55:140 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 89.702 ms[39m 
+2026-06-05 19:41:56:803 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 39.008 ms[39m 
+2026-06-05 19:41:56:854 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 88.950 ms[39m 
+2026-06-05 19:41:57:455 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 95.969 ms[39m 
+2026-06-05 19:41:57:657 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 300.461 ms[39m 
+2026-06-05 19:42:02:144 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 37.976 ms[39m 
+2026-06-05 19:42:02:182 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 74.888 ms[39m 
+2026-06-05 19:42:02:732 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 41.177 ms[39m 
+2026-06-05 19:42:02:772 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 79.970 ms[39m 
+2026-06-05 19:42:08:550 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 41.014 ms[39m 
+2026-06-05 19:42:08:591 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 80.125 ms[39m 
+2026-06-05 19:42:09:179 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 77.628 ms[39m 
+2026-06-05 19:42:09:238 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 135.280 ms[39m 
+2026-06-05 19:42:12:880 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 40.922 ms[39m 
+2026-06-05 19:42:12:921 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 80.060 ms[39m 
+2026-06-05 19:42:13:464 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 37.313 ms[39m 
+2026-06-05 19:42:13:507 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 78.549 ms[39m 
+2026-06-05 19:46:41:686 [31merror[39m [31mValidation Error[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Validation Error\n    at validateUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\middlewares\\userValidator.ts:61:19)\n    at Layer.handleRequest (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\node_modules\\router\\lib\\route.js:157:13)\n    at middleware (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\node_modules\\express-validator\\lib\\middlewares\\check.js:16:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+2026-06-05 19:46:41:691 [32mhttp[39m [32mPOST /api/user/register 400 150 - 35.601 ms[39m 
+2026-06-05 19:48:15:076 [31merror[39m [31mValidation Error[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Validation Error\n    at validateUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\middlewares\\userValidator.ts:61:19)\n    at Layer.handleRequest (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\node_modules\\router\\lib\\route.js:157:13)\n    at middleware (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\node_modules\\express-validator\\lib\\middlewares\\check.js:16:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)"}
+2026-06-05 19:48:15:078 [32mhttp[39m [32mPOST /api/user/register 400 150 - 4.946 ms[39m 
+2026-06-05 19:58:11:756 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m {"layer":"CONTROLLER","module":"USER","action":"REGISTER"}
+2026-06-05 19:58:11:824 [31merror[39m [31mEmail already exists[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Email already exists\n    at UserService.registerUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\services\\userService.ts:31:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async register (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\controllers\\userController.ts:18:22)"}
+2026-06-05 19:58:11:828 [32mhttp[39m [32mPOST /api/user/register 400 81 - 75.071 ms[39m 
+2026-06-05 20:05:55:535 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m {"layer":"CONTROLLER","module":"USER","action":"REGISTER"}
+2026-06-05 20:05:55:597 [31merror[39m [31mEmail already exists[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Email already exists\n    at UserService.registerUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\services\\userService.ts:31:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async register (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\controllers\\userController.ts:18:22)"}
+2026-06-05 20:05:55:602 [32mhttp[39m [32mPOST /api/user/register 400 81 - 80.975 ms[39m 
+2026-06-05 20:37:03:812 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m {"layer":"CONTROLLER","module":"USER","action":"REGISTER"}
+2026-06-05 20:37:03:871 [31merror[39m [31mEmail already exists[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Email already exists\n    at UserService.registerUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\services\\userService.ts:31:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async register (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\controllers\\userController.ts:18:22)"}
+2026-06-05 20:37:03:874 [32mhttp[39m [32mPOST /api/user/register 400 81 - 71.609 ms[39m 
+2026-06-05 20:45:48:554 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m {"layer":"CONTROLLER","module":"USER","action":"REGISTER"}
+2026-06-05 20:45:48:599 [31merror[39m [31mEmail already exists[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Email already exists\n    at UserService.registerUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\services\\userService.ts:31:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async register (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\controllers\\userController.ts:18:22)"}
+2026-06-05 20:45:48:603 [32mhttp[39m [32mPOST /api/user/register 400 81 - 50.242 ms[39m 

@@ -32,7 +32,7 @@ const Register = () => {
   }, []);
 
   return (
-    <div className="p-3 max-w-2xl mx-auto">
+    <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold mb-7   ">Register</h1>
       <ReUsableForm
         fields={userRegisterfields}
@@ -42,9 +42,9 @@ const Register = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
-      <p className="text-end">
+      <p className="mt-2 font-semibold">
         Already have an account?{" "}
-        <a href="/user/login" className="text-sky-500 ml-3">
+        <a href="/user/login" className=" text-md ml-3 font-bold">
           Login
         </a>
       </p>

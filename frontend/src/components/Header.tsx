@@ -10,6 +10,7 @@ import { GrNotes } from "react-icons/gr";
 import { TbFileLike } from "react-icons/tb";
 import { IoSearchSharp } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
+import { BiSolidHome } from "react-icons/bi";
 
 const Header = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -47,6 +48,12 @@ const Header = () => {
                     </Link>
                   </>
                 )}
+                      <Link to="/">
+                  <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
+                    <BiSolidHome />
+                    Home
+                  </li>
+                </Link>
                 <Link to="/contact">
                   <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                     <RiContactsBook2Fill />

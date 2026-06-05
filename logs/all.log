@@ -5192,3 +5192,7 @@
 2026-06-05 16:38:59:493 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 34.721 ms[39m 
 2026-06-05 16:38:59:498 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 81.347 ms[39m 
 2026-06-05 16:38:59:572 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 72.129 ms[39m 
+2026-06-05 17:11:02:699 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 323.729 ms[39m 
+2026-06-05 17:11:02:707 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 317.224 ms[39m 
+2026-06-05 17:11:02:754 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 45.669 ms[39m 
+2026-06-05 17:11:02:814 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 98.228 ms[39m 

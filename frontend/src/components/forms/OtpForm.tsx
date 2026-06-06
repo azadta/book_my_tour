@@ -49,7 +49,7 @@ export const OtpForm = ({
           disabled={timeLeft <= 0}
         />
         <button
-          className="bg-blue-600 text-white py-2 rounded-lg"
+          className=" bg-[#634C9F]  hover:bg-[#583c9f] text-white py-2 rounded-lg"
           type="submit"
           disabled={timeLeft <= 0 || otp.length !== 5}
         >

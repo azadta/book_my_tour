@@ -278,7 +278,7 @@ const ReUsableForm = ({
         form="reUsableForm"
         type="submit"
         disabled={loading}
-        className={`mt-5 px-4   bg-[#634C9F] text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-[#583c9f] transition-all disabled:opacity-60 ${fields.length < 5 && "w-full"}`}
+        className={`mt-5 px-4   bg-[#634C9F] text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-[#583c9f] transition-all disabled:opacity-60 cursor-pointer ${fields.length < 5 && "w-full"}`}
       >
         {loading ? "Loading..." : buttonText}
       </button>

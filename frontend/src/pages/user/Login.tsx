@@ -6,6 +6,7 @@ import { useLogin } from "../../hooks/useLogin";
 import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 import { userLoginfields } from "../../formConfig/fields";
 import { useEffect } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -33,21 +34,6 @@ const Login = () => {
         setFieldError={setFieldError}
       />
 
-      <button
-        onClick={handleGoogleLogin}
-        type="button"
-        className="flex gap-1 items-center mt-5 hover:cursor-pointer bg-white"
-      >
-        <img
-          src="https://developers.google.com/identity/images/g-logo.png"
-          alt="Google"
-          className="size-4"
-        />
-        <span className="text-sm font-medium text-sky-500">
-          Continue with Google
-        </span>
-      </button>
-
       <div className="flex justify-between items-center mt-4">
         <a
           href="/user/forgot-password"
@@ -62,6 +48,15 @@ const Login = () => {
           </a>
         </p>
       </div>
+
+      <button
+        onClick={handleGoogleLogin}
+        type="button"
+        className="mx-auto flex gap-1 items-center mt-10 hover:cursor-pointer px-5 py-3 border  rounded-full "
+      >
+        <FcGoogle className="bg-sky-50 text-xl" />
+        <span className="text-sm font-medium ">Sign in with Google</span>
+      </button>
     </div>
   );
 };

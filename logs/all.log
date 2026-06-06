@@ -5248,3 +5248,7 @@
 2026-06-05 20:45:48:554 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m {"layer":"CONTROLLER","module":"USER","action":"REGISTER"}
 2026-06-05 20:45:48:599 [31merror[39m [31mEmail already exists[39m {"status":400,"method":"POST","url":"/api/user/register","stack":"Error: Email already exists\n    at UserService.registerUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\services\\userService.ts:31:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async register (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\controllers\\userController.ts:18:22)"}
 2026-06-05 20:45:48:603 [32mhttp[39m [32mPOST /api/user/register 400 81 - 50.242 ms[39m 
+2026-06-06 08:16:08:212 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 48.584 ms[39m 
+2026-06-06 08:16:08:253 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 33.801 ms[39m 
+2026-06-06 08:16:08:298 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 129.241 ms[39m 
+2026-06-06 08:16:08:391 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 90.377 ms[39m 

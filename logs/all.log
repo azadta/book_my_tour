@@ -5252,3 +5252,16 @@
 2026-06-06 08:16:08:253 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 33.801 ms[39m 
 2026-06-06 08:16:08:298 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 129.241 ms[39m 
 2026-06-06 08:16:08:391 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 90.377 ms[39m 
+2026-06-06 10:05:52:453 [32minfo[39m [32mUser login attempt[39m {"layer":"CONTROLLER","module":"USER","action":"LOGIN","email":"abdulkareemazad@gmail.com"}
+2026-06-06 10:05:52:848 [31merror[39m [31mInvalid email or password[39m {"status":401,"method":"POST","url":"/api/user/login","stack":"Error: Invalid email or password\n    at UserService.loginUser (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\services\\userService.ts:92:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async login (C:\\Users\\THIS PC\\Desktop\\book-my-tour\\backend\\controllers\\userController.ts:62:9)"}
+2026-06-06 10:05:52:868 [32mhttp[39m [32mPOST /api/user/login 401 86 - 421.239 ms[39m 
+2026-06-06 10:11:07:603 [32minfo[39m [32mAttempting registration for email abdulkareemazad@gmail.com[39m {"layer":"CONTROLLER","module":"USER","action":"REGISTER"}
+2026-06-06 10:11:12:169 [32mhttp[39m [32mPOST /api/user/register 201 99 - 4594.490 ms[39m 
+2026-06-06 19:55:23:005 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 1087.701 ms[39m 
+2026-06-06 19:55:23:134 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 122.415 ms[39m 
+2026-06-06 19:55:23:619 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 1631.461 ms[39m 
+2026-06-06 19:55:24:257 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 634.949 ms[39m 
+2026-06-06 19:55:25:304 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 87.833 ms[39m 
+2026-06-06 19:55:25:368 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 150.332 ms[39m 
+2026-06-06 19:55:25:387 [32mhttp[39m [32mGET /api/user/package-categories 304 - - 81.659 ms[39m 
+2026-06-06 19:55:25:534 [32mhttp[39m [32mGET /api/user/packages/home?page=1&limit=6 304 - - 165.092 ms[39m 

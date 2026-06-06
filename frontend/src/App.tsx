@@ -65,6 +65,7 @@ const App = () => {
             />
             <Route path="/user/register" element={<Register />} />
             <Route path="/user/forgot-password" element={<ForgotPassword />} />
+                <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
           </Route>
 
           <Route
@@ -76,7 +77,7 @@ const App = () => {
             }
           >
             <Route path="/user/profile" element={<Profile />} />
-            <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
+        
           </Route>
         </Route>
 

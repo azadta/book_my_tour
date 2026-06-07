@@ -223,7 +223,7 @@ const Profile = () => {
           </button>
         </div>
       </div>
-      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto mt-2 mb-10 w-full max-sm:order-1  ">
+      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full max-sm:order-1  ">
         <h1 className="text-2xl font-semibold text-center my-5 text-emerald-500">
           Profile
         </h1>

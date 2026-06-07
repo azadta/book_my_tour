@@ -23,7 +23,7 @@ const Header = () => {
       <header className="fixed z-50 top-0 left-0 w-full   ">
         <div className="  bg-sky-200  ">
           <div className="max-w-6xl mx-auto flex justify-between items-center px-4 py-4 ">
-            <h1 className="text-3xl  font-jim text-pink-600">Book My Tour</h1>
+            <h1 className="text-[25px] sm:text-3xl  font-jim text-pink-600">Book My Tour</h1>
             <div
               className={`bg-white  rounded-md flex items-center p-2 md:hidden ${isOpen ? "hidden" : "block"}`}
             >

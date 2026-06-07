@@ -5,7 +5,7 @@ const Search = () => {
   const [showSearch, setShowSearch] = useState(true);
   useEffect(() => {
     const scrollHandler = () => {
-      setShowSearch(window.scrollY < 150);
+      setShowSearch(window.scrollY < 300);
     };
     window.addEventListener("scroll", scrollHandler);
     return () => {
@@ -14,7 +14,7 @@ const Search = () => {
   }, []);
   return (
     <div
-      className={`bg-sky-50 pb-2 -mt-20 transition-all w-full duration-300 fixed z-50 left-1/2 -translate-x-1/2  ${showSearch ? "hidden md:block" : "hidden"}`}
+      className={`bg-sky-50 pb-2 -mt-3   transition-all w-full duration-300 fixed z-50 left-1/2 -translate-x-1/2  ${showSearch ? "hidden md:block" : "hidden"}`}
     >
       <div className="flex justify-center items-center text-sky-400 gap-2 pb-2">
         Search By <IoSearchSharp />

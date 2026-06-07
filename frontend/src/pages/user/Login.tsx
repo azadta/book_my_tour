@@ -34,7 +34,7 @@ const Login = () => {
         setFieldError={setFieldError}
       />
 
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center mt-4">
         <a
           href="/user/forgot-password"
           className="text-sky-500 hover:underline"

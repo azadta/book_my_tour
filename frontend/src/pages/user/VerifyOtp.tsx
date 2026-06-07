@@ -59,7 +59,7 @@ const VerifyOtp = () => {
     <div className="flex max-md:flex-col justify-center items-center gap-5 ">
       <div className="relative py-10 px-12 ml-5 max-sm:hidden ">
         <div className="absolute inset-0 opacity-30 bg-[url('/review2.jpg')] bg-cover bg-center flex-1 rounded-2xl"></div>
-        <ul>
+        <ul className="space-y-4">
           <li className="text-cyan-800 font-semibold">
             Why Choose Our Tour booking App?
           </li>

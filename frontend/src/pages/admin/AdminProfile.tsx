@@ -160,34 +160,43 @@ const AdminProfile = () => {
   }, [currentAdmin]);
 
   return (
-    <div className="p-3 max-w-2xl mx-auto mt-10 mb-10">
-      <BackToDashboard path="/admin/dashboard"/>
-      <h1 className="text-3xl font-semibold text-center my-7  text-emerald-500">
-        Admin Profile
-      </h1>
-      <ProfileForm
-        currentUser={currentAdmin}
-        formData={formData}
-        fields={adminProfileFields}
-        handleChange={handleChange}
-        handleFileChange={handleFileChange}
-        handleSubmit={handleSubmit}
-        loading={loading}
-        fileRef={fileRef}
-        imageUploading={imageUploading}
-        fieldError={fieldError}
-        setFieldError={setFieldError}
-      />
-      <div className="flex justify-between mt-5">
-        <span onClick={handleLogOut} className="text-red-700 cursor-pointer">
-          Log Out
-        </span>
-        <span
-          onClick={() => navigate("/admin/reset-password")}
-          className="text-blue-700 cursor-pointer"
-        >
-          Reset Password
-        </span>
+    <div className="flex flex-col sm:flex-row  justify-center gap-5 ">
+      <div className="sm:max-w-[220px] bg-gray-200 w-full px-10 max-sm:order-2  ">
+        <div className="sm:mt-25 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+          <button
+            onClick={() => navigate("/admin/reset-password")}
+            className="text-white cursor-pointer bg-sky-400 px-3 py-2 rounded hover:bg-sky-500"
+          >
+            Reset Password
+          </button>
+
+          <button
+            onClick={handleLogOut}
+            className="text-white cursor-pointer bg-sky-400 px-3 py-2 rounded hover:bg-sky-500"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+
+      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full max-sm:order-1 ">
+        <BackToDashboard path="/admin/dashboard" />
+        <h1 className="text-2xl font-semibold text-center my-7  text-emerald-500">
+          Admin Profile
+        </h1>
+        <ProfileForm
+          currentUser={currentAdmin}
+          formData={formData}
+          fields={adminProfileFields}
+          handleChange={handleChange}
+          handleFileChange={handleFileChange}
+          handleSubmit={handleSubmit}
+          loading={loading}
+          fileRef={fileRef}
+          imageUploading={imageUploading}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
+        />
       </div>
     </div>
   );

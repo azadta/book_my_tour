@@ -55,7 +55,7 @@ const Home = () => {
   return (
     <>
     <Search/>
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 md:mt-15">
       {status === "loading" && <p>...Loading packages</p>}
       {status === "failed" && <p>...Failed to load packages.</p>}
       {categoryLoading && <p>...Loading categories</p>}

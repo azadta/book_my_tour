@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useApi } from "../../hooks/useApi";
 import { ProfileForm } from "../../components/forms/ProfileForm";
 import { userFields } from "../../formConfig/fields";
+import ConfirmationModel from "../../components/ConfirmationModal";
 
 interface FormDataType {
   [key: string]: any;
@@ -48,6 +49,9 @@ const Profile = () => {
 
   const [imageUploading, setImageUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalAction, setModalAction] = useState<() => void>(() => () => {});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { post, del } = useApi();
@@ -111,8 +115,6 @@ const Profile = () => {
   };
 
   const handleSubmit = async () => {
-
-
     try {
       dispatch(updateUserStart());
       const updatedUser = await post(
@@ -135,7 +137,7 @@ const Profile = () => {
       toast.error(error.response?.data?.message || "Error updating user");
     }
   };
-  const handleDeleteUser = async () => {
+  const deleteUser = async () => {
     try {
       dispatch(deleteUserStart());
       await del(`/user/delete/${currentUser?._id}`);
@@ -148,6 +150,14 @@ const Profile = () => {
       );
       toast.error(error.response?.data?.message || "Error deleting user");
     }
+  };
+  const handleDeleteUser = async () => {
+    setModalMessage("Are you sure to delete your account");
+    setModalAction(() => async () => {
+      await deleteUser();
+      setModalOpen(false);
+    });
+    setModalOpen(true);
   };
   const handleLogOut = async () => {
     try {
@@ -189,39 +199,56 @@ const Profile = () => {
   }, [currentUser]);
 
   return (
-    <div className="p-3 max-w-2xl mx-auto mt-2 mb-10">
-      <h1 className="text-3xl font-semibold text-center my-5 text-emerald-500">
-        Profile
-      </h1>
-      <ProfileForm
-        currentUser={currentUser}
-        formData={formData}
-        fields={userFields}
-        handleChange={handleChange}
-        handleFileChange={handleFileChange}
-        handleSubmit={handleSubmit}
-        loading={loading}
-        fileRef={fileRef}
-        imageUploading={imageUploading}
-        fieldError={fieldError}
-        setFieldError={setFieldError}
-      />
-      <div className="flex justify-between mt-5">
-        <span
-          onClick={handleDeleteUser}
-          className="text-red-700 cursor-pointer"
-        >
-          Delete Account
-        </span>
-        <span
-          onClick={() => navigate("/user/reset-password")}
-          className="text-sky-700 cursor-pointer"
-        >
-          Reset Password
-        </span>
-        <span onClick={handleLogOut} className="text-blue-700 cursor-pointer">
-          Log Out
-        </span>
+    <div className="flex flex-col sm:flex-row  justify-center gap-5 ">
+      <div className="sm:max-w-[220px] bg-gray-200 w-full px-10 max-sm:order-2  ">
+        <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+          <button
+            onClick={() => navigate("/user/reset-password")}
+            className="text-white cursor-pointer bg-sky-400 px-3 py-2 rounded hover:bg-sky-500"
+          >
+            Reset Password
+          </button>
+          <button
+            onClick={handleDeleteUser}
+            className="text-white cursor-pointer bg-red-400 px-3 py-2 rounded hover:bg-red-500"
+          >
+            Delete Account
+          </button>
+
+          <button
+            onClick={handleLogOut}
+             className="text-white cursor-pointer bg-sky-400 px-3 py-2 rounded hover:bg-sky-500"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto mt-2 mb-10 w-full max-sm:order-1  ">
+        <h1 className="text-2xl font-semibold text-center my-5 text-emerald-500">
+          Profile
+        </h1>
+        <ProfileForm
+          currentUser={currentUser}
+          formData={formData}
+          fields={userFields}
+          handleChange={handleChange}
+          handleFileChange={handleFileChange}
+          handleSubmit={handleSubmit}
+          loading={loading}
+          fileRef={fileRef}
+          imageUploading={imageUploading}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
+        />
+        <div className="flex justify-between mt-5"></div>
+        <ConfirmationModel
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={() => {
+            modalAction();
+          }}
+          message={modalMessage}
+        />
       </div>
     </div>
   );

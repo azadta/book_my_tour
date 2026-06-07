@@ -26,7 +26,7 @@ export const OtpForm = ({
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto mt-10">
+    <div className=" max-w-lg mx-auto ">
       <h1 className="text-2xl font-bold mb-4 text-center">Verify Otp</h1>
       <p className="text-center mb-4 text-gray-600">
         OTP expires in :

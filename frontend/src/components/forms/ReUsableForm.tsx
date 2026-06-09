@@ -106,7 +106,7 @@ const ReUsableForm = ({
 
   return (
     <div
-      className={` w-full mx-auto ${fields.length > 4 ? "max-w-2xl " : "max-w-lg"} `}
+      className={` w-full mx-auto ${fields.length > 4 ? "max-w-2xl max-md:max-w-lg " : "max-w-lg"} `}
     >
       <form
         id="reUsableForm"

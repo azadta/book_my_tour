@@ -7,8 +7,12 @@ import type { ActionButton, Column } from "../../components/ReUsableTable";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useAdminUserManagement } from "../../hooks/useAdminUserManagement";
 import type { IUser } from "../../redux/user/userSlice";
+import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { RiCloseLargeFill } from "react-icons/ri";
 
 const AdminUserDetails = () => {
+  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerpage = 5;
   const navigate = useNavigate();
@@ -23,14 +27,7 @@ const AdminUserDetails = () => {
     setCurrentPage(page);
   };
 
-  const handleGetSingleUser = () => {
-    if (userId.trim()) {
-      navigate(`/admin/edit-user/${userId.trim()}`);
-    }
-  };
-
   const columns: Column<IUser>[] = [
-    { label: "User ID", render: (user) => user._id },
     { label: "Name", render: (user) => user.name },
     { label: "Email", render: (user) => user.email },
     { label: "Mobile", render: (user) => user.mobile },
@@ -72,45 +69,73 @@ const AdminUserDetails = () => {
     },
   ];
   return (
-    <div className="p-6">
-      <BackToDashboard path="/admin/dashboard" />
-      <h1 className="text-3xl font-bold mb-6 text-center ">User Management</h1>
-      <div className="flex flex-col gap-3 p-4 bg-gray-50 rounded shadow w-full max-w-72 mb-6">
-        <input
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          type="text"
-          placeholder="Enter User ID"
-          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 "
-        />
-        <button
-          onClick={handleGetSingleUser}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 "
-        >
-          Get Single User
-        </button>
+    <>
+      <div className="flex flex-col min-h-screen ">
+        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
+          <h2 className="text-2xl font-bold text-center  text-gray-800">
+            Admin Dashboard
+          </h2>
+        </header>
+
+        <div className="flex-1 flex ">
+            <div className="w-64 max-md:hidden"></div>
+          <div className="max-md:hidden fixed top-16.5 bottom-0">
+          <AdminDashboardSideBar />
+          </div>
+        
+
+          <div className="flex-1 p-5 min-w-0">
+            <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
+              User Management
+            </h1>
+
+            <ReUsableTable
+              data={users}
+              columns={columns}
+              actions={actions}
+              loading={loading}
+            />
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              totalPages={totalPages}
+            />
+            <ConfirmationModal
+              isOpen={modalOpen}
+              message={modalMessage}
+              onClose={() => setModalOpen(false)}
+              onConfirm={() => {
+                modalAction();
+                setModalOpen(false);
+              }}
+            />
+          </div>
+        </div>
       </div>
-      <ReUsableTable
-        data={users}
-        columns={columns}
-        actions={actions}
-        loading={loading}
-      />
-      <Pagination
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-        totalPages={totalPages}
-      />
-      <ConfirmationModal
-        isOpen={modalOpen}
-        message={modalMessage}
-        onClose={() => setModalOpen(false)}
-        onConfirm={() => {
-          modalAction();
-          setModalOpen(false);
-        }}
-      />
-    </div>
+       {!open && (
+        <RxHamburgerMenu
+          className="fixed top-0 right-0 md:hidden text-3xl text-orange-600"
+          onClick={() => setOpen(true)}
+        />
+      )}
+      {open && (
+        <RiCloseLargeFill
+          onClick={() => setOpen(false)}
+          className=" fixed top-0 right-0 text-2xl z-60 "
+        />
+      )}
+      {open && (
+        <>
+          <div className="fixed top-0 right-0 bottom-0 z-50   md:hidden overflow-x-auto">
+            <AdminDashboardSideBar />
+          </div>
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden "
+            onClick={() => setOpen(false)}
+          ></div>
+        </>
+      )}
+    </>
   );
 };
 

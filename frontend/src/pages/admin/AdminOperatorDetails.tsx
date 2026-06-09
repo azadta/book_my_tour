@@ -6,8 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import type { IOperator } from "../../redux/operator/operatorSlice";
 import Pagination from "../../components/Pagination";
+import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { RiCloseLargeFill } from "react-icons/ri";
 
 const AdminOperatorDetails: React.FC = () => {
+  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 5;
   const navigate = useNavigate();
@@ -28,7 +32,6 @@ const AdminOperatorDetails: React.FC = () => {
   };
 
   const columns = [
-    { label: "Operator ID", render: (op: IOperator) => op._id },
     { label: "Name", render: (op: IOperator) => op.name },
     { label: "Email", render: (op: IOperator) => op.email },
     { label: "Mobile", render: (op: IOperator) => op.mobile },
@@ -51,7 +54,7 @@ const AdminOperatorDetails: React.FC = () => {
       loadingText: "Editing...",
     },
     {
-      label: (op:IOperator) => `${op.isBlocked ? "Unblock" : "Block"}`,
+      label: (op: IOperator) => `${op.isBlocked ? "Unblock" : "Block"}`,
       onClick: (op: IOperator) => {
         setModalMessage(
           `Are you sure want to ${
@@ -80,54 +83,78 @@ const AdminOperatorDetails: React.FC = () => {
   ];
 
   return (
-    <div className="p-6">
-      <BackToDashBoard path="/admin/dashboard" />
-      <h1 className="text-3xl font-bold mb-6 text-center ">
-        Operator Management
-      </h1>
-      <div className="flex flex-col gap-3 p-4 bg-gray-50 rounded shadow w-full max-w-72 mb-6">
-        <input
-          value={operatorId}
-          onChange={(e) => setOperatorId(e.target.value)}
-          type="text"
-          placeholder="Enter operator Id"
-          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    <>
+    <div className="flex flex-col min-h-screen ">
+         <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
+          <h2 className="text-2xl font-bold text-center  text-gray-800">
+            Admin Dashboard
+          </h2>
+        </header>
+        <div className="flex-1 flex">
+              <div className="w-64 max-md:hidden"></div>
+          <div className="max-md:hidden fixed top-16.5 bottom-0">
+          <AdminDashboardSideBar />
+          </div>
+
+      <div className="flex-1 p-5 min-w-0">
+        <h2 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
+          Operator Management
+        </h2>
+
+        <ReUsableTable
+          data={operators}
+          columns={columns}
+          actions={actions}
+          loading={loading}
+        />
+
+        <ConfirmationModal
+          isOpen={modalOpen}
+          message={modalMessage}
+          onClose={() => setModalOpen(false)}
+          onConfirm={() => {
+            modalAction();
+            setModalOpen(false);
+          }}
         />
         <button
-          onClick={handleGetSingleOperator}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          onClick={() => navigate("/admin/operator-verification")}
+          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700  mt-6"
         >
-          Get single Operator
+          Verification Requests
         </button>
+        <Pagination
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          totalPages={totalPages}
+        />
       </div>
-      <ReUsableTable
-        data={operators}
-        columns={columns}
-        actions={actions}
-        loading={loading}
-      />
-
-      <ConfirmationModal
-        isOpen={modalOpen}
-        message={modalMessage}
-        onClose={() => setModalOpen(false)}
-        onConfirm={() => {
-          modalAction();
-          setModalOpen(false);
-        }}
-      />
-      <button
-        onClick={() => navigate("/admin/operator-verification")}
-        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700  mt-6"
-      >
-        Verification Requests
-      </button>
-      <Pagination
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-        totalPages={totalPages}
-      />
-    </div>
+      </div>
+      </div>
+      {!open && (
+        <RxHamburgerMenu
+          className="fixed top-0 right-0 md:hidden text-3xl text-orange-600"
+          onClick={() => setOpen(true)}
+        />
+      )}
+      {open && (
+        <RiCloseLargeFill
+          onClick={() => setOpen(false)}
+          className=" fixed top-0 right-0 text-2xl z-60 "
+        />
+      )}
+      {open && (
+        <>
+          <div className="fixed top-0 right-0 bottom-0 z-50   md:hidden overflow-x-auto">
+            <AdminDashboardSideBar />
+          </div>
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden "
+            onClick={() => setOpen(false)}
+          ></div>
+        </>
+      )}
+    </>
   );
 };
 

@@ -32,7 +32,8 @@ const ReUsableTable = <T,>({
   if (loading) return <Loading />;
   if (data.length === 0) return <p className="text-center">{noDataText}</p>;
   return (
-    <table className="min-w-full table-auto border border-gray-500">
+    <div className="overflow-auto rounded shadow-md w-full">
+    <table className="w-full table-auto border border-gray-500">
       <thead>
         <tr className="bg-gray-100">
           {columns.map((col, idx) => (
@@ -45,20 +46,20 @@ const ReUsableTable = <T,>({
           )}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="bg-slate-200">
         {data.map((item, rawIndex) => (
           <tr key={rawIndex}>
             {columns.map((col, colIndex) => (
               <td
                 key={colIndex}
-                className="border border-gray-500 p-2 text-center"
+                className="border border-gray-500 p-2 text-center whitespace-nowrap"
               >
                 {col.render(item)}
               </td>
             ))}
 
             {actions.length > 0 && (
-              <td className="border border-gray-500 p-2 text-center space-x-2">
+              <td className="border border-gray-500 p-2 text-center space-x-2 whitespace-nowrap">
                 {actions.map((action, actionIdx) => {
                   const disabled = action.disabled?.(item) || false;
                   const loading = action.isLoading?.(item) || false;
@@ -84,6 +85,7 @@ const ReUsableTable = <T,>({
         ))}
       </tbody>
     </table>
+    </div>
   );
 };
 

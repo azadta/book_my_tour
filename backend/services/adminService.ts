@@ -1,16 +1,16 @@
-import { IAdminRepository } from "../interfaces/IAdminRepository.js";
-import { IDestination } from "../models/Destination.js";
-import { IPackageCategory } from "../models/PackageCategory.js";
-import { CustomError } from "../utils/customError.js";
+import { IAdminRepository } from "../interfaces/IAdminRepository";
+import { IDestination } from "../models/Destination";
+import { IPackageCategory } from "../models/PackageCategory";
+import { CustomError } from "../utils/customError";
 
-import { IAdminService } from "../interfaces/IAdminService.js";
-import { IHashService } from "../interfaces/IHashService.js";
-import { IMailService } from "../interfaces/IMailService.js";
-import { ISecurityService } from "../interfaces/ISecurityService.js";
-import { ITokenService } from "../interfaces/ITokenService.js";
-import { IAdmin } from "../models/Admin.js";
-import { Ipackage } from "../models/Package.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { IAdminService } from "../interfaces/IAdminService";
+import { IHashService } from "../interfaces/IHashService";
+import { IMailService } from "../interfaces/IMailService";
+import { ISecurityService } from "../interfaces/ISecurityService";
+import { ITokenService } from "../interfaces/ITokenService";
+import { IAdmin } from "../models/Admin";
+import { Ipackage } from "../models/Package";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class AdminService implements IAdminService {
   constructor(

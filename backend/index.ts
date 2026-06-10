@@ -4,12 +4,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
-import userRouter from "./routes/userRoutes.js";
-import operatorRouter from "./routes/operatorRoutes.js";
-import adminRouter from "./routes/adminRoutes.js";
-import commonAuthRouter from "./routes/commonAuthRoutes.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import { morganMiddleware } from "./middlewares/morgan.js";
+import userRouter from "./routes/userRoutes";
+import operatorRouter from "./routes/operatorRoutes";
+import adminRouter from "./routes/adminRoutes";
+import commonAuthRouter from "./routes/commonAuthRoutes";
+import errorHandler from "./middlewares/errorHandler";
+import { morganMiddleware } from "./middlewares/morgan";
 
 mongoose
   .connect(process.env.MONGO as string)

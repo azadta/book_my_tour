@@ -1,14 +1,14 @@
 import express from "express";
 
-import { validateUpdateAdmin } from "../middlewares/adminUpdateValidator.js";
-import { validateUpdateOperator } from "../middlewares/operatorUpdateValidator.js";
-import { validateUpdateUser } from "../middlewares/userUpdateValidator.js";
+import { validateUpdateAdmin } from "../middlewares/adminUpdateValidator";
+import { validateUpdateOperator } from "../middlewares/operatorUpdateValidator";
+import { validateUpdateUser } from "../middlewares/userUpdateValidator";
 
-import { adminController, authMiddleware } from "../config/container.js";
-import { validateDestination } from "../middlewares/validateDestination.js";
-import { validatePackageCategory } from "../middlewares/validatePackageCategory.js";
-import { ROUTES } from "../constants/routesConstants.js";
-import { resetPasswordValidator } from "../middlewares/resetPasswordValidator.js";
+import { adminController, authMiddleware } from "../config/container";
+import { validateDestination } from "../middlewares/validateDestination";
+import { validatePackageCategory } from "../middlewares/validatePackageCategory";
+import { ROUTES } from "../constants/routesConstants";
+import { resetPasswordValidator } from "../middlewares/resetPasswordValidator";
 
 const router = express.Router();
 

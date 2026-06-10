@@ -1,7 +1,7 @@
-import { IDestination } from "../models/Destination.js";
-import { IOperator } from "../models/Operator.js";
-import { Ipackage } from "../models/Package.js";
-import { IPackageCategory } from "../models/PackageCategory.js";
+import { IDestination } from "../models/Destination";
+import { IOperator } from "../models/Operator";
+import { Ipackage } from "../models/Package";
+import { IPackageCategory } from "../models/PackageCategory";
 
 export interface IOperatorService {
   operatorRegisterService(data: any): Promise<{

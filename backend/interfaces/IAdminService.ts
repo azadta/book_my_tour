@@ -1,9 +1,9 @@
-import { IAdmin } from "../models/Admin.js";
-import { IDestination } from "../models/Destination.js";
-import { IOperator } from "../models/Operator.js";
-import { Ipackage } from "../models/Package.js";
-import { IPackageCategory } from "../models/PackageCategory.js";
-import { IUser } from "../models/User.js";
+import { IAdmin } from "../models/Admin";
+import { IDestination } from "../models/Destination";
+import { IOperator } from "../models/Operator";
+import { Ipackage } from "../models/Package";
+import { IPackageCategory } from "../models/PackageCategory";
+import { IUser } from "../models/User";
 
 export interface IAdminService {
   loginAdminService(

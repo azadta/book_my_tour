@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/customError";
 
-import { IUserService } from "../interfaces/IUserService.js";
-import { logger } from "../utils/logger.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { IUserService } from "../interfaces/IUserService";
+import { logger } from "../utils/logger";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class UserController {
   constructor(private userService: IUserService) {}

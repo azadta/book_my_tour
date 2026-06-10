@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomError } from "../utils/customError.js";
-import { ICommonAuthService } from "../interfaces/ICommonAuthService.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { CustomError } from "../utils/customError";
+import { ICommonAuthService } from "../interfaces/ICommonAuthService";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class CommonAuthController {
   constructor(private commonAuthService: ICommonAuthService) {}

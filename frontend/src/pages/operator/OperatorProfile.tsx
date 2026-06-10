@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { operatorProfileFields } from "../../formConfig/fields.ts";
+import { operatorProfileFields } from "../../formConfig/fields";
 
 import {
   updateOperatorStart,

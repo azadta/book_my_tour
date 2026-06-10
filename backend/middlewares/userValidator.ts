@@ -1,8 +1,8 @@
 import { body, ValidationChain, validationResult } from "express-validator";
 
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import { StatusCode } from "../constants/statusCodeConstants.js";
-import { CustomError } from "../utils/customError.js";
+import { StatusCode } from "../constants/statusCodeConstants";
+import { CustomError } from "../utils/customError";
 
 export const validateUser: (ValidationChain | RequestHandler)[] = [
   body("name").trim().notEmpty().withMessage("Name is required"),

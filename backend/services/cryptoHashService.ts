@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-import { IHashGenerator } from "../interfaces/IHashGenerator.js";
+import { IHashGenerator } from "../interfaces/IHashGenerator";
 
 export class CryptoHashService implements IHashGenerator {
   hash(data: string): string {

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/customError";
 
-import { IAdminService } from "../interfaces/IAdminService.js";
-import { logger } from "../utils/logger.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { IAdminService } from "../interfaces/IAdminService";
+import { logger } from "../utils/logger";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class AdminController {
   constructor(private adminService: IAdminService) {}

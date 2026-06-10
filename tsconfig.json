@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
+    "module": "esnext",
     "target": "esnext",
-
+    "moduleResolution": "bundler",
 
     "sourceMap": true,
     "declaration": true,
@@ -12,8 +12,7 @@
     "exactOptionalPropertyTypes": true,
 
     "strict": true,
-  
-   
+
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",

@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import {
   ISecurityPayload,
   ISecurityService,
-} from "../interfaces/ISecurityService.js";
+} from "../interfaces/ISecurityService";
 
 export class SecurityService implements ISecurityService {
   private get accessSecret(): string {

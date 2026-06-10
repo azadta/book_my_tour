@@ -1,25 +1,25 @@
-import { UserController } from "../controllers/userController.js";
+import { UserController } from "../controllers/userController";
 
-import { UserRepository } from "../repositories/userRepository.js";
+import { UserRepository } from "../repositories/userRepository";
 
-import { BcryptHashService } from "../services/bcryptHashService.js";
+import { BcryptHashService } from "../services/bcryptHashService";
 
-import { CryptoHashService } from "../services/cryptoHashService.js";
-import { MailService } from "../services/mailService.js";
+import { CryptoHashService } from "../services/cryptoHashService";
+import { MailService } from "../services/mailService";
 
-import { SecurityService } from "../services/securityService.js";
-import { TokenService } from "../services/tokenService.js";
-import { UserService } from "../services/userService.js";
-import { AuthMiddleware } from "../middlewares/authMiddleware.js";
+import { SecurityService } from "../services/securityService";
+import { TokenService } from "../services/tokenService";
+import { UserService } from "../services/userService";
+import { AuthMiddleware } from "../middlewares/authMiddleware";
 
-import { OperatorRepository } from "../repositories/operatorRepository.js";
-import { OperatorService } from "../services/operatorService.js";
-import { OperatorController } from "../controllers/operatorController.js";
-import { AdminController } from "../controllers/adminController.js";
-import { AdminService } from "../services/adminService.js";
-import { AdminRepository } from "../repositories/adminRepository.js";
-import { CommonAuthController } from "../controllers/commonAuthController.js";
-import { CommonAuthService } from "../services/commonAuthService.js";
+import { OperatorRepository } from "../repositories/operatorRepository";
+import { OperatorService } from "../services/operatorService";
+import { OperatorController } from "../controllers/operatorController";
+import { AdminController } from "../controllers/adminController";
+import { AdminService } from "../services/adminService";
+import { AdminRepository } from "../repositories/adminRepository";
+import { CommonAuthController } from "../controllers/commonAuthController";
+import { CommonAuthService } from "../services/commonAuthService";
 
 export const securityService = new SecurityService();
 const mailService = new MailService();

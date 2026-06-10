@@ -1,6 +1,6 @@
 import { body, validationResult, ValidationChain } from "express-validator";
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/customError";
 
 export const validateUpdateAdmin: (ValidationChain | RequestHandler)[] = [
   body("name").optional().isString().withMessage("Name must be a string"),

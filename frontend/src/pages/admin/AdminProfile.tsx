@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { adminProfileFields } from "../../formConfig/fields.js";
+import { adminProfileFields } from "../../formConfig/fields";
 
 import {
   updateAdminStart,

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
-import { ISecurityService } from "../interfaces/ISecurityService.js";
-import { IUserRepository } from "../interfaces/IUserRepository.js";
-import { CustomError } from "../utils/customError.js";
-import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
-import { IAdminRepository } from "../interfaces/IAdminRepository.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { ISecurityService } from "../interfaces/ISecurityService";
+import { IUserRepository } from "../interfaces/IUserRepository";
+import { CustomError } from "../utils/customError";
+import { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import { IAdminRepository } from "../interfaces/IAdminRepository";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class AuthMiddleware {
   constructor(

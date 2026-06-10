@@ -1,5 +1,5 @@
 import { body, validationResult, ValidationChain } from "express-validator";
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/customError";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export const resetPasswordValidator: (ValidationChain | RequestHandler)[] = [

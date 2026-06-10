@@ -1,16 +1,16 @@
 import { Types } from "mongoose";
-import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
-import { IOperatorService } from "../interfaces/IOperatorService.js";
-import { Ipackage } from "../models/Package.js";
-import { CustomError } from "../utils/customError.js";
+import { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import { IOperatorService } from "../interfaces/IOperatorService";
+import { Ipackage } from "../models/Package";
+import { CustomError } from "../utils/customError";
 
-import { IHashService } from "../interfaces/IHashService.js";
-import { IMailService } from "../interfaces/IMailService.js";
-import { ISecurityService } from "../interfaces/ISecurityService.js";
-import { ITokenService } from "../interfaces/ITokenService.js";
-import { IDestination } from "../models/Destination.js";
-import { IHashGenerator } from "../interfaces/IHashGenerator.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { IHashService } from "../interfaces/IHashService";
+import { IMailService } from "../interfaces/IMailService";
+import { ISecurityService } from "../interfaces/ISecurityService";
+import { ITokenService } from "../interfaces/ITokenService";
+import { IDestination } from "../models/Destination";
+import { IHashGenerator } from "../interfaces/IHashGenerator";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class OperatorService implements IOperatorService {
   constructor(

@@ -1,10 +1,10 @@
-import { IUserRepository } from "../interfaces/IUserRepository.js";
-import Package, { Ipackage } from "../models/Package.js";
+import { IUserRepository } from "../interfaces/IUserRepository";
+import Package, { Ipackage } from "../models/Package";
 import PackageCategory, {
   IPackageCategory,
-} from "../models/PackageCategory.js";
-import User, { IUser } from "../models/User.js";
-import { flattenObjects } from "../utils/flattenObject.js";
+} from "../models/PackageCategory";
+import User, { IUser } from "../models/User";
+import { flattenObjects } from "../utils/flattenObject";
 
 export class UserRepository implements IUserRepository {
   async create(data: Partial<IUser>): Promise<IUser> {

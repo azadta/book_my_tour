@@ -1,9 +1,9 @@
-import { IAdminRepository } from "../interfaces/IAdminRepository.js";
-import { ICommonAuthService } from "../interfaces/ICommonAuthService.js";
-import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
-import { ISecurityService } from "../interfaces/ISecurityService.js";
-import { IUserRepository } from "../interfaces/IUserRepository.js";
-import { CustomError } from "../utils/customError.js";
+import { IAdminRepository } from "../interfaces/IAdminRepository";
+import { ICommonAuthService } from "../interfaces/ICommonAuthService";
+import { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import { ISecurityService } from "../interfaces/ISecurityService";
+import { IUserRepository } from "../interfaces/IUserRepository";
+import { CustomError } from "../utils/customError";
 
 export class CommonAuthService implements ICommonAuthService {
   constructor(

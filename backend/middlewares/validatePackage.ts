@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { body, ValidationChain, validationResult } from "express-validator";
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/customError";
 
 export const validatePackage: (ValidationChain | RequestHandler)[] = [
   body("name")

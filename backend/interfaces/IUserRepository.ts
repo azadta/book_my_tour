@@ -1,6 +1,6 @@
-import { Ipackage } from "../models/Package.js";
-import { IPackageCategory } from "../models/PackageCategory.js";
-import { IUser } from "../models/User.js";
+import { Ipackage } from "../models/Package";
+import { IPackageCategory } from "../models/PackageCategory";
+import { IUser } from "../models/User";
 
 export interface IUserRepository {
   create(data: Partial<IUser>): Promise<IUser>;

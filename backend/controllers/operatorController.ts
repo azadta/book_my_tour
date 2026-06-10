@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
-import { CustomError } from "../utils/customError.js";
-import { IOperatorService } from "../interfaces/IOperatorService.js";
-import { logger } from "../utils/logger.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { CustomError } from "../utils/customError";
+import { IOperatorService } from "../interfaces/IOperatorService";
+import { logger } from "../utils/logger";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class OperatorController {
   constructor(private operatorService: IOperatorService) {}

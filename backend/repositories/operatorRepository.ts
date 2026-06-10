@@ -1,10 +1,10 @@
-import { IOperatorRepository } from "../interfaces/IOperatorRepository.js";
-import Destination, { IDestination } from "../models/Destination.js";
-import Operator, { IOperator } from "../models/Operator.js";
-import Package, { Ipackage } from "../models/Package.js";
+import { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import Destination, { IDestination } from "../models/Destination";
+import Operator, { IOperator } from "../models/Operator";
+import Package, { Ipackage } from "../models/Package";
 import PackageCategory, {
   IPackageCategory,
-} from "../models/PackageCategory.js";
+} from "../models/PackageCategory";
 
 export class OperatorRepository implements IOperatorRepository {
   async create(data: Partial<IOperator>): Promise<IOperator> {

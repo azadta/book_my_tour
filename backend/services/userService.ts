@@ -1,15 +1,15 @@
 import { Types } from "mongoose";
 
-import { IHashService } from "../interfaces/IHashService.js";
-import { IMailService } from "../interfaces/IMailService.js";
-import { ISecurityService } from "../interfaces/ISecurityService.js";
-import { ITokenService } from "../interfaces/ITokenService.js";
-import { IUserRepository } from "../interfaces/IUserRepository.js";
-import { IUserService } from "../interfaces/IUserService.js";
-import { Ipackage } from "../models/Package.js";
-import { CustomError } from "../utils/customError.js";
-import { IHashGenerator } from "../interfaces/IHashGenerator.js";
-import { StatusCode } from "../constants/statusCodeConstants.js";
+import { IHashService } from "../interfaces/IHashService";
+import { IMailService } from "../interfaces/IMailService";
+import { ISecurityService } from "../interfaces/ISecurityService";
+import { ITokenService } from "../interfaces/ITokenService";
+import { IUserRepository } from "../interfaces/IUserRepository";
+import { IUserService } from "../interfaces/IUserService";
+import { Ipackage } from "../models/Package";
+import { CustomError } from "../utils/customError";
+import { IHashGenerator } from "../interfaces/IHashGenerator";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export class UserService implements IUserService {
   constructor(

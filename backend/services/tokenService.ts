@@ -2,7 +2,7 @@ import crypto from "crypto";
 import {
   IResetTokenResponse,
   ITokenService,
-} from "../interfaces/ITokenService.js";
+} from "../interfaces/ITokenService";
 
 export class TokenService implements ITokenService {
   getPasswordResetToken = (): IResetTokenResponse => {

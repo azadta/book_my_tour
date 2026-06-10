@@ -1,13 +1,13 @@
-import { IAdminRepository } from "../interfaces/IAdminRepository.js";
-import Admin, { IAdmin } from "../models/Admin.js";
-import Destination, { IDestination } from "../models/Destination.js";
-import Operator, { IOperator } from "../models/Operator.js";
-import Package, { Ipackage } from "../models/Package.js";
+import { IAdminRepository } from "../interfaces/IAdminRepository";
+import Admin, { IAdmin } from "../models/Admin";
+import Destination, { IDestination } from "../models/Destination";
+import Operator, { IOperator } from "../models/Operator";
+import Package, { Ipackage } from "../models/Package";
 import PackageCategory, {
   IPackageCategory,
-} from "../models/PackageCategory.js";
-import User, { IUser } from "../models/User.js";
-import { flattenObjects } from "../utils/flattenObject.js";
+} from "../models/PackageCategory";
+import User, { IUser } from "../models/User";
+import { flattenObjects } from "../utils/flattenObject";
 
 export class AdminRepository implements IAdminRepository {
   async findByEmail(email: string): Promise<IAdmin | null> {

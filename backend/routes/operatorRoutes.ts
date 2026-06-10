@@ -1,11 +1,11 @@
 import express from "express";
 
-import { authMiddleware, operatorController } from "../config/container.js";
-import { validateUpdateOperator } from "../middlewares/operatorUpdateValidator.js";
-import { validateOperator } from "../middlewares/operatorValidator.js";
-import { validatePackage } from "../middlewares/validatePackage.js";
-import { ROUTES } from "../constants/routesConstants.js";
-import { resetPasswordValidator } from "../middlewares/resetPasswordValidator.js";
+import { authMiddleware, operatorController } from "../config/container";
+import { validateUpdateOperator } from "../middlewares/operatorUpdateValidator";
+import { validateOperator } from "../middlewares/operatorValidator";
+import { validatePackage } from "../middlewares/validatePackage";
+import { ROUTES } from "../constants/routesConstants";
+import { resetPasswordValidator } from "../middlewares/resetPasswordValidator";
 
 const router = express.Router();
 

@@ -56,6 +56,7 @@ export class AdminController {
       );
       if (!updatedAdmin)
         return next(new CustomError("Admin not found", StatusCode.NOT_FOUND));
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedAdmin.toObject();
       res.status(StatusCode.OK).json(rest);
     } catch (error) {
@@ -74,6 +75,7 @@ export class AdminController {
         req.user!.id,
         image,
       );
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = admin!.toObject();
       res.status(StatusCode.OK).json(rest);
     } catch (error) {
@@ -174,9 +176,7 @@ export class AdminController {
 
   deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const deleted = await this.adminService.deleteOperatorService(
-        req.params.id as string,
-      );
+      await this.adminService.deleteOperatorService(req.params.id as string);
       res
         .status(StatusCode.OK)
         .json({ message: "Operator deleted Successfully" });
@@ -252,9 +252,7 @@ export class AdminController {
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const deleted = await this.adminService.deleteUserService(
-        req.params.id as string,
-      );
+      await this.adminService.deleteUserService(req.params.id as string);
       res.status(StatusCode.OK).json({ message: "User deleted Successfully" });
     } catch (error) {
       next(error);

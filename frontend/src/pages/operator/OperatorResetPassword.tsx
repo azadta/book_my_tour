@@ -13,7 +13,8 @@ const OperatorResetPassword: React.FC = () => {
   const { resetPassword, loading } = useOperatorResetPassword();
 
   const handleSubmit = async (formData: any) => {
-    (setError(null), setMessage(null));
+    setError(null);
+    setMessage(null);
     const { newPassword, confirmPassword } = formData;
 
     if (newPassword !== confirmPassword) {

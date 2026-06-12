@@ -113,12 +113,13 @@ export class UserService implements IUserService {
       id: user._id.toString(),
       role: user.role,
     });
+     //eslint-disable-next-line @typescript-eslint/no-unused-vars 
     const { password: pass, ...userData } = user.toObject();
     return { accessToken, refreshToken, userData };
   }
 
   async googleLogin(name: string, email: string) {
-    let user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (user) {
       if (user.isBlocked) {
@@ -136,6 +137,7 @@ export class UserService implements IUserService {
         id: user._id.toString(),
         role: user.role,
       });
+       //eslint-disable-next-line @typescript-eslint/no-unused-vars 
       const { password, ...rest } = user.toObject();
       return { accessToken, refreshToken, user: rest };
     }
@@ -162,7 +164,7 @@ export class UserService implements IUserService {
       id: newUser._id.toString(),
       role: newUser.role,
     });
-
+     //eslint-disable-next-line @typescript-eslint/no-unused-vars 
     const { password: pass, ...rest } = newUser.toObject();
     return { accessToken, refreshToken, user: rest };
   }

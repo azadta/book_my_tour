@@ -17,12 +17,12 @@ export const useOtp = ({
   const [error, setError] = useState<string | null>(null);
   const [resendLoading, setResendLoading] = useState(false);
   const [otpExpire, setOtpExpire] = useState<number>(
-    initialOtpExpire || Date.now()
+    () => initialOtpExpire || Date.now(),
   );
 
   const verifyOtp = async () => {
     try {
-      const { data } = await axiosInstance.post("/user/verify-otp", {
+      await axiosInstance.post("/user/verify-otp", {
         userId,
         otp,
       });

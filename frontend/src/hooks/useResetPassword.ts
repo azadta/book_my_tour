@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
-import { userResetPasswordfields } from "../formConfig/fields";
 
 export const useResetPassword = () => {
   const [loading, setLoading] = useState(false);

@@ -1,4 +1,4 @@
-import { replace, type NavigateFunction } from "react-router-dom";
+import { type NavigateFunction } from "react-router-dom";
 import type { AppDispatch } from "../redux/store";
 import {
   logInFailure,

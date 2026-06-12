@@ -30,7 +30,7 @@ export const validateDestination: (ValidationChain | RequestHandler)[] = [
     (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      let formattedError: Record<string, string> = {};
+      const formattedError: Record<string, string> = {};
       errors.array().forEach((err) => {
         if (err.type === "field") {
           formattedError[err.path] = err.msg;

@@ -16,6 +16,7 @@ const OperatorRegister = () => {
       toast.error("Passwords do not match");
       return;
     }
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...operatorData } = formData;
 
     registerOperator(operatorData, (operatorId, otpExpire) => {

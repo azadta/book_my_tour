@@ -14,13 +14,17 @@ export const useAdminDashboard = () => {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [usersCount, operatorsCount, todaySignups, pendingVerificationsCount] =
-        await Promise.all([
-          axiosInstance.get(`/admin/users/total-count`),
-          axiosInstance.get(`/admin/operators/total-count`),
-          axiosInstance.get(`/admin/users/signup-today`),
-          axiosInstance.get(`/admin/operators/pending-verification-count`),
-        ]);
+      const [
+        usersCount,
+        operatorsCount,
+        todaySignups,
+        pendingVerificationsCount,
+      ] = await Promise.all([
+        axiosInstance.get(`/admin/users/total-count`),
+        axiosInstance.get(`/admin/operators/total-count`),
+        axiosInstance.get(`/admin/users/signup-today`),
+        axiosInstance.get(`/admin/operators/pending-verification-count`),
+      ]);
       setUsersCount(usersCount.data.usersCount);
       setOperatorsCount(operatorsCount.data.operatorsCount);
       setTodaySignups(todaySignups.data.todaySignupCount);

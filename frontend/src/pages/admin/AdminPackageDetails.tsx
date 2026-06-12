@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
+import Pagination from "../../components/Pagination";
+import ReUsableTable from "../../components/ReUsableTable";
 import {
   useAdminPackageManagement,
   type IPackageItem,
 } from "../../hooks/useAdminPackageManagement";
-import BackToDashboard from "../../components/BackToDashboard";
-import ReUsableTable from "../../components/ReUsableTable";
-import Pagination from "../../components/Pagination";
 
 const AdminPackageDetails = () => {
     const [open, setOpen] = useState(false);

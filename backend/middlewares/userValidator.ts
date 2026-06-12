@@ -1,7 +1,6 @@
 import { body, ValidationChain, validationResult } from "express-validator";
 
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import { StatusCode } from "../constants/statusCodeConstants";
 import { CustomError } from "../utils/customError";
 
 export const validateUser: (ValidationChain | RequestHandler)[] = [
@@ -52,7 +51,7 @@ export const validateUser: (ValidationChain | RequestHandler)[] = [
     (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      let formattedError: Record<string, string> = {};
+      const formattedError: Record<string, string> = {};
       errors.array().forEach((err) => {
         if (err.type === "field") {
           formattedError[err.path] = err.msg;

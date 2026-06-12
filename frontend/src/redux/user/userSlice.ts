@@ -25,8 +25,8 @@ export interface IUser {
   isPremium: boolean;
   mobile?: "";
   coinsEarned?: number;
-  referralCode?: String;
-  referredBy?: String;
+  referralCode?: string;
+  referredBy?: string;
   address: {
     houseNo: string;
     landmark: string;
@@ -35,7 +35,7 @@ export interface IUser {
     country: string;
     postalCode: string;
   };
-  resetPasswordToken: String;
+  resetPasswordToken: string;
   resetPasswordExpire: Date;
 }
 
@@ -47,9 +47,9 @@ const userSlice = createSlice({
       state.loading = true;
     },
     logInSuccess: (state, action: PayloadAction<IUser>) => {
-      ((state.currentUser = action.payload),
-        (state.error = null),
-        (state.loading = false));
+      state.currentUser = action.payload
+        state.error = null
+        state.loading = false
     },
     logInFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload;

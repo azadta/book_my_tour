@@ -63,7 +63,7 @@ export const useCreateDestination = (onSuccess: () => void) => {
         return;
       }
       const message =
-        error?.response?.data?.message || error.response?.data?.error?.message;
+        error?.response?.data?.message || error.response?.data?.error?.message||
       error.message || "Failed to create destination.";
       toast.error(message);
     } finally {

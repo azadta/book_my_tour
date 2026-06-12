@@ -110,7 +110,7 @@ export class OperatorService implements IOperatorService {
       id: operator._id.toString(),
       role: operator.role,
     });
-
+       //eslint-disable-next-line @typescript-eslint/no-unused-vars 
     const { password: pass, ...operatorData } = operator.toObject();
     return { accessToken, refreshToken, operatorData };
   }

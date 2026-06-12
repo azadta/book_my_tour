@@ -34,7 +34,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
 
   useEffect(() => {
     fetchOperators();
-  }, [page, limit]);
+  }, [page, limit,fetchOperators]);
 
   return {
     operators,
@@ -45,4 +45,3 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
     totalCount,
   };
 };
-

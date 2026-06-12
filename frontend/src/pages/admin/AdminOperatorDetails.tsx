@@ -1,14 +1,13 @@
-import BackToDashBoard from "../../components/BackToDashboard";
-import ReUsableTable from "../../components/ReUsableTable";
-import ConfirmationModal from "../../components/ConfirmationModal";
-import { useAdminOperatorManagement } from "../../hooks/useAdminOperatorManagement";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import type { IOperator } from "../../redux/operator/operatorSlice";
-import Pagination from "../../components/Pagination";
-import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
+import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import Pagination from "../../components/Pagination";
+import ReUsableTable from "../../components/ReUsableTable";
+import { useAdminOperatorManagement } from "../../hooks/useAdminOperatorManagement";
+import type { IOperator } from "../../redux/operator/operatorSlice";
 
 const AdminOperatorDetails: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -18,17 +17,12 @@ const AdminOperatorDetails: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => void>(() => () => {});
-  const [operatorId, setOperatorId] = useState("");
+
   const { operators, loading, blockOperator, deleteOperator, totalCount } =
     useAdminOperatorManagement(currentPage, resultPerPage);
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  };
-  const handleGetSingleOperator = () => {
-    if (operatorId.trim()) {
-      navigate(`/admin/edit-operator/${operatorId.trim()}`);
-    }
   };
 
   const columns = [
@@ -84,52 +78,52 @@ const AdminOperatorDetails: React.FC = () => {
 
   return (
     <>
-    <div className="flex flex-col min-h-screen ">
-         <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
+      <div className="flex flex-col min-h-screen ">
+        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
           <h2 className="text-2xl font-bold text-center  text-gray-800">
             Admin Dashboard
           </h2>
         </header>
         <div className="flex-1 flex">
-              <div className="w-64 max-md:hidden"></div>
+          <div className="w-64 max-md:hidden"></div>
           <div className="max-md:hidden fixed top-16.5 bottom-0">
-          <AdminDashboardSideBar />
+            <AdminDashboardSideBar />
           </div>
 
-      <div className="flex-1 p-5 min-w-0">
-        <h2 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
-          Operator Management
-        </h2>
+          <div className="flex-1 p-5 min-w-0">
+            <h2 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
+              Operator Management
+            </h2>
 
-        <ReUsableTable
-          data={operators}
-          columns={columns}
-          actions={actions}
-          loading={loading}
-        />
+            <ReUsableTable
+              data={operators}
+              columns={columns}
+              actions={actions}
+              loading={loading}
+            />
 
-        <ConfirmationModal
-          isOpen={modalOpen}
-          message={modalMessage}
-          onClose={() => setModalOpen(false)}
-          onConfirm={() => {
-            modalAction();
-            setModalOpen(false);
-          }}
-        />
-        <button
-          onClick={() => navigate("/admin/operator-verification")}
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700  mt-6"
-        >
-          Verification Requests
-        </button>
-        <Pagination
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-          totalPages={totalPages}
-        />
-      </div>
-      </div>
+            <ConfirmationModal
+              isOpen={modalOpen}
+              message={modalMessage}
+              onClose={() => setModalOpen(false)}
+              onConfirm={() => {
+                modalAction();
+                setModalOpen(false);
+              }}
+            />
+            <button
+              onClick={() => navigate("/admin/operator-verification")}
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700  mt-6"
+            >
+              Verification Requests
+            </button>
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              totalPages={totalPages}
+            />
+          </div>
+        </div>
       </div>
       {!open && (
         <RxHamburgerMenu

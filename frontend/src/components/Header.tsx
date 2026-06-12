@@ -1,16 +1,15 @@
-import { Link } from "react-router-dom";
-import { RiContactsBook2Fill } from "react-icons/ri";
-import { PiBellRingingBold, PiCardsBold } from "react-icons/pi";
-import { FaSearch } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../redux/store";
-import { MdLogin } from "react-icons/md";
-import { GrNotes } from "react-icons/gr";
-import { TbFileLike } from "react-icons/tb";
-import { IoSearchSharp } from "react-icons/io5";
-import { HiMenu, HiX } from "react-icons/hi";
+import { useState } from "react";
 import { BiSolidHome } from "react-icons/bi";
+import { FaSearch } from "react-icons/fa";
+import { GrNotes } from "react-icons/gr";
+import { HiMenu, HiX } from "react-icons/hi";
+import { MdLogin } from "react-icons/md";
+import { PiBellRingingBold, PiCardsBold } from "react-icons/pi";
+import { RiContactsBook2Fill } from "react-icons/ri";
+import { TbFileLike } from "react-icons/tb";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import type { RootState } from "../redux/store";
 
 const Header = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);

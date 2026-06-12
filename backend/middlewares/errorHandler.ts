@@ -1,13 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import { logger } from "../utils/logger";
+import { Request, Response } from "express";
 import { CustomError } from "../utils/customError";
+import { logger } from "../utils/logger";
 
-const errorHandler = (
-  err: CustomError,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const errorHandler = (err: CustomError, req: Request, res: Response) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   logger.error(message, {

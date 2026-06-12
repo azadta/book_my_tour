@@ -33,7 +33,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, limit]);
+  }, [page, limit,fetchUsers]);
 
   return {
     users,

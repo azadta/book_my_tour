@@ -1,18 +1,19 @@
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useOperatorOtp } from "../../hooks/useOperatorOtp";
-import { OtpForm } from "../../components/forms/OtpForm";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { OtpForm } from "../../components/forms/OtpForm";
+import { useOperatorOtp } from "../../hooks/useOperatorOtp";
 
 const OperatorOtpVerification = () => {
   const { operatorId } = useParams<{ operatorId: string }>();
   const [searchParams] = useSearchParams();
   const otpExpireParam = searchParams.get("otpExpire");
 
-  const expire =
-    otpExpireParam && !isNaN(Number(otpExpireParam))
+  const [expire] = useState(() => {
+    return otpExpireParam && !isNaN(Number(otpExpireParam))
       ? Number(otpExpireParam)
       : Date.now();
+  });
 
   const navigate = useNavigate();
   const { otp, setOtp, verifyOtp, resendOtp, resendLoading, error, otpExpire } =
@@ -51,7 +52,7 @@ const OperatorOtpVerification = () => {
 
   useEffect(() => {
     if (otp.length === 5 && timeLeft > 0) verifyOtp();
-  }, [otp]);
+  }, [otp,timeLeft,verifyOtp]);
 
   return (
     <div className="pt-10">

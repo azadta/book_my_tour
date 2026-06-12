@@ -1,15 +1,14 @@
 import { useState } from "react";
+import { RiCloseLargeFill } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
-import BackToDashboard from "../../components/BackToDashboard";
+import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import Pagination from "../../components/Pagination";
 import type { ActionButton, Column } from "../../components/ReUsableTable";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useAdminUserManagement } from "../../hooks/useAdminUserManagement";
 import type { IUser } from "../../redux/user/userSlice";
-import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { RiCloseLargeFill } from "react-icons/ri";
 
 const AdminUserDetails = () => {
   const [open, setOpen] = useState(false);
@@ -19,7 +18,7 @@ const AdminUserDetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => void>(() => () => {});
-  const [userId, setUserId] = useState("");
+
   const { users, loading, blockUser, deleteUser, totalCount } =
     useAdminUserManagement(currentPage, resultPerpage);
   const totalPages = Math.ceil(totalCount / resultPerpage);
@@ -37,7 +36,7 @@ const AdminUserDetails = () => {
 
   const actions: ActionButton<IUser>[] = [
     {
-      label: (user) => "Edit",
+      label: () => "Edit",
       onClick: (user) => navigate(`/admin/edit-user/${user._id}`),
       className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
       disabled: () => false,
@@ -57,7 +56,7 @@ const AdminUserDetails = () => {
       loadingText: "Processing...",
     },
     {
-      label: (user) => "Delete",
+      label: () => "Delete",
       onClick: (user) => {
         setModalMessage(`Are you sure want to delete this user`);
         setModalAction(() => () => deleteUser(user._id));

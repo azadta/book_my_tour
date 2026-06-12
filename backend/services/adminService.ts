@@ -35,6 +35,7 @@ export class AdminService implements IAdminService {
       id: admin._id .toString(),
       role: admin.role,
     });
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars 
     const { password: pass, ...adminData } = admin.toObject();
     return { accessToken, refreshToken, adminData };
   }

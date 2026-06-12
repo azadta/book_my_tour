@@ -61,9 +61,9 @@ const operatorSlice = createSlice({
       state.loading = true;
     },
     updateOperatorSuccess: (state, action: PayloadAction<IOperator>) => {
-      (state.currentOperator = action.payload),
-        (state.loading = false),
-        (state.error = null);
+      state.currentOperator = action.payload
+        state.loading = false
+        state.error = null
     },
     updateOperatorFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload;

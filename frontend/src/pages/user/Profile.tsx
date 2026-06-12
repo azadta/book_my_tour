@@ -25,7 +25,7 @@ interface FormDataType {
 
 const Profile = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
-  const { currentUser, loading, error } = useSelector(
+  const { currentUser, loading } = useSelector(
     (state: RootState) => state.user,
   );
   const [formData, setFormData] = useState<FormDataType>({
@@ -200,24 +200,24 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col sm:flex-row  justify-center gap-5 ">
-     <div className="sm:max-w-[220px] bg-white shadow-2xl w-full px-10 max-sm:order-2 max-sm:hidden  ">
+      <div className="sm:max-w-[220px] bg-white shadow-2xl w-full px-10 max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
             onClick={() => navigate("/user/reset-password")}
-             className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
           >
             Reset Password
           </button>
           <button
             onClick={handleDeleteUser}
-             className=" cursor-pointer bg-red-300 px-1 py-1 rounded hover:bg-yellow-400"
+            className=" cursor-pointer bg-red-300 px-1 py-1 rounded hover:bg-yellow-400"
           >
             Delete Account
           </button>
 
           <button
             onClick={handleLogOut}
-             className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
           >
             Log Out
           </button>
@@ -241,26 +241,25 @@ const Profile = () => {
           setFieldError={setFieldError}
         />
         <div className="sm:hidden pt-10 flex items-center justify-between">
-            <button
+          <button
             onClick={() => navigate("/user/reset-password")}
-             className=" cursor-pointer bg-yellow-200 px-0.5 sm:px-1 py-1 rounded hover:bg-yellow-300"
+            className=" cursor-pointer bg-yellow-200 px-0.5 sm:px-1 py-1 rounded hover:bg-yellow-300"
           >
             Reset Password
           </button>
           <button
             onClick={handleDeleteUser}
-             className=" cursor-pointer bg-red-300 px-0.5 sm:px-1 py-1 rounded hover:bg-red-400"
+            className=" cursor-pointer bg-red-300 px-0.5 sm:px-1 py-1 rounded hover:bg-red-400"
           >
             Delete Account
           </button>
 
           <button
             onClick={handleLogOut}
-              className=" cursor-pointer bg-yellow-200 px-0.5 sm:px-1 py-1 rounded hover:bg-yellow-300"
+            className=" cursor-pointer bg-yellow-200 px-0.5 sm:px-1 py-1 rounded hover:bg-yellow-300"
           >
             Log Out
           </button>
-          
         </div>
         <div className="flex justify-between mt-5"></div>
         <ConfirmationModel

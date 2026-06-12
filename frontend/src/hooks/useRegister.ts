@@ -12,7 +12,7 @@ export const useRegister = () => {
     onSuccess: (userId: string, otpExpire: string) => void,
   ) => {
     setLoading(true);
-   
+    //eslint-disable-next-line  @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = formData;
     try {
       const res = await axiosInstance.post("/user/register", userData);

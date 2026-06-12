@@ -15,7 +15,7 @@ export const useOperatorOtp = ({
   const [otp, setOtp] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [resendLoading, setResendLoading] = useState(false);
-  const [otpExpire, setOtpExpire] = useState<number>(
+  const [otpExpire, setOtpExpire] = useState<number>(()=>
     initialOtpExpire || Date.now()
   );
 

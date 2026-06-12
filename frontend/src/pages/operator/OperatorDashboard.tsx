@@ -1,17 +1,12 @@
-import { BsBoxSeamFill } from "react-icons/bs";
 import { useState } from "react";
-import { AiOutlineLogin } from "react-icons/ai";
-import { FaUsersGear, FaUsersLine } from "react-icons/fa6";
-import { GoUnverified } from "react-icons/go";
+import { BsBoxSeamFill } from "react-icons/bs";
+import { HiCash } from "react-icons/hi";
+import { LuClipboardPenLine } from "react-icons/lu";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
-import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
 import Loading from "../../components/Loading";
-import { useAdminDashboard } from "../../hooks/useAdminDashboard";
-import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
 import OperatorDashboardSideBar from "../../components/OperatorDashboardSidebar";
-import { LuClipboardPenLine } from "react-icons/lu";
-import { HiCash } from "react-icons/hi";
+import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
 
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);

@@ -140,7 +140,7 @@ export class UserController {
       if (!updatedUser) {
         return next(new CustomError("User not found", 404));
       }
-
+       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
       res.status(StatusCode.OK).json(rest);
     } catch (error) {

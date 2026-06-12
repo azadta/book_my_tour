@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import axios from "axios";
+
 import { axiosInstance } from "../../api/axiosInstance";
 
 interface Destination {

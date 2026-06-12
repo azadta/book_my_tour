@@ -1,22 +1,24 @@
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useOtp } from "../../hooks/useOtp";
-import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { OtpForm } from "../../components/forms/OtpForm";
-import { MdOutlineEmojiNature } from "react-icons/md";
-import { IoCalendarOutline } from "react-icons/io5";
-import { TbLayoutCardsFilled } from "react-icons/tb";
-import { LuSearchCheck } from "react-icons/lu";
 import { BsFillChatQuoteFill } from "react-icons/bs";
+import { IoCalendarOutline } from "react-icons/io5";
+import { LuSearchCheck } from "react-icons/lu";
+import { MdOutlineEmojiNature } from "react-icons/md";
+import { TbLayoutCardsFilled } from "react-icons/tb";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { OtpForm } from "../../components/forms/OtpForm";
+import { useOtp } from "../../hooks/useOtp";
 
 const VerifyOtp = () => {
   const { userId } = useParams<{ userId: string }>();
   const [searchParams] = useSearchParams();
   const otpExpireParam = searchParams.get("otpExpire");
-  const expire =
-    otpExpireParam && !isNaN(Number(otpExpireParam))
+  const [expire] = useState(() => {
+    return otpExpireParam && !isNaN(Number(otpExpireParam))
       ? Number(otpExpireParam)
       : Date.now();
+  });
+
   const navigate = useNavigate();
   const { otp, setOtp, error, resendLoading, verifyOtp, resendOtp, otpExpire } =
     useOtp({
@@ -53,7 +55,7 @@ const VerifyOtp = () => {
     if (otp.length === 5 && timeLeft > 0) {
       verifyOtp();
     }
-  }, [otp]);
+  }, [otp,verifyOtp,timeLeft]);
 
   return (
     <div className="flex max-md:flex-col justify-center items-center gap-5 ">

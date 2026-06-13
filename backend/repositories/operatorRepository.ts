@@ -1,3 +1,4 @@
+import { injectable } from "inversify";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import Destination, { IDestination } from "../models/Destination";
 import Operator, { IOperator } from "../models/Operator";
@@ -6,6 +7,7 @@ import PackageCategory, {
   IPackageCategory,
 } from "../models/PackageCategory";
 
+@injectable()
 export class OperatorRepository implements IOperatorRepository {
   async create(data: Partial<IOperator>): Promise<IOperator> {
     const operator = new Operator(data);

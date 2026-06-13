@@ -1,10 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import { CustomError } from "../utils/customError";
-import { ICommonAuthService } from "../interfaces/ICommonAuthService";
+import type { ICommonAuthService } from "../interfaces/ICommonAuthService";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { inject, injectable } from "inversify";
+import { Types } from "../types/types";
+import { ICommonAuthController } from "../interfaces/ICommonAuthController";
 
-export class CommonAuthController {
-  constructor(private commonAuthService: ICommonAuthService) {}
+@injectable()
+export class CommonAuthController implements ICommonAuthController {
+  constructor(
+    @inject(Types.CommonAuthService)
+    private commonAuthService: ICommonAuthService,
+  ) {}
   refresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refreshToken = req.cookies.refresh_token;

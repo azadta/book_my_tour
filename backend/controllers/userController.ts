@@ -2,12 +2,16 @@ import { NextFunction, Request, Response } from "express";
 
 import { CustomError } from "../utils/customError";
 
-import { IUserService } from "../interfaces/IUserService";
+import type{ IUserService } from "../interfaces/IUserService";
 import { logger } from "../utils/logger";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { injectable,inject } from "inversify";
+import {Types} from '../types/types'
+import { IUserController } from "../interfaces/IUserController";
 
-export class UserController {
-  constructor(private userService: IUserService) {}
+@injectable()
+export class UserController implements IUserController {
+  constructor(@inject(Types.UserService) private userService: IUserService) {}
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       logger.info(`Attempting registration for email ${req.body.email}`, {
@@ -114,7 +118,7 @@ export class UserController {
     }
   };
 
-  logout = (req: Request, res: Response, next: NextFunction) => {
+  logout = async(req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
       const result = this.userService.userLogoutService();

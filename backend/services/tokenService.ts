@@ -3,7 +3,8 @@ import {
   IResetTokenResponse,
   ITokenService,
 } from "../interfaces/ITokenService";
-
+import { injectable } from "inversify";
+@injectable()
 export class TokenService implements ITokenService {
   getPasswordResetToken = (): IResetTokenResponse => {
     const resetToken = crypto.randomBytes(20).toString("hex");

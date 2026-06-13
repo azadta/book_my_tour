@@ -30,8 +30,11 @@ export const useAdminDashboard = () => {
       setTodaySignups(todaySignups.data.todaySignupCount);
       setPendingVerificationsCount(pendingVerificationsCount.data.count);
     } catch (error: any) {
-      console.log(error.response?.data?.message || error.message);
-      toast.error("failed to fetch dashboard data");
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "failed to fetch dashboard data";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

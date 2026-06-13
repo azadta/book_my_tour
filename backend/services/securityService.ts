@@ -3,7 +3,8 @@ import {
   ISecurityPayload,
   ISecurityService,
 } from "../interfaces/ISecurityService";
-
+import { injectable } from "inversify";
+@injectable()
 export class SecurityService implements ISecurityService {
   private get accessSecret(): string {
     const accessSecret = process.env.JWT_ACCESS_SECRET;

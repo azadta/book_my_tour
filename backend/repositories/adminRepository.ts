@@ -1,3 +1,4 @@
+import { injectable } from "inversify";
 import { IAdminRepository } from "../interfaces/IAdminRepository";
 import Admin, { IAdmin } from "../models/Admin";
 import Destination, { IDestination } from "../models/Destination";
@@ -9,6 +10,7 @@ import PackageCategory, {
 import User, { IUser } from "../models/User";
 import { flattenObjects } from "../utils/flattenObject";
 
+@injectable()
 export class AdminRepository implements IAdminRepository {
   async findByEmail(email: string): Promise<IAdmin | null> {
     return Admin.findOne({ email });

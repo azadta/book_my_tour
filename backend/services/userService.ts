@@ -1,24 +1,27 @@
-import { Types } from "mongoose";
+import { Types as mongooseType } from "mongoose";
 
-import { IHashService } from "../interfaces/IHashService";
-import { IMailService } from "../interfaces/IMailService";
-import { ISecurityService } from "../interfaces/ISecurityService";
-import { ITokenService } from "../interfaces/ITokenService";
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { IUserService } from "../interfaces/IUserService";
-import { Ipackage } from "../models/Package";
+import type { IHashService } from "../interfaces/IHashService";
+import type { IMailService } from "../interfaces/IMailService";
+import type { ISecurityService } from "../interfaces/ISecurityService";
+import type { ITokenService } from "../interfaces/ITokenService";
+import type { IUserRepository } from "../interfaces/IUserRepository";
+import type { IUserService } from "../interfaces/IUserService";
+import type { Ipackage } from "../models/Package";
 import { CustomError } from "../utils/customError";
-import { IHashGenerator } from "../interfaces/IHashGenerator";
+import type { IHashGenerator } from "../interfaces/IHashGenerator";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { inject, injectable } from "inversify";
+import { Types } from "../types/types";
 
+@injectable()
 export class UserService implements IUserService {
   constructor(
-    private userRepository: IUserRepository,
-    private mailService: IMailService,
-    private hashService: IHashService,
-    private securityService: ISecurityService,
-    private tokenService: ITokenService,
-    private resetTokenHasher: IHashGenerator,
+    @inject(Types.UserRepository) private userRepository: IUserRepository,
+    @inject(Types.MailService) private mailService: IMailService,
+    @inject(Types.BcryptHashService) private hashService: IHashService,
+    @inject(Types.SecurityService) private securityService: ISecurityService,
+    @inject(Types.TokenService) private tokenService: ITokenService,
+    @inject(Types.CryptoHashService) private resetTokenHasher: IHashGenerator,
   ) {}
 
   async registerUser(userData: {
@@ -46,7 +49,7 @@ export class UserService implements IUserService {
     );
 
     return {
-      userId: (newUser._id as Types.ObjectId).toString(),
+      userId: (newUser._id as mongooseType.ObjectId).toString(),
       otpExpire: newUser.otpExpire,
     };
   }
@@ -113,7 +116,7 @@ export class UserService implements IUserService {
       id: user._id.toString(),
       role: user.role,
     });
-     //eslint-disable-next-line @typescript-eslint/no-unused-vars 
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: pass, ...userData } = user.toObject();
     return { accessToken, refreshToken, userData };
   }
@@ -137,7 +140,7 @@ export class UserService implements IUserService {
         id: user._id.toString(),
         role: user.role,
       });
-       //eslint-disable-next-line @typescript-eslint/no-unused-vars 
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = user.toObject();
       return { accessToken, refreshToken, user: rest };
     }
@@ -164,7 +167,7 @@ export class UserService implements IUserService {
       id: newUser._id.toString(),
       role: newUser.role,
     });
-     //eslint-disable-next-line @typescript-eslint/no-unused-vars 
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: pass, ...rest } = newUser.toObject();
     return { accessToken, refreshToken, user: rest };
   }
@@ -201,7 +204,7 @@ export class UserService implements IUserService {
     user.password = this.hashService.hash(newPassword);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
-    await this.userRepository.save(user)
+    await this.userRepository.save(user);
     return { message: "Password updated successfully" };
   }
 

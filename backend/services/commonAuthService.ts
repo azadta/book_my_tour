@@ -1,16 +1,20 @@
-import { IAdminRepository } from "../interfaces/IAdminRepository";
-import { ICommonAuthService } from "../interfaces/ICommonAuthService";
-import { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import { ISecurityService } from "../interfaces/ISecurityService";
-import { IUserRepository } from "../interfaces/IUserRepository";
+import { inject, injectable } from "inversify";
+import type { IAdminRepository } from "../interfaces/IAdminRepository";
+import type { ICommonAuthService } from "../interfaces/ICommonAuthService";
+import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import type { ISecurityService } from "../interfaces/ISecurityService";
+import type { IUserRepository } from "../interfaces/IUserRepository";
 import { CustomError } from "../utils/customError";
+import { Types } from "../types/types";
 
+@injectable()
 export class CommonAuthService implements ICommonAuthService {
   constructor(
-    private securityService: ISecurityService,
-    private userRepository: IUserRepository,
+    @inject(Types.SecurityService) private securityService: ISecurityService,
+    @inject(Types.UserRepository) private userRepository: IUserRepository,
+    @inject(Types.OperatorRepository)
     private operatorRepository: IOperatorRepository,
-    private adminRepository: IAdminRepository,
+    @inject(Types.AdminRepository) private adminRepository: IAdminRepository,
   ) {}
 
   refreshToken = async (token: string) => {
@@ -32,11 +36,10 @@ export class CommonAuthService implements ICommonAuthService {
       throw new CustomError("UnAuthorized", 401);
     }
     const newAccessToken = this.securityService.generateAccessToken({
-      id: user._id .toString(),
+      id: user._id.toString(),
       role: user.role,
     });
 
- 
     return { newAccessToken };
   };
 }

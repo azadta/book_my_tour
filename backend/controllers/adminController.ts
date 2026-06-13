@@ -2,12 +2,18 @@ import { NextFunction, Request, Response } from "express";
 
 import { CustomError } from "../utils/customError";
 
-import { IAdminService } from "../interfaces/IAdminService";
+import type { IAdminService } from "../interfaces/IAdminService";
 import { logger } from "../utils/logger";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { injectable, inject } from "inversify";
+import { Types } from "../types/types";
+import { IAdminController } from "../interfaces/IAdminController";
 
-export class AdminController {
-  constructor(private adminService: IAdminService) {}
+@injectable()
+export class AdminController implements IAdminController {
+  constructor(
+    @inject(Types.AdminService) private adminService: IAdminService,
+  ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;

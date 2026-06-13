@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
 
-const errorHandler = (err: CustomError, req: Request, res: Response) => {
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
+const errorHandler = (err: CustomError, req: Request, res: Response,next:NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   logger.error(message, {

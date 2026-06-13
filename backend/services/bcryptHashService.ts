@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { IHashService } from "../interfaces/IHashService";
+import { injectable } from "inversify";
 
+@injectable()
 export class BcryptHashService implements IHashService {
   private readonly saltRounds = 10;
 

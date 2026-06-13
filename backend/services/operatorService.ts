@@ -1,25 +1,28 @@
-import { Types } from "mongoose";
-import { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import { IOperatorService } from "../interfaces/IOperatorService";
-import { Ipackage } from "../models/Package";
+import { Types as mongooseType } from "mongoose";
+import type{ IOperatorRepository } from "../interfaces/IOperatorRepository";
+import type{ IOperatorService } from "../interfaces/IOperatorService";
+import type{ Ipackage } from "../models/Package";
 import { CustomError } from "../utils/customError";
 
-import { IHashService } from "../interfaces/IHashService";
-import { IMailService } from "../interfaces/IMailService";
-import { ISecurityService } from "../interfaces/ISecurityService";
-import { ITokenService } from "../interfaces/ITokenService";
-import { IDestination } from "../models/Destination";
-import { IHashGenerator } from "../interfaces/IHashGenerator";
+import type{ IHashService } from "../interfaces/IHashService";
+import type{ IMailService } from "../interfaces/IMailService";
+import type{ ISecurityService } from "../interfaces/ISecurityService";
+import type{ ITokenService } from "../interfaces/ITokenService";
+import type{ IDestination } from "../models/Destination";
+import type{ IHashGenerator } from "../interfaces/IHashGenerator";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { inject, injectable } from "inversify";
+import { Types } from "../types/types";
 
+@injectable()
 export class OperatorService implements IOperatorService {
   constructor(
-    private operatorRepository: IOperatorRepository,
-    private mailService: IMailService,
-    private hashService: IHashService,
-    private securityService: ISecurityService,
-    private tokenService: ITokenService,
-    private resetTokenHasher: IHashGenerator,
+   @inject(Types.OperatorRepository) private operatorRepository: IOperatorRepository,
+   @inject(Types.MailService) private mailService: IMailService,
+   @inject(Types.BcryptHashService) private hashService: IHashService,
+   @inject(Types.SecurityService) private securityService: ISecurityService,
+   @inject(Types.TokenService) private tokenService: ITokenService,
+   @inject(Types.BcryptHashService) private resetTokenHasher: IHashGenerator,
   ) {}
   async operatorRegisterService(data: any) {
     const existing = await this.operatorRepository.findByEmail(data.email);
@@ -43,7 +46,7 @@ export class OperatorService implements IOperatorService {
     );
 
     return {
-      operatorId: (newOperator._id as Types.ObjectId).toString(),
+      operatorId: (newOperator._id as mongooseType.ObjectId).toString(),
       otpExpire: newOperator.otpExpire,
     };
   }

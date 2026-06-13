@@ -1,24 +1,27 @@
-import { IAdminRepository } from "../interfaces/IAdminRepository";
-import { IDestination } from "../models/Destination";
-import { IPackageCategory } from "../models/PackageCategory";
+import type { IAdminRepository } from "../interfaces/IAdminRepository";
+import type { IDestination } from "../models/Destination";
+import type { IPackageCategory } from "../models/PackageCategory";
 import { CustomError } from "../utils/customError";
 
-import { IAdminService } from "../interfaces/IAdminService";
-import { IHashService } from "../interfaces/IHashService";
-import { IMailService } from "../interfaces/IMailService";
-import { ISecurityService } from "../interfaces/ISecurityService";
-import { ITokenService } from "../interfaces/ITokenService";
-import { IAdmin } from "../models/Admin";
-import { Ipackage } from "../models/Package";
+import type { IAdminService } from "../interfaces/IAdminService";
+import type { IHashService } from "../interfaces/IHashService";
+import type { IMailService } from "../interfaces/IMailService";
+import type { ISecurityService } from "../interfaces/ISecurityService";
+import type { ITokenService } from "../interfaces/ITokenService";
+import type { IAdmin } from "../models/Admin";
+import type { Ipackage } from "../models/Package";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { inject, injectable } from "inversify";
+import { Types } from "../types/types";
 
+@injectable()
 export class AdminService implements IAdminService {
   constructor(
-    private adminRepository: IAdminRepository,
-    private mailService: IMailService,
-    private hashService: IHashService,
-    private securityService: ISecurityService,
-    private tokenService: ITokenService,
+    @inject(Types.AdminRepository) private adminRepository: IAdminRepository,
+    @inject(Types.MailService) private mailService: IMailService,
+    @inject(Types.BcryptHashService) private hashService: IHashService,
+    @inject(Types.SecurityService) private securityService: ISecurityService,
+    @inject(Types.TokenService) private tokenService: ITokenService,
   ) {}
 
   async loginAdminService(email: string, password: string) {
@@ -32,15 +35,15 @@ export class AdminService implements IAdminService {
       role: admin.role,
     });
     const refreshToken = this.securityService.generateRefreshToken({
-      id: admin._id .toString(),
+      id: admin._id.toString(),
       role: admin.role,
     });
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars 
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: pass, ...adminData } = admin.toObject();
     return { accessToken, refreshToken, adminData };
   }
 
-  async updateAdminService(id: string, data:Partial<IAdmin>) {
+  async updateAdminService(id: string, data: Partial<IAdmin>) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }
@@ -232,15 +235,15 @@ export class AdminService implements IAdminService {
     return this.adminRepository.updateProfieImage(id, image);
   }
 
-  async getSignupCountTodayService(){
-    const startOfDay=new Date()
-    startOfDay.setHours(0,0,0,0)
-    const  endOfDay=new Date()
-    endOfDay.setHours(23,59,59,999)
-    return this.adminRepository.getSignupCountToday(startOfDay,endOfDay)
+  async getSignupCountTodayService() {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    return this.adminRepository.getSignupCountToday(startOfDay, endOfDay);
   }
 
-  async getPendingOperatorsCountService(){
-     return await this.adminRepository.getPendingOperatorsCount()
+  async getPendingOperatorsCountService() {
+    return await this.adminRepository.getPendingOperatorsCount();
   }
 }

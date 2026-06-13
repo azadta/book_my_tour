@@ -1,12 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 
 import { CustomError } from "../utils/customError";
-import { IOperatorService } from "../interfaces/IOperatorService";
+import type { IOperatorService } from "../interfaces/IOperatorService";
 import { logger } from "../utils/logger";
 import { StatusCode } from "../constants/statusCodeConstants";
-
-export class OperatorController {
-  constructor(private operatorService: IOperatorService) {}
+import { inject, injectable } from "inversify";
+import { Types } from "../types/types";
+import { IOperatorController } from "../interfaces/IOperatorController";
+@injectable()
+export class OperatorController implements IOperatorController {
+  constructor(
+    @inject(Types.OperatorService) private operatorService: IOperatorService,
+  ) {}
 
   operatorRegister = async (
     req: Request,
@@ -119,7 +124,7 @@ export class OperatorController {
     }
   };
 
-  operatorLogout = (req: Request, res: Response, next: NextFunction) => {
+  operatorLogout = async(req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
       const result = this.operatorService.operatorLogoutService();
@@ -145,7 +150,7 @@ export class OperatorController {
       if (!updatedUser) {
         return next(new CustomError("User not found", 404));
       }
-        //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
       res.status(StatusCode.OK).json(rest);
     } catch (error) {

@@ -1,3 +1,4 @@
+import { injectable } from "inversify";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import Package, { Ipackage } from "../models/Package";
 import PackageCategory, {
@@ -6,6 +7,7 @@ import PackageCategory, {
 import User, { IUser } from "../models/User";
 import { flattenObjects } from "../utils/flattenObject";
 
+@injectable()
 export class UserRepository implements IUserRepository {
   async create(data: Partial<IUser>): Promise<IUser> {
     const user = new User(data);

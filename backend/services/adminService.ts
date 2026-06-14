@@ -3,25 +3,38 @@ import type { IDestination } from "../models/Destination";
 import type { IPackageCategory } from "../models/PackageCategory";
 import { CustomError } from "../utils/customError";
 
+import { inject, injectable } from "inversify";
+import { StatusCode } from "../constants/statusCodeConstants";
 import type { IAdminService } from "../interfaces/IAdminService";
+import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
 import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
+import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
+import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
-import type { ITokenService } from "../interfaces/ITokenService";
+import type { IUserRepository } from "../interfaces/IUserRepository";
 import type { IAdmin } from "../models/Admin";
 import type { Ipackage } from "../models/Package";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { inject, injectable } from "inversify";
 import { Types } from "../types/types";
 
 @injectable()
 export class AdminService implements IAdminService {
   constructor(
     @inject(Types.AdminRepository) private adminRepository: IAdminRepository,
+    @inject(Types.OperatorRepository)
+    private operatorRepository: IOperatorRepository,
+    @inject(Types.UserRepository) private userRepository: IUserRepository,
+    @inject(Types.PackageCategoryRepository)
+    private packageCategoryRepository: IPackageCategoryRepository,
+    @inject(Types.PackageRepository)
+    private packageRepository: IPackageRepository,
+    @inject(Types.DestinationRepository)
+    private destinationRepository: IDestinationRepository,
+
     @inject(Types.MailService) private mailService: IMailService,
     @inject(Types.BcryptHashService) private hashService: IHashService,
     @inject(Types.SecurityService) private securityService: ISecurityService,
-    @inject(Types.TokenService) private tokenService: ITokenService,
   ) {}
 
   async loginAdminService(email: string, password: string) {
@@ -51,11 +64,11 @@ export class AdminService implements IAdminService {
   }
 
   async getOperatorVerificationRequestsService() {
-    return await this.adminRepository.getPendingOperator();
+    return await this.operatorRepository.getPendingOperator();
   }
 
   async verifyOperatorService(id: string, isVerified: boolean) {
-    const updated = await this.adminRepository.updateOperatorStatus(
+    const updated = await this.operatorRepository.updateOperatorStatus(
       id,
       isVerified,
     );
@@ -68,46 +81,46 @@ export class AdminService implements IAdminService {
       : `Hi ${updated.name},<br><br>your verification request has been  <b>rejected</b>.Please contact support for clarification`;
     await this.mailService.sendEmail(updated.email, subject, message);
     if (!isVerified) {
-      await this.adminRepository.deleteOperatorById(id);
+      await this.operatorRepository.deleteById(id);
     }
 
     return { message: `Operator ${isVerified ? "verified" : "rejected"}` };
   }
 
   async getPaginatedOperatorsService(skip: number, limit: number) {
-    return this.adminRepository.getPaginatedOperators(skip, limit);
+    return this.operatorRepository.getPaginatedOperators(skip, limit);
   }
 
   getTotalOperatorsCount() {
-    return this.adminRepository.countAllOperators();
+    return this.operatorRepository.countDocuments();
   }
 
   async getSingleOperatorService(id: string) {
-    return this.adminRepository.findOperatorById(id);
+    return this.operatorRepository.findById(id);
   }
 
   async blockOperatorService(id: string, isBlocked: boolean) {
-    return this.adminRepository.updateOperatorBlockStatus(id, isBlocked);
+    return this.operatorRepository.updateOperatorBlockStatus(id, isBlocked);
   }
 
   async deleteOperatorService(id: string) {
-    return this.adminRepository.deleteOperatorById(id);
+    return this.operatorRepository.deleteById(id);
   }
 
   async getPaginatedUsersService(skip: number, limit: number) {
-    return this.adminRepository.getPaginatedUsers(skip, limit);
+    return this.userRepository.getPaginatedUsers(skip, limit);
   }
 
   getTotalUsersCount() {
-    return this.adminRepository.countAllUsers();
+    return this.userRepository.countDocuments();
   }
 
   async getSingleUserService(id: string) {
-    return this.adminRepository.findUserById(id);
+    return this.userRepository.findById(id);
   }
 
   async blockUserService(id: string, isBlocked: boolean) {
-    return this.adminRepository.updateUserBlockStatus(id, isBlocked);
+    return this.userRepository.updateUserBlockStatus(id, isBlocked);
   }
 
   async createCategoryService(
@@ -118,16 +131,15 @@ export class AdminService implements IAdminService {
         "Category name is required",
         StatusCode.BAD_REQUEST,
       );
-    const existing = await this.adminRepository.findPackageCategoryByName(
-      data.name,
-    );
+    const existing =
+      await this.packageCategoryRepository.findPackageCategoryByName(data.name);
     if (existing)
       throw new CustomError("Category already exists", StatusCode.BAD_REQUEST);
-    return this.adminRepository.createPackgeCategory(data);
+    return this.packageCategoryRepository.create(data);
   }
 
   getAllCategories() {
-    return this.adminRepository.findAllPackageCategory();
+    return this.packageCategoryRepository.findAll();
   }
 
   async createDestinationService(
@@ -143,7 +155,7 @@ export class AdminService implements IAdminService {
         "Latitude and longitude are required",
         StatusCode.BAD_REQUEST,
       );
-    const existing = await this.adminRepository.findDestinationByName(
+    const existing = await this.destinationRepository.findDestinationByName(
       data.name,
     );
     if (existing)
@@ -152,7 +164,7 @@ export class AdminService implements IAdminService {
         StatusCode.BAD_REQUEST,
       );
 
-    return this.adminRepository.createDestination({
+    return this.destinationRepository.create({
       name: data.name.trim(),
       location: { latitude: data.latitude, longitude: data.longitude },
       images: Array.isArray(data.images) ? data.images : [],
@@ -160,11 +172,11 @@ export class AdminService implements IAdminService {
   }
 
   getAllDestinationsServise(): Promise<IDestination[]> {
-    return this.adminRepository.findAllDestinations();
+    return this.destinationRepository.findAll();
   }
 
   async getDestinationByIdService(id: string): Promise<IDestination> {
-    const destination = await this.adminRepository.findDestinationById(id);
+    const destination = await this.destinationRepository.findById(id);
     if (!destination) {
       throw new CustomError("Destination not found", StatusCode.NOT_FOUND);
     }
@@ -172,7 +184,7 @@ export class AdminService implements IAdminService {
   }
 
   async deleteDestinationByIdService(id: string): Promise<void> {
-    const deleted = await this.adminRepository.deleteDestinationById(id);
+    const deleted = await this.destinationRepository.deleteById(id);
     if (!deleted)
       throw new CustomError("Destination not found", StatusCode.NOT_FOUND);
   }
@@ -199,25 +211,25 @@ export class AdminService implements IAdminService {
   }
 
   async deleteUserService(id: string) {
-    return await this.adminRepository.deleteUserById(id);
+    return await this.userRepository.deleteById(id);
   }
   async updateUserService(id: string, data: any) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }
 
-    return await this.adminRepository.updateUserById(id, data);
+    return await this.userRepository.updateById(id, data);
   }
 
   async getPaginatedPackagesService(
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.adminRepository.findAllPackages(skip, limit);
+    return this.packageRepository.findAllPackages(skip, limit);
   }
 
   getTotalPackagesCount() {
-    return this.adminRepository.countAllPackages();
+    return this.packageRepository.countDocuments();
   }
 
   async updateOperatorService(id: string, data: any) {
@@ -225,7 +237,7 @@ export class AdminService implements IAdminService {
       data.password = this.hashService.hash(data.password);
     }
 
-    return await this.adminRepository.updateOperatorById(id, data);
+    return await this.operatorRepository.updateById(id, data);
   }
 
   async updateProfieImageService(
@@ -240,10 +252,16 @@ export class AdminService implements IAdminService {
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
-    return this.adminRepository.getSignupCountToday(startOfDay, endOfDay);
+    const [users, operators] = await Promise.all([
+      this.userRepository.countUsersByDateRange(startOfDay, endOfDay),
+      this.operatorRepository.countOperatorsByDateRange(startOfDay, endOfDay),
+    ]);
+    return users + operators;
   }
 
   async getPendingOperatorsCountService() {
-    return await this.adminRepository.getPendingOperatorsCount();
+    return await this.operatorRepository.getPendingOperatorsCount();
   }
 }
+
+

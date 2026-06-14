@@ -1,9 +1,9 @@
 import crypto from "crypto";
+import { injectable } from "inversify";
 import {
   IResetTokenResponse,
   ITokenService,
 } from "../interfaces/ITokenService";
-import { injectable } from "inversify";
 @injectable()
 export class TokenService implements ITokenService {
   getPasswordResetToken = (): IResetTokenResponse => {

@@ -1,9 +1,9 @@
+import { injectable } from "inversify";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import {
   ISecurityPayload,
   ISecurityService,
 } from "../interfaces/ISecurityService";
-import { injectable } from "inversify";
 @injectable()
 export class SecurityService implements ISecurityService {
   private get accessSecret(): string {

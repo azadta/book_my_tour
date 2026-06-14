@@ -4,8 +4,8 @@ import type { ICommonAuthService } from "../interfaces/ICommonAuthService";
 import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
-import { CustomError } from "../utils/customError";
 import { Types } from "../types/types";
+import { CustomError } from "../utils/customError";
 
 @injectable()
 export class CommonAuthService implements ICommonAuthService {

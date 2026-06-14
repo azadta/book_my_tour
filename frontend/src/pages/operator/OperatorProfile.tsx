@@ -230,6 +230,7 @@ const OperatorProfile = () => {
         <ProfileForm
           currentUser={currentOperator}
           formData={formData}
+          setFormData={setFormData}
           fields={operatorProfileFields}
           handleChange={handleChange}
           handleFileChange={handleFileChange}

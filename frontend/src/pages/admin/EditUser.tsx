@@ -47,6 +47,7 @@ const EditUser = () => {
       const nestedData = unFlattenObject(data);
 
       await updateUser(id, nestedData);
+          navigate('/admin/users')
       toast.success("User updated successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {

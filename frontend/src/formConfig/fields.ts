@@ -60,26 +60,27 @@ export const userFields: FormField[] = [
     label: "House No",
   },
   {
+    id: "address.country",
+    type: "select",
+    placeholder: "Country",
+    required: false,
+    label: "Country",
+  },
+  {
+    id: "address.state",
+    type: "select",
+    placeholder: "State",
+    required: false,
+    label: "State",
+  },
+  {
     id: "address.city",
     type: "text",
     placeholder: "City",
     required: false,
     label: "City",
   },
-  {
-    id: "address.state",
-    type: "text",
-    placeholder: "State",
-    required: false,
-    label: "State",
-  },
-  {
-    id: "address.country",
-    type: "text",
-    placeholder: "Country",
-    required: false,
-    label: "Country",
-  },
+
   {
     id: "address.postalCode",
     type: "text",
@@ -258,26 +259,27 @@ export const operatorRegisterFields: FormField[] = [
     required: false,
     label: "Landmark",
   },
+
+  {
+    id: "verificationDetails.businessAddress.country",
+    type: "select",
+    placeholder: "Country",
+    required: true,
+    label: "Country",
+  },
+  {
+    id: "verificationDetails.businessAddress.state",
+    type: "select",
+    placeholder: "State",
+    required: true,
+    label: "State",
+  },
   {
     id: "verificationDetails.businessAddress.city",
     type: "text",
     placeholder: "City",
     required: true,
     label: "City",
-  },
-  {
-    id: "verificationDetails.businessAddress.state",
-    type: "text",
-    placeholder: "State",
-    required: true,
-    label: "State",
-  },
-  {
-    id: "verificationDetails.businessAddress.country",
-    type: "text",
-    placeholder: "Country",
-    required: true,
-    label: "Country",
   },
   {
     id: "verificationDetails.businessAddress.postalCode",
@@ -388,26 +390,28 @@ export const operatorProfileFields: FormField[] = [
     label: "Landmark",
   },
   {
+    id: "verificationDetails.businessAddress.country",
+    type: "select",
+    placeholder: "Country",
+    required: true,
+    label: "Country",
+  },
+
+  {
+    id: "verificationDetails.businessAddress.state",
+    type: "select",
+    placeholder: "State",
+    required: true,
+    label: "State",
+  },
+  {
     id: "verificationDetails.businessAddress.city",
     type: "text",
     placeholder: "City",
     required: true,
     label: "City",
   },
-  {
-    id: "verificationDetails.businessAddress.state",
-    type: "text",
-    placeholder: "State",
-    required: true,
-    label: "State",
-  },
-  {
-    id: "verificationDetails.businessAddress.country",
-    type: "text",
-    placeholder: "Country",
-    required: true,
-    label: "Country",
-  },
+
   {
     id: "verificationDetails.businessAddress.postalCode",
     type: "text",
@@ -564,26 +568,27 @@ export const adminProfileFields: FormField[] = [
     label: "House No",
   },
   {
+    id: "address.country",
+    type: "select",
+    placeholder: "Country",
+    required: false,
+    label: "Country",
+  },
+  {
+    id: "address.state",
+    type: "select",
+    placeholder: "State",
+    required: false,
+    label: "State",
+  },
+  {
     id: "address.city",
     type: "text",
     placeholder: "City",
     required: false,
     label: "City",
   },
-  {
-    id: "address.state",
-    type: "text",
-    placeholder: "State",
-    required: false,
-    label: "State",
-  },
-  {
-    id: "address.country",
-    type: "text",
-    placeholder: "Country",
-    required: false,
-    label: "Country",
-  },
+
   {
     id: "address.postalCode",
     type: "text",
@@ -653,6 +658,21 @@ export const adminUpdateUserFields: FormField[] = [
     required: false,
     label: "Landmark",
   },
+
+  {
+    id: "address.country",
+    type: "select",
+    placeholder: "Country",
+    required: false,
+    label: "Country",
+  },
+  {
+    id: "address.state",
+    type: "select",
+    placeholder: "State",
+    required: false,
+    label: "State",
+  },
   {
     id: "address.city",
     type: "text",
@@ -660,20 +680,7 @@ export const adminUpdateUserFields: FormField[] = [
     required: false,
     label: "City",
   },
-  {
-    id: "address.state",
-    type: "text",
-    placeholder: "State",
-    required: false,
-    label: "State",
-  },
-  {
-    id: "address.country",
-    type: "text",
-    placeholder: "Country",
-    required: false,
-    label: "Country",
-  },
+
   {
     id: "address.postalCode",
     type: "text",
@@ -769,6 +776,21 @@ export const adminUpdateOperatorFields: FormField[] = [
     required: false,
     label: "Landmark",
   },
+
+  {
+    id: "verificationDetails.businessAddress.country",
+    type: "select",
+    placeholder: "Country",
+    required: true,
+    label: "Country",
+  },
+  {
+    id: "verificationDetails.businessAddress.state",
+    type: "select",
+    placeholder: "State",
+    required: true,
+    label: "State",
+  },
   {
     id: "verificationDetails.businessAddress.city",
     type: "text",
@@ -776,20 +798,7 @@ export const adminUpdateOperatorFields: FormField[] = [
     required: true,
     label: "City",
   },
-  {
-    id: "verificationDetails.businessAddress.state",
-    type: "text",
-    placeholder: "State",
-    required: true,
-    label: "State",
-  },
-  {
-    id: "verificationDetails.businessAddress.country",
-    type: "text",
-    placeholder: "Country",
-    required: true,
-    label: "Country",
-  },
+
   {
     id: "verificationDetails.businessAddress.postalCode",
     type: "text",

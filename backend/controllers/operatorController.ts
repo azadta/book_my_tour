@@ -81,11 +81,11 @@ export class OperatorController implements IOperatorController {
         await this.operatorService.operatorLoginService(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: Number(process.env.MAX_AGE)
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: Number(process.env.MAX_AGE)
       });
       res.status(StatusCode.OK).json(operatorData);
     } catch (error) {

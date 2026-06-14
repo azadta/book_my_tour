@@ -25,7 +25,7 @@ export class CommonAuthController implements ICommonAuthController {
       res.cookie("access_token", newAccessToken, {
         httpOnly: true,
 
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge:Number(process.env.MAX_AGE)
       });
       res.status(StatusCode.OK).json({ success: true });
     } catch (error) {

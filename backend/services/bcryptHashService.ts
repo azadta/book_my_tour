@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { IHashService } from "../interfaces/IHashService";
 import { injectable } from "inversify";
+import { IHashService } from "../interfaces/IHashService";
 
 @injectable()
 export class BcryptHashService implements IHashService {

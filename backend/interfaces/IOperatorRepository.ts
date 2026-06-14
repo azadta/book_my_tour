@@ -1,31 +1,29 @@
-import { IDestination } from "../models/Destination";
 import { IOperator } from "../models/Operator";
-import { Ipackage } from "../models/Package";
-import { IPackageCategory } from "../models/PackageCategory";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface IOperatorRepository {
-  create(data: Partial<IOperator>): Promise<IOperator>;
+export interface IOperatorRepository extends IBaseRepository<IOperator> {
   findByEmail(email: string): Promise<IOperator | null>;
-  findById(id: string): Promise<IOperator | null>;
-  save(operator: IOperator): Promise<IOperator>;
-  updateById(
-    id: string,
-    operatorData: Partial<IOperator>,
-  ): Promise<IOperator | null>;
-  deleteById(id: string): Promise<IOperator | null>;
+
   findByResetToken(token: string): Promise<IOperator | null>;
   updateOperatorProfileImage(
     id: string,
     image: string,
   ): Promise<IOperator | null>;
-  createPackage(data: Partial<Ipackage>): Promise<Ipackage>;
-  findAllPackages(skip: number, limit: number): Promise<Ipackage[]>;
-  countAllPackages(): Promise<number>;
-  getPackageById(id: string): Promise<Ipackage | null>;
-  updatePackage(id: string, data: Partial<Ipackage>): Promise<Ipackage | null>;
-  deletePackage(id: string): Promise<Ipackage | null>;
-  findAllPackageCategory(): Promise<IPackageCategory[]>;
-  findAllDestinations(): Promise<IDestination[]>;
-  getPackageByName(name: string): Promise<Ipackage | null>;
-  countPackagesByOperatorId(operatorId: string): Promise<number>;
+
+  getPendingOperatorsCount(): Promise<number>;
+
+  updateOperatorBlockStatus(
+    id: string,
+    isBlocked: boolean,
+  ): Promise<IOperator | null>;
+
+  getPaginatedOperators(skip: number, limit: number): Promise<IOperator[]>;
+  getPendingOperator(): Promise<IOperator[]>;
+
+  updateOperatorStatus(
+    id: string,
+    isVerified: boolean,
+  ): Promise<IOperator | null>;
+  countOperatorsByDateRange(start: Date, end: Date): Promise<number>;
+  save(operator: IOperator): Promise<IOperator>;
 }

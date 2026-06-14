@@ -1,40 +1,24 @@
 import { injectable } from "inversify";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import Destination, { IDestination } from "../models/Destination";
 import Operator, { IOperator } from "../models/Operator";
-import Package, { Ipackage } from "../models/Package";
-import PackageCategory, {
-  IPackageCategory,
-} from "../models/PackageCategory";
+import { BaseRepository } from "./baseRepository";
 
 @injectable()
-export class OperatorRepository implements IOperatorRepository {
-  async create(data: Partial<IOperator>): Promise<IOperator> {
-    const operator = new Operator(data);
-    return await operator.save();
+export class OperatorRepository
+  extends BaseRepository<IOperator>
+  implements IOperatorRepository
+{
+  constructor() {
+    super(Operator);
   }
+
   async findByEmail(email: string): Promise<IOperator | null> {
     return Operator.findOne({ email });
-  }
-  async findById(id: string): Promise<IOperator | null> {
-    return Operator.findById(id);
   }
   async save(operator: IOperator): Promise<IOperator> {
     return operator.save();
   }
-  async updateById(
-    id: string,
-    operatorData: Partial<IOperator>,
-  ): Promise<IOperator | null> {
-    return Operator.findByIdAndUpdate(
-      id,
-      { $set: operatorData },
-      { new: true },
-    );
-  }
-  async deleteById(id: string): Promise<IOperator | null> {
-    return Operator.findByIdAndDelete(id);
-  }
+
   async findByResetToken(token: string): Promise<IOperator | null> {
     return Operator.findOne({
       resetPasswordToken: token,
@@ -48,42 +32,40 @@ export class OperatorRepository implements IOperatorRepository {
     return Operator.findByIdAndUpdate(id, { image }, { new: true });
   }
 
-  async createPackage(data: Partial<Ipackage>): Promise<Ipackage> {
-    return await Package.create(data);
+  getPendingOperatorsCount(): Promise<number> {
+    return Operator.countDocuments({ isVerified: false });
   }
-  async findAllPackages(skip: number, limit: number): Promise<Ipackage[]> {
-    return Package.find()
-      .skip(skip)
-      .limit(limit)
-      .populate("destinations category operatorId");
+
+  async findOperatorById(id: string): Promise<IOperator | null> {
+    return Operator.findById(id).select("-password");
   }
-  countAllPackages(): Promise<number> {
-    return Package.countDocuments();
-  }
-  async getPackageById(id: string): Promise<Ipackage | null> {
-    return await Package.findById(id).populate("destinations category");
-  }
-  async getPackageByName(name: string): Promise<Ipackage | null> {
-    return await Package.findOne({ name: { $regex: name, $options: "i" } });
-  }
-  async updatePackage(
+
+  async updateOperatorBlockStatus(
     id: string,
-    data: Partial<Ipackage>,
-  ): Promise<Ipackage | null> {
-    return await Package.findByIdAndUpdate(id, data, { new: true });
+    isBlocked: boolean,
+  ): Promise<IOperator | null> {
+    return Operator.findByIdAndUpdate(id, { isBlocked }, { new: true });
   }
 
-  async deletePackage(id: string): Promise<Ipackage | null> {
-    return await Package.findByIdAndDelete(id);
+  async getPaginatedOperators(
+    skip: number,
+    limit: number,
+  ): Promise<IOperator[]> {
+    return Operator.find().skip(skip).limit(limit).select("-password");
   }
 
-  findAllPackageCategory(): Promise<IPackageCategory[]> {
-    return PackageCategory.find();
+  getPendingOperator(): Promise<IOperator[]> {
+    return Operator.find({ isVerified: false });
   }
-  findAllDestinations(): Promise<IDestination[]> {
-    return Destination.find();
+
+  updateOperatorStatus(
+    id: string,
+    isVerified: boolean,
+  ): Promise<IOperator | null> {
+    return Operator.findByIdAndUpdate(id, { isVerified }, { new: true });
   }
-  async countPackagesByOperatorId(operatorId:string):Promise<number>{
-    return Package.countDocuments({operatorId})
+
+  async countOperatorsByDateRange(start: Date, end: Date): Promise<number> {
+    return Operator.countDocuments({ createdAt: { $gte: start, $lte: end } });
   }
 }

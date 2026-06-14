@@ -1,17 +1,17 @@
-import { Ipackage } from "../models/Package";
-import { IPackageCategory } from "../models/PackageCategory";
 import { IUser } from "../models/User";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface IUserRepository {
-  create(data: Partial<IUser>): Promise<IUser>;
+export interface IUserRepository extends IBaseRepository<IUser> {
   findByEmail(email: string): Promise<IUser | null>;
-  findById(id: string): Promise<IUser | null>;
+
   findByResetToken(token: string): Promise<IUser | null>;
-  updateById(id: string, data: Partial<IUser>): Promise<IUser | null>;
-  deleteById(id: string): Promise<IUser | null>;
-  save(user: IUser): Promise<IUser>;
+
   updateProfileImage(id: string, image: string): Promise<IUser | null>;
-  findAllPackageCategory(): Promise<IPackageCategory[]>;
-  findAllPackages(skip: number, limit: number): Promise<Ipackage[]>;
-  countAllPackages(): Promise<number> 
+
+  updateUserBlockStatus(id: string, isBlocked: boolean): Promise<IUser | null>;
+
+  getPaginatedUsers(skip: number, limit: number): Promise<IUser[]>;
+
+  countUsersByDateRange(start: Date, end: Date): Promise<number>;
+  save(user: IUser): Promise<IUser>;
 }

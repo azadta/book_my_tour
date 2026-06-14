@@ -1,28 +1,38 @@
 import { Types as mongooseType } from "mongoose";
-import type{ IOperatorRepository } from "../interfaces/IOperatorRepository";
-import type{ IOperatorService } from "../interfaces/IOperatorService";
-import type{ Ipackage } from "../models/Package";
+import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import type { IOperatorService } from "../interfaces/IOperatorService";
+import type { Ipackage } from "../models/Package";
 import { CustomError } from "../utils/customError";
 
-import type{ IHashService } from "../interfaces/IHashService";
-import type{ IMailService } from "../interfaces/IMailService";
-import type{ ISecurityService } from "../interfaces/ISecurityService";
-import type{ ITokenService } from "../interfaces/ITokenService";
-import type{ IDestination } from "../models/Destination";
-import type{ IHashGenerator } from "../interfaces/IHashGenerator";
-import { StatusCode } from "../constants/statusCodeConstants";
 import { inject, injectable } from "inversify";
+import { StatusCode } from "../constants/statusCodeConstants";
+import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
+import type { IHashGenerator } from "../interfaces/IHashGenerator";
+import type { IHashService } from "../interfaces/IHashService";
+import type { IMailService } from "../interfaces/IMailService";
+import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
+import type { IPackageRepository } from "../interfaces/IPackageRepository";
+import type { ISecurityService } from "../interfaces/ISecurityService";
+import type { ITokenService } from "../interfaces/ITokenService";
+import type { IDestination } from "../models/Destination";
 import { Types } from "../types/types";
 
 @injectable()
 export class OperatorService implements IOperatorService {
   constructor(
-   @inject(Types.OperatorRepository) private operatorRepository: IOperatorRepository,
-   @inject(Types.MailService) private mailService: IMailService,
-   @inject(Types.BcryptHashService) private hashService: IHashService,
-   @inject(Types.SecurityService) private securityService: ISecurityService,
-   @inject(Types.TokenService) private tokenService: ITokenService,
-   @inject(Types.BcryptHashService) private resetTokenHasher: IHashGenerator,
+    @inject(Types.OperatorRepository)
+    private operatorRepository: IOperatorRepository,
+    @inject(Types.PackageRepository)
+    private packageRepository: IPackageRepository,
+    @inject(Types.MailService) private mailService: IMailService,
+    @inject(Types.BcryptHashService) private hashService: IHashService,
+    @inject(Types.SecurityService) private securityService: ISecurityService,
+    @inject(Types.TokenService) private tokenService: ITokenService,
+    @inject(Types.BcryptHashService) private resetTokenHasher: IHashGenerator,
+    @inject(Types.PackageCategoryRepository)
+    private packageCategoryRepository: IPackageCategoryRepository,
+    @inject(Types.DestinationRepository)
+    private destinationRepository: IDestinationRepository,
   ) {}
   async operatorRegisterService(data: any) {
     const existing = await this.operatorRepository.findByEmail(data.email);
@@ -113,7 +123,7 @@ export class OperatorService implements IOperatorService {
       id: operator._id.toString(),
       role: operator.role,
     });
-       //eslint-disable-next-line @typescript-eslint/no-unused-vars 
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: pass, ...operatorData } = operator.toObject();
     return { accessToken, refreshToken, operatorData };
   }
@@ -167,7 +177,7 @@ export class OperatorService implements IOperatorService {
   }
 
   async createPackageService(data: Partial<Ipackage>): Promise<Ipackage> {
-    const existingPackage = await this.operatorRepository.getPackageByName(
+    const existingPackage = await this.packageRepository.getPackageByName(
       data.name as string,
     );
     if (existingPackage) {
@@ -177,33 +187,33 @@ export class OperatorService implements IOperatorService {
       );
     }
 
-    return await this.operatorRepository.createPackage(data);
+    return await this.packageRepository.create(data);
   }
 
   async getSinglePackageService(id: string): Promise<Ipackage | null> {
-    return await this.operatorRepository.getPackageById(id);
+    return await this.packageRepository.getPackageById(id);
   }
 
   async updatePackageService(
     id: string,
     data: Partial<Ipackage>,
   ): Promise<Ipackage | null> {
-    return await this.operatorRepository.updatePackage(id, data);
+    return await this.packageRepository.updateById(id, data);
   }
 
   async deletePackageService(id: string): Promise<Ipackage | null> {
-    return await this.operatorRepository.deletePackage(id);
+    return await this.packageRepository.deleteById(id);
   }
 
   async getPaginatedPackagesService(
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.operatorRepository.findAllPackages(skip, limit);
+    return this.packageRepository.findAllPackages(skip, limit);
   }
 
   getTotalPackagesCount() {
-    return this.operatorRepository.countAllPackages();
+    return this.packageRepository.countDocuments();
   }
 
   async resetPasswordAuthenticatedService(
@@ -228,12 +238,12 @@ export class OperatorService implements IOperatorService {
     return { message: "Password updated successfully" };
   }
   getAllCategories() {
-    return this.operatorRepository.findAllPackageCategory();
+    return this.packageCategoryRepository.findAll();
   }
   getAllDestinationsServise(): Promise<IDestination[]> {
-    return this.operatorRepository.findAllDestinations();
+    return this.destinationRepository.findAll();
   }
   getMyPackagesCountService(operatorId: string): Promise<number> {
-    return this.operatorRepository.countPackagesByOperatorId(operatorId);
+    return this.packageRepository.countPackagesByOperatorId(operatorId);
   }
 }

@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
-import { IHashGenerator } from "../interfaces/IHashGenerator";
 import { injectable } from "inversify";
+import { IHashGenerator } from "../interfaces/IHashGenerator";
 @injectable()
 export class CryptoHashService implements IHashGenerator {
   hash(data: string): string {

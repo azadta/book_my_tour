@@ -1,22 +1,28 @@
 import { Types as mongooseType } from "mongoose";
 
+import { inject, injectable } from "inversify";
+import { StatusCode } from "../constants/statusCodeConstants";
+import type { IHashGenerator } from "../interfaces/IHashGenerator";
 import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
+import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
+import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import type { IUserService } from "../interfaces/IUserService";
 import type { Ipackage } from "../models/Package";
-import { CustomError } from "../utils/customError";
-import type { IHashGenerator } from "../interfaces/IHashGenerator";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { inject, injectable } from "inversify";
 import { Types } from "../types/types";
+import { CustomError } from "../utils/customError";
 
 @injectable()
 export class UserService implements IUserService {
   constructor(
     @inject(Types.UserRepository) private userRepository: IUserRepository,
+    @inject(Types.PackageCategoryRepository)
+    private packageCategoryRepository: IPackageCategoryRepository,
+    @inject(Types.PackageRepository)
+    private packageRepository: IPackageRepository,
     @inject(Types.MailService) private mailService: IMailService,
     @inject(Types.BcryptHashService) private hashService: IHashService,
     @inject(Types.SecurityService) private securityService: ISecurityService,
@@ -252,15 +258,15 @@ export class UserService implements IUserService {
   }
 
   getAllCategories() {
-    return this.userRepository.findAllPackageCategory();
+    return this.packageCategoryRepository.findAll();
   }
   async getPaginatedPackagesService(
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.userRepository.findAllPackages(skip, limit);
+    return this.packageRepository.findAllPackages(skip, limit);
   }
   getTotalPackagesCount() {
-    return this.userRepository.countAllPackages();
+    return this.packageRepository.countDocuments();
   }
 }

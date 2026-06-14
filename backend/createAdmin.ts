@@ -7,8 +7,6 @@ dotenv.config();
 
 const createAdmin = async () => {
   try {
-
-
     await mongoose.connect(process.env.MONGO!);
 
     const existingAdmin = await Admin.findOne({ email: "admin@abc.com" });

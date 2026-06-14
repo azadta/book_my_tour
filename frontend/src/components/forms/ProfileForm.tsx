@@ -1,7 +1,14 @@
+import { useEffect, useState } from "react";
 import type { FormField } from "../../interfaces/interfaces";
+import { Country, State, type IState } from "country-state-city";
+
+interface FormDataType {
+  [key: string]: any;
+}
 
 interface ProfileFormProps {
-  formData: any;
+  formData: FormDataType;
+  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
   currentUser: any;
   fields: FormField[];
   handleChange: (
@@ -18,6 +25,7 @@ interface ProfileFormProps {
 
 export const ProfileForm = ({
   formData,
+  setFormData,
   currentUser,
   fields,
   handleChange,
@@ -29,6 +37,8 @@ export const ProfileForm = ({
   fieldError,
   setFieldError,
 }: ProfileFormProps) => {
+  const [countryCode, setCountryCode] = useState("");
+  const [states, setStates] = useState<IState[]>([]);
   const getNestedValue = (obj: any, path: string) => {
     return path.split(".").reduce((acc, key) => acc[key], obj);
   };
@@ -48,7 +58,7 @@ export const ProfileForm = ({
     });
 
     setFieldError(newErrors);
-  
+
     if (Object.keys(newErrors).length > 0) {
       return;
     }
@@ -59,7 +69,6 @@ export const ProfileForm = ({
   const changeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-
     handleChange(e);
     const { id } = e.target;
 
@@ -73,6 +82,66 @@ export const ProfileForm = ({
     const { id } = e.target;
     setFieldError((prev) => ({ ...prev, [id]: "" }));
   };
+
+  const setNestedFormData = (id: string, value: string) => {
+    setFormData((prevForm) => {
+      const keys = id.split(".");
+      const newForm = { ...prevForm };
+      let prevNested = prevForm;
+
+      let nested = newForm;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const key = keys[i];
+
+        nested[key] = { ...(prevNested?.[key] || {}) };
+        nested = nested[key];
+        prevNested = prevNested?.[key] || {};
+      }
+
+      nested[keys[keys.length - 1]] = value;
+
+      return { ...newForm };
+    });
+  };
+
+  const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { id } = e.target;
+    const selectedCode = e.target.value;
+    setCountryCode(selectedCode);
+    const selectedCountry = Country.getAllCountries().find(
+      (Country) => Country.isoCode === selectedCode,
+    );
+
+    const stateField = fields.find((field) => field.label === "State");
+
+    setNestedFormData(id, selectedCountry?.name as string);
+    console.log(selectedCountry?.name);
+    if (stateField) setNestedFormData(stateField.id, "");
+
+    setStates(State.getStatesOfCountry(selectedCode));
+    setFieldError((prev) => ({ ...prev, [id]: "" }));
+  };
+
+  useEffect(() => {
+    const countryField = fields.find((field) => field.label === "Country");
+
+    if (!countryField) return;
+
+    const countryName = countryField.id.includes(".")
+      ? getNestedValue(formData, countryField.id)
+      : formData[countryField.id];
+
+    if (!countryName) return;
+
+    const country = Country.getAllCountries().find(
+      (c) => c.name === countryName,
+    );
+
+    if (country) {
+      setCountryCode(country.isoCode);
+      setStates(State.getStatesOfCountry(country.isoCode));
+    }
+  }, [formData]);
 
   return (
     <div className="flex flex-col items-center gap-3 max-w-2xl mx-auto">
@@ -119,23 +188,59 @@ export const ProfileForm = ({
                     <span className="text-red-500 font-bold">*</span>
                   )}
                 </label>
-                <select
-                  id={field.id}
-                  onChange={changeHandler}
-                  className="border border-gray-300 p-3 rounded-lg"
-                  value={
-                    field.id.includes(".")
-                      ? getNestedValue(formData, field.id)
-                      : formData[field.id]
-                  }
-                >
-                  <option value="">Select {field.label}</option>
-                  {field.options?.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                {field.label === "Country" ? (
+                  <select
+                    id={field.id}
+                    onChange={handleChangeCountry}
+                    value={countryCode}
+                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+                    disabled={field.disabled}
+                  >
+                    <option className="text-red-500">Choose Country</option>
+                    {Country.getAllCountries().map((country) => (
+                      <option key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : field.label === "State" ? (
+                  <select
+                    id={field.id}
+                    onChange={handleChange}
+                    value={
+                      field.id.includes(".")
+                        ? getNestedValue(formData, field.id)
+                        : formData[field.id]
+                    }
+                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 `}
+                    disabled={!countryCode}
+                  >
+                    {countryCode && <option>Choose State</option>}
+                    {states.map((state) => (
+                      <option key={state.isoCode} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <select
+                    id={field.id}
+                    onChange={changeHandler}
+                    className="border border-gray-300 p-3 rounded-lg"
+                    value={
+                      field.id.includes(".")
+                        ? getNestedValue(formData, field.id)
+                        : formData[field.id]
+                    }
+                  >
+                    <option value="">Select {field.label}</option>
+                    {field.options?.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 {fieldError[field.id] && (
                   <p className="text-red-500 text-sm mt-1">
                     {fieldError[field.id]}

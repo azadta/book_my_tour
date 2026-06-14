@@ -6,6 +6,7 @@ import ReusableForm from "../../components/forms/ReUsableForm";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import { toast } from "react-toastify";
+import BackToDashboard from "../../components/BackToDashboard";
 
 const EditOperator = () => {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +53,8 @@ const EditOperator = () => {
       }
       const nestedData = unFlattenObject(data);
 
-      await updateOperator(id, nestedData);
+     const result= await updateOperator(id, nestedData);
+      navigate('/admin/operators')
       toast.success("Operator updated successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -98,6 +100,7 @@ const EditOperator = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
+        <BackToDashboard path='/admin/dashboard'/>
       <h2 className="text-2xl font-bold text-center mb-6">Edit Operator</h2>
       <ReusableForm
         fields={adminUpdateOperatorFields}

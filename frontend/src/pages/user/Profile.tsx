@@ -230,6 +230,7 @@ const Profile = () => {
         <ProfileForm
           currentUser={currentUser}
           formData={formData}
+          setFormData={setFormData}
           fields={userFields}
           handleChange={handleChange}
           handleFileChange={handleFileChange}

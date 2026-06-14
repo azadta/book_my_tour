@@ -1,3 +1,4 @@
+import { Country, State, type IState } from "country-state-city";
 import { useEffect, useState } from "react";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import type { FormField } from "../../interfaces/interfaces";
@@ -24,6 +25,8 @@ const ReUsableForm = ({
   fieldError,
   setFieldError,
 }: ReUsableFormProps) => {
+  const [countryCode, setCountryCode] = useState("");
+  const [states, setStates] = useState<IState[]>([]);
   const [formData, setFormData] = useState<FormData>({});
 
   const [imagePreviews, setImagePreviews] = useState<{
@@ -76,7 +79,7 @@ const ReUsableForm = ({
       return;
     }
     onSubmit(formData);
-    setFormData({});
+
     setImagePreviews({});
   };
 
@@ -98,11 +101,49 @@ const ReUsableForm = ({
     });
   };
 
+  const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { id } = e.target;
+    const selectedCode = e.target.value;
+    setCountryCode(selectedCode);
+    const selectedCountry = Country.getAllCountries().find(
+      (Country) => Country.isoCode === selectedCode,
+    );
+
+    const stateField = fields.find((field) => field.label === "State");
+
+    setFormData((prev) => ({
+      ...prev,
+      [id]: selectedCountry?.name,
+      ...(stateField && { [stateField.id]: "" }),
+    }));
+
+    setStates(State.getStatesOfCountry(selectedCode));
+    setFieldError((prev) => ({ ...prev, [id]: "" }));
+  };
+
   useEffect(() => {
     if (initialData) {
       setFormData(flattenObjects(initialData));
     }
   }, [initialData]);
+  useEffect(() => {
+    const countryField = fields.find((field) => field.label === "Country");
+
+    if (!countryField) return;
+
+    const countryName = formData[countryField.id];
+
+    if (!countryName) return;
+
+    const country = Country.getAllCountries().find(
+      (c) => c.name === countryName,
+    );
+
+    if (country) {
+      setCountryCode(country.isoCode);
+      setStates(State.getStatesOfCountry(country.isoCode));
+    }
+  }, [formData]);
 
   return (
     <div
@@ -126,46 +167,85 @@ const ReUsableForm = ({
                     <span className="text-red-500 font-bold">*</span>
                   )}
                 </label>
-                <select
-                  id={field.id}
-                  multiple={field.multiple}
-                  onChange={(e) => {
-                    if (field.multiple) {
-                      const selectedOptions = Array.from(
-                        e.target.selectedOptions,
-                      ).map((opt) => opt.value);
-                      setFormData((prev) => ({
-                        ...prev,
-                        [field.id]: selectedOptions,
-                      }));
-
-                      setFieldError((prev) => ({ ...prev, [field.id]: "" }));
-                    } else {
+                {field.label === "Country" ? (
+                  <select
+                    id={field.id}
+                    onChange={handleChangeCountry}
+                    value={countryCode}
+                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+                    disabled={field.disabled}
+                  >
+                    {!formData[field.id] && (
+                      <option className="text-red-500">Choose Country</option>
+                    )}
+                    {Country.getAllCountries().map((country) => (
+                      <option key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : field.label === "State" ? (
+                  <select
+                    id={field.id}
+                    onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
                         [field.id]: e.target.value,
-                      }));
-                      setFieldError((prev) => ({ ...prev, [field.id]: "" }));
+                      }))
                     }
-                  }}
-                  value={
-                    field.multiple
-                      ? (formData[field.id] ?? [])
-                      : (formData[field.id] ?? "")
-                  }
-                  className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${field.multiple ? "min-h-[100px]" : ""}`}
-                  disabled={field.disabled}
-                >
-                  {!field.multiple && (
-                    <option value="">{field.placeholder || "Select"}</option>
-                  )}
+                    value={formData[field.id] ?? ""}
+                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 `}
+                    disabled={!countryCode}
+                  >
+                    {states.map((state) => (
+                      <option key={state.isoCode} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <select
+                    id={field.id}
+                    multiple={field.multiple}
+                    onChange={(e) => {
+                      if (field.multiple) {
+                        const selectedOptions = Array.from(
+                          e.target.selectedOptions,
+                        ).map((opt) => opt.value);
+                        setFormData((prev) => ({
+                          ...prev,
+                          [field.id]: selectedOptions,
+                        }));
 
-                  {field.options?.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                        setFieldError((prev) => ({ ...prev, [field.id]: "" }));
+                      } else {
+                        setFormData((prev) => ({
+                          ...prev,
+                          [field.id]: e.target.value,
+                        }));
+                        setFieldError((prev) => ({ ...prev, [field.id]: "" }));
+                      }
+                    }}
+                    value={
+                      field.multiple
+                        ? (formData[field.id] ?? [])
+                        : (formData[field.id] ?? "")
+                    }
+                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${field.multiple ? "min-h-[100px]" : ""}`}
+                    disabled={field.disabled}
+                  >
+                    {!field.multiple && (
+                      <option value="">{field.placeholder || "Select"}</option>
+                    )}
+
+                    {field.options?.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
                 {fieldError[field.id] && (
                   <p className="text-red-500 text-sm mt-1">
                     {fieldError[field.id]}

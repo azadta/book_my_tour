@@ -187,6 +187,7 @@ const AdminProfile = () => {
         <ProfileForm
           currentUser={currentAdmin}
           formData={formData}
+          setFormData={setFormData}
           fields={adminProfileFields}
           handleChange={handleChange}
           handleFileChange={handleFileChange}
@@ -197,25 +198,24 @@ const AdminProfile = () => {
           fieldError={fieldError}
           setFieldError={setFieldError}
         />
-          <div className="sm:hidden pt-10">
-           <div className="flex items-center justify-between">
-          <button
-            onClick={() => navigate("/admin/reset-password")}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
-          >
-            Reset Password
-          </button>
+        <div className="sm:hidden pt-10">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => navigate("/admin/reset-password")}
+              className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+            >
+              Reset Password
+            </button>
 
-          <button
-            onClick={handleLogOut}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
-          >
-            Log Out
-          </button>
-         </div>
+            <button
+              onClick={handleLogOut}
+              className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+            >
+              Log Out
+            </button>
+          </div>
+        </div>
       </div>
-      </div>
-    
     </div>
   );
 };

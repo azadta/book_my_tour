@@ -4,6 +4,8 @@ import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import type { FormField } from "../../interfaces/interfaces";
 
 interface ReUsableFormProps {
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   fields: FormField[];
   onSubmit: (formData: any) => void;
   loading: boolean;
@@ -17,6 +19,8 @@ interface FormData {
 }
 
 const ReUsableForm = ({
+  formData,
+  setFormData,
   fields,
   onSubmit,
   loading,
@@ -27,7 +31,6 @@ const ReUsableForm = ({
 }: ReUsableFormProps) => {
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
-  const [formData, setFormData] = useState<FormData>({});
 
   const [imagePreviews, setImagePreviews] = useState<{
     [key: string]: string[];
@@ -125,7 +128,7 @@ const ReUsableForm = ({
     if (initialData) {
       setFormData(flattenObjects(initialData));
     }
-  }, [initialData]);
+  }, [initialData,setFormData]);
   useEffect(() => {
     const countryField = fields.find((field) => field.label === "Country");
 
@@ -143,7 +146,7 @@ const ReUsableForm = ({
       setCountryCode(country.isoCode);
       setStates(State.getStatesOfCountry(country.isoCode));
     }
-  }, [formData]);
+  }, [formData,fields]);
 
   return (
     <div

@@ -1,7 +1,9 @@
 import { injectable } from "inversify";
 import { IAdminRepository } from "../interfaces/IAdminRepository";
-import Admin, { IAdmin } from "../models/Admin";
+import Admin from "../models/Admin";
 import { BaseRepository } from "./baseRepository";
+import { IAdmin } from "../interfaces/IAdmin";
+import { HydratedDocument } from "mongoose";
 
 @injectable()
 export class AdminRepository
@@ -11,14 +13,14 @@ export class AdminRepository
   constructor() {
     super(Admin);
   }
-  async findByEmail(email: string): Promise<IAdmin | null> {
+  async findByEmail(email: string): Promise<HydratedDocument<IAdmin> | null> {
     return Admin.findOne({ email });
   }
-  async save(admin: IAdmin): Promise<IAdmin> {
+  async save(admin: HydratedDocument<IAdmin>): Promise<IAdmin> {
     return admin.save();
   }
 
-  async updateProfieImage(id: string, image: string): Promise<IAdmin | null> {
+  async updateProfieImage(id: string, image: string): Promise<HydratedDocument<IAdmin> | null>  {
     return Admin.findByIdAndUpdate(id, { image }, { new: true });
   }
 }

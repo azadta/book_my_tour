@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 import { IBaseRepository } from "../interfaces/IBaseRepository";
 import { flattenObjects } from "../utils/flattenObject";
+import { HydratedDocument } from "mongoose";
 
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
   protected model: Model<T>;
@@ -17,7 +18,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return await this.model.findById(id);
   }
 
-  async updateById(id: string, data: Partial<T>): Promise<T | null> {
+  async updateById(id: string, data: Partial<T>): Promise<HydratedDocument<T> | null> {
     const flattenedData = flattenObjects(data);
 
     return this.model.findByIdAndUpdate(

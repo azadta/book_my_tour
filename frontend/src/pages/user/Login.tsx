@@ -5,10 +5,11 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { useLogin } from "../../hooks/useLogin";
 import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 import { userLoginfields } from "../../formConfig/fields";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
+    const [formData, setFormData] = useState<Record<string, any>>({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state: RootState) => state.user);
@@ -26,6 +27,8 @@ const Login = () => {
       <h1 className="text-3xl text-center font-semibold my-3">Log In</h1>
 
       <ReUsableForm
+         formData={formData}
+          setFormData={setFormData}
         fields={userLoginfields}
         onSubmit={login}
         loading={loading}

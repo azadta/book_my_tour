@@ -5,6 +5,7 @@ import { OperatorResetPasswordFields } from "../../formConfig/fields";
 import { useState } from "react";
 
 const OperatorResetPassword: React.FC = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
@@ -42,6 +43,8 @@ const OperatorResetPassword: React.FC = () => {
           Reset Password
         </h2>
         <ReusableForm
+          formData={formData}
+          setFormData={setFormData}
           fields={OperatorResetPasswordFields}
           onSubmit={handleSubmit}
           loading={loading}

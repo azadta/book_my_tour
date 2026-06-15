@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import type { IOperator } from "../redux/operator/operatorSlice";
+import { toast } from "react-toastify";
 
 export const useAdminOperatorManagement = (page: number, limit: number) => {
   const [operators, setOperators] = useState<IOperator[]>([]);
@@ -23,18 +24,36 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
   }, [page, limit]);
 
   const blockOperator = async (id: string, isBlocked: boolean) => {
-    await axiosInstance.put(`/admin/operators/block/${id}`, { isBlocked });
-    fetchOperators();
+    try {
+      await axiosInstance.put(`/admin/operators/block/${id}`, { isBlocked });
+      setOperators((prev) =>
+        prev.map((operator) =>
+          operator._id === id ? { ...operator, isBlocked } : operator,
+        ),
+      );
+    } catch (error) {
+      console.error(`Failed to block operator`, error);
+      toast.error(`Failed to update operator status`);
+    }
   };
 
   const deleteOperator = async (id: string) => {
-    await axiosInstance.delete(`/admin/operators/delete/${id}`);
-    fetchOperators();
+    try {
+      setLoading(true);
+      await axiosInstance.delete(`/admin/operators/delete/${id}`);
+      setOperators((prev) => prev.filter((operator) => operator._id !== id));
+      setTotalCount((prev) => prev - 1);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete operator");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchOperators();
-  }, [page, limit,fetchOperators]);
+  }, [page, limit, fetchOperators]);
 
   return {
     operators,

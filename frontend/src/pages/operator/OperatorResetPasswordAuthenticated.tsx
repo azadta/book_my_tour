@@ -6,6 +6,7 @@ import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 import BackToDashboard from "../../components/BackToDashboard";
 
 const OperatorResetPasswordAuthenticated: React.FC = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -39,6 +40,8 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
           Change Password
         </h2>
         <ReusableForm
+          formData={formData}
+          setFormData={setFormData}
           fields={resetAuthenticatedPasswordFields}
           buttonText="Update Password"
           loading={loading}

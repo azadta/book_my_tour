@@ -14,9 +14,14 @@ import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryR
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
-import type { IAdmin } from "../models/Admin";
+
 import type { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
+import { IAdmin, IAdminResponse } from "../interfaces/IAdmin";
+
+import { IOperator } from "../interfaces/IOperator";
+import { IUser } from "../interfaces/IUser";
+import { HydratedDocument } from "mongoose";
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -37,7 +42,14 @@ export class AdminService implements IAdminService {
     @inject(Types.SecurityService) private securityService: ISecurityService,
   ) {}
 
-  async loginAdminService(email: string, password: string) {
+  async loginAdminService(
+    email: string,
+    password: string,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    adminData: IAdminResponse;
+  }> {
     const admin = await this.adminRepository.findByEmail(email);
     if (!admin) throw new CustomError("Admin not found", StatusCode.NOT_FOUND);
     const isPasswordValid = this.hashService.compare(password, admin.password);
@@ -56,7 +68,7 @@ export class AdminService implements IAdminService {
     return { accessToken, refreshToken, adminData };
   }
 
-  async updateAdminService(id: string, data: Partial<IAdmin>) {
+  async updateAdminService(id: string, data: Partial<IAdmin>): Promise<HydratedDocument<IAdmin> | null> {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }
@@ -213,7 +225,7 @@ export class AdminService implements IAdminService {
   async deleteUserService(id: string) {
     return await this.userRepository.deleteById(id);
   }
-  async updateUserService(id: string, data: any) {
+  async updateUserService(id: string, data: Partial<IUser>) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }
@@ -232,7 +244,7 @@ export class AdminService implements IAdminService {
     return this.packageRepository.countDocuments();
   }
 
-  async updateOperatorService(id: string, data: any) {
+  async updateOperatorService(id: string, data: Partial<IOperator>) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }
@@ -243,7 +255,7 @@ export class AdminService implements IAdminService {
   async updateProfieImageService(
     id: string,
     image: string,
-  ): Promise<IAdmin | null> {
+  ): Promise<HydratedDocument<IAdmin> | null> {
     return this.adminRepository.updateProfieImage(id, image);
   }
 
@@ -263,5 +275,3 @@ export class AdminService implements IAdminService {
     return await this.operatorRepository.getPendingOperatorsCount();
   }
 }
-
-

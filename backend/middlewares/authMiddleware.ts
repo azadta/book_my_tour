@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 
+import { inject, injectable } from "inversify";
+import jwt from "jsonwebtoken";
 import { StatusCode } from "../constants/statusCodeConstants";
 import type { IAdminRepository } from "../interfaces/IAdminRepository";
+import { IAuthMiddleware } from "../interfaces/IAuthMiddleware";
 import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
-import { CustomError } from "../utils/customError";
-import { inject, injectable } from "inversify";
 import { Types } from "../types/types";
-import { IAuthMiddleware } from "../interfaces/IAuthMiddleware";
+import { CustomError } from "../utils/customError";
 @injectable()
 export class AuthMiddleware implements IAuthMiddleware {
   constructor(
@@ -24,7 +25,6 @@ export class AuthMiddleware implements IAuthMiddleware {
       const token = req.cookies.access_token;
 
       if (!token) {
-
         return next(
           new CustomError(
             "Unauthorized: No token provided",
@@ -76,8 +76,8 @@ export class AuthMiddleware implements IAuthMiddleware {
         req.user = decoded;
 
         next();
-      } catch (error: any) {
-        if (error.name === "TokenExpiredError") {
+      } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
           return next(
             new CustomError("Token expired", StatusCode.UNAUTHORIZED),
           );

@@ -1,7 +1,8 @@
 import { injectable } from "inversify";
 import { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import Operator, { IOperator } from "../models/Operator";
+import Operator from "../models/Operator";
 import { BaseRepository } from "./baseRepository";
+import { IOperator } from "../interfaces/IOperator";
 
 @injectable()
 export class OperatorRepository

@@ -23,7 +23,7 @@ export class UserController implements IUserController {
       res
         .status(StatusCode.CREATED)
         .json({ success: true, message: "OTP sent", ...result });
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   };

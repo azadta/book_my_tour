@@ -20,11 +20,12 @@ export const useCreatePackageCategory = () => {
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
-        return;
+        throw error
       }
       const message =
         error?.response?.data?.message || "Failed to create category";
       toast.error(message);
+      throw error
     }
   };
 

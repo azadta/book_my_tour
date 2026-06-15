@@ -6,6 +6,8 @@ import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 import { toast } from "react-toastify";
 
 const ResetPasswordAuthenticated = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
+
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
 
   const endPoint = "/user/reset-password-authenticated";
@@ -17,7 +19,7 @@ const ResetPasswordAuthenticated = () => {
     try {
       await resetPassword(oldPassword, newPassword, confirmPassword);
       toast.success("Password updated successfully");
-      setTimeout(() => navigate(`/user/profile`), 2000);
+      navigate(`/user/profile`);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
@@ -34,6 +36,8 @@ const ResetPasswordAuthenticated = () => {
         Change Password
       </h2>
       <ReUsableForm
+        formData={formData}
+        setFormData={setFormData}
         fields={resetAuthenticatedPasswordFields}
         buttonText="Update Password"
         loading={loading}

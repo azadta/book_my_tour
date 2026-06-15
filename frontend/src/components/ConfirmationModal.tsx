@@ -1,7 +1,7 @@
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () =>void
   message: string;
 }
 

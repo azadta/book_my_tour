@@ -1,6 +1,7 @@
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
-import { IUser } from "../models/User";
+import { IUser, IUserResponse } from "./IUser";
+
 
 export interface IUserService {
   registerUser(userData: {
@@ -13,17 +14,17 @@ export interface IUserService {
   loginUser(
     email: string,
     password: string,
-  ): Promise<{ accessToken: string; refreshToken: string; userData: any }>;
+  ): Promise<{ accessToken: string; refreshToken: string; userData:  IUserResponse }>;
   googleLogin(
     name: string,
     email: string,
-  ): Promise<{ accessToken: string; refreshToken: string; user: any }>;
+  ): Promise<{ accessToken: string; refreshToken: string; user: IUserResponse  }>;
   forgotPasswordService(email: string): Promise<{ message: string }>;
   resetPasswordService(
     token: string,
     newPassword: string,
   ): Promise<{ message: string }>;
-  updateUserService(id: string, data: any): Promise<IUser | null>;
+  updateUserService(id: string, data:Partial<IUser>): Promise<IUser | null>;
   deleteUserService(id: string): Promise<IUser | null>;
   updateProfileImageService(id: string, image: string): Promise<IUser | null>;
   userLogoutService(): { message: string };

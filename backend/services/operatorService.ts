@@ -16,6 +16,7 @@ import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
 import type { IDestination } from "../models/Destination";
 import { Types } from "../types/types";
+import { IOperator, IOperatorResponse } from "../interfaces/IOperator";
 
 @injectable()
 export class OperatorService implements IOperatorService {
@@ -28,18 +29,20 @@ export class OperatorService implements IOperatorService {
     @inject(Types.BcryptHashService) private hashService: IHashService,
     @inject(Types.SecurityService) private securityService: ISecurityService,
     @inject(Types.TokenService) private tokenService: ITokenService,
-    @inject(Types.BcryptHashService) private resetTokenHasher: IHashGenerator,
+    @inject(Types.CryptoHashService) private resetTokenHasher: IHashGenerator,
     @inject(Types.PackageCategoryRepository)
     private packageCategoryRepository: IPackageCategoryRepository,
     @inject(Types.DestinationRepository)
     private destinationRepository: IDestinationRepository,
   ) {}
-  async operatorRegisterService(data: any) {
-    const existing = await this.operatorRepository.findByEmail(data.email);
+  async operatorRegisterService(data: Partial<IOperator>) {
+    const existing = await this.operatorRepository.findByEmail(
+      data.email as string,
+    );
     if (existing) {
       throw new CustomError("Email already exists", StatusCode.BAD_REQUEST);
     }
-    const hashedPassword = this.hashService.hash(data.password);
+    const hashedPassword = this.hashService.hash(data.password as string);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
     const newOperator = await this.operatorRepository.create({
@@ -50,7 +53,7 @@ export class OperatorService implements IOperatorService {
     });
 
     await this.mailService.sendEmail(
-      data.email,
+      data.email as string,
       "Verify your email",
       `Your otp is ${otp} .It expires in 10 minutes`,
     );
@@ -98,7 +101,14 @@ export class OperatorService implements IOperatorService {
     return { otpExpire };
   }
 
-  async operatorLoginService(email: string, password: string) {
+  async operatorLoginService(
+    email: string,
+    password: string,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    operatorData: IOperatorResponse;
+  }> {
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
       throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
@@ -131,12 +141,12 @@ export class OperatorService implements IOperatorService {
   async operatorForgotPasswordService(email: string) {
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
-      throw new CustomError("User not found", StatusCode.NOT_FOUND);
+      throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
     const { resetToken, expireTime, hashedToken } =
       this.tokenService.getPasswordResetToken();
     operator.resetPasswordToken = hashedToken;
     operator.resetPasswordExpire = expireTime;
-    await operator.save();
+    await this.operatorRepository.save(operator)
     const resetUrl = `${process.env.FRONTEND_URL}/operator/reset-password/${resetToken}`;
     await this.mailService.sendEmail(
       operator.email,
@@ -160,7 +170,7 @@ export class OperatorService implements IOperatorService {
     return { message: "Password updated successfully" };
   }
 
-  async updateOperatorService(id: string, data: any) {
+  async updateOperatorService(id: string, data: Partial<IOperator>) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }

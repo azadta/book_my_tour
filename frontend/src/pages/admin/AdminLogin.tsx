@@ -7,11 +7,14 @@ import type { RootState } from "../../redux/store";
 
 import { adminLoginFields } from "../../formConfig/fields.js";
 import { useAdminLogin } from "../../hooks/useAdminLogin.js";
+import { useState } from "react";
 
 const AdminLogin = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.admin);
+
   const { adminLogin, fieldError, setFieldError } = useAdminLogin(
     dispatch,
     navigate,
@@ -24,6 +27,8 @@ const AdminLogin = () => {
           Admin Log In
         </h1>
         <ReusableForm
+          formData={formData}
+          setFormData={setFormData}
           fields={adminLoginFields}
           loading={loading}
           buttonText="Log In"

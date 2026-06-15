@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { IUser } from "../redux/user/userSlice";
 import { axiosInstance } from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 export const useAdminUserManagement = (page: number, limit: number) => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -22,18 +23,34 @@ export const useAdminUserManagement = (page: number, limit: number) => {
   }, [page, limit]);
 
   const blockUser = async (id: string, isBlocked: boolean) => {
-    await axiosInstance.put(`/admin/users/block/${id}`, { isBlocked });
-    fetchUsers();
+    try {
+      await axiosInstance.put(`/admin/users/block/${id}`, { isBlocked });
+      setUsers((prev) =>
+        prev.map((user) => (user._id === id ? { ...user, isBlocked } : user)),
+      );
+    } catch (error) {
+      console.error(`Failed to block user`, error);
+      toast.error(`Failed to update user status`);
+    }
   };
 
   const deleteUser = async (id: string) => {
-    await axiosInstance.delete(`/admin/users/delete/${id}`);
-    fetchUsers();
+    try {
+      setLoading(true);
+      await axiosInstance.delete(`/admin/users/delete/${id}`);
+      setUsers((prev) => prev.filter((user) => user._id !== id));
+      setTotalCount((prev) => prev - 1);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete user");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, [page, limit,fetchUsers]);
+  }, [page, limit, fetchUsers]);
 
   return {
     users,

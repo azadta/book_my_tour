@@ -115,7 +115,7 @@ export const ProfileForm = ({
     const stateField = fields.find((field) => field.label === "State");
 
     setNestedFormData(id, selectedCountry?.name as string);
-    console.log(selectedCountry?.name);
+
     if (stateField) setNestedFormData(stateField.id, "");
 
     setStates(State.getStatesOfCountry(selectedCode));
@@ -141,7 +141,7 @@ export const ProfileForm = ({
       setCountryCode(country.isoCode);
       setStates(State.getStatesOfCountry(country.isoCode));
     }
-  }, [formData]);
+  }, [formData,fields]);
 
   return (
     <div className="flex flex-col items-center gap-3 max-w-2xl mx-auto">

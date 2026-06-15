@@ -1,25 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-
-interface Address {
-  houseNo?: string;
-  landmark?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  postalCode?: string;
-}
-
-export interface IAdmin extends Document {
-  name: string;
-  email: string;
-  password: string;
-  image?: string;
-  mobile?: string;
-  address?: Address;
-  role: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose, { Schema } from "mongoose";
+import { IAdmin } from "../interfaces/IAdmin";
 
 const adminSchema: Schema<IAdmin> = new Schema(
   {
@@ -43,7 +23,7 @@ const adminSchema: Schema<IAdmin> = new Schema(
       postalCode: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Admin = mongoose.model<IAdmin>("Admin", adminSchema);

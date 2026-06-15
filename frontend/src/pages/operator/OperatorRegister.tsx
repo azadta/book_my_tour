@@ -3,8 +3,10 @@ import { useOperatorRegister } from "../../hooks/useOperatorRegister.ts";
 import ReusableForm from "../../components/forms/ReUsableForm.tsx";
 import { operatorRegisterFields } from "../../formConfig/fields.ts";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const OperatorRegister = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const navigate = useNavigate();
   const { registerOperator, loading, error, fieldError, setFieldError } =
     useOperatorRegister();
@@ -33,6 +35,8 @@ const OperatorRegister = () => {
         Operator Register
       </h1>
       <ReusableForm
+        formData={formData}
+        setFormData={setFormData}
         buttonText="Register Operator"
         fields={operatorRegisterFields}
         loading={loading}
@@ -40,12 +44,12 @@ const OperatorRegister = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
-             <p className="text-end">
-          Already  have an account?
-          <a href="/operator/login" className="text-sky-700 ml-3 ">
-            Login
-          </a>
-        </p>
+      <p className="text-end">
+        Already have an account?
+        <a href="/operator/login" className="text-sky-700 ml-3 ">
+          Login
+        </a>
+      </p>
     </div>
   );
 };

@@ -2,12 +2,20 @@ import { useCreatePackageCategory } from "../../hooks/useCreatePackageCategory";
 import BackToDashboard from "../../components/BackToDashboard";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createPackageCategoryFields } from "../../formConfig/fields";
+import { useState } from "react";
 
 const CreatePackageCategory = () => {
-  const { createPackageCategory,fieldError,setFieldError } = useCreatePackageCategory();
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const { createPackageCategory, fieldError, setFieldError } =
+    useCreatePackageCategory();
 
   const handleSubmit = async (formData: any) => {
-    await createPackageCategory(formData);
+    try {
+      await createPackageCategory(formData);
+      setFormData({});
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6 mt-10">
@@ -18,6 +26,8 @@ const CreatePackageCategory = () => {
         Create Package Category
       </h2>
       <ReUsableForm
+        formData={formData}
+        setFormData={setFormData}
         fields={createPackageCategoryFields}
         onSubmit={handleSubmit}
         loading={false}

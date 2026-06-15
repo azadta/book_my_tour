@@ -17,7 +17,7 @@ const AdminUserDetails = () => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalAction, setModalAction] = useState<() => void>(() => () => {});
+  const [modalAction, setModalAction] = useState<() => Promise<void>>(() => async() => {});
 
   const { users, loading, blockUser, deleteUser, totalCount } =
     useAdminUserManagement(currentPage, resultPerpage);
@@ -77,11 +77,10 @@ const AdminUserDetails = () => {
         </header>
 
         <div className="flex-1 flex ">
-            <div className="w-64 max-md:hidden"></div>
+          <div className="w-64 max-md:hidden"></div>
           <div className="max-md:hidden fixed top-16.5 bottom-0">
-          <AdminDashboardSideBar />
+            <AdminDashboardSideBar />
           </div>
-        
 
           <div className="flex-1 p-5 min-w-0">
             <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
@@ -103,7 +102,7 @@ const AdminUserDetails = () => {
               isOpen={modalOpen}
               message={modalMessage}
               onClose={() => setModalOpen(false)}
-              onConfirm={() => {
+              onConfirm={async () => {
                 modalAction();
                 setModalOpen(false);
               }}
@@ -111,7 +110,7 @@ const AdminUserDetails = () => {
           </div>
         </div>
       </div>
-       {!open && (
+      {!open && (
         <RxHamburgerMenu
           className="fixed top-0 right-0 md:hidden text-3xl text-orange-600"
           onClick={() => setOpen(true)}

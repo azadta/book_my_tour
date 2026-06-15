@@ -5,8 +5,10 @@ import { operatorLoginFields } from "../../formConfig/fields";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import ReusableForm from "../../components/forms/ReUsableForm";
+import { useState } from "react";
 
 const OperatorLogin = () => {
+    const [formData, setFormData] = useState<Record<string, any>>({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { login, fieldError, setFieldError } = useOperatorLogin(
@@ -21,6 +23,8 @@ const OperatorLogin = () => {
         Operator Log In
       </h1>
       <ReusableForm
+          formData={formData}
+       setFormData={setFormData}
         fields={operatorLoginFields}
         onSubmit={login}
         loading={loading}

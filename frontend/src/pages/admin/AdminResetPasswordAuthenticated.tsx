@@ -5,6 +5,7 @@ import ReusableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 
 const AdminResetPasswordAuthenticated: React.FC = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -36,6 +37,8 @@ const AdminResetPasswordAuthenticated: React.FC = () => {
           Change Password
         </h2>
         <ReusableForm
+          formData={formData}
+          setFormData={setFormData}
           fields={resetAuthenticatedPasswordFields}
           buttonText="Update Password"
           loading={loading}

@@ -12,6 +12,7 @@ interface IOptions {
 }
 
 const CreatePackage = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { categories, createPackage, destinations, loading } =
     useCreatePackage();
@@ -23,7 +24,8 @@ const CreatePackage = () => {
   const handleSubmit = async (formData: any) => {
     try {
       await createPackage(formData);
-      
+      setFormData({});
+
       toast.success("Package created successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -43,9 +45,11 @@ const CreatePackage = () => {
 
   return (
     <div className="p-6  max-w-2xl mt-10 mb-10 mx-auto">
-      <BackToDashboard path="/operator/dashboard"/>
+      <BackToDashboard path="/operator/dashboard" />
       <h2 className="text-2xl font-semibold mb-4 mt-10">Create Package</h2>
       <ReUsableForm
+        formData={formData}
+        setFormData={setFormData}
         fields={enrichedFields}
         buttonText="Create Package"
         loading={loading}

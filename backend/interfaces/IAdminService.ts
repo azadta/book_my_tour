@@ -1,9 +1,12 @@
-import { IAdmin } from "../models/Admin";
+import { HydratedDocument } from "mongoose";
 import { IDestination } from "../models/Destination";
-import { IOperator } from "../models/Operator";
+
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
-import { IUser } from "../models/User";
+
+import { IAdmin, IAdminResponse } from "./IAdmin";
+import { IOperator } from "./IOperator";
+import { IUser } from "./IUser";
 
 export interface IAdminService {
   loginAdminService(
@@ -12,9 +15,12 @@ export interface IAdminService {
   ): Promise<{
     accessToken: string;
     refreshToken: string;
-    adminData: any;
+    adminData: IAdminResponse;
   }>;
-  updateAdminService(id: string, data: any): Promise<IAdmin | null>;
+  updateAdminService(
+    id: string,
+    data: Partial<IAdmin>,
+  ): Promise<HydratedDocument<IAdmin> | null>;
   getOperatorVerificationRequestsService(): Promise<IOperator[]>;
   verifyOperatorService(
     id: string,
@@ -61,11 +67,17 @@ export interface IAdminService {
   ): Promise<{
     message: string;
   }>;
-  updateUserService(id: string, data: any): Promise<IUser | null>;
+  updateUserService(id: string, data: Partial<IUser>): Promise<IUser | null>;
   getPaginatedPackagesService(skip: number, limit: number): Promise<Ipackage[]>;
   getTotalPackagesCount(): Promise<number>;
-  updateOperatorService(id: string, data: any): Promise<IOperator | null>;
-  updateProfieImageService(id: string, image: string): Promise<IAdmin | null>;
+  updateOperatorService(
+    id: string,
+    data: Partial<IOperator>,
+  ): Promise<IOperator | null>;
+  updateProfieImageService(
+    id: string,
+    image: string,
+  ): Promise<HydratedDocument<IAdmin> | null>;
   deleteUserService(id: string): Promise<IUser | null>;
   getSignupCountTodayService(): Promise<number>;
   getPendingOperatorsCountService(): Promise<number>;

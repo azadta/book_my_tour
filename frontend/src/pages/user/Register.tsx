@@ -3,9 +3,10 @@ import { useRegister } from "../../hooks/useRegister";
 import { toast } from "react-toastify";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userRegisterfields } from "../../formConfig/fields";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Register = () => {
+    const [formData, setFormData] = useState<Record<string, any>>({});
   const { registerUser, loading, fieldError, setFieldError } = useRegister();
   const navigate = useNavigate();
 
@@ -35,6 +36,8 @@ const Register = () => {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold mb-7   ">Register</h1>
       <ReUsableForm
+           formData={formData}
+          setFormData={setFormData}
         fields={userRegisterfields}
         onSubmit={handleSubmit}
         loading={loading}

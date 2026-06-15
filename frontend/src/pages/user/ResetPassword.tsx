@@ -5,6 +5,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userResetPasswordfields } from "../../formConfig/fields";
 
 export const ResetPassword = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
@@ -40,6 +41,8 @@ export const ResetPassword = () => {
         Reset Password
       </h2>
       <ReUsableForm
+        formData={formData}
+        setFormData={setFormData}
         fields={userResetPasswordfields}
         onSubmit={handleSubmit}
         loading={loading}

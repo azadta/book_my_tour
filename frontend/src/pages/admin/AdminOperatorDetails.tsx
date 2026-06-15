@@ -113,7 +113,7 @@ const AdminOperatorDetails: React.FC = () => {
             />
             <button
               onClick={() => navigate("/admin/operator-verification")}
-              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700  mt-6"
+              className="bg-blue-400 text-white py-2 px-4 rounded hover:bg-blue-500  mt-6"
             >
               Verification Requests
             </button>

@@ -1,10 +1,11 @@
 import { IDestination } from "../models/Destination";
-import { IOperator } from "../models/Operator";
+
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
+import { IOperator, IOperatorResponse } from "./IOperator";
 
 export interface IOperatorService {
-  operatorRegisterService(data: any): Promise<{
+  operatorRegisterService(data: Partial<IOperator>): Promise<{
     operatorId: string;
     otpExpire: number | undefined;
   }>;
@@ -18,7 +19,7 @@ export interface IOperatorService {
   ): Promise<{
     accessToken: string;
     refreshToken: string;
-    operatorData: any;
+    operatorData:IOperatorResponse;
   }>;
   operatorForgotPasswordService(email: string): Promise<{
     message: string;
@@ -29,7 +30,7 @@ export interface IOperatorService {
   ): Promise<{
     message: string;
   }>;
-  updateOperatorService(id: string, data: any): Promise<IOperator | null>;
+  updateOperatorService(id: string, data:Partial<IOperator>): Promise<IOperator | null>;
   updateOperatorProfileImageService(
     id: string,
     image: string,

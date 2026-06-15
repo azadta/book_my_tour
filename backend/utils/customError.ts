@@ -10,6 +10,6 @@ export class CustomError extends Error {
     super(message);
     this.errors = errors;
     this.statusCode = statusCode;
-    (Error as any).captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }

@@ -9,12 +9,13 @@ import ConfirmationModel from "../../components/ConfirmationModal";
 import BackToDashboard from "../../components/BackToDashboard";
 
 const EditUser = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { fetchUser, blockUser, deleteUser, loading, updateUser } =
     useAdminUserActions();
-  const [formData, setFormData] = useState<any>({});
+  const [data, setData] = useState<any>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => void>(() => () => {});
@@ -23,7 +24,7 @@ const EditUser = () => {
       if (!id) return;
       try {
         const data = await fetchUser(id);
-        setFormData(data);
+        setData(data);
       } catch (error: any) {
         toast.error(error.response?.data?.message || error.message);
       }
@@ -47,7 +48,7 @@ const EditUser = () => {
       const nestedData = unFlattenObject(data);
 
       await updateUser(id, nestedData);
-          navigate('/admin/users')
+
       toast.success("User updated successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -62,10 +63,10 @@ const EditUser = () => {
     if (!id) return;
     try {
       setModalMessage(
-        formData.isBlocked ? "Unblock this user?" : "Block this user?",
+        data.isBlocked ? "Unblock this user?" : "Block this user?",
       );
       setModalAction(() => async () => {
-        await blockUser(id, !formData.isBlocked);
+        await blockUser(id, !data.isBlocked);
 
         navigate("/admin/users");
       });
@@ -92,23 +93,25 @@ const EditUser = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <BackToDashboard path='/admin/dashboard'/>
+      <BackToDashboard path="/admin/dashboard" />
       <h2 className="text-2xl font-bold text-center mb-6">Edit User</h2>
       <ReUsableForm
+        formData={formData}
+        setFormData={setFormData}
         fields={adminUpdateUserFields}
         onSubmit={handleFormSubmit}
         loading={loading}
         buttonText="Update User"
-        initialData={formData}
+        initialData={data}
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
       <div className="flex gap-4 mt-4 justify-end">
         <button
           onClick={handleBlockToggle}
-          className={`px-4 py-2 text-white rounded ${formData.isBlocked ? "bg-green-500" : "bg-yellow-500"}`}
+          className={`px-4 py-2 text-white rounded ${data.isBlocked ? "bg-green-500" : "bg-yellow-500"}`}
         >
-          {formData.isBlocked ? "unblock" : "block"}
+          {data.isBlocked ? "unblock" : "block"}
         </button>
         <button
           onClick={handleDelete}

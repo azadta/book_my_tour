@@ -17,7 +17,7 @@ export interface DestinationPayload {
   images: string[];
 }
 
-export const useCreateDestination = (onSuccess: () => void) => {
+export const useCreateDestination = (onSuccess?: () => void) => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -60,12 +60,15 @@ export const useCreateDestination = (onSuccess: () => void) => {
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
-        return;
+        throw error;
       }
       const message =
-        error?.response?.data?.message || error.response?.data?.error?.message||
-      error.message || "Failed to create destination.";
+        error?.response?.data?.message ||
+        error.response?.data?.error?.message ||
+        error.message ||
+        "Failed to create destination.";
       toast.error(message);
+      throw error;
     } finally {
       setLoading(false);
     }

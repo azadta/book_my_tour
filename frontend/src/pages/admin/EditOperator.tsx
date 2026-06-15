@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard";
 
 const EditOperator = () => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const { id } = useParams<{ id: string }>();
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const EditOperator = () => {
     loading,
     updateOperator,
   } = useAdminOperatorActions();
-  const [formData, setFormData] = useState<any>({});
+  const [data, setData] = useState<any>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => void>(() => () => {});
@@ -28,7 +29,7 @@ const EditOperator = () => {
       if (!id) return;
       try {
         const data = await fetchOperator(id);
-        setFormData(data);
+        setData(data);
       } catch (error: any) {
         toast.error(
           error.response?.data?.message || "Failed to fetching operators",
@@ -53,8 +54,8 @@ const EditOperator = () => {
       }
       const nestedData = unFlattenObject(data);
 
-     const result= await updateOperator(id, nestedData);
-      navigate('/admin/operators')
+      await updateOperator(id, nestedData);
+
       toast.success("Operator updated successfully");
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -69,10 +70,10 @@ const EditOperator = () => {
     if (!id) return;
     try {
       setModalMessage(
-        formData.isBlocked ? "Unblock this operator?" : "Block this operator?",
+        data.isBlocked ? "Unblock this operator?" : "Block this operator?",
       );
       setModalAction(() => async () => {
-        await blockOperator(id, !formData.isBlocked);
+        await blockOperator(id, !data.isBlocked);
         navigate("/admin/operators");
       });
       setModalOpen(true);
@@ -100,14 +101,16 @@ const EditOperator = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-        <BackToDashboard path='/admin/dashboard'/>
+      <BackToDashboard path="/admin/dashboard" />
       <h2 className="text-2xl font-bold text-center mb-6">Edit Operator</h2>
       <ReusableForm
+        formData={formData}
+        setFormData={setFormData}
         fields={adminUpdateOperatorFields}
         onSubmit={handleFormSubmit}
         loading={loading}
         buttonText="Update Operator"
-        initialData={formData}
+        initialData={data}
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
@@ -115,10 +118,10 @@ const EditOperator = () => {
         <button
           onClick={handleBlockToggle}
           className={`px-4 py-2 text-white rounded ${
-            formData.isBlocked ? "bg-green-500" : "bg-yellow-500"
+            data.isBlocked ? "bg-green-500" : "bg-yellow-500"
           }`}
         >
-          {formData.isBlocked ? "unblock" : "block"}
+          {data.isBlocked ? "unblock" : "block"}
         </button>
         <button
           onClick={handleDelete}

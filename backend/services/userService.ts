@@ -14,6 +14,7 @@ import type { IUserService } from "../interfaces/IUserService";
 import type { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
+import { IUser, IUserResponse } from "../interfaces/IUser";
 
 @injectable()
 export class UserService implements IUserService {
@@ -95,7 +96,14 @@ export class UserService implements IUserService {
     return { otpExpire: user.otpExpire };
   }
 
-  async loginUser(email: string, password: string) {
+  async loginUser(
+    email: string,
+    password: string,
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    userData: IUserResponse;
+  }> {
     const user = await this.userRepository.findByEmail(email);
     if (!user)
       throw new CustomError(
@@ -127,7 +135,11 @@ export class UserService implements IUserService {
     return { accessToken, refreshToken, userData };
   }
 
-  async googleLogin(name: string, email: string) {
+  async googleLogin(name: string, email: string): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: IUserResponse;
+  }> {
     const user = await this.userRepository.findByEmail(email);
 
     if (user) {
@@ -214,7 +226,7 @@ export class UserService implements IUserService {
     return { message: "Password updated successfully" };
   }
 
-  async updateUserService(id: string, data: any) {
+  async updateUserService(id: string, data: Partial<IUser>) {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }

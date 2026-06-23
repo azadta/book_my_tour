@@ -24,9 +24,10 @@ const Login = () => {
 
   return (
     <div className="p-3 max-w-lg mx-auto ">
-      <h1 className="text-3xl text-center font-semibold my-3">Log In</h1>
+   
 
       <ReUsableForm
+      heading="Login"
          formData={formData}
           setFormData={setFormData}
         fields={userLoginfields}
@@ -55,7 +56,7 @@ const Login = () => {
       <button
         onClick={handleGoogleLogin}
         type="button"
-        className="mx-auto flex gap-1 items-center mt-10 hover:cursor-pointer px-5 py-3 border  rounded-full "
+        className="mx-auto flex gap-1 items-center mt-5 hover:cursor-pointer px-5 py-3 border border-sky-400  rounded-full "
       >
         <FcGoogle className="bg-sky-50 text-xl" />
         <span className="text-sm font-medium ">Sign in with Google</span>

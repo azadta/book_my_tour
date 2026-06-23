@@ -199,34 +199,38 @@ const Profile = () => {
   }, [currentUser]);
 
   return (
-    <div className="flex flex-col sm:flex-row  justify-center gap-5 ">
-      <div className="sm:max-w-[220px] bg-white shadow-2xl w-full px-10 max-sm:order-2 max-sm:hidden  ">
+    <div className="flex flex-col sm:flex-row  justify-center gap-5  ">
+      <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
             onClick={() => navigate("/user/reset-password")}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+             className="profile-sidebar-button"
           >
             Reset Password
           </button>
+
+          <button
+            
+            className="profile-sidebar-button"
+          >
+            My Wallet
+          </button>
           <button
             onClick={handleDeleteUser}
-            className=" cursor-pointer bg-red-300 px-1 py-1 rounded hover:bg-yellow-400"
+             className="profile-sidebar-button"
           >
             Delete Account
           </button>
 
           <button
             onClick={handleLogOut}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+             className="profile-sidebar-button"
           >
             Log Out
           </button>
         </div>
       </div>
-      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full max-sm:order-1  ">
-        <h1 className="text-2xl font-semibold text-center my-5 text-emerald-500">
-          Profile
-        </h1>
+      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto mt-15   w-full max-sm:order-1  ">
         <ProfileForm
           currentUser={currentUser}
           formData={formData}

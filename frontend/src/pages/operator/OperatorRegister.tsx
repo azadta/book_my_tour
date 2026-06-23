@@ -31,10 +31,8 @@ const OperatorRegister = () => {
 
   return (
     <div className="p-3 max-w-2xl mx-auto mb-10">
-      <h1 className="text-3xl font-semibold my-7 text-center">
-        Operator Register
-      </h1>
       <ReusableForm
+      heading="Operator Register"
         formData={formData}
         setFormData={setFormData}
         buttonText="Register Operator"
@@ -44,7 +42,7 @@ const OperatorRegister = () => {
         fieldError={fieldError}
         setFieldError={setFieldError}
       />
-      <p className="text-end">
+      <p className="text-end pt-5">
         Already have an account?
         <a href="/operator/login" className="text-sky-700 ml-3 ">
           Login

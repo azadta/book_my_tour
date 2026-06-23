@@ -8,8 +8,6 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log('Error from axios ineterceptor',error)
-
     const originalRequest = error.config;
     if (
       error.response?.status === 401 &&

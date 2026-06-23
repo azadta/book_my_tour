@@ -1,8 +1,20 @@
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnFiltersState,
+  type SortingState,
+} from "@tanstack/react-table";
+import { Fragment, useState } from "react";
 import Loading from "../components/Loading";
 
 export interface Column<T> {
   label: string;
   render: (item: T) => React.ReactNode;
+  sortValue?: (item: T) => string | number;
+  filterValue?: (item: T) => string;
 }
 
 export interface ActionButton<T> {
@@ -29,62 +41,144 @@ const ReUsableTable = <T,>({
   loading,
   noDataText = "No data available",
 }: ReUsableTableProps<T>) => {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  const tanstackColumns = columns.map((column) => ({
+    id: column.label.toLowerCase(),
+    header: column.label,
+    enableColumnFilter: true,
+
+    accessorFn: column.filterValue
+      ? (row: T) => column.filterValue!(row)
+      : column.sortValue
+        ? (row: T) => column.sortValue!(row)
+        : (row: T) => column.render(row),
+    cell: ({ row }: any) => column.render(row.original),
+  }));
+  const table = useReactTable({
+    data,
+    columns: tanstackColumns,
+    state: {
+      sorting,
+      globalFilter,
+      columnFilters,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
   if (loading) return <Loading />;
   if (data.length === 0) return <p className="text-center">{noDataText}</p>;
+
   return (
     <div className="overflow-auto rounded shadow-md w-full">
-    <table className="w-full table-auto border border-gray-500">
-      <thead>
-        <tr className="bg-gray-100">
-          {columns.map((col, idx) => (
-            <th key={idx} className="border border-gray-500 p-2">
-              {col.label}
-            </th>
-          ))}
-          {actions.length > 0 && (
-            <th className="border  border-gray-500 p-2  ">Actions</th>
-          )}
-        </tr>
-      </thead>
-      <tbody className="bg-slate-200">
-        {data.map((item, rawIndex) => (
-          <tr key={rawIndex}>
-            {columns.map((col, colIndex) => (
-              <td
-                key={colIndex}
-                className="border border-gray-500 p-2 text-center whitespace-nowrap"
-              >
-                {col.render(item)}
-              </td>
-            ))}
-
-            {actions.length > 0 && (
-              <td className="border border-gray-500 p-2 text-center space-x-2 whitespace-nowrap">
-                {actions.map((action, actionIdx) => {
-                  const disabled = action.disabled?.(item) || false;
-                  const loading = action.isLoading?.(item) || false;
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search"
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          className="border rounded px-3 py-2 "
+        />
+      </div>
+      <table className="w-full table-auto border border-gray-500">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Fragment key={headerGroup.id}>
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const sortDirection = header.column.getIsSorted();
                   return (
-                    <button
-                      key={actionIdx}
-                      className={
-                        action.className ||
-                        "px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 "
-                      }
-                      onClick={() => action.onClick(item)}
-                      disabled={disabled}
+                    <th
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                      className="border border-gray-500 p-2 cursor-pointer"
                     >
-                      {loading
-                        ? action.loadingText || "Processing"
-                        : action.label(item)}
-                    </button>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+
+                      {sortDirection === "asc" && " ↑"}
+                      {sortDirection === "desc" && " ↓"}
+                    </th>
                   );
                 })}
-              </td>
-            )}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                {actions.length > 0 && (
+                  <th className="border border-gray-500 p-2">Actions</th>
+                )}
+              </tr>
+              <tr>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={`filter-${header.id}`}
+                    className="border border-gray-500 p-1"
+                  >
+                    <input
+                      value={(header.column.getFilterValue() as string) ?? ""}
+                      onChange={(e) =>
+                        header.column.setFilterValue(e.target.value)
+                      }
+                      placeholder={`...Filter`}
+                      className="w-full border rounded px-2 py-1 text-sm"
+                    />
+                  </th>
+                ))}
+
+                {actions.length > 0 && (
+                  <th className="border border-gray-500 "></th>
+                )}
+              </tr>
+            </Fragment>
+          ))}
+        </thead>
+        <tbody className="bg-slate-200">
+          {table.getRowModel().rows.map((row) => {
+            const item = row.original;
+            return (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="border border-gray-500 p-2 text-center"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+
+                {actions.length > 0 && (
+                  <td className="border border-gray-500 p-2 text-center space-x-2 whitespace-nowrap">
+                    {actions.map((action, actionIdx) => {
+                      const disabled = action.disabled?.(item) || false;
+                      const loading = action.isLoading?.(item) || false;
+                      return (
+                        <button
+                          key={actionIdx}
+                          className={
+                            action.className ||
+                            "px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 "
+                          }
+                          onClick={() => action.onClick(item)}
+                          disabled={disabled}
+                        >
+                          {loading
+                            ? action.loadingText || "Processing"
+                            : action.label(item)}
+                        </button>
+                      );
+                    })}
+                  </td>
+                )}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

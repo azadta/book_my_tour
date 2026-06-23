@@ -4,6 +4,7 @@ import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import type { FormField } from "../../interfaces/interfaces";
 
 interface ReUsableFormProps {
+  heading: string;
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   fields: FormField[];
@@ -19,6 +20,7 @@ interface FormData {
 }
 
 const ReUsableForm = ({
+  heading,
   formData,
   setFormData,
   fields,
@@ -128,7 +130,7 @@ const ReUsableForm = ({
     if (initialData) {
       setFormData(flattenObjects(initialData));
     }
-  }, [initialData,setFormData]);
+  }, [initialData, setFormData]);
   useEffect(() => {
     const countryField = fields.find((field) => field.label === "Country");
 
@@ -146,16 +148,19 @@ const ReUsableForm = ({
       setCountryCode(country.isoCode);
       setStates(State.getStatesOfCountry(country.isoCode));
     }
-  }, [formData,fields]);
+  }, [formData, fields]);
 
   return (
     <div
-      className={` w-full mx-auto ${fields.length > 4 ? "max-w-2xl max-md:max-w-lg " : "max-w-lg"} `}
+      className={` mx-auto bg-linear-to-b from-white to-slate-100 rounded-[40px] border-[5px] border-white shadow-[0px_20px_20px_5px_rgba(133,189,215,0.88)] p-8 ${fields.length > 4 ? "max-w-2xl max-md:max-w-lg " : "max-w-lg"} `}
     >
+      <h2 className="text-center text-2xl font-black text-sky-600">
+        {heading}
+      </h2>
       <form
         id="reUsableForm"
         onSubmit={handleSubmit}
-        className={`space-y-6 bg-white shadow-lg rounded-2xl px-6 py-4  ${fields.length > 4 ? "  grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center" : ""} `}
+        className={`mt-5   ${fields.length > 4 ? "  grid grid-cols-1 md:grid-cols-2 gap-5" : "space-y-4"} `}
       >
         {fields.map((field) => {
           if (field.type === "select") {
@@ -163,7 +168,7 @@ const ReUsableForm = ({
               <div key={field.id} className="flex flex-col">
                 <label
                   htmlFor={field.id}
-                  className="mb-2 font-medium text-gray-700"
+                  className="mb-2 ml-2 font-semibold text-gray-700"
                 >
                   {field.label}
                   {field.required && (
@@ -175,7 +180,7 @@ const ReUsableForm = ({
                     id={field.id}
                     onChange={handleChangeCountry}
                     value={countryCode}
-                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+                    className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] border-none focus:outline-none `}
                     disabled={field.disabled}
                   >
                     {!formData[field.id] && (
@@ -197,7 +202,7 @@ const ReUsableForm = ({
                       }))
                     }
                     value={formData[field.id] ?? ""}
-                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 `}
+                    className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] border-none focus:outline-none `}
                     disabled={!countryCode}
                   >
                     {states.map((state) => (
@@ -286,7 +291,7 @@ const ReUsableForm = ({
             <div key={field.id} className="flex flex-col ">
               <label
                 htmlFor={field.id}
-                className="mb-2 font-medium text-gray-700"
+                className="mb-2 ml-2 font-semibold text-gray-700"
               >
                 {field.label || field.placeholder}
                 {field.required && (
@@ -301,7 +306,7 @@ const ReUsableForm = ({
                     id={field.id}
                     placeholder={field.placeholder || field.label}
                     onChange={handleChange}
-                    className="border p-3 rounded-lg"
+                    className="w-full bg-white p-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff]"
                     multiple={field.multiple}
                     disabled={field.disabled}
                     accept="image/*"
@@ -341,7 +346,7 @@ const ReUsableForm = ({
                     id={field.id}
                     placeholder={field.placeholder || field.label}
                     onChange={handleChange}
-                    className={`border p-3 rounded-lg ${field.readOnly ? "bg-gray-200 cursor-not-allowed" : ""}`}
+                    className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 ${field.readOnly ? "bg-gray-100 cursor-not-allowed" : ""}`}
                     multiple={field.multiple}
                     value={formData[field.id] || ""}
                     disabled={field.disabled}
@@ -361,7 +366,7 @@ const ReUsableForm = ({
         form="reUsableForm"
         type="submit"
         disabled={loading}
-        className={`mt-5 px-4   bg-[#634C9F] text-white py-3 rounded-lg font-semibold uppercase tracking-wider hover:bg-[#583c9f] transition-all disabled:opacity-60 cursor-pointer ${fields.length < 5 && "w-full"}`}
+        className={`mt-6 w-full py-4 rounded-[20px] font-bold text-white bg-linear-to-r from-sky-600 to-cyan-500 shadow-[0px_20px_10px_-15px_rgba(133,189,215,0.88)] transition-all hover:scale-[1.03] active:scale-95 disabled:opacity-60 cursor-pointer`}
       >
         {loading ? "Loading..." : buttonText}
       </button>

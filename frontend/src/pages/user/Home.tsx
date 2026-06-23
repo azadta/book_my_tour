@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PackageCard from "../../components/PackageCard";
 import Pagination from "../../components/Pagination";
 import { usePackageCategories } from "../../hooks/usePackageCategories";
 import { fetchPackages, type IPackage } from "../../redux/package/packageSlice";
 import type { AppDispatch, RootState } from "../../redux/store";
-import PackageCard from "../../components/PackageCard";
-import Search from "../../components/Search";
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +40,7 @@ const Home = () => {
     if (filtered.length === 0) return null;
 
     return (
-      <div className="mb-16" key={category._id}>
+      <div className="mb-16 mt-15" key={category._id}>
         <h2 className="text-2xl font-bold text-emerald-800 bg-linear-to-r from-emerald-200 to-sky-200 rounded-lg shadow px-6 py-2 mb-6 capitalize font-caveat ">
           {category.name.replace("-", " ")}
         </h2>
@@ -54,7 +53,7 @@ const Home = () => {
 
   return (
     <>
-    <Search/>
+
     <div className="container mx-auto p-4 md:mt-15">
       {status === "loading" && <p>...Loading packages</p>}
       {status === "failed" && <p>...Failed to load packages.</p>}

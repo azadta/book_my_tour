@@ -36,11 +36,10 @@ export const ResetPassword = () => {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 ">
-        Reset Password
-      </h2>
+    <div className="w-full max-w-lg mx-auto pb-5">
+    
       <ReUsableForm
+      heading="Reset Password"
         formData={formData}
         setFormData={setFormData}
         fields={userResetPasswordfields}

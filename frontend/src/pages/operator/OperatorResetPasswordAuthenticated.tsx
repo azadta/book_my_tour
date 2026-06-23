@@ -36,10 +36,8 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
     <div className="min-h-screen   px-4 w-full max-w-lg mx-auto pt-10 ">
       <BackToDashboard path="/operator/dashboard" />
       <div className="pt-10">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Change Password
-        </h2>
         <ReusableForm
+          heading="Change Password"
           formData={formData}
           setFormData={setFormData}
           fields={resetAuthenticatedPasswordFields}

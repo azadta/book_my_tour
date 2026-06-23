@@ -6,6 +6,7 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
 import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
 import Loading from "../../components/Loading";
+import "../../css/dashboard.css";
 import { useAdminDashboard } from "../../hooks/useAdminDashboard";
 
 const AdminDashboard = () => {
@@ -36,45 +37,48 @@ const AdminDashboard = () => {
             <AdminDashboardSideBar />
           </div>
           <main className="flex-1 p-8 bg-gray-100 pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 items-center max-sm:w-60 mx-auto   ">
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center   gap-7   ">
-                <FaUsersLine className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">Total users</h2>
-                  <p className="text-2xl font-bold text-gray-700">
-                    {usersCount}
-                  </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-10 items-center max-sm:w-60 mx-auto   ">
+              <div className="card">
+                <div className="image flex items-center justify-center">
+                  {" "}
+                  <FaUsersLine className="size-[50px]" />
+                </div>
+                <div className="card-info">
+                  <span>Total users</span>
+                  <p> {usersCount}</p>
                 </div>
               </div>
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center gap-7 w-full">
-                <FaUsersGear className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 ">
-                    Total Operaters
-                  </h2>
-                  <p className="text-2xl font-bold text-gray-700">
-                    {operatorsCount}
-                  </p>
+
+              <div className="card">
+                <div className="image flex items-center justify-center">
+                  {" "}
+                  <FaUsersGear className="size-[50px]" />
+                </div>
+                <div className="card-info">
+                  <span> Total Operaters</span>
+                  <p> {operatorsCount}</p>
                 </div>
               </div>
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center gap-7">
-                <AiOutlineLogin className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">Total Signups</h2>
-                  <p className="text-2xl font-bold text-gray-700">
-                    {todaySignups}
-                  </p>
+
+              <div className="card">
+                <div className="image flex items-center justify-center">
+                  {" "}
+                  <AiOutlineLogin className="size-[50px]" />
+                </div>
+                <div className="card-info">
+                  <span> Today Signups</span>
+                  <p> {todaySignups}</p>
                 </div>
               </div>
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center gap-7">
-                <GoUnverified className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">
-                    Pending Verifications
-                  </h2>
-                  <p className="text-2xl font-bold text-gray-700">
-                    {pendingVerificationsCount}
-                  </p>
+
+              <div className="card">
+                <div className="image flex items-center justify-center">
+                  {" "}
+                  <GoUnverified className="size-[50px]" />
+                </div>
+                <div className="card-info">
+                  <span> Pending Verifications</span>
+                  <p> {pendingVerificationsCount}</p>
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 body {
-  @apply bg-sky-50;
+  @apply bg-linear-to-r from-emerald-100 to-purple-100;
 }
 
 @theme {
@@ -13,5 +13,6 @@ body {
   --font-satisfy: "Satisfy", cursive;
   --font-caveat: "Caveat", cursive;
   --font-vibes: "Great Vibes", cursive;
-  --font-jim:"Jim Nightshade", cursive;
+  --font-jim: "Jim Nightshade", cursive;
 }
+

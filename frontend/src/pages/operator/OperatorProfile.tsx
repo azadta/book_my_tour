@@ -204,8 +204,48 @@ const OperatorProfile = () => {
 
   return (
     <div className="flex flex-col sm:flex-row  justify-center gap-5 ">
-      <div className="sm:max-w-[220px] bg-white shadow-2xl w-full px-10 max-sm:order-2 max-sm:hidden  ">
-        <div className="sm:mt-25 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+      <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
+        <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+          <button
+            onClick={() => navigate("/operator/reset-password")}
+             className="profile-sidebar-button"
+          >
+            Reset Password
+          </button>
+
+   
+   
+
+          <button
+            onClick={handleLogOut}
+             className="profile-sidebar-button"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+
+      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full  ">
+        <div className="mb-5">
+          {" "}
+          <BackToDashboard path="/operator/dashboard" />
+        </div>
+
+        <ProfileForm
+          currentUser={currentOperator}
+          formData={formData}
+          setFormData={setFormData}
+          fields={operatorProfileFields}
+          handleChange={handleChange}
+          handleFileChange={handleFileChange}
+          handleSubmit={handleSubmit}
+          loading={loading}
+          fileRef={fileRef}
+          imageUploading={imageUploading}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
+        />
+        <div className="sm:hidden pt-10 flex items-center justify-between">
           <button
             onClick={() => navigate("/operator/reset-password")}
             className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
@@ -221,43 +261,6 @@ const OperatorProfile = () => {
           </button>
         </div>
       </div>
-
-      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full  ">
-        <BackToDashboard path="/operator/dashboard" />
-        <h1 className="text-2xl font-semibold text-center my-7  text-emerald-500">
-          Profile
-        </h1>
-        <ProfileForm
-          currentUser={currentOperator}
-          formData={formData}
-          setFormData={setFormData}
-          fields={operatorProfileFields}
-          handleChange={handleChange}
-          handleFileChange={handleFileChange}
-          handleSubmit={handleSubmit}
-          loading={loading}
-          fileRef={fileRef}
-          imageUploading={imageUploading}
-          fieldError={fieldError}
-          setFieldError={setFieldError}
-        />
-          <div className="sm:hidden pt-10 flex items-center justify-between">
-        <button
-          onClick={() => navigate("/operator/reset-password")}
-          className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
-        >
-          Reset Password
-        </button>
-
-        <button
-          onClick={handleLogOut}
-          className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
-        >
-          Log Out
-        </button>
-      </div>
-      </div>
-    
     </div>
   );
 };

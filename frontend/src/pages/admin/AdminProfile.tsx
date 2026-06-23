@@ -161,18 +161,21 @@ const AdminProfile = () => {
 
   return (
     <div className="flex   justify-center gap-5 ">
-      <div className="sm:max-w-[220px] bg-white shadow-2xl w-full px-10 max-sm:order-2 max-sm:hidden  ">
-        <div className="sm:mt-25 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+    <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
+        <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
             onClick={() => navigate("/admin/reset-password")}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+             className="profile-sidebar-button"
           >
             Reset Password
           </button>
 
+   
+   
+
           <button
             onClick={handleLogOut}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+             className="profile-sidebar-button"
           >
             Log Out
           </button>
@@ -180,10 +183,11 @@ const AdminProfile = () => {
       </div>
 
       <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full max-sm:order-1 ">
-        <BackToDashboard path="/admin/dashboard" />
-        <h1 className="text-2xl font-semibold text-center my-7  text-emerald-500">
-          Admin Profile
-        </h1>
+        <div className="mb-5">
+             <BackToDashboard path="/admin/dashboard" />
+        </div>
+     
+      
         <ProfileForm
           currentUser={currentAdmin}
           formData={formData}

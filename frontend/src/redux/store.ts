@@ -1,8 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./user/userSlice";
 import operatorReducer from "./operator/operatorSlice";
-import adminReducer from "./admin/adminSlice.js";
-import packageReducer from "./package/packageSlice.js";
+import adminReducer from "./admin/adminSlice";
+import packageReducer from "./package/packageSlice";
 
 import storageImport from "redux-persist/lib/storage";
 const storage = (storageImport as any).default || storageImport;
@@ -44,5 +44,5 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

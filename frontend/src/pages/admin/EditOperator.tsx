@@ -101,9 +101,13 @@ const EditOperator = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <BackToDashboard path="/admin/dashboard" />
-      <h2 className="text-2xl font-bold text-center mb-6">Edit Operator</h2>
+      <div className="mb-5">
+        {" "}
+        <BackToDashboard path="/admin/dashboard" />
+      </div>
+
       <ReusableForm
+        heading="Edit Operator"
         formData={formData}
         setFormData={setFormData}
         fields={adminUpdateOperatorFields}

@@ -141,11 +141,15 @@ export const ProfileForm = ({
       setCountryCode(country.isoCode);
       setStates(State.getStatesOfCountry(country.isoCode));
     }
-  }, [formData,fields]);
+  }, [formData, fields]);
 
   return (
-    <div className="flex flex-col items-center gap-3 max-w-2xl mx-auto">
-      <div>
+    <div className="max-w-4xl mx-auto   bg-slate-700 p-8 rounded-xl border-2 border-red-500 shadow-[6px _6px_0px_0px_#ef4444]  ">
+      <div className="relative mb-8 ">
+        <h1 className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-black text-2xl text-white tracking-wider">
+          Profile
+        </h1>
+
         <input
           type="file"
           ref={fileRef}
@@ -161,10 +165,10 @@ export const ProfileForm = ({
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
           }
           alt="Profile"
-          className="rounded-full size-24 object-cover cursor-pointer self-center mt-2"
+          className="rounded-full size-28 object-cover cursor-pointer border-4 border-red-500 shadow-[4px_4px_0px_0px_#ef4444] hover:scale-105 transition "
         />
         {imageUploading && (
-          <p className="text-sm text-blue-500 text-center">
+          <p className="text-red-300 text-sm mt-2 font-semibold">
             Uploading image...
           </p>
         )}
@@ -172,7 +176,7 @@ export const ProfileForm = ({
       <form
         id="profileForm"
         onSubmit={formSubmit}
-        className="grid grid-col-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-xl shadow-md w-full   "
+        className="grid grid-col-1 md:grid-cols-2 gap-5  w-full mt-2  "
       >
         {fields.map((field) => {
           if (field.type === "file") return null;
@@ -181,7 +185,7 @@ export const ProfileForm = ({
               <div key={field.id} className="flex flex-col ">
                 <label
                   htmlFor={field.id}
-                  className="mb-1 font-medium text-gray-700"
+                  className="mb-2  font-bold text-white tracking-wide"
                 >
                   {field.label || field.placeholder}
                   {field.required && (
@@ -193,10 +197,12 @@ export const ProfileForm = ({
                     id={field.id}
                     onChange={handleChangeCountry}
                     value={countryCode}
-                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+                    className={`w-full rounded-xl border-2 border-red-500 bg-slate-800 px-4 py-3 text-white font-semibold shadow-[4px_4px_0px_0px_#ef4444] placeholder:text-slate-400 focus:outline-none focus:border-red-400 ${field.readOnly ? "bg-gray-200" : ""}  `}
                     disabled={field.disabled}
                   >
-                    <option className="text-red-500">Choose Country</option>
+                    {!getNestedValue(formData, field.id) && (
+                      <option className="">Choose Country</option>
+                    )}
                     {Country.getAllCountries().map((country) => (
                       <option key={country.isoCode} value={country.isoCode}>
                         {country.name}
@@ -212,7 +218,7 @@ export const ProfileForm = ({
                         ? getNestedValue(formData, field.id)
                         : formData[field.id]
                     }
-                    className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 `}
+                    className={`w-full rounded-xl border-2 border-red-500 bg-slate-800 px-4 py-3 text-white font-semibold shadow-[4px_4px_0px_0px_#ef4444] placeholder:text-slate-400 focus:outline-none focus:border-red-400 ${field.readOnly ? "bg-gray-200" : ""}  `}
                     disabled={!countryCode}
                   >
                     {countryCode && <option>Choose State</option>}
@@ -226,7 +232,7 @@ export const ProfileForm = ({
                   <select
                     id={field.id}
                     onChange={changeHandler}
-                    className="border border-gray-300 p-3 rounded-lg"
+                    className={`w-full rounded-xl border-2 border-red-500 bg-slate-800 px-4 py-3 text-white font-semibold shadow-[4px_4px_0px_0px_#ef4444] placeholder:text-slate-400 focus:outline-none focus:border-red-400 ${field.readOnly ? "bg-gray-200" : ""}  `}
                     value={
                       field.id.includes(".")
                         ? getNestedValue(formData, field.id)
@@ -242,7 +248,7 @@ export const ProfileForm = ({
                   </select>
                 )}
                 {fieldError[field.id] && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-300 text-sm mt-2 font-semibold">
                     {fieldError[field.id]}
                   </p>
                 )}
@@ -254,7 +260,7 @@ export const ProfileForm = ({
             <div key={field.id} className="flex flex-col">
               <label
                 htmlFor={field.id}
-                className="mb-1 text-left font-medium text-gray-700 "
+                className="mb-2  font-bold text-white tracking-wide "
               >
                 {field.label || field.placeholder}
                 {field.required && (
@@ -268,7 +274,7 @@ export const ProfileForm = ({
                 onChange={changeHandler}
                 readOnly={field.readOnly}
                 multiple={field.multiple}
-                className={`border p-3 rounded-lg   ${field.readOnly ? "bg-gray-100  text-gray-700 " : "focus:outline-none focus:ring-2 focus:ring-sky-500"}`}
+                className={`w-full rounded-xl border-2 border-red-500 bg-slate-800 px-4 py-3 text-white font-semibold shadow-[4px_4px_0px_0px_#ef4444] placeholder:text-slate-400 focus:outline-none focus:border-red-400 ${field.readOnly ? "bg-gray-100" : ""}  `}
                 value={
                   field.id.includes(".")
                     ? getNestedValue(formData, field.id)
@@ -276,7 +282,7 @@ export const ProfileForm = ({
                 }
               />
               {fieldError[field.id] && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-300 text-sm mt-2 font-semibold">
                   {fieldError[field.id]}
                 </p>
               )}
@@ -288,7 +294,7 @@ export const ProfileForm = ({
         form="profileForm"
         type="submit"
         disabled={loading}
-        className="bg-sky-400 text-white rounded-lg py-3 px-7 mt-4 self-start hover:bg-sky-500"
+        className="mt-5 px-8 py-3 bg-slate-800 text-white font-bold rounded-xl border-2 border-red-500 shadow-[4px_4px_0px_0px_#ef4444] transition duration-1000 active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50 cursor-pointer"
       >
         {loading ? "Loading..." : "Update"}
       </button>

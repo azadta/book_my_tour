@@ -57,24 +57,18 @@ container
   .to(AdminRepository)
   .inSingletonScope();
 
-  container
+container
   .bind<IDestinationRepository>(Types.DestinationRepository)
   .to(DestinationRepository)
   .inSingletonScope();
-  container
+container
   .bind<IPackageCategoryRepository>(Types.PackageCategoryRepository)
   .to(PackageCategoryRepository)
   .inSingletonScope();
-  container
+container
   .bind<IPackageRepository>(Types.PackageRepository)
   .to(PackageRepository)
   .inSingletonScope();
-  
-
-
-
-
-  
 
 container
   .bind<ISecurityService>(Types.SecurityService)

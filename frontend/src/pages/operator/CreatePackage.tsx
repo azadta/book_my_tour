@@ -45,9 +45,12 @@ const CreatePackage = () => {
 
   return (
     <div className="p-6  max-w-2xl mt-10 mb-10 mx-auto">
-      <BackToDashboard path="/operator/dashboard" />
-      <h2 className="text-2xl font-semibold mb-4 mt-10">Create Package</h2>
+      <div className="mb-5">
+        <BackToDashboard path="/operator/dashboard" />
+      </div>
+
       <ReUsableForm
+        heading="Create Package"
         formData={formData}
         setFormData={setFormData}
         fields={enrichedFields}

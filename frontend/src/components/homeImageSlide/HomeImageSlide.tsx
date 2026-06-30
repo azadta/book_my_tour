@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomeImageSlide = () => {
+  const navigate = useNavigate();
   const images = [
     "beach image-2.avif",
     "beach image-3.avif",
@@ -56,7 +58,10 @@ const HomeImageSlide = () => {
               alt="Cruises"
               className="size-15 object-contain"
             />
-            <button className=" flex justify-center items-center gap-2 rounded-full bg-sky-600 px-7 py-3 text-white text-sm font-semibold shadow-lg shadow-sky-600/20 hover:bg-sky-700 hover:shadow-sky-700/30 active:scale-[0.98] transition-all group   ">
+            <button
+              onClick={() => navigate("/user/packages-list")}
+              className=" flex justify-center items-center gap-2 rounded-full bg-sky-600 px-7 py-3 text-white text-sm font-semibold shadow-lg shadow-sky-600/20 hover:bg-sky-700 hover:shadow-sky-700/30 active:scale-[0.98] transition-all group   "
+            >
               Explore Tours
               <span className="transform group-hover:translate-x-1 transition-transform">
                 →

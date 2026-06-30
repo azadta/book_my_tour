@@ -35,6 +35,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "./redux/store";
 import PublicRoute from "./Routes/PublicRoute";
 import ProtectedRoute from "./Routes/ProtectedRoute";
+import PackagesList from "./pages/user/PackagesList";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -65,7 +66,8 @@ const App = () => {
             />
             <Route path="/user/register" element={<Register />} />
             <Route path="/user/forgot-password" element={<ForgotPassword />} />
-                <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
+            <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
+            <Route path="/user/packages-list" element={<PackagesList />} />
           </Route>
 
           <Route
@@ -77,7 +79,6 @@ const App = () => {
             }
           >
             <Route path="/user/profile" element={<Profile />} />
-        
           </Route>
         </Route>
 

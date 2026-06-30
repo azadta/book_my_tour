@@ -2,16 +2,20 @@ import { NextFunction, Request, Response } from "express";
 
 import { CustomError } from "../utils/customError";
 
-import type{ IUserService } from "../interfaces/IUserService";
+import type { IUserService } from "../interfaces/IUserService";
 import { logger } from "../utils/logger";
 import { StatusCode } from "../constants/statusCodeConstants";
-import { injectable,inject } from "inversify";
-import {Types} from '../types/types'
+import { injectable, inject } from "inversify";
+import { Types } from "../types/types";
 import { IUserController } from "../interfaces/IUserController";
+import type { IAdminService } from "../interfaces/IAdminService";
 
 @injectable()
 export class UserController implements IUserController {
-  constructor(@inject(Types.UserService) private userService: IUserService) {}
+  constructor(
+    @inject(Types.UserService) private userService: IUserService,
+    @inject(Types.AdminService) private adminService: IAdminService,
+  ) {}
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       logger.info(`Attempting registration for email ${req.body.email}`, {
@@ -66,11 +70,11 @@ export class UserController implements IUserController {
         await this.userService.loginUser(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.status(StatusCode.OK).json(userData);
     } catch (error) {
@@ -85,11 +89,11 @@ export class UserController implements IUserController {
         await this.userService.googleLogin(name, email);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.status(StatusCode.OK).json(user);
     } catch (error) {
@@ -118,7 +122,7 @@ export class UserController implements IUserController {
     }
   };
 
-  logout = async(req: Request, res: Response, next: NextFunction) => {
+  logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
       const result = this.userService.userLogoutService();
@@ -144,7 +148,7 @@ export class UserController implements IUserController {
       if (!updatedUser) {
         return next(new CustomError("User not found", 404));
       }
-       //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
       res.status(StatusCode.OK).json(rest);
     } catch (error) {
@@ -213,8 +217,11 @@ export class UserController implements IUserController {
     }
   };
 
-  getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
-
+  getPaginatedPackages = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
@@ -225,6 +232,28 @@ export class UserController implements IUserController {
       ]);
 
       res.json({ packages, totalCount });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const packages = await this.userService.getAllPackagesService();
+      res.json({ packages });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getAllDestinations = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const destinations = await this.adminService.getAllDestinationsService();
+      res.json(destinations);
     } catch (error) {
       next(error);
     }

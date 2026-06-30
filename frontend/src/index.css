@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 body {
-  @apply bg-linear-to-r from-emerald-100 to-purple-100;
+  @apply bg-gray-100;
 }
 
 @theme {

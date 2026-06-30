@@ -69,7 +69,7 @@ const AdminPackageDetails = () => {
             Admin Dashboard
           </h2>
         </header>
-      <div className="flex-1 flex ">
+      <div className="flex-1 flex  bg-gray-100 ">
              <div className="w-64 max-md:hidden"></div>
           <div className="max-md:hidden fixed top-16.5 bottom-0">
           <AdminDashboardSideBar />

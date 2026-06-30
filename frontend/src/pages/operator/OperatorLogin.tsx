@@ -19,7 +19,7 @@ const OperatorLogin = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-lg">
        <ReusableForm
       heading="Operator Login"
           formData={formData}

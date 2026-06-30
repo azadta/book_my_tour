@@ -56,7 +56,7 @@ export interface IAdminService {
       longitude?: number;
     },
   ): Promise<IDestination>;
-  getAllDestinationsServise(): Promise<IDestination[]>;
+  getAllDestinationsService(): Promise<IDestination[]>;
   getDestinationByIdService(id: string): Promise<IDestination>;
   deleteDestinationByIdService(id: string): Promise<void>;
   resetPasswordAuthenticatedService(

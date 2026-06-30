@@ -6,7 +6,7 @@ const UserLayout = () => {
   return (
     <div className="flex flex-col min-h-screen  ">
       <Header />
-      <main className="grow  mt-38  ">
+      <main className="grow  mt-33  ">
         <Outlet />
       </main>
       <Footer />

@@ -38,7 +38,12 @@ router.get(
   ROUTES.USER.PACKAGE_CATEGORIES,
   userController.getAllPackageCategories,
 );
-router.get(ROUTES.USER.PACKAGES_HOME, userController.getAllPackages);
+router.get(
+  ROUTES.USER.DESTINATIONS,
+  userController.getAllDestinations,
+);
+router.get(ROUTES.USER.PACKAGES_HOME, userController.getPaginatedPackages);
+router.get(ROUTES.USER.PACKAGES, userController.getAllPackages);
 router.post(
   ROUTES.USER.RESET_PASSWORD_AUTH,
   authMiddleware.verifyRole("user"),

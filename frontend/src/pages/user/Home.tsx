@@ -1,7 +1,7 @@
-import HomeImageSlide from "@/components/homeImageSlide/HomeImageSlide";
-import HomeSlideThree from "@/components/homeSlideThree/homeSlideThree";
-import HomeSlideTwo from "@/components/homeSlideTwo/homeSlideTwo";
+import HomeSlideTwo from "@/components/homeSlideTwo/HomeSlideTwo";
+import HomeImageSlide from "../../components/homeImageSlide/HomeImageSlide";
 import HomeSlideTop from "@/components/homeTopSlide/HomeSlideTop";
+import HomeSlideThree from "@/components/homeSlideThree/HomeSlideThree";
 
 const Home = () => {
   return (

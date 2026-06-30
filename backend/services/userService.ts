@@ -15,6 +15,7 @@ import type { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
 import { IUser, IUserResponse } from "../interfaces/IUser";
+import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
 
 @injectable()
 export class UserService implements IUserService {
@@ -24,6 +25,8 @@ export class UserService implements IUserService {
     private packageCategoryRepository: IPackageCategoryRepository,
     @inject(Types.PackageRepository)
     private packageRepository: IPackageRepository,
+    @inject(Types.DestinationRepository)
+    private destinationRepository: IDestinationRepository,
     @inject(Types.MailService) private mailService: IMailService,
     @inject(Types.BcryptHashService) private hashService: IHashService,
     @inject(Types.SecurityService) private securityService: ISecurityService,
@@ -135,7 +138,10 @@ export class UserService implements IUserService {
     return { accessToken, refreshToken, userData };
   }
 
-  async googleLogin(name: string, email: string): Promise<{
+  async googleLogin(
+    name: string,
+    email: string,
+  ): Promise<{
     accessToken: string;
     refreshToken: string;
     user: IUserResponse;
@@ -272,13 +278,18 @@ export class UserService implements IUserService {
   getAllCategories() {
     return this.packageCategoryRepository.findAll();
   }
+
   async getPaginatedPackagesService(
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.findAllPackages(skip, limit);
+    return this.packageRepository.findPaginatedPackages(skip, limit);
   }
   getTotalPackagesCount() {
     return this.packageRepository.countDocuments();
+  }
+
+  getAllPackagesService(){
+    return this.packageRepository.findAllPackages()
   }
 }

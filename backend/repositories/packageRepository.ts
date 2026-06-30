@@ -12,7 +12,7 @@ export class PackageRepository
     super(Package);
   }
 
-  findAllPackages(skip: number, limit: number): Promise<Ipackage[]> {
+  findPaginatedPackages(skip: number, limit: number): Promise<Ipackage[]> {
     return Package.find()
       .skip(skip)
       .limit(limit)
@@ -32,5 +32,9 @@ export class PackageRepository
 
   async getPackageById(id: string): Promise<Ipackage | null> {
     return await Package.findById(id).populate("destinations category");
+  }
+
+  findAllPackages(): Promise<Ipackage[]> {
+    return Package.find().populate("destinations category operatorId");
   }
 }

@@ -128,6 +128,7 @@ container
   .bind<IAuthMiddleware>(Types.AuthMiddleware)
   .to(AuthMiddleware)
   .inSingletonScope();
+  
 
 export const userController = container.get<IUserController>(
   Types.UserController,

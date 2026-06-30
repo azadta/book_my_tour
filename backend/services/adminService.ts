@@ -183,7 +183,7 @@ export class AdminService implements IAdminService {
     } as Partial<IDestination>);
   }
 
-  getAllDestinationsServise(): Promise<IDestination[]> {
+  getAllDestinationsService(): Promise<IDestination[]> {
     return this.destinationRepository.findAll();
   }
 
@@ -237,7 +237,7 @@ export class AdminService implements IAdminService {
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.findAllPackages(skip, limit);
+    return this.packageRepository.findPaginatedPackages(skip, limit);
   }
 
   getTotalPackagesCount() {

@@ -1,0 +1,50 @@
+/* From Uiverse.io by aadium */
+.sunSetCard {
+  width: 250px;
+  height: 320px;
+  padding: 5px;
+
+  position: absolute;
+  right: 200px;
+  top: 10px;
+  transform: scale(.80);
+}
+
+.sunSetCard__content {
+  backdrop-filter: blur(50px);
+  width: 100%;
+  height: 100%;
+}
+
+.sunSetCard-details {
+  height: 100%;
+  gap: 0.5em;
+  display: grid;
+  place-content: center;
+  padding-bottom: 110px;
+}
+
+.text-body {
+  margin-top: -35px;
+  color: #ff8d79;
+  text-align: center;
+}
+
+.text-title {
+  margin-top: -125px;
+  color: #ff4d7d;
+  font-size: 1.75em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.sunsetsvg {
+  width: 313px;
+  margin-left: -51.9px;
+  margin-top: -165px;
+  fill: black;
+}
+
+#sun {
+  fill: url(#MyGradient);
+}

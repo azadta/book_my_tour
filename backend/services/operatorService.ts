@@ -219,7 +219,7 @@ export class OperatorService implements IOperatorService {
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.findAllPackages(skip, limit);
+    return this.packageRepository.findPaginatedPackages(skip, limit);
   }
 
   getTotalPackagesCount() {

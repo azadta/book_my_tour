@@ -13,7 +13,9 @@ export const ROUTES = {
     DELETE: "/delete/:id",
     PACKAGE_CATEGORIES: "/package-categories",
     PACKAGES_HOME: "/packages/home",
+    PACKAGES:'/packages',
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
+    DESTINATIONS: "/destinations",
   },
   OPERATOR: {
     REGISTER: "/register",
@@ -31,7 +33,7 @@ export const ROUTES = {
     DESTINATIONS: "/destinations",
     PACKAGE_CATEGORIES: "/package-categories",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
-    MY_PACKAGES_COUNT:'/my-packages-count'
+    MY_PACKAGES_COUNT: "/my-packages-count",
   },
   ADMIN: {
     LOGIN: "/login",
@@ -46,23 +48,23 @@ export const ROUTES = {
     OPS_DELETE: "/operators/delete/:id",
     OPS_SINGLE: "/operators/single-operator/:id",
     OPS_UPDATE: "/operators/update/:id",
-    OPS_COUNT:'/operators/total-count',
-    OPS_PENDING_COUNT:'/operators/pending-verification-count',
+    OPS_COUNT: "/operators/total-count",
+    OPS_PENDING_COUNT: "/operators/pending-verification-count",
 
     USERS_LIST: "/users",
     USERS_BLOCK: "/users/block/:id",
     USERS_DELETE: "/users/delete/:id",
     USERS_SINGLE: "/users/single-user/:id",
     USERS_UPDATE: "/users/update/:id",
-    USER_COUNT:'/users/total-count',
-    SIGNUP_TODAY:'/users/signup-today',
+    USER_COUNT: "/users/total-count",
+    SIGNUP_TODAY: "/users/signup-today",
 
     CREATE_CATEGORY: "/create-package-category",
     CREATE_DESTINATION: "/create-destination",
     PACKAGES_LIST: "/packages",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
   },
-    COMMON: {
+  COMMON: {
     REFRESH: "/refresh",
   },
 } as const;

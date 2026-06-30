@@ -42,6 +42,17 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
+  getPaginatedPackages: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+
+  getAllDestinations: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
   getAllPackages: (
     req: Request,
     res: Response,

@@ -13,7 +13,7 @@ export const useAdminDashboard = () => {
 
   const fetchDashboardData = async () => {
     setLoading(true);
-    try {
+    try {  
       const [
         usersCount,
         operatorsCount,

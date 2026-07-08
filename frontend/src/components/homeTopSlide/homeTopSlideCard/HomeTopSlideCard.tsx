@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./homeTopSlideCard.css";
 
 const HomeTopSlideCard = ({
@@ -7,6 +8,7 @@ const HomeTopSlideCard = ({
   position: string;
   pkg: any;
 }) => {
+  const navigate=useNavigate()
 
 
 
@@ -22,7 +24,7 @@ const HomeTopSlideCard = ({
             backgroundRepeat: "no-repeat",
           }}
         >
-          <span className="see-more absolute bottom-10 tracking-widest text-[#059699]">See More</span>
+          <button onClick={()=>navigate('/user/packages-list')} className="see-more absolute bottom-10 tracking-widest text-[#059699]">See More</button>
         </div>
         <div className="district-box">
           <span className="district font-dosis tracking-wider">{pkg.destinations[0]?.name}</span>

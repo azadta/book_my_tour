@@ -1,7 +1,9 @@
-import HomeSlideTwo from "@/components/homeSlideTwo/HomeSlideTwo";
-import HomeImageSlide from "../../components/homeImageSlide/HomeImageSlide";
-import HomeSlideTop from "@/components/homeTopSlide/HomeSlideTop";
 import HomeSlideThree from "@/components/homeSlideThree/HomeSlideThree";
+import HomeSlideTwo from "@/components/homeSlideTwo/HomeSlideTwo";
+import HomeSlideTop from "@/components/homeTopSlide/HomeSlideTop";
+import HomeImageSlide from "../../components/homeImageSlide/HomeImageSlide";
+
+
 
 const Home = () => {
   return (
@@ -12,6 +14,9 @@ const Home = () => {
         <HomeSlideTop />
         <HomeSlideThree />
       </div>
+
+  
+  
     </div>
   );
 };

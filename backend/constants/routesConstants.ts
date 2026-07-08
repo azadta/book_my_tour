@@ -14,8 +14,11 @@ export const ROUTES = {
     PACKAGE_CATEGORIES: "/package-categories",
     PACKAGES_HOME: "/packages/home",
     PACKAGES:'/packages',
+    PACKAGE:'/package/:id',
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
     DESTINATIONS: "/destinations",
+    PACKAGE_FILTER:'/packages/filter',
+    ACTIVE_PACKAGE_CATEGORIES:'/active-package-categories'
   },
   OPERATOR: {
     REGISTER: "/register",

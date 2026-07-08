@@ -40,4 +40,6 @@ export class UserRepository
   async countUsersByDateRange(start: Date, end: Date): Promise<number> {
     return User.countDocuments({ createdAt: { $gte: start, $lte: end } });
   }
+
+
 }

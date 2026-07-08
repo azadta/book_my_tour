@@ -72,7 +72,7 @@ const Header = () => {
                 ></path>
               </svg>
 
-              <input className="search" type="text" placeholder="Search here" />
+              <input className="search" type="text" placeholder="Search destination" />
             </div>
 
             <ul className="wrapper">

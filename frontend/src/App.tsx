@@ -36,6 +36,8 @@ import type { RootState } from "./redux/store";
 import PublicRoute from "./Routes/PublicRoute";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PackagesList from "./pages/user/PackagesList";
+import PackageDetails from "./pages/user/PackageDetails";
+import OperatorPackageDetails from "./pages/operator/OperatorPackageDetails";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -68,6 +70,7 @@ const App = () => {
             <Route path="/user/forgot-password" element={<ForgotPassword />} />
             <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
             <Route path="/user/packages-list" element={<PackagesList />} />
+            <Route path="/user/package-details/:id" element={<PackageDetails />} />
           </Route>
 
           <Route
@@ -119,6 +122,7 @@ const App = () => {
           <Route path="/operator/profile" element={<OperatorProfile />} />
           <Route path="/operator/dashboard" element={<OperatorDashboard />} />
           <Route path="/operator/create-package" element={<CreatePackage />} />
+          <Route path="/operator/package-details/:id" element={<OperatorPackageDetails />} />
         </Route>
 
         <Route

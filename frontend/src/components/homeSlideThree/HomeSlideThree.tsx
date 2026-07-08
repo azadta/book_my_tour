@@ -9,16 +9,18 @@ import { Swiper as swiperType } from "swiper";
 import { useDestinations } from "@/hooks/useDestinations";
 import type { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
-import { useAllPackages } from "@/hooks/useAllPackages";
+import { useAllPackages } from "@/hooks/useAllPackages"; 
 
 const HomeSlideThree = () => {
   const swiperRef = useRef<swiperType | null>(null);
- const {packages}=useAllPackages()
+  const { packages } = useAllPackages();
   return (
     <div>
       <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-5 flex flex-col">
         <div className="flex justify-between items-center ">
-          <h1 className="text-3xl font-semibold">"Escape Into Adventure Packages"</h1>
+          <h1 className="text-3xl font-semibold">
+            "Escape Into Adventure Packages"
+          </h1>
           <div className="px-3 py-1 rounded-full shadow-[0px_0px_5px_rgba(0,0,0,0.15)] flex items-center justify-center mb-1">
             <button
               onClick={() => {
@@ -36,7 +38,6 @@ const HomeSlideThree = () => {
         <div>
           <Swiper
             modules={[Navigation]}
-         
             slidesPerView={8}
             slidesPerGroup={1}
             onSwiper={(swiper) => (swiperRef.current = swiper)}

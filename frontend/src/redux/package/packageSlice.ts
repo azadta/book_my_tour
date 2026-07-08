@@ -21,6 +21,7 @@ export interface IPackage {
     night: number;
   };
   specifications?: string[];
+  activities?: string[];
   expiryDate?: string;
   operatorId?: string;
   remark?: string;

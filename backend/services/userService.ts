@@ -289,7 +289,68 @@ export class UserService implements IUserService {
     return this.packageRepository.countDocuments();
   }
 
-  getAllPackagesService(){
-    return this.packageRepository.findAllPackages()
+  getAllPackagesService() {
+    return this.packageRepository.findAllPackages();
+  }
+
+  async getFilteredPackagesService(query: any) {
+    const {
+      page = 1,
+      limit = 6,
+      category,
+
+      startDate,
+      maxBudget,
+      search,
+      maxDuration,
+    } = query;
+
+    const skip = page > 1 ? (Number(page) - 1) * Number(limit) : 0;
+    const filter: any = {};
+    if (category) {
+      filter.category = category;
+    }
+
+    if (startDate) {
+      filter.startDate = { $gte: new Date(startDate) };
+    }
+
+    if (maxBudget) {
+      filter.amount = { $lte: Number(maxBudget) };
+    }
+    if (search) {
+      const destinationIds =
+        await this.destinationRepository.findDestinationIdsByName(search);
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { destinations: { $in: destinationIds } },
+      ];
+    }
+
+    if (maxDuration) {
+      filter["duration.day"] = { $lte: Number(maxDuration) };
+    }
+
+    const [packages, totalCount, uniqueCategoryCount] = await Promise.all([
+      this.packageRepository.getFilteredPackages(filter, skip, limit),
+      this.packageRepository.getFilteredPackagesCount(filter),
+      this.packageRepository.getUniqueCategoryCount(filter),
+    ]);
+
+    return { packages, totalCount, uniqueCategoryCount };
+  }
+
+  async getActiveCategoryService() {
+    const categoryIds = await this.packageRepository.getUsedCategoryIds();
+
+    return this.packageCategoryRepository.findCategoriesByIds(categoryIds);
+  }
+
+  async getPackageByIdService(id: string) {
+    const pkg = await this.packageRepository.getPackageById(id);
+    if (pkg) {
+      new CustomError("Package not found", 404);
+    }
+    return pkg;
   }
 }

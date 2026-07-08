@@ -5,6 +5,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { useState } from "react";
 import type { FormField } from "../../interfaces/interfaces";
 import BackToDashboard from "../../components/BackToDashboard";
+import ItineraryEditor from "@/components/itinerary/ItineraryEditor";
 
 interface IOptions {
   category: Option[];
@@ -44,7 +45,7 @@ const CreatePackage = () => {
   }));
 
   return (
-    <div className="p-6  max-w-2xl mt-10 mb-10 mx-auto">
+    <div className="p-6  max-w-4xl mt-10 mb-10 mx-auto">
       <div className="mb-5">
         <BackToDashboard path="/operator/dashboard" />
       </div>
@@ -59,6 +60,14 @@ const CreatePackage = () => {
         onSubmit={handleSubmit}
         fieldError={fieldError}
         setFieldError={setFieldError}
+        renderAfterFields={
+          <ItineraryEditor
+            onChange={(itinerary) =>
+              setFormData((prev) => ({ ...prev, itinerary }))
+            }
+            value={formData.itinerary ?? []}
+          />
+        }
       />
     </div>
   );

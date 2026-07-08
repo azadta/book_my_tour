@@ -482,7 +482,14 @@ export const createPackageFields: FormField[] = [
     placeholder: "Enter specifications",
     required: false,
   },
-  { id: "expiryDate", label: "Expiry Date", type: "date", required: false },
+  {
+    id: "activities",
+    label: "Activities",
+    type: "text",
+    placeholder: "Enter activities",
+    required: false,
+  },
+  { id: "startDate", label: "Start Date", type: "date", required: false },
   { id: "remark", label: "Remark", type: "text", required: false },
   { id: "discount", label: "Discount (%)", type: "number", required: false },
   {
@@ -499,12 +506,7 @@ export const createPackageFields: FormField[] = [
     multiple: true,
     required: true,
   },
-  {
-    id: "isCustomizable",
-    label: "Customizable",
-    type: "checkbox",
-    required: false,
-  },
+
   {
     id: "category",
     label: "Package Category",

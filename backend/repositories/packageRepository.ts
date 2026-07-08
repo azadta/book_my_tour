@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { IPackageRepository } from "../interfaces/IPackageRepository";
 import Package, { Ipackage } from "../models/Package";
 import { BaseRepository } from "./baseRepository";
+import { Types } from "mongoose";
 
 @injectable()
 export class PackageRepository
@@ -37,4 +38,30 @@ export class PackageRepository
   findAllPackages(): Promise<Ipackage[]> {
     return Package.find().populate("destinations category operatorId");
   }
+
+  async getFilteredPackages(
+    filter: any,
+    skip: number,
+    limit: number,
+  ): Promise<Ipackage[]> {
+    return Package.find(filter)
+      .skip(skip)
+      .limit(limit)
+      .populate("destinations category");
+  }
+
+  async getFilteredPackagesCount(filter: any) {
+    return Package.countDocuments(filter);
+  }
+
+  async getUsedCategoryIds(): Promise<Types.ObjectId[]> {
+    return Package.distinct("category");
+  }
+
+  async getUniqueCategoryCount(filter: any): Promise<number> {
+    const categories = await Package.distinct("category", filter);
+    return categories.length;
+  }
+
+
 }

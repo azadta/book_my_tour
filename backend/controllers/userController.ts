@@ -258,4 +258,38 @@ export class UserController implements IUserController {
       next(error);
     }
   };
+
+  getFilteredPackages = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const query = req.query;
+      const { packages, totalCount,uniqueCategoryCount } =
+        await this.userService.getFilteredPackagesService(query);
+      res.status(200).json({ packages, totalCount,uniqueCategoryCount });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getActiveCategories = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const categories = await this.userService.getActiveCategoryService();
+    res.status(200).json({ categories });
+  };
+
+    getPackageById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const {id}=req.params
+    const pkg = await this.userService.getPackageByIdService(id as string);
+    res.status(200).json({ pkg });
+  };
 }

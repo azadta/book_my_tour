@@ -1,37 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { axiosInstance } from "../api/axiosInstance";
+import type { IPackageItem } from "@/interfaces/interfaces";
 
-interface Destination {
-  _id: string;
-  name: string;
-}
-interface Operator {
-  _id: string;
-  name: string;
-}
-interface Category {
-  _id: string;
-  name: string;
-}
 
-export interface IPackageItem {
-  _id: string;
-  name: string;
-  amount: number;
-  destinations: Destination[];
-  specifications?: string;
-  expiryDate?: string;
-  remark?: string;
-  discount?: number;
-  availableSlots?: string;
-  images?: string[];
-  isCustomizable?: boolean;
-  category: Category;
-  operatorId?: Operator;
-  createdAt?: string;
-  updatedAt?: string;
-}
 
 export const useAdminPackageManagement = (page: number, limit: number) => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -41,7 +13,9 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
     const fetchPackages = async () => {
       setLoading(true);
       try {
-        const { data } = await axiosInstance.get(`/admin/packages?page=${page}&limit=${limit}`);
+        const { data } = await axiosInstance.get(
+          `/admin/packages?page=${page}&limit=${limit}`,
+        );
 
         setPackages(data.packages || []);
         setTotalCount(data.totalCount || 0);

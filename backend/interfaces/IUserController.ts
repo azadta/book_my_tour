@@ -58,4 +58,19 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
+  getFilteredPackages: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  getActiveCategories: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  getPackageById: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

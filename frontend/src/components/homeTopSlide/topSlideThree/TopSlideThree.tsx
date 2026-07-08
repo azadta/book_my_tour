@@ -4,7 +4,7 @@ import HomeTopSlideCard from "../homeTopSlideCard/HomeTopSlideCard";
 import SunCardOne from "./SunCardOne";
 import SunCardTwo from "./SunCardTwo";
 import { useSelector } from "react-redux";
-import { useAllPackages } from "@/hooks/useAllPackages";
+import { useAllPackages } from "@/hooks/useAllPackages"; 
 
 const TopSlideThree = () => {
   const { packages } = useAllPackages();

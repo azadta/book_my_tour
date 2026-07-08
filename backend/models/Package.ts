@@ -1,4 +1,27 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
+
+export interface IActivity {
+  id: string;
+  name: string;
+  cost: number;
+  customizable: boolean;
+}
+
+export interface IOptionalActivity {
+  id: string;
+  name: string;
+  cost: number;
+}
+
+export interface IItineraryDay {
+  day: number;
+  title: string;
+  description: string;
+  gallery: string[];
+  activities: IActivity[];
+  optionalActivities: IOptionalActivity[];
+}
+
 export interface Ipackage extends Document {
   name: string;
   amount: number;
@@ -8,16 +31,49 @@ export interface Ipackage extends Document {
     night: number;
   };
   specifications: string;
-  expiryDate: Date;
+  activities: string;
+  startDate: Date;
   remark: string;
   discount: number;
   availableSlots: string;
   images: string[];
-  isCustomizable: boolean;
+
   category: Types.ObjectId;
 
   operatorId: Types.ObjectId;
+  itinerary: IItineraryDay[];
 }
+
+const ActivitySchema = new Schema<IActivity>(
+  {
+    id: String,
+    name: String,
+    cost: Number,
+    customizable: Boolean,
+  },
+  { _id: false },
+);
+
+const OptionalActivitySchema = new Schema<IOptionalActivity>(
+  {
+    id: String,
+    name: String,
+    cost: Number,
+  },
+  { _id: false },
+);
+
+const ItinerarySchema = new Schema<IItineraryDay>(
+  {
+    day: Number,
+    title: String,
+    description: String,
+    gallery: [String],
+    activities: [ActivitySchema],
+    optionalActivities: [OptionalActivitySchema],
+  },
+  { _id: false },
+);
 
 const packageSchema = new Schema<Ipackage>(
   {
@@ -48,7 +104,8 @@ const packageSchema = new Schema<Ipackage>(
       },
     },
     specifications: { type: String },
-    expiryDate: {
+    activities: { type: String },
+    startDate: {
       type: Date,
     },
     operatorId: {
@@ -58,13 +115,11 @@ const packageSchema = new Schema<Ipackage>(
     },
     remark: String,
 
-    isCustomizable: {
-      type: Boolean,
-      default: false,
-    },
+ 
     discount: Number,
     availableSlots: { type: String },
     images: [{ type: String }],
+    itinerary: [ItinerarySchema],
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "PackageCategory",

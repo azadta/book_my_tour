@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Ipackage } from "../models/Package";
 import { IBaseRepository } from "./IBaseRepository";
 
@@ -7,5 +8,13 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
   getPackageByName(name: string): Promise<Ipackage | null>;
   getPackageById(id: string): Promise<Ipackage | null>;
   save(item: Ipackage): Promise<Ipackage>;
-  findAllPackages(): Promise<Ipackage[]>
+  findAllPackages(): Promise<Ipackage[]>;
+  getFilteredPackages(
+    filter: any,
+    skip: number,
+    limit: number,
+  ): Promise<Ipackage[]>;
+  getFilteredPackagesCount(filter: any): Promise<number>;
+  getUsedCategoryIds(): Promise<Types.ObjectId[]>;
+  getUniqueCategoryCount(filter: any): Promise<number>
 }

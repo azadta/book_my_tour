@@ -5,13 +5,11 @@ import { useNavigate } from "react-router-dom";
 import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
 import Pagination from "../../components/Pagination";
 import ReUsableTable from "../../components/ReUsableTable";
-import {
-  useAdminPackageManagement,
-  type IPackageItem,
-} from "../../hooks/useAdminPackageManagement";
+import { useAdminPackageManagement } from "../../hooks/useAdminPackageManagement";
+import type { IPackageItem } from "@/interfaces/interfaces";
 
 const AdminPackageDetails = () => {
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 6;
   const navigate = useNavigate();
@@ -25,7 +23,6 @@ const AdminPackageDetails = () => {
   };
 
   const columns = [
-  
     { label: "Name", render: (pkg: IPackageItem) => pkg.name },
     { label: "Amount", render: (pkg: IPackageItem) => pkg.amount },
     {
@@ -35,14 +32,11 @@ const AdminPackageDetails = () => {
           ? pkg.category
           : pkg.category?.name || "-",
     },
+
     {
-      label: "Customizable",
-      render: (pkg: IPackageItem) => (pkg.isCustomizable ? "Yes" : "No"),
-    },
-    {
-      label: "Expiry Date",
+      label: "Start Date",
       render: (pkg: IPackageItem) =>
-        pkg.expiryDate ? new Date(pkg.expiryDate).toLocaleDateString() : "N/A",
+        pkg.startDate ? new Date(pkg.startDate).toLocaleDateString() : "N/A",
     },
     {
       label: "Operator",
@@ -63,50 +57,53 @@ const AdminPackageDetails = () => {
   ];
   return (
     <>
-    <div className="flex flex-col min-h-screen ">
-         <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
+      <div className="flex flex-col min-h-screen ">
+        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
           <h2 className="text-2xl font-bold text-center  text-gray-800">
             Admin Dashboard
           </h2>
         </header>
-      <div className="flex-1 flex  bg-gray-100 ">
-             <div className="w-64 max-md:hidden"></div>
+        <div className="flex-1 flex  bg-gray-100 ">
+          <div className="w-64 max-md:hidden"></div>
           <div className="max-md:hidden fixed top-16.5 bottom-0">
-          <AdminDashboardSideBar />
+            <AdminDashboardSideBar />
           </div>
-    <div className="flex-1 p-5 min-w-0">
-
-      <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
-        Package Management
-      </h1>
-      <ReUsableTable data={packages} columns={columns} loading={loading} />
-      <Pagination
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-        totalPages={totalPages}
-      />
-      <div className="mt-6 flex gap-1.5 sm:gap-5">
-        <button
-          onClick={() => navigate(`/admin/create-package-category`)}
-          className="bg-blue-600 text-white  py-2 px-1 sm:px-4 rounded hover:bg-blue-700"
-        >
-          Create Package Category
-        </button>
-        <button
-          onClick={() => navigate(`/admin/create-destination`)}
-          className="bg-blue-600 text-white py-2 px-1 sm:px-4 rounded hover:bg-blue-700"
-        >
-          Create Destination
-        </button>
-      </div>
-    </div>
-    </div>
-      {!open && (
-        <RxHamburgerMenu
-          className="fixed top-0 right-0 md:hidden text-3xl text-orange-600"
-          onClick={() => setOpen(true)}
-        />
-      )}
+          <div className="flex-1 p-5 min-w-0">
+            <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
+              Package Management
+            </h1>
+            <ReUsableTable
+              data={packages}
+              columns={columns}
+              loading={loading}
+            />
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              totalPages={totalPages}
+            />
+            <div className="mt-6 flex gap-1.5 sm:gap-5">
+              <button
+                onClick={() => navigate(`/admin/create-package-category`)}
+                className="bg-blue-600 text-white  py-2 px-1 sm:px-4 rounded hover:bg-blue-700"
+              >
+                Create Package Category
+              </button>
+              <button
+                onClick={() => navigate(`/admin/create-destination`)}
+                className="bg-blue-600 text-white py-2 px-1 sm:px-4 rounded hover:bg-blue-700"
+              >
+                Create Destination
+              </button>
+            </div>
+          </div>
+        </div>
+        {!open && (
+          <RxHamburgerMenu
+            className="fixed top-0 right-0 md:hidden text-3xl text-orange-600"
+            onClick={() => setOpen(true)}
+          />
+        )}
       </div>
       {open && (
         <RiCloseLargeFill

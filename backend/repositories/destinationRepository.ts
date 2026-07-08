@@ -18,6 +18,12 @@ export class DestinationRepository
     });
   }
 
+    async findDestinationIdsByName(name: string) {
+    return Destination.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    }).distinct('_id')
+  }
+
   async save(destination: IDestination): Promise<IDestination> {
     return destination.save();
   }

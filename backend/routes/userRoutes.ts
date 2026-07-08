@@ -14,7 +14,11 @@ router.post(ROUTES.USER.RESEND_OTP, userController.resendOtp);
 router.post(ROUTES.USER.LOGIN, userController.login);
 router.post(ROUTES.USER.GOOGLE, userController.google);
 router.post(ROUTES.USER.FORGOT_PASSWORD, userController.forgotPassword);
-router.post(ROUTES.USER.RESET_PASSWORD,resetPasswordValidator, userController.resetPassword);
+router.post(
+  ROUTES.USER.RESET_PASSWORD,
+  resetPasswordValidator,
+  userController.resetPassword,
+);
 router.delete(ROUTES.USER.LOGOUT, userController.logout);
 
 router.post(
@@ -38,10 +42,7 @@ router.get(
   ROUTES.USER.PACKAGE_CATEGORIES,
   userController.getAllPackageCategories,
 );
-router.get(
-  ROUTES.USER.DESTINATIONS,
-  userController.getAllDestinations,
-);
+router.get(ROUTES.USER.DESTINATIONS, userController.getAllDestinations);
 router.get(ROUTES.USER.PACKAGES_HOME, userController.getPaginatedPackages);
 router.get(ROUTES.USER.PACKAGES, userController.getAllPackages);
 router.post(
@@ -50,5 +51,12 @@ router.post(
   resetPasswordValidator,
   userController.resetPasswordAuthenticated,
 );
+router.get(ROUTES.USER.PACKAGE_FILTER, userController.getFilteredPackages);
+router.get(
+  ROUTES.USER.ACTIVE_PACKAGE_CATEGORIES,
+  userController.getActiveCategories,
+);
+
+router.get(ROUTES.USER.PACKAGE, userController.getPackageById);
 
 export default router;

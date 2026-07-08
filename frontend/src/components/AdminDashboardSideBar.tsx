@@ -69,19 +69,6 @@ const AdminDashboardSideBar = () => {
           )}
         </NavLink>
       </div>
-      {/* <div className="mt-10 border-t border-gray-600 pt-4">
-        <button
-          onClick={() => navigate("/admin/profile")}
-          className="flex items-center gap-3 hover:bg-gray-700 bg-gray-500 p-3 rounded w-full transition"
-        >
-          <img
-            src={currentAdmin?.image}
-            alt="Admin"
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <span className="text-white text-sm font-medium">Admin Profile</span>
-        </button>
-      </div> */}
 
       <button
         onClick={() => navigate("/admin/profile")}

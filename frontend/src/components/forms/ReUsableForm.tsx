@@ -14,6 +14,7 @@ interface ReUsableFormProps {
   initialData?: FormData;
   fieldError: Record<string, string>;
   setFieldError: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  renderAfterFields?:React.ReactNode
 }
 interface FormData {
   [key: string]: any;
@@ -30,6 +31,7 @@ const ReUsableForm = ({
   initialData,
   fieldError,
   setFieldError,
+  renderAfterFields
 }: ReUsableFormProps) => {
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
@@ -152,7 +154,7 @@ const ReUsableForm = ({
 
   return (
     <div
-      className={` mx-auto bg-linear-to-b from-white to-slate-100 rounded-[40px] border-[5px] border-white shadow-[0px_20px_20px_5px_rgba(133,189,215,0.88)] p-8 ${fields.length > 4 ? "max-w-2xl max-md:max-w-lg " : "max-w-lg"} `}
+      className={` mx-auto flex flex-col  bg-linear-to-b from-white to-slate-100 rounded-[40px] border-[5px] border-white shadow-[0px_20px_20px_5px_rgba(133,189,215,0.88)] p-8 ${fields.length > 4 ? "max-w-4xl max-md:max-w-lg " : "max-w-lg"} `}
     >
       <h2 className="text-center text-2xl font-black text-sky-600">
         {heading}
@@ -160,7 +162,7 @@ const ReUsableForm = ({
       <form
         id="reUsableForm"
         onSubmit={handleSubmit}
-        className={`mt-5   ${fields.length > 4 ? "  grid grid-cols-1 md:grid-cols-2 gap-5" : "space-y-4"} `}
+        className={`mt-5   ${fields.length > 4 ? "  grid grid-cols-1 md:grid-cols-2 gap-y-7 gap-x-10" : "space-y-4"} `}
       >
         {fields.map((field) => {
           if (field.type === "select") {
@@ -362,11 +364,12 @@ const ReUsableForm = ({
           );
         })}
       </form>
+      {renderAfterFields}
       <button
         form="reUsableForm"
         type="submit"
         disabled={loading}
-        className={`mt-6 w-full py-4 rounded-[20px] font-bold text-white bg-linear-to-r from-sky-600 to-cyan-500 shadow-[0px_20px_10px_-15px_rgba(133,189,215,0.88)] transition-all hover:scale-[1.03] active:scale-95 disabled:opacity-60 cursor-pointer`}
+        className={` mt-6 max-w-lg mx-auto w-full py-4 rounded-[20px] font-bold text-white bg-linear-to-r from-sky-600 to-cyan-500 shadow-[0px_20px_10px_-15px_rgba(133,189,215,0.88)] transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-60 cursor-pointer`}
       >
         {loading ? "Loading..." : buttonText}
       </button>

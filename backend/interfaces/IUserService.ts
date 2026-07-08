@@ -45,5 +45,12 @@ export interface IUserService {
   getAllCategories(): Promise<IPackageCategory[]>;
   getPaginatedPackagesService(skip: number, limit: number): Promise<Ipackage[]>;
   getTotalPackagesCount(): Promise<number>;
-  getAllPackagesService(): Promise<Ipackage[]>
+  getAllPackagesService(): Promise<Ipackage[]>;
+  getFilteredPackagesService(query: any): Promise<{
+    packages: Ipackage[];
+    totalCount: number;
+    uniqueCategoryCount: number;
+  }>;
+  getActiveCategoryService(): Promise<IPackageCategory[]>;
+  getPackageByIdService(id: string): Promise<Ipackage | null>;
 }

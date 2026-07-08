@@ -4,7 +4,7 @@ import HomeTopSlideCard from "../homeTopSlideCard/HomeTopSlideCard";
 import SunSetCard from "./SunSetCard";
 
 import type { RootState } from "@/redux/store";
-import { useAllPackages } from "@/hooks/useAllPackages";
+import { useAllPackages } from "@/hooks/useAllPackages"; 
 
 const TopSlideTwo = () => {
   const { packages } = useAllPackages();

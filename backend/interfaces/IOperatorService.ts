@@ -1,3 +1,4 @@
+import { QueryFilter } from "mongoose";
 import { IDestination } from "../models/Destination";
 
 import { Ipackage } from "../models/Package";
@@ -19,7 +20,7 @@ export interface IOperatorService {
   ): Promise<{
     accessToken: string;
     refreshToken: string;
-    operatorData:IOperatorResponse;
+    operatorData: IOperatorResponse;
   }>;
   operatorForgotPasswordService(email: string): Promise<{
     message: string;
@@ -30,7 +31,10 @@ export interface IOperatorService {
   ): Promise<{
     message: string;
   }>;
-  updateOperatorService(id: string, data:Partial<IOperator>): Promise<IOperator | null>;
+  updateOperatorService(
+    id: string,
+    data: Partial<IOperator>,
+  ): Promise<IOperator | null>;
   updateOperatorProfileImageService(
     id: string,
     image: string,
@@ -41,11 +45,19 @@ export interface IOperatorService {
   createPackageService(data: Partial<Ipackage>): Promise<Ipackage>;
   getSinglePackageService(id: string): Promise<Ipackage | null>;
   updatePackageService(
-    id: string,
+    packageId: string,
+    operatorId: string,
     data: Partial<Ipackage>,
+  ):Promise<Ipackage | null>;
+  deletePackageService(
+    operatorId: string,
+    packageId: string,
   ): Promise<Ipackage | null>;
-  deletePackageService(id: string): Promise<Ipackage | null>;
-  getPaginatedPackagesService(skip: number, limit: number): Promise<Ipackage[]>;
+  getPaginatedPackagesService(
+    id: QueryFilter<Ipackage>,
+    skip: number,
+    limit: number,
+  ): Promise<Ipackage[]>;
   getTotalPackagesCount(): Promise<number>;
   resetPasswordAuthenticatedService(
     operatorId: string,
@@ -58,4 +70,5 @@ export interface IOperatorService {
   getAllCategories(): Promise<IPackageCategory[]>;
   getAllDestinationsServise(): Promise<IDestination[]>;
   getMyPackagesCountService(operatorId: string): Promise<number>;
+  getPackageByIdAndOperatorService(packageId: string, operatorId: string): Promise<Ipackage>
 }

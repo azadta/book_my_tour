@@ -1,16 +1,14 @@
-import { useSelector } from "react-redux";
+import { useHome } from "@/hooks/useHome";
 import { cardPosition } from "../cardPosition";
 import HomeTopSlideCard from "../homeTopSlideCard/HomeTopSlideCard";
 import SunSetCard from "./SunSetCard";
 
-import type { RootState } from "@/redux/store";
-import { useAllPackages } from "@/hooks/useAllPackages"; 
 
 const TopSlideTwo = () => {
-  const { packages } = useAllPackages();
+  const { packages } = useHome();
   return (
     <div className="relative shadow w-full   rounded-2xl  p-2  bg-yellow-50/50 ">
-      {packages?.slice(3, 8).map((pkg: any, index: any) => (
+      {packages?.slice(5, 10).map((pkg: any, index: any) => (
         <HomeTopSlideCard
           key={pkg._id}
           position={cardPosition[index]}

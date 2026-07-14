@@ -482,14 +482,8 @@ export const createPackageFields: FormField[] = [
     placeholder: "Enter specifications",
     required: false,
   },
-  {
-    id: "activities",
-    label: "Activities",
-    type: "text",
-    placeholder: "Enter activities",
-    required: false,
-  },
-  { id: "startDate", label: "Start Date", type: "date", required: false },
+
+  { id: "startDate", label: "Start Date", type: "date", required: true },
   { id: "remark", label: "Remark", type: "text", required: false },
   { id: "discount", label: "Discount (%)", type: "number", required: false },
   {

@@ -53,4 +53,7 @@ export interface IUserService {
   }>;
   getActiveCategoryService(): Promise<IPackageCategory[]>;
   getPackageByIdService(id: string): Promise<Ipackage | null>;
+  getDestinationsByPackageCategoryService(categoryName: string): Promise<any[]>;
+
+  getPackagesByCategoryService(categoryName: string): Promise<Ipackage[]>;
 }

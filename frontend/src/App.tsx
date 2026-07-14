@@ -1,7 +1,10 @@
+import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+
 import UserLayout from "./components/UserLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminEditPackage from "./pages/admin/AdminEditPackage";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminOperatorDetails from "./pages/admin/AdminOperatorDetails";
 import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
@@ -13,11 +16,12 @@ import CreateDestination from "./pages/admin/CreateDestination";
 import CreatePackageCategory from "./pages/admin/CreatePackageCategory";
 import EditOperator from "./pages/admin/EditOperator";
 import EditUser from "./pages/admin/EditUser";
-import CreatePackage from "./pages/operator/CreatePackage";
+import OperatorCreatePackage from "./pages/operator/OperatorCreatePackage";
 import OperatorDashboard from "./pages/operator/OperatorDashboard";
 import OperatorForgotPassword from "./pages/operator/OperatorForgotPassword";
 import OperatorLogin from "./pages/operator/OperatorLogin";
 import OperatorOtpVerification from "./pages/operator/OperatorOtpVerification";
+import OperatorPackagesList from "./pages/operator/OperatorPackagesList";
 import OperatorProfile from "./pages/operator/OperatorProfile";
 import OperatorRegister from "./pages/operator/OperatorRegister";
 import OperatorResetPassword from "./pages/operator/OperatorResetPassword";
@@ -26,18 +30,17 @@ import { About } from "./pages/user/About";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import Home from "./pages/user/Home";
 import Login from "./pages/user/Login";
+import PackageDetails from "./pages/user/PackageDetails";
+import PackagesList from "./pages/user/PackagesList";
 import Profile from "./pages/user/Profile";
 import Register from "./pages/user/Register";
 import { ResetPassword } from "./pages/user/ResetPassword";
 import ResetPasswordAuthenticated from "./pages/user/ResetPasswordAuthenticated";
 import VerifyOtp from "./pages/user/VerifyOtp";
-import { useSelector } from "react-redux";
 import type { RootState } from "./redux/store";
-import PublicRoute from "./Routes/PublicRoute";
 import ProtectedRoute from "./Routes/ProtectedRoute";
-import PackagesList from "./pages/user/PackagesList";
-import PackageDetails from "./pages/user/PackageDetails";
-import OperatorPackageDetails from "./pages/operator/OperatorPackageDetails";
+import PublicRoute from "./Routes/PublicRoute";
+import OperatorEditPackage from "./pages/operator/OperatorEditPackage";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -70,7 +73,10 @@ const App = () => {
             <Route path="/user/forgot-password" element={<ForgotPassword />} />
             <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
             <Route path="/user/packages-list" element={<PackagesList />} />
-            <Route path="/user/package-details/:id" element={<PackageDetails />} />
+            <Route
+              path="/user/package-details/:id"
+              element={<PackageDetails />}
+            />
           </Route>
 
           <Route
@@ -121,8 +127,18 @@ const App = () => {
         >
           <Route path="/operator/profile" element={<OperatorProfile />} />
           <Route path="/operator/dashboard" element={<OperatorDashboard />} />
-          <Route path="/operator/create-package" element={<CreatePackage />} />
-          <Route path="/operator/package-details/:id" element={<OperatorPackageDetails />} />
+          <Route
+            path="/operator/create-package"
+            element={<OperatorCreatePackage />}
+          />
+          <Route
+            path="/operator/edit-package/:id"
+            element={<OperatorEditPackage />}
+          />
+          <Route
+            path="/operator/packages-list/:id"
+            element={<OperatorPackagesList />}
+          />
         </Route>
 
         <Route
@@ -181,6 +197,7 @@ const App = () => {
             element={<CreatePackageCategory />}
           />
         </Route>
+        <Route path="/admin/edit-package/:id" element={<AdminEditPackage />} />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

@@ -133,4 +133,22 @@ router.get(
   adminController.todaySignupCount,
 );
 
+router.get(
+  ROUTES.ADMIN.PACKAGE,
+  authMiddleware.verifyRole("admin"),
+  adminController.getPackageById,
+);
+
+router.delete(
+  ROUTES.ADMIN.DELETE_PACKAGE,
+  authMiddleware.verifyRole("admin"),
+  adminController.deletePackage,
+);
+router.put(
+  ROUTES.ADMIN.PACKAGES_UPDATE,
+  authMiddleware.verifyRole("admin"),
+
+  adminController.updatePackage,
+);
+
 export default router;

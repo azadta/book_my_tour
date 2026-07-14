@@ -10,10 +10,19 @@ export interface FormField {
   readOnly?: boolean;
 }
 
-interface Destination {
+export interface Ilocation {
+  latitude: number;
+  longitude: number;
+}
+
+export interface Destination {
   _id: string;
   name: string;
+  location: Ilocation;
+  images: string[];
+  createdAt: Date;
 }
+
 interface Operator {
   _id: string;
   name: string;
@@ -51,7 +60,7 @@ export interface IPackageItem {
   amount: number;
   destinations: Destination[];
   specifications?: string;
-  activities?: string;
+
   startDate?: string;
   duration: { day: number; night: number };
   remark?: string;

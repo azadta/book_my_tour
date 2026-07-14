@@ -58,5 +58,13 @@ router.get(
 );
 
 router.get(ROUTES.USER.PACKAGE, userController.getPackageById);
+router.get(
+  ROUTES.USER.DESTINATIONS_BY_PACKAGE_CATEGORY,
+  userController.getDestinationsByPackageCategory,
+);
+router.get(
+  ROUTES.USER.PACKAGES_BY_CATEGORY,
+  userController.getPackagesByCategory,
+);
 
 export default router;

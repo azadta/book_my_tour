@@ -8,11 +8,13 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import { injectable, inject } from "inversify";
 import { Types } from "../types/types";
 import { IAdminController } from "../interfaces/IAdminController";
+import type { IOperatorService } from "../interfaces/IOperatorService";
 
 @injectable()
 export class AdminController implements IAdminController {
   constructor(
     @inject(Types.AdminService) private adminService: IAdminService,
+    @inject(Types.OperatorService) private operatorService: IOperatorService,
   ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,11 +31,11 @@ export class AdminController implements IAdminController {
         await this.adminService.loginAdminService(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge:Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.status(StatusCode.OK).json(adminData);
     } catch (error) {
@@ -316,7 +318,7 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destinations = await this.adminService.getAllDestinationsServise();
+      const destinations = await this.adminService.getAllDestinationsService();
       res.json(destinations);
     } catch (error) {
       next(error);
@@ -433,6 +435,54 @@ export class AdminController implements IAdminController {
     try {
       const count = await this.adminService.getPendingOperatorsCountService();
       res.status(StatusCode.OK).json({ success: true, count });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getPackageById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const packageId = req.params.id;
+
+      const pkg = await this.adminService.getSinglePackageService(
+        packageId as string,
+      );
+
+      res.status(StatusCode.OK).json(pkg);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updatePackage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const packageId = req.params.id;
+      const updatedPackage = await this.adminService.updatePackageService(
+        packageId as string,
+
+        req.body,
+      );
+      if (!updatedPackage) {
+        return next(new CustomError("Package not found", StatusCode.NOT_FOUND));
+      }
+      res.status(StatusCode.OK).json(updatedPackage);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deletePackage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id: packageId } = req.params;
+      const deletePackage = await this.adminService.deletePackageService(
+        packageId as string,
+      );
+      if (!deletePackage) {
+        throw new CustomError("Package not found", StatusCode.NOT_FOUND);
+      }
+      res
+        .status(StatusCode.OK)
+        .json({ success: true, message: "Package deleted successfully" });
     } catch (error) {
       next(error);
     }

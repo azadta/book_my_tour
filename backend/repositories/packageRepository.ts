@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { IPackageRepository } from "../interfaces/IPackageRepository";
 import Package, { Ipackage } from "../models/Package";
 import { BaseRepository } from "./baseRepository";
-import { Types } from "mongoose";
+import { QueryFilter, Types } from "mongoose";
 
 @injectable()
 export class PackageRepository
@@ -13,12 +13,6 @@ export class PackageRepository
     super(Package);
   }
 
-  findPaginatedPackages(skip: number, limit: number): Promise<Ipackage[]> {
-    return Package.find()
-      .skip(skip)
-      .limit(limit)
-      .populate("destinations category operatorId");
-  }
   async save(item: Ipackage): Promise<Ipackage> {
     return item.save();
   }
@@ -47,7 +41,7 @@ export class PackageRepository
     return Package.find(filter)
       .skip(skip)
       .limit(limit)
-      .populate("destinations category");
+      .populate("destinations category operatorId");
   }
 
   async getFilteredPackagesCount(filter: any) {
@@ -62,6 +56,21 @@ export class PackageRepository
     const categories = await Package.distinct("category", filter);
     return categories.length;
   }
+  async deleteByIdAndOperator(
+    packageId: string,
+    operatorId: string,
+  ): Promise<Ipackage | null> {
+    return Package.findOneAndDelete({ _id: packageId, operatorId });
+  }
 
+  async getByIdAndOperator(
+    packageId: string,
+    operatorId: string,
+  ): Promise<Ipackage | null> {
+    return Package.findOne({ _id: packageId, operatorId });
+  }
 
+  async findPackageByCategory(categoryId:string):Promise<Ipackage[]>{
+    return Package.find({category:categoryId}).populate('destinations category')
+  }
 }

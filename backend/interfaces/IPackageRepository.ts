@@ -3,7 +3,6 @@ import { Ipackage } from "../models/Package";
 import { IBaseRepository } from "./IBaseRepository";
 
 export interface IPackageRepository extends IBaseRepository<Ipackage> {
-  findPaginatedPackages(skip: number, limit: number): Promise<Ipackage[]>;
   countPackagesByOperatorId(operatorId: string): Promise<number>;
   getPackageByName(name: string): Promise<Ipackage | null>;
   getPackageById(id: string): Promise<Ipackage | null>;
@@ -16,5 +15,14 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
   ): Promise<Ipackage[]>;
   getFilteredPackagesCount(filter: any): Promise<number>;
   getUsedCategoryIds(): Promise<Types.ObjectId[]>;
-  getUniqueCategoryCount(filter: any): Promise<number>
+  getUniqueCategoryCount(filter: any): Promise<number>;
+  deleteByIdAndOperator(
+    packageId: string,
+    operatorId: string,
+  ): Promise<Ipackage | null>;
+  getByIdAndOperator(
+    packageId: string,
+    operatorId: string,
+  ): Promise<Ipackage | null>;
+  findPackageByCategory(categoryId: string): Promise<Ipackage[]>
 }

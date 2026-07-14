@@ -7,8 +7,9 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import Loading from "../../components/Loading";
 import OperatorDashboardSideBar from "../../components/OperatorDashboardSidebar";
 import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
+import style from  "../../css/operatorDashboard.module.css";
 
-const AdminDashboard = () => {
+const OperatorDashboard = () => {
   const [open, setOpen] = useState(false);
 
   const { PackagesCount, loading } = useOperatorDashboard();
@@ -30,34 +31,52 @@ const AdminDashboard = () => {
             <OperatorDashboardSideBar />
           </div>
           <main className="flex-1 p-8 bg-gray-100 pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 items-center max-sm:w-60 mx-auto   ">
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center   gap-7   ">
-                <LuClipboardPenLine className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">Total Bookings</h2>
-                  <p className="text-2xl font-bold text-gray-700"></p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6  justify-items-center max-sm:w-60 mx-auto   ">
+              <div className={style.card}>
+                <div className={`${style.image} flex items-center justify-center`}>
+                  {" "}
+                  <LuClipboardPenLine className="size-[40px]" />
+                </div>
+                <div className={style['card-info']}>
+                  <span>Total Bookings</span>
+                  <p> </p>
                 </div>
               </div>
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center gap-7 w-full">
-                < BsBoxSeamFill  className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 ">
-                    Total Packages
-                  </h2>
-                  <p className="text-2xl font-bold text-gray-700">
-                    {PackagesCount}
-                  </p>
+
+              <div className={style.card}>
+                <div className={`${style.image} flex items-center justify-center`}>
+                  {" "}
+                  <BsBoxSeamFill className="size-[37px]" />
+                </div>
+                <div className={style['card-info']}>
+                  <span> Total Packages</span>
+                  <p> {PackagesCount} </p>
                 </div>
               </div>
-              <div className="bg-[#EBE3AF] p-6 rounded shadow flex items-center justify-center gap-7">
-                <HiCash className="text-5xl text-orange-400 max-sm:hidden max-lg:hidden" />
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">
-                    Payouts Recieved
-                  </h2>
-                  <p className="text-2xl font-bold text-gray-700"></p>
+
+              <div className={style.card}>
+                <div className={`${style.image} flex items-center justify-center`}>
+                  {" "}
+                  <HiCash className="size-[50px] text-emerald-200" />
+                </div>
+                <div className={style['card-info']}>
+                  <span> Payouts Recieved</span>
+                  <p> </p>
                 </div>
               </div>
+
+                <div className={style.card}>
+                <div className={`${style.image} flex items-center justify-center`}>
+                  {" "}
+                  <HiCash className="size-[50px] text-red-300" />
+                </div>
+                <div className={style['card-info']}>
+                  <span> Pending Payouts</span>
+                  <p> </p>
+                </div>
+              </div>
+
+       
             </div>
           </main>
         </div>
@@ -89,4 +108,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default OperatorDashboard;

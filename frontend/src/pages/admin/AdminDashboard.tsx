@@ -6,7 +6,7 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
 import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
 import Loading from "../../components/Loading";
-import "../../css/dashboard.css";
+import "../../css/adminDashboard.css";
 import { useAdminDashboard } from "../../hooks/useAdminDashboard";
 
 const AdminDashboard = () => {
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
             <AdminDashboardSideBar />
           </div>
           <main className="flex-1 p-8 bg-gray-100 pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-10 items-center max-sm:w-60 mx-auto   ">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 justify-items-center max-sm:w-60 mx-auto   ">
               <div className="card">
                 <div className="image flex items-center justify-center">
                   {" "}

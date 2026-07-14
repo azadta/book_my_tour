@@ -17,7 +17,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 const PackagesList = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
 
@@ -32,6 +32,8 @@ const PackagesList = () => {
   } = usePackageList();
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
+  const destination = searchParams.get("destination") || "";
+  const destinationName = searchParams.get("destinationName") || "";
   const [maxBudget, setMaxBudget] = useState(
     Number(searchParams.get("maxBudget")) || 100000,
   );
@@ -39,7 +41,7 @@ const PackagesList = () => {
     Number(searchParams.get("maxDuration")) || 15,
   );
 
-  const [debouncedSearch] = useDebounce(search,700);
+  const [debouncedSearch] = useDebounce(search, 700);
   const [debouncedMaxBudget] = useDebounce(maxBudget, 500);
   const [debouncedMaxDuration] = useDebounce(maxDuration, 500);
 
@@ -60,24 +62,31 @@ const PackagesList = () => {
     setSearchParams({});
   };
 
+  const hasActiveFiters = [...searchParams.keys()].some(
+    (key) => key !== "page",
+  );
+
   useEffect(() => {
     fetchPackages(searchParams.toString());
   }, [searchParams]);
 
   useEffect(() => {
+    const value = debouncedMaxBudget === 100000 ? null : debouncedMaxBudget;
     setSearchParams((prev) => {
-      return updateSearchParams(prev, { maxBudget: debouncedMaxBudget });
+      return updateSearchParams(prev, { maxBudget: value, page: 1 });
     });
   }, [debouncedMaxBudget]);
 
   useEffect(() => {
+    const value = debouncedMaxDuration === 15 ? null : debouncedMaxDuration;
     setSearchParams((prev) =>
-      updateSearchParams(prev, { maxDuration: debouncedMaxDuration }),
+      updateSearchParams(prev, { maxDuration: value, page: 1 }),
     );
   }, [debouncedMaxDuration]);
   useEffect(() => {
+    const value = debouncedSearch === "" ? null : debouncedSearch;
     setSearchParams((prev) => {
-      return updateSearchParams(prev, { search: debouncedSearch });
+      return updateSearchParams(prev, { search: value, page: 1 });
     });
   }, [debouncedSearch]);
 
@@ -213,9 +222,28 @@ const PackagesList = () => {
           <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-8 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4  ">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 ">
-                Explore curated travel bundles
+                {destinationName ? (
+                  <>
+                    <span className="text-yellow-400">{destinationName}</span>{" "}
+                    Tour Packages
+                  </>
+                ) : (
+                  `Explore curated travel bundles`
+                )}
               </h1>
-              <p>Tailored Iteneraries handpicked for absolute comfort</p>
+
+              {hasActiveFiters && (
+                <button
+                  onClick={clearFilters}
+                  className=" font-semibold text-sm text-white border-gray-500  border bg-blue-500 px-2 py-1 rounded-xl mt-2 mb-1 hover:cursor-pointer"
+                >
+                  Clear All filters
+                </button>
+              )}
+
+              {!destination && (
+                <p>Tailored Iteneraries handpicked for absolute comfort</p>
+              )}
             </div>
 
             <div className="flex items-center  divide-x divide-gray-200 ">
@@ -284,7 +312,7 @@ const PackagesList = () => {
                             What's included
                           </span>
                           <div className="flex flex-wrap gap-1.5">
-                            {pkg.specifications
+                            {pkg?.specifications
                               ?.split(",")
 
                               .map((fac, idx) => (
@@ -299,16 +327,16 @@ const PackagesList = () => {
                         </div>
                         <div className="mb-6">
                           <span className="block text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">
-                            Curated Experience
+                            Destinations covered
                           </span>
                           <div className="flex flex-wrap gap-2">
-                            {pkg.activities?.split(",").map((act, idx) => (
+                            {pkg?.destinations.map((dest, idx) => (
                               <span
                                 key={idx}
                                 className="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1"
                               >
                                 <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                                {act}
+                                {dest.name}
                               </span>
                             ))}
                           </div>
@@ -345,7 +373,12 @@ const PackagesList = () => {
                           </div>
                         )}
 
-                        <button onClick={()=>navigate(`/user/package-details/${pkg._id}`)} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95">
+                        <button
+                          onClick={() =>
+                            navigate(`/user/package-details/${pkg._id}`)
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95"
+                        >
                           View Itinerary
                         </button>
                       </div>

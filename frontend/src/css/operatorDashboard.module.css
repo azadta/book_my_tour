@@ -1,0 +1,92 @@
+/* From Uiverse.io by Javierrocadev */
+.card {
+  width: 220px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  background-color: #fffffe;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  width: 220px;
+  height: 60px;
+  position: absolute;
+  top: 0;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom: 3px solid #fefefe;
+  background: linear-gradient(
+    40deg,
+    rgba(131, 58, 180, 1) 0%,
+    rgba(253, 29, 29, 1) 50%,
+    rgba(252, 176, 69, 1) 100%
+  );
+  transition: all 0.5s ease;
+}
+
+.card * {
+  z-index: 1;
+}
+
+.image {
+  width: 70px;
+  height: 70px;
+
+  border-radius: 50%;
+  border: 3px solid #fefefe;
+  margin-top: 18px;
+  transition: all 0.5s ease;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.5s ease;
+}
+
+.card-info span {
+  font-weight: 600;
+  font-size: 20px;
+
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: 8px;
+  line-height: 1.2px;
+}
+
+.card-info p {
+  color: #161a42;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.card:hover::before {
+  width: 220px;
+  height: 180px;
+  border-bottom: none;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  transform: scale(0.95);
+}
+
+.card:hover .card-info {
+  transform: translate(0%, -20%);
+}
+
+.card:hover .image {
+  transform: scale(1.2) translate(-90%, -50%);
+}
+
+.button:hover {
+  background-color: #ff6844;
+  transform: scale(1.1);
+}

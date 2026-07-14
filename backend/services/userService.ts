@@ -283,7 +283,7 @@ export class UserService implements IUserService {
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.findPaginatedPackages(skip, limit);
+    return this.packageRepository.getFilteredPackages({}, skip, limit);
   }
   getTotalPackagesCount() {
     return this.packageRepository.countDocuments();
@@ -298,6 +298,7 @@ export class UserService implements IUserService {
       page = 1,
       limit = 6,
       category,
+      destination,
 
       startDate,
       maxBudget,
@@ -309,6 +310,9 @@ export class UserService implements IUserService {
     const filter: any = {};
     if (category) {
       filter.category = category;
+    }
+    if (destination) {
+      filter.destinations = destination;
     }
 
     if (startDate) {
@@ -352,5 +356,36 @@ export class UserService implements IUserService {
       new CustomError("Package not found", 404);
     }
     return pkg;
+  }
+
+  async getDestinationsByPackageCategoryService(categoryName: string) {
+    const category =
+      await this.packageCategoryRepository.findPackageCategoryByName(
+        categoryName,
+      );
+    if (!category) return [];
+
+    const packages = await this.packageRepository.findPackageByCategory(
+      category._id.toString(),
+    );
+    const destinationMap = new Map();
+    packages.forEach((pkg) => {
+      pkg.destinations.forEach((destination: any) => {
+        destinationMap.set(destination._id.toString(), destination);
+      });
+    });
+    return [...destinationMap.values()];
+  }
+
+  async getPackagesByCategoryService(categoryName: string) {
+    const category =
+      await this.packageCategoryRepository.findPackageCategoryByName(
+        categoryName,
+      );
+    if (!category) return [];
+
+    return this.packageRepository.findPackageByCategory(
+      category._id.toString(),
+    );
   }
 }

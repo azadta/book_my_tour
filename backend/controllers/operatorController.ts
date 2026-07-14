@@ -7,6 +7,7 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import { inject, injectable } from "inversify";
 import { Types } from "../types/types";
 import { IOperatorController } from "../interfaces/IOperatorController";
+import { OperatorService } from "../services/operatorService";
 @injectable()
 export class OperatorController implements IOperatorController {
   constructor(
@@ -81,11 +82,11 @@ export class OperatorController implements IOperatorController {
         await this.operatorService.operatorLoginService(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
       res.status(StatusCode.OK).json(operatorData);
     } catch (error) {
@@ -124,7 +125,7 @@ export class OperatorController implements IOperatorController {
     }
   };
 
-  operatorLogout = async(req: Request, res: Response, next: NextFunction) => {
+  operatorLogout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
       const result = this.operatorService.operatorLogoutService();
@@ -230,7 +231,7 @@ export class OperatorController implements IOperatorController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [packages, totalCount] = await Promise.all([
-        this.operatorService.getPaginatedPackagesService(skip, limit),
+        this.operatorService.getPaginatedPackagesService({}, skip, limit),
         this.operatorService.getTotalPackagesCount(),
       ]);
       res.json({ packages, totalCount });
@@ -269,6 +270,91 @@ export class OperatorController implements IOperatorController {
           operatorId as string,
         );
       res.status(StatusCode.OK).json({ success: true, totalPakagesCount });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getPaginatedPackages = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const operatorId = req.user!.id;
+      const { limit, page } = req.query;
+
+      const skip = (Number(page) - 1) * Number(limit);
+
+      const totalCount = await this.operatorService.getMyPackagesCountService(
+        operatorId as string,
+      );
+
+      const packages = await this.operatorService.getPaginatedPackagesService(
+        { operatorId },
+        skip,
+        Number(limit),
+      );
+      res.status(StatusCode.OK).json({ success: true, totalCount, packages });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getPackageByIdAndOperator = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const packageId = req.params.id;
+      const operatorId = req.user!.id;
+
+      const pkg = await this.operatorService.getPackageByIdAndOperatorService(
+        packageId as string,
+        operatorId,
+      );
+
+      res.status(StatusCode.OK).json(pkg);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deletePackage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const operatorId = req.user?.id;
+      if (!operatorId) {
+        throw new CustomError("Unauthorized", StatusCode.UNAUTHORIZED);
+      }
+      const { id: packageId } = req.params;
+      const deletePackage = await this.operatorService.deletePackageService(
+        packageId as string,
+        operatorId,
+      );
+      if (!deletePackage) {
+        throw new CustomError("Package not found", StatusCode.NOT_FOUND);
+      }
+      res
+        .status(StatusCode.OK)
+        .json({ success: true, message: "Package deleted successfully" });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updatePackage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const packageId = req.params.id;
+      const updatedPackage = await this.operatorService.updatePackageService(
+        packageId as string,
+        req.user!.id,
+        req.body,
+      );
+      if (!updatedPackage) {
+        return next(new CustomError("Package not found", StatusCode.NOT_FOUND));
+      }
+      res.status(StatusCode.OK).json(updatedPackage);
     } catch (error) {
       next(error);
     }

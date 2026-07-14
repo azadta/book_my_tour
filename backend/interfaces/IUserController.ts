@@ -73,4 +73,14 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
+  getDestinationsByPackageCategory: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  getPackagesByCategory: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

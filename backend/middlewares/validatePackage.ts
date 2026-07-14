@@ -23,10 +23,23 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
     .optional()
     .isString()
     .withMessage("Specifications must be a string"),
-  body("expiryDate")
+  body("startDate")
     .optional()
     .isISO8601()
-    .withMessage("Expiry date must be valid date"),
+    .withMessage("Expiry date must be valid date")
+    .custom((value, { req }) => {
+      if (req.method === "PUT" || req.method === "PATCH") {
+        return true;
+      }
+      const selectedDate = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        throw new Error(`Start date cannot be in the past`);
+      }
+      return true;
+    }),
   body("remark")
     .optional()
     .isString()
@@ -40,29 +53,83 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
     .isString()
     .withMessage("available slots must be a string"),
   body("images")
-    .isArray({ min: 1 })
-    .withMessage("images must be a non empty array of URLs"),
-  body("images.*")
-    .optional()
-    .isURL()
-    .withMessage("Each image must be a valid URL"),
-  body("isCustomizable")
-    .optional()
-    .isBoolean()
-    .withMessage("isCustomizable must be true or false"),
+    .isArray({ min: 3 })
+    .withMessage("images must be an array with atleast three images"),
+  body("images.*").isURL().withMessage("Each image must be a valid URL"),
 
   body("category")
     .notEmpty()
     .withMessage("Category is required")
     .isMongoId()
     .withMessage("Category must be a valid mongo Id"),
-    (req: Request, res: Response, next: NextFunction) => {
+  body("duration.day")
+    .notEmpty()
+    .withMessage("Duration day is required")
+    .isInt({ min: 1 })
+    .withMessage("Duration day must be a positive integer"),
+  body("duration.night")
+    .notEmpty()
+    .withMessage("Duration night is required")
+    .isInt({ min: 0 })
+    .withMessage("Duration night must be a zero or greater"),
+  body("itinerary")
+    .isArray({ min: 1 })
+    .withMessage("Itinerary must contain at least one day"),
+  body("itinerary.*.day")
+    .isInt({ min: 1 })
+    .withMessage("Day must be a positive integer"),
+  body("itinerary.*.title").trim().notEmpty().withMessage("Title is required"),
+  body("itinerary.*.description")
+    .trim()
+    .notEmpty()
+    .withMessage("Descripion is required"),
+  body("itinerary.*.gallery")
+    .isArray({ min: 4 })
+    .withMessage("Gallery must be an array with atleast four images"),
+  body("itinerary.*.gallery.*")
+    .isURL()
+    .withMessage("Each gallery image must be a valid url"),
+  body("itinerary.*.activities")
+    .isArray({ min: 1 })
+    .withMessage("Activities must be an array with atleast one activity"),
+  body("itinerary.*.activities.*.id")
+    .notEmpty()
+    .withMessage("Activity id is required"),
+  body("itinerary.*.activities.*.name")
+    .trim()
+    .notEmpty()
+    .withMessage("Activity name is required"),
+  body("itinerary.*.activities.*.cost")
+    .isFloat({ min: 0 })
+
+    .withMessage("Activity cost must be a non negative number"),
+  body("itinerary.*.activities.*.customizable")
+    .isBoolean()
+    .withMessage("Activity customizable must be true or false"),
+
+  body("itinerary.*.optionalActivities")
+    .isArray({})
+    .withMessage("Optional activities must be an array"),
+  body("itinerary.*.optionalActivities.*.id")
+    .notEmpty()
+    .withMessage("Optional activity id is required"),
+  body("itinerary.*.optionalActivities.*.name")
+    .trim()
+    .notEmpty()
+    .withMessage("Optional activity name is required"),
+  body("itinerary.*.optionalActivities.*.cost")
+    .isFloat({ min: 0 })
+
+    .withMessage("Optional activity cost must be a non negative number"),
+
+  (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const formattedError: Record<string, string> = {};
       errors.array().forEach((err) => {
         if (err.type === "field") {
-          formattedError[err.path] = err.msg;
+          const standardizedPath = err.path.replace(/\[(\d+)\]/g, ".$1");
+          formattedError[standardizedPath] = err.msg;
         }
       });
       return next(new CustomError("Validation Error", 400, formattedError));

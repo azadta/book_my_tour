@@ -13,12 +13,15 @@ export const ROUTES = {
     DELETE: "/delete/:id",
     PACKAGE_CATEGORIES: "/package-categories",
     PACKAGES_HOME: "/packages/home",
-    PACKAGES:'/packages',
-    PACKAGE:'/package/:id',
+    PACKAGES: "/packages",
+    PACKAGE: "/package/:id",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
     DESTINATIONS: "/destinations",
-    PACKAGE_FILTER:'/packages/filter',
-    ACTIVE_PACKAGE_CATEGORIES:'/active-package-categories'
+    PACKAGE_FILTER: "/packages/filter",
+    ACTIVE_PACKAGE_CATEGORIES: "/active-package-categories",
+    DESTINATIONS_BY_PACKAGE_CATEGORY:
+      "/destinations/package-category/:category",
+    PACKAGES_BY_CATEGORY: "/packages/category/:category",
   },
   OPERATOR: {
     REGISTER: "/register",
@@ -37,6 +40,10 @@ export const ROUTES = {
     PACKAGE_CATEGORIES: "/package-categories",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
     MY_PACKAGES_COUNT: "/my-packages-count",
+    PACKAGE: "/package/:id",
+    DELETE_PACKAGE: "/package/delete/:id",
+    PACKAGES_UPDATE: "/packages/update/:id",
+    PACKAGES: "/packages/:id",
   },
   ADMIN: {
     LOGIN: "/login",
@@ -64,7 +71,11 @@ export const ROUTES = {
 
     CREATE_CATEGORY: "/create-package-category",
     CREATE_DESTINATION: "/create-destination",
+
     PACKAGES_LIST: "/packages",
+    PACKAGE: "/package/:id",
+    PACKAGES_UPDATE: "/packages/update/:id",
+    DELETE_PACKAGE: "/package/delete/:id",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
   },
   COMMON: {

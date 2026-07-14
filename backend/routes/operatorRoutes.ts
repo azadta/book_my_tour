@@ -67,4 +67,28 @@ router.get(
   operatorController.getMyPackagesCount,
 );
 
+router.get(
+  ROUTES.OPERATOR.PACKAGE,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getPackageByIdAndOperator,
+);
+
+router.delete(
+  ROUTES.OPERATOR.DELETE_PACKAGE,
+  authMiddleware.verifyRole("operator"),
+  operatorController.deletePackage,
+);
+
+router.put(
+  ROUTES.OPERATOR.PACKAGES_UPDATE,
+  authMiddleware.verifyRole("operator"),
+  validatePackage,
+  operatorController.updatePackage,
+);
+router.get(
+  ROUTES.OPERATOR.PACKAGES,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getPaginatedPackages,
+);
+
 export default router;

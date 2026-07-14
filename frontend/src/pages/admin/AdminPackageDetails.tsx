@@ -4,16 +4,24 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardSideBar from "../../components/AdminDashboardSideBar";
 import Pagination from "../../components/Pagination";
-import ReUsableTable from "../../components/ReUsableTable";
+import ReUsableTable, {
+  type ActionButton,
+} from "../../components/ReUsableTable";
 import { useAdminPackageManagement } from "../../hooks/useAdminPackageManagement";
 import type { IPackageItem } from "@/interfaces/interfaces";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
 const AdminPackageDetails = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalAction, setModalAction] = useState<() => Promise<void>>(
+    () => async () => {},
+  );
   const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 6;
   const navigate = useNavigate();
-  const { loading, packages, totalCount } = useAdminPackageManagement(
+  const { loading, packages, totalCount,deletePackage } = useAdminPackageManagement(
     currentPage,
     resultPerPage,
   );
@@ -55,6 +63,28 @@ const AdminPackageDetails = () => {
         )) || "-",
     },
   ];
+
+  const actions: ActionButton<IPackageItem>[] = [
+    {
+      label: () => "Edit",
+      onClick: (pkg) => navigate(`/admin/edit-package/${pkg._id}`),
+      className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
+      disabled: () => false,
+      loadingText: "Editing...",
+    },
+
+    {
+      label: () => "Delete",
+      onClick: (pkg) => {
+        setModalMessage(`Are you sure want to delete this package`);
+        setModalAction(() => () => deletePackage(pkg._id));
+        setModalOpen(true);
+      },
+      className: `bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600`,
+      disabled: () => false,
+      loadingText: "Deleting...",
+    },
+  ];
   return (
     <>
       <div className="flex flex-col min-h-screen ">
@@ -76,11 +106,21 @@ const AdminPackageDetails = () => {
               data={packages}
               columns={columns}
               loading={loading}
+              actions={actions}
             />
             <Pagination
               currentPage={currentPage}
               onPageChange={handlePageChange}
               totalPages={totalPages}
+            />
+            <ConfirmationModal
+              isOpen={modalOpen}
+              message={modalMessage}
+              onClose={() => setModalOpen(false)}
+              onConfirm={async () => {
+                modalAction();
+                setModalOpen(false);
+              }}
             />
             <div className="mt-6 flex gap-1.5 sm:gap-5">
               <button

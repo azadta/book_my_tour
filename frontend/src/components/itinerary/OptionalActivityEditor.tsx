@@ -4,9 +4,18 @@ import type { OptionalActivity } from "./types";
 interface Props {
   value: OptionalActivity[];
   onChange: (activities: OptionalActivity[]) => void;
+  fieldError: Record<string, string>;
+  setFieldError: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  dayIndex: number;
 }
 
-const OptionalActivityEditor = ({ value, onChange }: Props) => {
+const OptionalActivityEditor = ({
+  value,
+  onChange,
+  dayIndex,
+  fieldError,
+  setFieldError,
+}: Props) => {
   const addActivity = () => {
     onChange([...value, { id: crypto.randomUUID(), name: "", cost: 0 }]);
   };
@@ -57,13 +66,31 @@ const OptionalActivityEditor = ({ value, onChange }: Props) => {
           </div>
 
           <div>
-            <label>Name</label>
+            <label>Name <span className="text-red-500 font-bold">*</span></label>
             <input
               type="text"
               value={activity.name}
-              onChange={(e) => updateActivity(index, "name", e.target.value)}
+              onChange={(e) => {
+                updateActivity(index, "name", e.target.value);
+                setFieldError((prev) => ({
+                  ...prev,
+                  [`itinerary.${dayIndex}.optionalActivities.${index}.name`]:
+                    "",
+                }));
+              }}
               className="w-full bg-white px-5 py-4 mt-2 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500"
             />
+            {fieldError[
+              `itinerary.${dayIndex}.optionalActivities.${index}.name`
+            ] && (
+              <p className="text-red-500 text-sm mt-1">
+                {
+                  fieldError[
+                    `itinerary.${dayIndex}.optionalActivities.${index}.name`
+                  ]
+                }
+              </p>
+            )}
           </div>
 
           <div>
@@ -71,11 +98,27 @@ const OptionalActivityEditor = ({ value, onChange }: Props) => {
             <input
               type="number"
               value={activity.cost}
-              onChange={(e) =>
-                updateActivity(index, "cost", Number(e.target.value))
-              }
+              onChange={(e) => {
+                updateActivity(index, "cost", Number(e.target.value));
+                setFieldError((prev) => ({
+                  ...prev,
+                  [`itinerary.${dayIndex}.optionalActivities.${index}.cost`]:
+                    "",
+                }));
+              }}
               className="w-full bg-white px-5 py-4 mt-2 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500"
             />
+            {fieldError[
+              `itinerary.${dayIndex}.optionalActivities.${index}.cost`
+            ] && (
+              <p className="text-red-500 text-sm mt-1">
+                {
+                  fieldError[
+                    `itinerary.${dayIndex}.optionalActivities.${index}.cost`
+                  ]
+                }
+              </p>
+            )}
           </div>
         </div>
       ))}

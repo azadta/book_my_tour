@@ -266,9 +266,9 @@ export class UserController implements IUserController {
   ) => {
     try {
       const query = req.query;
-      const { packages, totalCount,uniqueCategoryCount } =
+      const { packages, totalCount, uniqueCategoryCount } =
         await this.userService.getFilteredPackagesService(query);
-      res.status(200).json({ packages, totalCount,uniqueCategoryCount });
+      res.status(200).json({ packages, totalCount, uniqueCategoryCount });
     } catch (error) {
       next(error);
     }
@@ -279,17 +279,55 @@ export class UserController implements IUserController {
     res: Response,
     next: NextFunction,
   ) => {
-    const categories = await this.userService.getActiveCategoryService();
-    res.status(200).json({ categories });
+    try {
+      const categories = await this.userService.getActiveCategoryService();
+      res.status(200).json({ categories });
+    } catch (error) {
+      next(error);
+    }
   };
 
-    getPackageById = async (
+  getPackageById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const pkg = await this.userService.getPackageByIdService(id as string);
+      res.status(200).json({ pkg });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getDestinationsByPackageCategory = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
-    const {id}=req.params
-    const pkg = await this.userService.getPackageByIdService(id as string);
-    res.status(200).json({ pkg });
+    try {
+      const { category } = req.params;
+      const destinations =
+        await this.userService.getDestinationsByPackageCategoryService(
+          category as string,
+        );
+      res.status(200).json(destinations);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getPackagesByCategory = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { category } = req.params;
+
+      const packages = await this.userService.getPackagesByCategoryService(
+        category as string,
+      );
+      res.status(200).json(packages);
+    } catch (error) {
+      next(error);
+    }
   };
 }

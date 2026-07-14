@@ -3,6 +3,7 @@ import { axiosInstance } from "../api/axiosInstance";
 import axios from "axios";
 import type { Option } from "../formConfig/fields";
 import type { ItineraryDay } from "@/components/itinerary/types";
+import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 
 export const useCreatePackage = () => {
   const [categories, setCategories] = useState<Option[]>([]);
@@ -36,31 +37,6 @@ export const useCreatePackage = () => {
     fetchDropDownOptions();
   }, []);
 
-  const uploadImagesToCloudinary = async (files: File[]) => {
-    const urls: string[] = [];
-    try {
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append(
-          "upload_preset",
-          import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        );
-
-        const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/${
-            import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-          }/image/upload`,
-          formData,
-        );
-        urls.push(res.data.secure_url);
-      }
-      return urls;
-    } catch (error: any) {
-      console.error(error);
-    }
-  };
-
   const createPackage = async (data: any) => {
     setLoading(true);
     try {
@@ -84,8 +60,6 @@ export const useCreatePackage = () => {
         images: uploadedImageUrls,
         itinerary: uploadedItinerary,
       };
-
-      console.log('itinaray payload',payload.itinerary)
 
       await axiosInstance.post("/operator/create-package", payload);
     } finally {

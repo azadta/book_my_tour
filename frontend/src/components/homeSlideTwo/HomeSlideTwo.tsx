@@ -4,13 +4,18 @@ import { IoIosArrowDropright } from "react-icons/io";
 import { IoIosArrowDropleft } from "react-icons/io";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Swiper as swiperType } from "swiper";
-import { useDestinations } from "@/hooks/useDestinations";
+import { useHome } from "@/hooks/useHome";
+import { useNavigate } from "react-router-dom";
 
 const HomeSlideTwo = () => {
+  const navigate = useNavigate();
   const swiperRef = useRef<swiperType | null>(null);
-  const { destinations } = useDestinations();
+  const { destinationsByCategory, fetchDestinationsByCategory } = useHome();
+  useEffect(() => {
+    fetchDestinationsByCategory("Family Vacation Packages");
+  }, []);
   return (
     <div>
       <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-5 flex flex-col">
@@ -39,21 +44,30 @@ const HomeSlideTwo = () => {
             slidesPerGroup={1}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
-            {destinations?.map((destination: any) => (
-              <SwiperSlide key={destination?._id}>
-                <div className=" w-[180px] h-[240px] relative  ">
-                  <img
-                    src={destination?.images?.[0]}
-                    className=" w-full h-full object-cover object-center border-3 border-white rounded-xl"
-                  />
-                  <div className="absolute bottom-0  inset-x-0 border-b-3 border-x-3 border-white rounded-b-xl p-2 bg-black/40">
-                    <p className="text-white text-center font-semibold">
-                      {destination?.name}
-                    </p>
+            {destinationsByCategory["Family Vacation Packages"]?.map(
+              (destination) => (
+                <SwiperSlide key={destination?._id}>
+                  <div
+                    onClick={() =>
+                      navigate(
+                        `user/packages-list?destination=${destination._id}&destinationName=${encodeURIComponent(destination.name)}`,
+                      )
+                    }
+                    className=" w-[180px] h-[240px] relative hover:cursor-pointer  "
+                  >
+                    <img
+                      src={destination?.images?.[0]}
+                      className=" w-full h-full object-cover object-center border-3 border-white rounded-xl"
+                    />
+                    <div className="absolute bottom-0  inset-x-0 border-b-3 border-x-3 border-white rounded-b-xl p-2 bg-black/40">
+                      <p className="text-white text-center font-semibold">
+                        {destination?.name}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            ))}
+                </SwiperSlide>
+              ),
+            )}
           </Swiper>
         </div>
       </div>

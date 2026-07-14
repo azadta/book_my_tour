@@ -68,7 +68,10 @@ export class AdminService implements IAdminService {
     return { accessToken, refreshToken, adminData };
   }
 
-  async updateAdminService(id: string, data: Partial<IAdmin>): Promise<HydratedDocument<IAdmin> | null> {
+  async updateAdminService(
+    id: string,
+    data: Partial<IAdmin>,
+  ): Promise<HydratedDocument<IAdmin> | null> {
     if (data.password) {
       data.password = this.hashService.hash(data.password);
     }
@@ -237,7 +240,7 @@ export class AdminService implements IAdminService {
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.findPaginatedPackages(skip, limit);
+    return this.packageRepository.getFilteredPackages({}, skip, limit);
   }
 
   getTotalPackagesCount() {
@@ -274,4 +277,23 @@ export class AdminService implements IAdminService {
   async getPendingOperatorsCountService() {
     return await this.operatorRepository.getPendingOperatorsCount();
   }
+
+  async updatePackageService(
+    packageId: string,
+
+    data: Partial<Ipackage>,
+  ): Promise<Ipackage | null> {
+    return await this.packageRepository.updateById(packageId, data);
+  }
+
+  async deletePackageService(packageId: string): Promise<Ipackage | null> {
+    return this.packageRepository.deleteById(packageId);
+  }
+  async getSinglePackageService(packageId: string): Promise<Ipackage | null> {
+    return this.packageRepository.findById(packageId);
+  }
+
+
+  
+  
 }

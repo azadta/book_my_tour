@@ -7,10 +7,24 @@ import OptionalActivityEditor from "./OptionalActivityEditor";
 interface Props {
   value: ItineraryDay;
   onChange: (day: ItineraryDay) => void;
+  onAddDay?: () => void;
+  isLastDay?: boolean;
+  dayIndex: number;
+  fieldError: Record<string, string>;
+  setFieldError: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
-const DayEditor = ({ value, onChange }: Props) => {
+const DayEditor = ({
+  value,
+  onChange,
+  isLastDay,
+  onAddDay,
+  dayIndex,
+  fieldError,
+  setFieldError,
+}: Props) => {
   const [previews, setPreviews] = useState<string[]>([]);
+  const inputId = `gallery-${dayIndex}`;
 
   const handleInput = (field: keyof ItineraryDay, fieldValue: any) => {
     onChange({ ...value, [field]: fieldValue });
@@ -25,6 +39,10 @@ const DayEditor = ({ value, onChange }: Props) => {
 
     onChange({ ...value, gallery: [...value.gallery, ...files] });
     e.target.value = "";
+    setFieldError((prev) => ({
+      ...prev,
+      [`itinerary.${dayIndex}.gallery`]: "",
+    }));
   };
 
   const removeImage = (index: number) => {
@@ -57,30 +75,52 @@ const DayEditor = ({ value, onChange }: Props) => {
     <div className="rounded-[30px] bg-linear-to-b from-white to-slate-100 border-[4px] border-white shadow-[0px_20px_20px_5px_rgba(133,189,215,0.88)] p-8 ">
       <div className="space-y-5">
         <div>
-          <label className="font-medium ">Title</label>
+          <label className="font-medium ">Title <span className="text-red-500 font-bold">*</span></label>
           <input
             type="text"
             value={value.title}
-            onChange={(e) => handleInput("title", e.target.value)}
+            onChange={(e) => {
+              handleInput("title", e.target.value);
+              setFieldError((prev) => ({
+                ...prev,
+                [`itinerary.${dayIndex}.title`]: "",
+              }));
+            }}
             className="w-full bg-white px-5 py-4 mt-2 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500"
             placeholder="Arrival & Welcome "
           />
+          {fieldError[`itinerary.${dayIndex}.title`] && (
+            <p className="text-red-500 text-sm mt-1">
+              {fieldError[`itinerary.${dayIndex}.title`]}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="font-medium">Description</label>
+          <label className="font-medium">Description <span className="text-red-500 font-bold">*</span></label>
           <textarea
             value={value.description}
-            onChange={(e) => handleInput("description", e.target.value)}
+            onChange={(e) => {
+              handleInput("description", e.target.value);
+              setFieldError((prev) => ({
+                ...prev,
+                [`itinerary.${dayIndex}.description`]: "",
+              }));
+            }}
             className="w-full h-32 mt-2 bg-white rounded-[20px] px-5 py-4 shadow-[0px_10px_10px_5px_#cff0ff] resize-none focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 "
             placeholder="Describe today's itinerary..."
           />
+          {fieldError[`itinerary.${dayIndex}.description`] && (
+            <p className="text-red-500 text-sm mt-1">
+              {fieldError[`itinerary.${dayIndex}.description`]}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="font-medium block mb-3">Gallery Images</label>
+          <label className="font-medium block mb-3">Gallery Images <span className="text-red-500 font-bold">*</span></label>
           <input
-            id="gallery"
+            id={inputId}
             hidden
             multiple
             accept="image/*"
@@ -88,12 +128,17 @@ const DayEditor = ({ value, onChange }: Props) => {
             onChange={handleGalleryChange}
           />
           <label
-            htmlFor="gallery"
+            htmlFor={inputId}
             className=" bg-white flex items-center gap-2 border-2 border-dashed rounded-[20px] p-5 cursor-pointer hover:border-blue-500 shadow-[0px_10px_10px_5px_#cff0ff]"
           >
             <ImagePlus size={22} />
             Upload Images
           </label>
+          {fieldError[`itinerary.${dayIndex}.gallery`] && (
+            <p className="text-red-500 text-sm mt-1">
+              {fieldError[`itinerary.${dayIndex}.gallery`]}
+            </p>
+          )}
         </div>
 
         {previews.length > 0 && (
@@ -119,6 +164,9 @@ const DayEditor = ({ value, onChange }: Props) => {
         <ActivityEditor
           onChange={(activities) => onChange({ ...value, activities })}
           value={value.activities}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
+          dayIndex={dayIndex}
         />
 
         <OptionalActivityEditor
@@ -126,6 +174,9 @@ const DayEditor = ({ value, onChange }: Props) => {
             onChange({ ...value, optionalActivities })
           }
           value={value.optionalActivities}
+          fieldError={fieldError}
+          setFieldError={setFieldError}
+          dayIndex={dayIndex}
         />
       </div>
     </div>

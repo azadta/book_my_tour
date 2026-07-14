@@ -8,9 +8,7 @@ const HomeTopSlideCard = ({
   position: string;
   pkg: any;
 }) => {
-  const navigate=useNavigate()
-
-
+  const navigate = useNavigate();
 
   return (
     <div className={`homeSlideTopParent  ${position}`}>
@@ -24,10 +22,21 @@ const HomeTopSlideCard = ({
             backgroundRepeat: "no-repeat",
           }}
         >
-          <button onClick={()=>navigate('/user/packages-list')} className="see-more absolute bottom-10 tracking-widest text-[#059699]">See More</button>
+          <button
+            onClick={() =>
+              navigate(
+                `/user/packages-list?destination=${pkg?.destinations[0]?._id}&destinationName=${pkg?.destinations[0]?.name}`,
+              )
+            }
+            className="see-more absolute bottom-10 tracking-widest text-[#059699]"
+          >
+            See More
+          </button>
         </div>
         <div className="district-box">
-          <span className="district font-dosis tracking-wider">{pkg.destinations[0]?.name}</span>
+          <span className="district font-dosis tracking-wider">
+            {pkg.destinations[0]?.name}
+          </span>
         </div>
       </div>
     </div>

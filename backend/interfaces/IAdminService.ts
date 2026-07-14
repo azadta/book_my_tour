@@ -81,4 +81,10 @@ export interface IAdminService {
   deleteUserService(id: string): Promise<IUser | null>;
   getSignupCountTodayService(): Promise<number>;
   getPendingOperatorsCountService(): Promise<number>;
+  deletePackageService(packageId: string): Promise<Ipackage | null>;
+  updatePackageService(
+    packageId: string,
+    data: Partial<Ipackage>,
+  ): Promise<Ipackage | null>;
+  getSinglePackageService(packageId: string): Promise<Ipackage | null>
 }

@@ -4,7 +4,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnFiltersState,
+
   type SortingState,
 } from "@tanstack/react-table";
 import { Fragment, useState } from "react";
@@ -41,14 +41,14 @@ const ReUsableTable = <T,>({
   loading,
   noDataText = "No data available",
 }: ReUsableTableProps<T>) => {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
   const tanstackColumns = columns.map((column) => ({
     id: column.label.toLowerCase(),
     header: column.label,
-    enableColumnFilter: true,
+
 
     accessorFn: column.filterValue
       ? (row: T) => column.filterValue!(row)
@@ -63,11 +63,11 @@ const ReUsableTable = <T,>({
     state: {
       sorting,
       globalFilter,
-      columnFilters,
+
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
-    onColumnFiltersChange: setColumnFilters,
+
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -76,7 +76,7 @@ const ReUsableTable = <T,>({
   if (data.length === 0) return <p className="text-center">{noDataText}</p>;
 
   return (
-    <div className="overflow-auto rounded shadow-md w-full">
+    <div className="overflow-auto  rounded shadow-md w-full">
       <div className="mb-4">
         <input
           type="text"
@@ -113,27 +113,7 @@ const ReUsableTable = <T,>({
                   <th className="border border-gray-500 p-2">Actions</th>
                 )}
               </tr>
-              <tr>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={`filter-${header.id}`}
-                    className="border border-gray-500 p-1"
-                  >
-                    <input
-                      value={(header.column.getFilterValue() as string) ?? ""}
-                      onChange={(e) =>
-                        header.column.setFilterValue(e.target.value)
-                      }
-                      placeholder={`...Filter`}
-                      className="w-full border rounded px-2 py-1 text-sm"
-                    />
-                  </th>
-                ))}
-
-                {actions.length > 0 && (
-                  <th className="border border-gray-500 "></th>
-                )}
-              </tr>
+             
             </Fragment>
           ))}
         </thead>

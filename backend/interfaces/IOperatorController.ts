@@ -76,4 +76,24 @@ export interface IOperatorController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
+  getPaginatedPackages: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  deletePackage: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  updatePackage: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  getPackageByIdAndOperator: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

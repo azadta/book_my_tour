@@ -14,7 +14,7 @@ interface ReUsableFormProps {
   initialData?: FormData;
   fieldError: Record<string, string>;
   setFieldError: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  renderAfterFields?:React.ReactNode
+  renderAfterFields?: React.ReactNode;
 }
 interface FormData {
   [key: string]: any;
@@ -31,7 +31,7 @@ const ReUsableForm = ({
   initialData,
   fieldError,
   setFieldError,
-  renderAfterFields
+  renderAfterFields,
 }: ReUsableFormProps) => {
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
@@ -69,22 +69,7 @@ const ReUsableForm = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newErrors: Record<string, string> = {};
-    fields.map((field) => {
-      if (field.required) {
-        if (
-          !formData[field.id] ||
-          (Array.isArray(formData[field.id]) && formData[field.id].length === 0)
-        ) {
-          newErrors[field.id] = `${field.label || field.id} is required`;
-        }
-      }
-    });
-
-    setFieldError(newErrors);
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
+  
     onSubmit(formData);
 
     setImagePreviews({});
@@ -151,6 +136,11 @@ const ReUsableForm = ({
       setStates(State.getStatesOfCountry(country.isoCode));
     }
   }, [formData, fields]);
+
+  useEffect(() => {
+    if (initialData?.images)
+      setImagePreviews((prev) => ({ ...prev, images: initialData.images }));
+  }, [initialData]);
 
   return (
     <div

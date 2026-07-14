@@ -1,19 +1,20 @@
 import "swiper/css";
 
-import { IoIosArrowDropright } from "react-icons/io";
-import { IoIosArrowDropleft } from "react-icons/io";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import { useRef } from "react";
+import { useHome } from "@/hooks/useHome";
+import { useEffect, useRef } from "react";
+import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { Swiper as swiperType } from "swiper";
-import { useDestinations } from "@/hooks/useDestinations";
-import type { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
-import { useAllPackages } from "@/hooks/useAllPackages"; 
+import { Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useNavigate } from "react-router-dom";
 
 const HomeSlideThree = () => {
+  const navigate=useNavigate()
   const swiperRef = useRef<swiperType | null>(null);
-  const { packages } = useAllPackages();
+  const { packagesByCategory, fetchPackagesByCategory } = useHome();
+  useEffect(() => {
+    fetchPackagesByCategory("Adventure Packages");
+  }, []);
   return (
     <div>
       <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-5 flex flex-col">
@@ -42,9 +43,9 @@ const HomeSlideThree = () => {
             slidesPerGroup={1}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
           >
-            {packages?.map((pkg: any) => (
+            {packagesByCategory["Adventure Packages"]?.map((pkg: any) => (
               <SwiperSlide key={pkg?._id}>
-                <div className=" w-[180px] h-[240px] relative  ">
+                <div onClick={()=>navigate(`/user/package-details/${pkg?._id}`)} className=" w-[180px] h-[240px] relative hover:cursor-pointer  ">
                   <img
                     src={pkg?.images?.[0]}
                     className=" w-full h-full object-cover object-center border-3 border-white rounded-xl"

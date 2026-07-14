@@ -3,6 +3,7 @@ import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import type { IOperatorService } from "../interfaces/IOperatorService";
 import type { Ipackage } from "../models/Package";
 import { CustomError } from "../utils/customError";
+import { QueryFilter } from "mongoose";
 
 import { inject, injectable } from "inversify";
 import { StatusCode } from "../constants/statusCodeConstants";
@@ -146,7 +147,7 @@ export class OperatorService implements IOperatorService {
       this.tokenService.getPasswordResetToken();
     operator.resetPasswordToken = hashedToken;
     operator.resetPasswordExpire = expireTime;
-    await this.operatorRepository.save(operator)
+    await this.operatorRepository.save(operator);
     const resetUrl = `${process.env.FRONTEND_URL}/operator/reset-password/${resetToken}`;
     await this.mailService.sendEmail(
       operator.email,
@@ -205,21 +206,36 @@ export class OperatorService implements IOperatorService {
   }
 
   async updatePackageService(
-    id: string,
+    packageId: string,
+    operatorId: string,
     data: Partial<Ipackage>,
   ): Promise<Ipackage | null> {
-    return await this.packageRepository.updateById(id, data);
+    const existingPackage = await this.packageRepository.getByIdAndOperator(
+      packageId,
+      operatorId,
+    );
+    if (!existingPackage) {
+      throw new CustomError(
+        "Pacakage not found or unauthorized",
+        StatusCode.NOT_FOUND,
+      );
+    }
+    return await this.packageRepository.updateById(packageId, data);
   }
 
-  async deletePackageService(id: string): Promise<Ipackage | null> {
-    return await this.packageRepository.deleteById(id);
+  async deletePackageService(
+    packageId: string,
+    operatorId: string,
+  ): Promise<Ipackage | null> {
+    return this.packageRepository.deleteByIdAndOperator(packageId, operatorId);
   }
 
   async getPaginatedPackagesService(
+    filter: QueryFilter<Ipackage> = {},
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.findPaginatedPackages(skip, limit);
+    return this.packageRepository.getFilteredPackages(filter, skip, limit);
   }
 
   getTotalPackagesCount() {
@@ -255,5 +271,22 @@ export class OperatorService implements IOperatorService {
   }
   getMyPackagesCountService(operatorId: string): Promise<number> {
     return this.packageRepository.countPackagesByOperatorId(operatorId);
+  }
+
+  async getPackageByIdAndOperatorService(
+    packageId: string,
+    operatorId: string,
+  ) {
+    const pkg = await this.packageRepository.getByIdAndOperator(
+      packageId,
+      operatorId,
+    );
+    if (!pkg) {
+      throw new CustomError(
+        "Package not found or unauthorized",
+        StatusCode.NOT_FOUND,
+      );
+    }
+    return pkg;
   }
 }

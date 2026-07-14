@@ -25,7 +25,7 @@ const OperatorDashboardSideBar = () => {
         </NavLink>
 
         <NavLink
-          to={`/operator/package-details/${currentOperator?._id}`}
+          to={`/operator/packages-list/${currentOperator?._id}`}
           className={({ isActive }) =>
             ` relative py-2 shadow-md px-4 rounded-xl transition w-full text-center ${isActive ? "bg-emerald-400  hover:bg-emerald-500" : " bg-sky-400   hover:bg-sky-500"} `
           }

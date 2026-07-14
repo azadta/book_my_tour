@@ -31,7 +31,7 @@ export interface Ipackage extends Document {
     night: number;
   };
   specifications: string;
-  activities: string;
+
   startDate: Date;
   remark: string;
   discount: number;
@@ -65,12 +65,18 @@ const OptionalActivitySchema = new Schema<IOptionalActivity>(
 
 const ItinerarySchema = new Schema<IItineraryDay>(
   {
-    day: Number,
-    title: String,
-    description: String,
-    gallery: [String],
-    activities: [ActivitySchema],
-    optionalActivities: [OptionalActivitySchema],
+    day: { type: Number, required: true },
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    gallery: { type: [String], required: true },
+    activities: { type: [ActivitySchema], required: true },
+    optionalActivities: { type: [OptionalActivitySchema], default: [] },
   },
   { _id: false },
 );
@@ -104,7 +110,7 @@ const packageSchema = new Schema<Ipackage>(
       },
     },
     specifications: { type: String },
-    activities: { type: String },
+
     startDate: {
       type: Date,
     },
@@ -115,7 +121,6 @@ const packageSchema = new Schema<Ipackage>(
     },
     remark: String,
 
- 
     discount: Number,
     availableSlots: { type: String },
     images: [{ type: String }],

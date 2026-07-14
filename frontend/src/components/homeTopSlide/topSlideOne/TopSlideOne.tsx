@@ -6,9 +6,10 @@ import CloudCardOne from "./CloudCardOne";
 import CloudCardTwo from "./CloudCardTwo";
 import type { RootState } from "@/redux/store";
 import { useAllPackages } from "@/hooks/useAllPackages"; 
+import { useHome } from "@/hooks/useHome";
 
 const TopSlideOne = () => {
-  const { packages } = useAllPackages();
+  const { packages } = useHome();
 
   return (
     <div className="p-1 w-full">

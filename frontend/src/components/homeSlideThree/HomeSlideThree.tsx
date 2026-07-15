@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useNavigate } from "react-router-dom";
 
 const HomeSlideThree = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const swiperRef = useRef<swiperType | null>(null);
   const { packagesByCategory, fetchPackagesByCategory } = useHome();
   useEffect(() => {
@@ -39,13 +39,23 @@ const HomeSlideThree = () => {
         <div>
           <Swiper
             modules={[Navigation]}
-            slidesPerView={8}
             slidesPerGroup={1}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
+            breakpoints={{
+              320: { slidesPerView: 1.5 },
+              480: { slidesPerView: 2.5 },
+              640: { slidesPerView: 3.5 },
+              768: { slidesPerView: 4 },
+              1024: { slidesPerView: 6 },
+              1280: { slidesPerView: 8 },
+            }}
           >
             {packagesByCategory["Adventure Packages"]?.map((pkg: any) => (
               <SwiperSlide key={pkg?._id}>
-                <div onClick={()=>navigate(`/user/package-details/${pkg?._id}`)} className=" w-[180px] h-[240px] relative hover:cursor-pointer  ">
+                <div
+                  onClick={() => navigate(`/user/package-details/${pkg?._id}`)}
+                  className=" w-full h-[240px] relative hover:cursor-pointer  "
+                >
                   <img
                     src={pkg?.images?.[0]}
                     className=" w-full h-full object-cover object-center border-3 border-white rounded-xl"

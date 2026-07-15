@@ -1,17 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import "./homeTopSlideCard.css";
 
-const HomeTopSlideCard = ({
-  position,
-  pkg,
-}: {
-  position: string;
-  pkg: any;
-}) => {
+const HomeTopSlideCard = ({ pkg }: { pkg: any }) => {
   const navigate = useNavigate();
 
   return (
-    <div className={`homeSlideTopParent  ${position}`}>
+    <div className={`homeSlideTopParent w-full`}>
       <div className="homeSlideTopCard ">
         <div
           className="content-box relative"

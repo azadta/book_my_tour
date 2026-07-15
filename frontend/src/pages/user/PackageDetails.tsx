@@ -7,11 +7,12 @@ import {
   ChevronRight,
   Clock,
   MapPin,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const PackageDetails = ({ onBackClick }: any) => {
+const PackageDetails = () => {
   const { id } = useParams();
   const { pkg: data, loading } = usePackageDetails(id as string);
 
@@ -113,22 +114,13 @@ const PackageDetails = ({ onBackClick }: any) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans pb-24">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <button
-          onClick={onBackClick}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors group mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to pages
-        </button>
-      </div>
-
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[260px] md:h-[400px] rounded-3xl overflow-hidden shadow-sm bg-gray-200">
+    <div className="min-h-screen bg-gray-50 font-sans pb-5 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[200px] sm:h-[300px] md:h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm bg-gray-200">
           <div className="md:col-span-2 h-full relative group overflow-hidden ">
             <img
               src={data.images[0]}
+              alt="Main feature"
               className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700 "
             />
           </div>
@@ -150,10 +142,22 @@ const PackageDetails = ({ onBackClick }: any) => {
         </div>
       </div>
 
+      <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-gray-100 px-4 py-3 shadow-xs flex gap-2 overflow-x-auto scrollbar-none mb-6 ">
+        {data.itinerary.map((item) => (
+          <button
+            key={item.day}
+            onClick={() => scrollToDay(item.day)}
+            className={`px-4 py-2 rounded-xl font-bold text-xs shrink-0 transition-all ${activeDay === item.day ? "bg-blue-600 text-white shadow-sm" : " bg-gray-100 text-gray-600"}`}
+          >
+            Day{item.day}
+          </button>
+        ))}
+      </div>
+
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 self-start">
           <div className="lg:col-span-4">
-            <div className="sticky top-24 max-h-[calc(100vh-8rem)] ">
+            <div className=" hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] ">
               <h3 className="font-bold text-lg mb-4">Day Gallery</h3>
 
               <div className="grid grid-cols-2 gap-4 animate-fade-in">
@@ -187,7 +191,7 @@ const PackageDetails = ({ onBackClick }: any) => {
             </div>
           </div>
 
-          <main className="col-span-1 lg:col-span-5 space-y-8">
+          <main className=" lg:col-span-5 space-y-8">
             <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
               <div className="flex justify-between items-start gap-4 mb-4 ">
                 <div>
@@ -306,9 +310,14 @@ const PackageDetails = ({ onBackClick }: any) => {
                                       add
                                     </p>
                                   ) : (
-                                    <p className="bg-red-100 hover:bg-red-200 rounded-md text-red-600 px-1 cursor-pointer">
-                                      Remove
-                                    </p>
+                                    <>
+                                      <p className="hidden bg-red-100 hover:bg-red-200 min-[360px]:inline rounded-md text-red-600 px-1 cursor-pointer">
+                                        Remove
+                                      </p>
+                                      <span className=" min-[360px]:hidden text-red-500 inline-flex items-cener justify-center bg-red-200 hover:bg-red-300 p-1 rounded-lg ">
+                                        <Trash2 className="size-4" />
+                                      </span>
+                                    </>
                                   )}
                                 </button>
                               )}
@@ -364,9 +373,14 @@ const PackageDetails = ({ onBackClick }: any) => {
                                     Add
                                   </p>
                                 ) : (
-                                  <p className="bg-red-100 hover:bg-red-200 rounded-md text-red-600 px-1 cursor-pointer">
-                                    Remove
-                                  </p>
+                                  <>
+                                    <p className="hidden bg-red-100 hover:bg-red-200 min-[360px]:inline rounded-md text-red-600 px-1 cursor-pointer">
+                                      Remove
+                                    </p>
+                                    <span className=" min-[360px]:hidden text-red-500 inline-flex items-cener justify-center bg-red-200 hover:bg-red-300 p-1 rounded-lg ">
+                                      <Trash2 className="size-4" />
+                                    </span>
+                                  </>
                                 )}
                               </button>
                             </div>
@@ -380,7 +394,7 @@ const PackageDetails = ({ onBackClick }: any) => {
             </div>
           </main>
 
-          <aside className="lg:col-span-3 self-start min-w-[320px] sticky top-24">
+          <aside className="col-span-1 lg:col-span-3 lg:sticky self-start min-w-[320px]  lg:top-24 order-3 space-y-4 hidden lg:block">
             <div className=" space-y-4">
               <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-4 shadow-lg">
                 <h3 className="text-base font-bold text-gray-900 mb-4">
@@ -487,6 +501,19 @@ const PackageDetails = ({ onBackClick }: any) => {
             </div>
           </aside>
         </div>
+      </div>
+      <div className="lg:hidden sticky  bottom-0 z-20  left-0 right-0  bg-white border-t border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)] px-4 py-3 pb-safe flex items-center justify-between gap-4 ">
+        <div>
+          <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">
+            Total Est. Cost
+          </span>
+          <span className="text-lg font-black text-blue-600 ">
+            Rs {currentPrice.toLocaleString("en-IN")}
+          </span>
+        </div>
+        <button className="flex-1 max-w-[200px] bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl text-center shadow-md active:scale-95 transition-all ">
+          Book Package
+        </button>
       </div>
     </div>
   );

@@ -14,5 +14,7 @@ body {
   --font-caveat: "Caveat", cursive;
   --font-vibes: "Great Vibes", cursive;
   --font-jim: "Jim Nightshade", cursive;
+
+  --breakpoint-xs:400px
 }
 

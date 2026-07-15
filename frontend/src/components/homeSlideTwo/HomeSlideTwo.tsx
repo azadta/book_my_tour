@@ -17,13 +17,13 @@ const HomeSlideTwo = () => {
     fetchDestinationsByCategory("Family Vacation Packages");
   }, []);
   return (
-    <div>
-      <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-5 flex flex-col">
+    <div className="w-full">
+      <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-4 sm:p-5 flex flex-col">
         <div className="flex justify-between items-center ">
-          <h1 className="text-3xl font-semibold">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
             Family Holiday Destinations
           </h1>
-          <div className="px-3 py-1 rounded-full shadow-[0px_0px_5px_rgba(0,0,0,0.15)] flex items-center justify-center mb-1">
+          <div className="px-3 bg-white py-1 rounded-full shadow-[0px_0px_5px_rgba(0,0,0,0.15)] flex items-center justify-center mb-1">
             <button
               onClick={() => {
                 swiperRef.current?.slidePrev();
@@ -40,9 +40,16 @@ const HomeSlideTwo = () => {
         <div>
           <Swiper
             modules={[Navigation]}
-            slidesPerView={8}
             slidesPerGroup={1}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
+            breakpoints={{
+              320: { slidesPerView: 1.5 },
+              480: { slidesPerView: 2.5 },
+              640: { slidesPerView: 3.5 },
+              768: { slidesPerView: 4 },
+              1024: { slidesPerView: 6 },
+              1280: { slidesPerView: 8 },
+            }}
           >
             {destinationsByCategory["Family Vacation Packages"]?.map(
               (destination) => (
@@ -53,7 +60,7 @@ const HomeSlideTwo = () => {
                         `user/packages-list?destination=${destination._id}&destinationName=${encodeURIComponent(destination.name)}`,
                       )
                     }
-                    className=" w-[180px] h-[240px] relative hover:cursor-pointer  "
+                    className=" w-full h-[240px] relative hover:cursor-pointer  "
                   >
                     <img
                       src={destination?.images?.[0]}

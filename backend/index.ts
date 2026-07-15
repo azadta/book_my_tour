@@ -1,36 +1,29 @@
-import dotenv from "dotenv";
-dotenv.config();
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
 import express from "express";
-import mongoose from "mongoose";
-import userRouter from "./routes/userRoutes";
-import operatorRouter from "./routes/operatorRoutes";
-import adminRouter from "./routes/adminRoutes";
-import commonAuthRouter from "./routes/commonAuthRoutes";
+import { connectDb } from "./config/database";
 import errorHandler from "./middlewares/errorHandler";
 import { morganMiddleware } from "./middlewares/morgan";
-
-mongoose
-  .connect(process.env.MONGO as string)
-  .then((conn) => console.log(`Mongodb connected: ${conn.connection.host}`))
-  .catch((err) => {
-    console.log(err);
-    process.exit(1);
-  });
+import adminRouter from "./routes/adminRoutes";
+import commonAuthRouter from "./routes/commonAuthRoutes";
+import operatorRouter from "./routes/operatorRoutes";
+import userRouter from "./routes/userRoutes";
+dotenv.config();
 
 const app = express();
 const PORT = 4000;
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.ORIGIN,
     credentials: true,
   }),
 );
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(morganMiddleware)
+app.use(morganMiddleware);
+connectDb();
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });

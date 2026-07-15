@@ -45,16 +45,15 @@ const HomeHeader = () => {
     <>
       <header className="fixed z-50 top-0 left-0 w-full   ">
         <div className="bg-white shadow-md">
-          <div
-            className={`flex justify-between px-4 overflow-hidden transition-all duration-300 ${hideTopBar ? "max-h-0 opacity-0 py-0" : "max-h-20 opacity-100 pt-2 pb-1"}`}
-          >
+          <div className={`flex flex-col sm:flex-row gap-2 sm:justify-between px-4 overflow-hidden transition-all duration-300 ${hideTopBar?'max-h-0 opacity-0 py-0':'max-h-32 sm:max-h-20 opacity-100 pt-2 pb-1'}`}>
+      
             <div className="flex gap-1">
               {" "}
-              <NavLink to="/about" className={"text-orange-900 "}>
+              <NavLink to="/about" className='text-orange-900 text-[12px] md:text-[14px]'>
                 About
               </NavLink>
               <span className="text-orange-900">/</span>
-              <NavLink to="/contact" className="text-orange-900 ">
+              <NavLink to="/contact" className='text-orange-900 text-[12px] md:text-[14px]'>
                 Contact
               </NavLink>
             </div>
@@ -95,7 +94,7 @@ const HomeHeader = () => {
               />
             </div>
 
-            <ul className="wrapper">
+            <ul className="wrapper hidden md:flex">
               <li className="icon facebook">
                 <svg
                   viewBox="0 0 320 512"
@@ -130,26 +129,32 @@ const HomeHeader = () => {
               </li>
             </ul>
           </div>
+       
 
           <div
             className={`max-w-7xl mx-auto flex justify-between items-center px-4 ${hideTopBar ? "pt-3 pb-3" : "pb-2"}`}
           >
             <Logo />
+            <div className="hidden md:block">
+              <Navigation />
+            </div>
 
-            <Navigation />
-
-            <HeaderActions openDrawer={() => setIsOpen(true)} />
+            <div className="flex items-center gap-4">
+              <HeaderActions openDrawer={() => setIsOpen(true)} />
+        
+            </div>
           </div>
         </div>
       </header>
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+      <div onClick={closeDrawer}
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
       ></div>
       <div
-        className={`fixed top-0 right-0 h-full bg-white z-50 w-72 shadow-xl ${isOpen ? "block" : "hidden"}`}
+        className={`fixed top-0 right-0 h-full bg-white z-50 w-72 shadow-xl transform transition duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex items-center justify-between p-4 border-b ">
           <h2 className="font-semibold text-lg">Menu</h2>
+
           <button onClick={closeDrawer}>
             <HiX className="text-3xl" />
           </button>

@@ -103,10 +103,9 @@ button:focus:before {
 }
 
 .search {
-
   font-family: inherit;
   min-width: 300px;
-  padding: 1rem 1rem 1rem calc(1rem + var(--icon-size) + 0.5rem);
+  padding: 0.6rem 1rem 0.6rem calc(1rem + var(--icon-size) + 0.5rem);
   font-size: 1.025rem;
   width: 300px;
   background:
@@ -138,13 +137,8 @@ button:focus:before {
   width: 75%;
 }
 
-
-
-
-
 /* From Uiverse.io by david-mohseni */
 .wrapper {
-  display: flex;
   list-style: none;
   height: auto;
   width: auto;
@@ -159,14 +153,14 @@ button:focus:before {
   background: #ebeaea;
   border-radius: 50%;
   margin-left: 10px;
-  width: 50px;
-  height: 50px;
-  font-size: 18px;
+  width: 38px;
+  height: 38px;
+  font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  box-shadow: 5px 5px 5px  rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }

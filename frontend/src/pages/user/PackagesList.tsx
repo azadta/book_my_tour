@@ -11,12 +11,14 @@ import {
   MapPin,
   Search,
   ShieldCheck,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 const PackagesList = () => {
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -95,10 +97,24 @@ const PackagesList = () => {
   return (
     <div className="min-h-screen  bg-gray-50  font-sans ">
       <div className="flex relative">
-        <aside className="w-80 bg-white border-r border-gray-200 p-6 sticky top-15 h-[700px] pt-10  left-0 overflow-y-auto  z-40 hidden md:block   ">
-          <h2 className="text-lg font-bold text-gray-900 mb-6 ">
-            Filter Tours
-          </h2>
+        {showMobileFilters && (
+          <div
+            className="fixed inset-0 bg-black/40 z-50 md:hidden "
+            onClick={() => setShowMobileFilters(false)}
+          />
+        )}
+        <aside
+          className={`fixed inset-y-0 left-0 w-80 bg-white p-6 z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto border-r border-gray-200 ${showMobileFilters ? "translate-x-0 max-w-[250px]" : "-translate-x-full"} md:sticky md:translate-x-0 md:top-15 md:h-[calc(100vh-60px)] md:z-40 md:block  `}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-6 ">
+              Filter Tours
+            </h2>
+            <button
+              className="md:hidden p-1 text-gray-500 hover:text-gray-800 "
+              onClick={() => setShowMobileFilters(false)}
+            ></button>
+          </div>
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -218,7 +234,7 @@ const PackagesList = () => {
             </div>
           </div>
         </aside>
-        <main className="flex-1  p-8 ">
+        <main className="flex-1  p-3 xs:p-4 sm:p-6 md:p-8 ">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-8 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4  ">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 ">
@@ -235,18 +251,24 @@ const PackagesList = () => {
               {hasActiveFiters && (
                 <button
                   onClick={clearFilters}
-                  className=" font-semibold text-sm text-white border-gray-500  border bg-blue-500 px-2 py-1 rounded-xl mt-2 mb-1 hover:cursor-pointer"
+                  className=" font-semibold text-sm text-white border-gray-600  border bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-xl mt-2 mb-1 hover:cursor-pointer"
                 >
                   Clear All filters
                 </button>
               )}
+              <button
+                onClick={() => setShowMobileFilters(true)}
+                className="md:hidden flex items-center gap-1.5 bg-blue-600 text-white px-3.5 py-1.5 rounded-xl font-semibold text-xs shadow-sm hover:bg-blue-700 transition-colors"
+              >
+                <SlidersHorizontal className="size-3.5" /> Filters
+              </button>
 
               {!destination && (
                 <p>Tailored Iteneraries handpicked for absolute comfort</p>
               )}
             </div>
 
-            <div className="flex items-center  divide-x divide-gray-200 ">
+            <div className="flex flex-col xs:flex-row items-start  xs:items-center justify-start lg:justify-end divide-y xs:divide-y-0 xs:divide-x divide-gray-200  pt-4 lg:pt-0 gap-3 xs:gap-0 ">
               <div className="text-center sm:text-left px-3">
                 <span className="block text-2xl font-extrabold text-blue-600 ">
                   {totalPackagesCount}
@@ -268,7 +290,7 @@ const PackagesList = () => {
           </div>
 
           {packages.length > 0 ? (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 px-1">
               {packages.map((pkg) => {
                 return (
                   <div
@@ -343,7 +365,7 @@ const PackagesList = () => {
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-100 pt-4 mt-auto flex justify-between items-center">
+                      <div className="border-t border-gray-100 pt-4 mt-auto xs:flex xs:flex-row flex-col  justify-between   gap-3">
                         {pkg?.discount ? (
                           <div>
                             <span className="text-xs text-gray-400 line-through block">
@@ -377,7 +399,7 @@ const PackagesList = () => {
                           onClick={() =>
                             navigate(`/user/package-details/${pkg._id}`)
                           }
-                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95"
+                          className="bg-blue-600 w-full max-w-[150px]  xs:w-auto hover:bg-blue-700 text-white font-semibold text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95 whitespace-nowrap text-center"
                         >
                           View Itinerary
                         </button>

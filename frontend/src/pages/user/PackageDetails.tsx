@@ -114,7 +114,7 @@ const PackageDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans pb-5 sm:px-6 lg:px-8 pt-6">
+    <div className="min-h-screen bg-gray-50 font-sans pb-5 sm:px-6 lg:px-8 pt-10">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[200px] sm:h-[300px] md:h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm bg-gray-200">
           <div className="md:col-span-2 h-full relative group overflow-hidden ">

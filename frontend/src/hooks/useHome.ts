@@ -57,7 +57,6 @@ export const useHome = () => {
     fetchPackagesByCategory,
     packagesByCategory,
     destinationsByCategory,
-
     packages,
   };
 };

@@ -9,6 +9,7 @@ import { validateDestination } from "../middlewares/validateDestination";
 import { validatePackageCategory } from "../middlewares/validatePackageCategory";
 import { ROUTES } from "../constants/routesConstants";
 import { resetPasswordValidator } from "../middlewares/resetPasswordValidator";
+import { validatePackage } from "../middlewares/validatePackage";
 
 const router = express.Router();
 
@@ -105,7 +106,7 @@ router.post(
   adminController.createDestination,
 );
 
-router.get(ROUTES.ADMIN.PACKAGES_LIST, adminController.getAllPackages);
+router.get(ROUTES.ADMIN.PACKAGES_LIST,authMiddleware.verifyRole("admin"), adminController.getAllPackages);
 router.post(
   ROUTES.ADMIN.RESET_PASSWORD_AUTH,
   authMiddleware.verifyRole("admin"),
@@ -147,6 +148,7 @@ router.delete(
 router.put(
   ROUTES.ADMIN.PACKAGES_UPDATE,
   authMiddleware.verifyRole("admin"),
+  validatePackage,
 
   adminController.updatePackage,
 );

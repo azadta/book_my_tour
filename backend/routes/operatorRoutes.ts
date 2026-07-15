@@ -53,6 +53,7 @@ router.post(
 router.get(ROUTES.OPERATOR.DESTINATIONS, operatorController.getAllDestinations);
 router.get(
   ROUTES.OPERATOR.PACKAGE_CATEGORIES,
+  authMiddleware.verifyRole("operator"),
   operatorController.getAllPackageCategory,
 );
 router.post(

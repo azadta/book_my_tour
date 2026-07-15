@@ -60,60 +60,11 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
   };
 
   const handleSubmit = async (formData: any) => {
-    const newErrors: Record<string, string> = {};
-    createPackageFields.map((field) => {
-      if (field.required) {
-        if (
-          !formData[field.id] ||
-          (Array.isArray(formData[field.id]) && formData[field.id].length === 0)
-        ) {
-          newErrors[field.id] = `${field.label || field.id} is required`;
-        }
-      }
-    });
 
-    const itineraryData: ItineraryDay[] = formData.itinerary || [];
-    itineraryData.forEach((day: ItineraryDay, dayIndex: number) => {
-      if (!day.title || day.title.trim() === "") {
-        newErrors[`itinerary.${dayIndex}.title`] = "Title is required";
-      }
-      if (!day.description || day.description.trim() === "") {
-        newErrors[`itinerary.${dayIndex}.description`] =
-          "description is required";
-      }
-      if (!day.gallery || day.gallery.length < 3) {
-        newErrors[`itinerary.${dayIndex}.gallery`] =
-          "At least three gallery images are required";
-      }
-      if (!day.activities || day.activities.length === 0) {
-        newErrors[`itinerary.${dayIndex}.activities`] =
-          "At least one activity is  required";
-      } else {
-        day.activities.forEach((activity: IActivity, index: number) => {
-          if (!activity.name || activity.name.trim() === "") {
-            newErrors[`itinerary.${dayIndex}.activities.${index}.name`] =
-              " activity name is  required";
-          }
-        });
-      }
 
-      if (day.optionalActivities) {
-        day.optionalActivities.forEach(
-          (optActivity: IOptionalActivity, index: number) => {
-            if (!optActivity.name || optActivity.name.trim() === "") {
-              newErrors[
-                `itinerary.${dayIndex}.optionalActivities.${index}.name`
-              ] = " optional Activity name is  required";
-            }
-          },
-        );
-      }
-    });
+ 
 
-    if (Object.keys(newErrors).length > 0) {
-      setFieldError(newErrors);
-      return;
-    }
+
 
     try {
       if (mode === "create") {

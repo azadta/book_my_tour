@@ -21,7 +21,7 @@ export const usePackageDetails = (id: string) => {
 
   useEffect(() => {
     fetchPackage();
-  }, []);
+  }, [id]);
 
   return {
     pkg,

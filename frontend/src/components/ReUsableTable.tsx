@@ -4,7 +4,6 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-
   type SortingState,
 } from "@tanstack/react-table";
 import { Fragment, useState } from "react";
@@ -41,14 +40,12 @@ const ReUsableTable = <T,>({
   loading,
   noDataText = "No data available",
 }: ReUsableTableProps<T>) => {
-
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
   const tanstackColumns = columns.map((column) => ({
     id: column.label.toLowerCase(),
     header: column.label,
-
 
     accessorFn: column.filterValue
       ? (row: T) => column.filterValue!(row)
@@ -63,7 +60,6 @@ const ReUsableTable = <T,>({
     state: {
       sorting,
       globalFilter,
-
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
@@ -113,7 +109,6 @@ const ReUsableTable = <T,>({
                   <th className="border border-gray-500 p-2">Actions</th>
                 )}
               </tr>
-             
             </Fragment>
           ))}
         </thead>
@@ -140,7 +135,7 @@ const ReUsableTable = <T,>({
                         <button
                           key={actionIdx}
                           className={
-                            action.className ||
+                            `w-[75px] ${action.className}` ||
                             "px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 "
                           }
                           onClick={() => action.onClick(item)}

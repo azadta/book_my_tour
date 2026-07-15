@@ -1,7 +1,8 @@
 import { Country, State, type IState } from "country-state-city";
 import { useEffect, useState } from "react";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
-import type { FormField } from "../../interfaces/interfaces";
+import type { FormField, IActivity, IOptionalActivity } from "../../interfaces/interfaces";
+import type { ItineraryDay } from "../itinerary/types";
 
 interface ReUsableFormProps {
   heading: string;
@@ -69,7 +70,62 @@ const ReUsableForm = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+    const newErrors: Record<string, string> = {};
+    fields.map((field) => {
+      if (field.required) {
+        if (
+          !formData[field.id] ||
+          (Array.isArray(formData[field.id]) && formData[field.id].length === 0)
+        ) {
+          newErrors[field.id] = `${field.label || field.id} is required`;
+        }
+      }
+    });
+
+    const itineraryData: ItineraryDay[] = formData.itinerary || [];
+    if (itineraryData) {
+      itineraryData.forEach((day: ItineraryDay, dayIndex: number) => {
+        if (!day.title || day.title.trim() === "") {
+          newErrors[`itinerary.${dayIndex}.title`] = "Title is required";
+        }
+        if (!day.description || day.description.trim() === "") {
+          newErrors[`itinerary.${dayIndex}.description`] =
+            "description is required";
+        }
+        if (!day.gallery || day.gallery.length < 4) {
+          newErrors[`itinerary.${dayIndex}.gallery`] =
+            "At least four gallery images are required";
+        }
+        if (!day.activities || day.activities.length === 0) {
+          newErrors[`itinerary.${dayIndex}.activities`] =
+            "At least one activity is  required";
+        } else {
+          day.activities.forEach((activity: IActivity, index: number) => {
+            if (!activity.name || activity.name.trim() === "") {
+              newErrors[`itinerary.${dayIndex}.activities.${index}.name`] =
+                " activity name is  required";
+            }
+          });
+        }
+
+        if (day.optionalActivities) {
+          day.optionalActivities.forEach(
+            (optActivity: IOptionalActivity, index: number) => {
+              if (!optActivity.name || optActivity.name.trim() === "") {
+                newErrors[
+                  `itinerary.${dayIndex}.optionalActivities.${index}.name`
+                ] = " optional Activity name is  required";
+              }
+            },
+          );
+        }
+      });
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setFieldError(newErrors);
+      return;
+    }
+
     onSubmit(formData);
 
     setImagePreviews({});

@@ -60,6 +60,11 @@ const App = () => {
             path="/user/reset-password/:token"
             element={<ResetPassword />}
           />
+          <Route path="/user/packages-list" element={<PackagesList />} />
+          <Route
+            path="/user/package-details/:id"
+            element={<PackageDetails />}
+          />
           <Route
             element={
               <PublicRoute isAuthenticated={!!currentUser} redirectedPath="/" />
@@ -72,11 +77,6 @@ const App = () => {
             <Route path="/user/register" element={<Register />} />
             <Route path="/user/forgot-password" element={<ForgotPassword />} />
             <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
-            <Route path="/user/packages-list" element={<PackagesList />} />
-            <Route
-              path="/user/package-details/:id"
-              element={<PackageDetails />}
-            />
           </Route>
 
           <Route

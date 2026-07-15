@@ -23,7 +23,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="p-3 max-w-lg mx-auto ">
+    <div className="p-3 max-w-lg mx-auto pb-10 pt-10 ">
    
 
       <ReUsableForm

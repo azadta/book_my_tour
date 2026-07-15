@@ -34,9 +34,8 @@ const AdminLogin = () => {
           fieldError={fieldError}
           setFieldError={setFieldError}
         />
+        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
       </div>
-
-      {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
     </div>
   );
 };

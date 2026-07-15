@@ -19,7 +19,7 @@ const HomeSlideThree = () => {
     <div>
       <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-5 flex flex-col">
         <div className="flex justify-between items-center ">
-          <h1 className="text-3xl font-semibold">
+          <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold font-caveat text-orange-500">
             "Escape Into Adventure Packages"
           </h1>
           <div className="px-3 py-1 rounded-full shadow-[0px_0px_5px_rgba(0,0,0,0.15)] flex items-center justify-center mb-1">

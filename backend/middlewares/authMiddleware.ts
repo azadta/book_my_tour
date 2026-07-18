@@ -10,6 +10,7 @@ import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 @injectable()
 export class AuthMiddleware implements IAuthMiddleware {
   constructor(
@@ -27,7 +28,7 @@ export class AuthMiddleware implements IAuthMiddleware {
       if (!token) {
         return next(
           new CustomError(
-            "Unauthorized: No token provided",
+            RESPONSE_MESSAGES.AUTH.ERROR.TOKEN_MISSING,
             StatusCode.UNAUTHORIZED,
           ),
         );
@@ -39,7 +40,7 @@ export class AuthMiddleware implements IAuthMiddleware {
         if (!allowedRoles.includes(decoded.role)) {
           return next(
             new CustomError(
-              "Access denied: Insufficient permissions",
+              RESPONSE_MESSAGES.AUTH.ERROR.ACCESS_DENIED,
               StatusCode.FORBIDDEN,
             ),
           );
@@ -49,27 +50,42 @@ export class AuthMiddleware implements IAuthMiddleware {
           const user = await this.userRepository.findById(decoded.id);
           if (!user)
             return next(
-              new CustomError("User not found", StatusCode.NOT_FOUND),
+              new CustomError(
+                RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+                StatusCode.NOT_FOUND,
+              ),
             );
           if (user.isBlocked)
             return next(
-              new CustomError("Account is blocked", StatusCode.FORBIDDEN),
+              new CustomError(
+                RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED,
+                StatusCode.FORBIDDEN,
+              ),
             );
         } else if (decoded.role === "operator") {
           const operator = await this.operatorRepository.findById(decoded.id);
           if (!operator)
             return next(
-              new CustomError("Operator not found", StatusCode.NOT_FOUND),
+              new CustomError(
+                RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+                StatusCode.NOT_FOUND,
+              ),
             );
           if (operator.isBlocked)
             return next(
-              new CustomError("Account is blocked", StatusCode.FORBIDDEN),
+              new CustomError(
+                RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED,
+                StatusCode.FORBIDDEN,
+              ),
             );
         } else if (decoded.role === "admin") {
           const admin = await this.adminRepository.findById(decoded.id);
           if (!admin)
             return next(
-              new CustomError("Admin not found", StatusCode.NOT_FOUND),
+              new CustomError(
+                RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+                StatusCode.NOT_FOUND,
+              ),
             );
         }
 
@@ -79,7 +95,10 @@ export class AuthMiddleware implements IAuthMiddleware {
       } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
           return next(
-            new CustomError("Token expired", StatusCode.UNAUTHORIZED),
+            new CustomError(
+              RESPONSE_MESSAGES.AUTH.ERROR.EXPIRED_TOKEN,
+              StatusCode.UNAUTHORIZED,
+            ),
           );
         }
         next(error);

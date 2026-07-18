@@ -22,6 +22,7 @@ import { IAdmin, IAdminResponse } from "../interfaces/IAdmin";
 import { IOperator } from "../interfaces/IOperator";
 import { IUser } from "../interfaces/IUser";
 import { HydratedDocument } from "mongoose";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -51,10 +52,17 @@ export class AdminService implements IAdminService {
     adminData: IAdminResponse;
   }> {
     const admin = await this.adminRepository.findByEmail(email);
-    if (!admin) throw new CustomError("Admin not found", StatusCode.NOT_FOUND);
+    if (!admin)
+      throw new CustomError(
+        RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const isPasswordValid = this.hashService.compare(password, admin.password);
     if (!isPasswordValid)
-      throw new CustomError("Invalid credentials", StatusCode.UNAUTHORIZED);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
+        StatusCode.UNAUTHORIZED,
+      );
     const accessToken = this.securityService.generateAccessToken({
       id: admin._id.toString(),
       role: admin.role,
@@ -88,7 +96,10 @@ export class AdminService implements IAdminService {
       isVerified,
     );
     if (!updated)
-      throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const subject = "Verification Request update";
 
     const message = isVerified
@@ -141,15 +152,15 @@ export class AdminService implements IAdminService {
   async createCategoryService(
     data: Partial<IPackageCategory>,
   ): Promise<IPackageCategory> {
-    if (!data.name)
+    const existing =
+      await this.packageCategoryRepository.findPackageCategoryByName(
+        data?.name as string,
+      );
+    if (existing)
       throw new CustomError(
-        "Category name is required",
+        RESPONSE_MESSAGES.CATEGORY.ERROR.ALREADY_EXIST,
         StatusCode.BAD_REQUEST,
       );
-    const existing =
-      await this.packageCategoryRepository.findPackageCategoryByName(data.name);
-    if (existing)
-      throw new CustomError("Category already exists", StatusCode.BAD_REQUEST);
     return this.packageCategoryRepository.create(data);
   }
 
@@ -160,27 +171,17 @@ export class AdminService implements IAdminService {
   async createDestinationService(
     data: Partial<IDestination> & { latitude?: number; longitude?: number },
   ): Promise<IDestination> {
-    if (!data.name)
-      throw new CustomError(
-        "Destination name is required",
-        StatusCode.BAD_REQUEST,
-      );
-    if (data.latitude === null || data.longitude === null)
-      throw new CustomError(
-        "Latitude and longitude are required",
-        StatusCode.BAD_REQUEST,
-      );
     const existing = await this.destinationRepository.findDestinationByName(
-      data.name,
+      data.name as string,
     );
     if (existing)
       throw new CustomError(
-        "Destination with same name already exists",
+        RESPONSE_MESSAGES.DESTINATION.ERROR.ALREADY_EXISTS,
         StatusCode.BAD_REQUEST,
       );
 
     return this.destinationRepository.create({
-      name: data.name.trim(),
+      name: (data.name as string).trim(),
       location: { latitude: data.latitude, longitude: data.longitude },
       images: Array.isArray(data.images) ? data.images : [],
     } as Partial<IDestination>);
@@ -193,7 +194,7 @@ export class AdminService implements IAdminService {
   async getDestinationByIdService(id: string): Promise<IDestination> {
     const destination = await this.destinationRepository.findById(id);
     if (!destination) {
-      throw new CustomError("Destination not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     }
     return destination;
   }
@@ -201,7 +202,7 @@ export class AdminService implements IAdminService {
   async deleteDestinationByIdService(id: string): Promise<void> {
     const deleted = await this.destinationRepository.deleteById(id);
     if (!deleted)
-      throw new CustomError("Destination not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
   }
 
   async resetPasswordAuthenticatedService(
@@ -211,18 +212,22 @@ export class AdminService implements IAdminService {
     confirmPassword: string,
   ) {
     const admin = await this.adminRepository.findById(adminId);
-    if (!admin) throw new CustomError("Admin not found", StatusCode.NOT_FOUND);
-    const isMatch = await this.hashService.compare(oldPassword, admin.password);
+    if (!admin)
+      throw new CustomError(
+        RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    const isMatch = this.hashService.compare(oldPassword, admin.password);
     if (!isMatch)
       throw new CustomError(
-        "Old password is incorrect",
+        RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
         StatusCode.BAD_REQUEST,
       );
     if (confirmPassword !== newPassword)
-      throw new CustomError("Password do not match", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH, StatusCode.BAD_REQUEST);
     admin.password = this.hashService.hash(newPassword);
     await this.adminRepository.save(admin);
-    return { message: "Password updated successfully" };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
   async deleteUserService(id: string) {
@@ -292,8 +297,4 @@ export class AdminService implements IAdminService {
   async getSinglePackageService(packageId: string): Promise<Ipackage | null> {
     return this.packageRepository.findById(packageId);
   }
-
-
-  
-  
 }

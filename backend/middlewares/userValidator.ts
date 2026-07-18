@@ -2,6 +2,7 @@ import { body, ValidationChain, validationResult } from "express-validator";
 
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { CustomError } from "../utils/customError";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 export const validateUser: (ValidationChain | RequestHandler)[] = [
   body("name").trim().notEmpty().withMessage("Name is required"),
@@ -57,7 +58,7 @@ export const validateUser: (ValidationChain | RequestHandler)[] = [
           formattedError[err.path] = err.msg;
         }
       });
-      return next(new CustomError("Validation Error", 400, formattedError));
+      return next(new CustomError(RESPONSE_MESSAGES.VALIDATION.ERROR.VALIDATION_ERROR, 400, formattedError));
     }
     next();
   },

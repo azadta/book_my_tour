@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
+import { Types } from "mongoose";
 import { IPackageRepository } from "../interfaces/IPackageRepository";
 import Package, { Ipackage } from "../models/Package";
 import { BaseRepository } from "./baseRepository";
-import { QueryFilter, Types } from "mongoose";
 
 @injectable()
 export class PackageRepository

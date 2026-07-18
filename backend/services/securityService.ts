@@ -4,13 +4,14 @@ import {
   ISecurityPayload,
   ISecurityService,
 } from "../interfaces/ISecurityService";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 @injectable()
 export class SecurityService implements ISecurityService {
   private get accessSecret(): string {
     const accessSecret = process.env.JWT_ACCESS_SECRET;
     if (!accessSecret) {
       throw new Error(
-        "JWT_ACCESS_SECRET is not defined in environment variables",
+        RESPONSE_MESSAGES.SYSTEM.ERROR.MISSNG_ACCESS_SECRET,
       );
     }
     return accessSecret;
@@ -19,7 +20,7 @@ export class SecurityService implements ISecurityService {
     const refreshSecret = process.env.JWT_REFRESH_SECRET;
     if (!refreshSecret) {
       throw new Error(
-        "JWT_REFRESH_SECRET is not defined in environment variables",
+        RESPONSE_MESSAGES.SYSTEM.ERROR.MISSING_REFRESH_SECRET,
       );
     }
     return refreshSecret;

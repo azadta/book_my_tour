@@ -9,6 +9,7 @@ import { injectable, inject } from "inversify";
 import { Types } from "../types/types";
 import { IUserController } from "../interfaces/IUserController";
 import type { IAdminService } from "../interfaces/IAdminService";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class UserController implements IUserController {
@@ -26,7 +27,7 @@ export class UserController implements IUserController {
       const result = await this.userService.registerUser(req.body);
       res
         .status(StatusCode.CREATED)
-        .json({ success: true, message: "OTP sent", ...result });
+        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL, ...result });
     } catch (error) {
       next(error);
     }
@@ -38,7 +39,7 @@ export class UserController implements IUserController {
       await this.userService.verifyUserOtp({ userId, otp });
       res
         .status(StatusCode.OK)
-        .json({ success: true, message: "OTP verified successfully" });
+        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED });
     } catch (error) {
       next(error);
     }
@@ -50,7 +51,7 @@ export class UserController implements IUserController {
       const data = await this.userService.resendUserOtp(userId);
       res
         .status(StatusCode.OK)
-        .json({ success: true, message: "OTP resent to email", ...data });
+        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_RESENT_EMAIL, ...data });
     } catch (error) {
       next(error);
     }
@@ -134,11 +135,11 @@ export class UserController implements IUserController {
 
   updateUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new CustomError("Unauthorized", 401));
+      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
     }
 
     if (req.user.id !== req.params.id) {
-      return next(new CustomError("unauthorized", 401));
+      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
     }
     try {
       const updatedUser = await this.userService.updateUserService(
@@ -146,7 +147,7 @@ export class UserController implements IUserController {
         req.body,
       );
       if (!updatedUser) {
-        return next(new CustomError("User not found", 404));
+        return next(new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404));
       }
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
@@ -158,12 +159,12 @@ export class UserController implements IUserController {
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     if (req.user?.id !== req.params.id) {
-      return next(new CustomError("unauthorized", 401));
+      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
     }
     try {
       await this.userService.deleteUserService(req.params.id as string);
       res.clearCookie("access_token");
-      res.status(StatusCode.OK).json({ message: "User has been deleted" });
+      res.status(StatusCode.OK).json({ message:RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }

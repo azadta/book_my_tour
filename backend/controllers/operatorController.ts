@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
-import { CustomError } from "../utils/customError";
-import type { IOperatorService } from "../interfaces/IOperatorService";
-import { logger } from "../utils/logger";
-import { StatusCode } from "../constants/statusCodeConstants";
 import { inject, injectable } from "inversify";
-import { Types } from "../types/types";
+import { StatusCode } from "../constants/statusCodeConstants";
 import { IOperatorController } from "../interfaces/IOperatorController";
-import { OperatorService } from "../services/operatorService";
+import type { IOperatorService } from "../interfaces/IOperatorService";
+import { Types } from "../types/types";
+import { CustomError } from "../utils/customError";
+import { logger } from "../utils/logger";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 @injectable()
 export class OperatorController implements IOperatorController {
   constructor(
@@ -30,7 +30,7 @@ export class OperatorController implements IOperatorController {
       );
       res
         .status(StatusCode.CREATED)
-        .json({ success: true, message: "Otp sent", ...result });
+        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL, ...result });
     } catch (error) {
       next(error);
     }
@@ -46,7 +46,7 @@ export class OperatorController implements IOperatorController {
       await this.operatorService.operatorVerifyOtpService(operatorId, otp);
       res
         .status(StatusCode.OK)
-        .json({ success: true, message: "OTP verified Successfully" });
+        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED });
     } catch (error) {
       next(error);
     }
@@ -63,7 +63,7 @@ export class OperatorController implements IOperatorController {
         await this.operatorService.operatorResendOtpService(operatorId);
       res
         .status(StatusCode.OK)
-        .json({ succuss: true, message: "OTP sent to email", otpExpire });
+        .json({ succuss: true, message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL, otpExpire });
     } catch (error) {
       next(error);
     }
@@ -137,11 +137,11 @@ export class OperatorController implements IOperatorController {
 
   updateOperator = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new CustomError("Unauthorized", 401));
+      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
     }
 
     if (req.user.id !== req.params.id) {
-      return next(new CustomError("unauthorized", 401));
+      return next(new CustomError("RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED", 401));
     }
     try {
       const updatedUser = await this.operatorService.updateOperatorService(
@@ -149,7 +149,7 @@ export class OperatorController implements IOperatorController {
         req.body,
       );
       if (!updatedUser) {
-        return next(new CustomError("User not found", 404));
+        return next(new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404));
       }
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
@@ -325,7 +325,7 @@ export class OperatorController implements IOperatorController {
     try {
       const operatorId = req.user?.id;
       if (!operatorId) {
-        throw new CustomError("Unauthorized", StatusCode.UNAUTHORIZED);
+        throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, StatusCode.UNAUTHORIZED);
       }
       const { id: packageId } = req.params;
       const deletePackage = await this.operatorService.deletePackageService(
@@ -333,11 +333,11 @@ export class OperatorController implements IOperatorController {
         operatorId,
       );
       if (!deletePackage) {
-        throw new CustomError("Package not found", StatusCode.NOT_FOUND);
+        throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
       }
       res
         .status(StatusCode.OK)
-        .json({ success: true, message: "Package deleted successfully" });
+        .json({ success: true, message:RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }
@@ -352,7 +352,7 @@ export class OperatorController implements IOperatorController {
         req.body,
       );
       if (!updatedPackage) {
-        return next(new CustomError("Package not found", StatusCode.NOT_FOUND));
+        return next(new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND));
       }
       res.status(StatusCode.OK).json(updatedPackage);
     } catch (error) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export interface Category {
   _id: string;
@@ -18,7 +19,7 @@ export const usePackageCategories = () => {
         const res = await axiosInstance.get(`/user/package-categories`);
         setCategories(res.data);
       } catch (error: any) {
-        setError(error.response?.data?.message || "Failed to fetch categories");
+        setError(error.response?.data?.message || FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.FETCH);
       } finally {
         setLoading(false);
       }

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useOperatorPackageManagement = (page: number, limit: number) => {
   const { currentOperator } = useSelector((state: RootState) => state.operator);
@@ -19,7 +20,7 @@ export const useOperatorPackageManagement = (page: number, limit: number) => {
       setPackages(res.data.packages || []);
       setTotalCount(res.data.totalCount || 0);
     } catch (error) {
-      console.error("failed to fetch packages", error);
+      console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
       setLoading(false);
     }
@@ -33,7 +34,7 @@ export const useOperatorPackageManagement = (page: number, limit: number) => {
       setTotalCount((prev) => prev - 1);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete package");
+      toast.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.DELETE);
     } finally {
       setLoading(false);
     }

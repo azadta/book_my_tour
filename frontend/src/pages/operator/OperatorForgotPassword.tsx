@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { useOperatorForgotPassword } from "../../hooks/useOperatorForgotPassword";
 import { useState } from "react";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const OperatorForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -11,11 +12,11 @@ const OperatorForgotPassword: React.FC = () => {
 
     try {
       await sendResetEmail(email);
-      toast.success("Password reset link sent!, Please check your email");
+      toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.FORGOT_PASSWORD_SENT);
     } catch (error: any) {
       toast.error(
         error.response.data.message ||
-          "Failed to process forgot password request.",
+          FEEDBACK_MESSAGES.AUTH.ERROR.FORGOT_PASSWORD,
       );
     }
   };

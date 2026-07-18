@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { OtpForm } from "../../components/forms/OtpForm";
 import { useOperatorOtp } from "../../hooks/useOperatorOtp";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const OperatorOtpVerification = () => {
   const { operatorId } = useParams<{ operatorId: string }>();
@@ -20,7 +21,7 @@ const OperatorOtpVerification = () => {
     useOperatorOtp({
       operatorId: operatorId || "",
       onSuccess: () => {
-        toast.success("Registration Submitted, awaiting admin verification.");
+        toast.success(FEEDBACK_MESSAGES.OPERATOR.SUCCESS.REGISTRATION_AWAITING);
         navigate("/");
       },
       initialOtpExpire: expire,

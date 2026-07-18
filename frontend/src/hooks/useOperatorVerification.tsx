@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import type { IOperator } from "../redux/operator/operatorSlice";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useOperatorVerification = () => {
   const [operators, setOperators] = useState<IOperator[]>([]);
@@ -21,7 +22,7 @@ export const useOperatorVerification = () => {
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to fetch verification requests",
+         FEEDBACK_MESSAGES.ADMIN.ERROR.VERIFICATION_REQUESTS,
       );
     } finally {
       setLoading(false);
@@ -41,7 +42,7 @@ export const useOperatorVerification = () => {
       getVerificationRequests();
     } catch (error: any) {
       toast.error(
-        error.response?.data?.message || "Failed to update verification status",
+        error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.VERIFICATION_STATUS,
       );
     } finally {
       setActionLoading({ id: null, type: null });

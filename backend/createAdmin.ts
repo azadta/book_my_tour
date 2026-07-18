@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import Admin from "./models/Admin";
+import { RESPONSE_MESSAGES } from "./constants/messages";
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const createAdmin = async () => {
 
     const existingAdmin = await Admin.findOne({ email: "admin@abc.com" });
     if (existingAdmin) {
-      console.log("Email Already Exists");
+      console.log(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS);
       process.exit(0);
     }
 

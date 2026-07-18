@@ -7,6 +7,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { adminUpdateUserFields } from "../../formConfig/fields";
 import ConfirmationModel from "../../components/ConfirmationModal";
 import BackToDashboard from "../../components/BackToDashboard";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const EditUser = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -49,7 +50,7 @@ const EditUser = () => {
 
       await updateUser(id, nestedData);
 
-      toast.success("User updated successfully");
+      toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.UPDATE);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);

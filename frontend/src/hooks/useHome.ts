@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import type { Destination } from "@/interfaces/interfaces";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useHome = () => {
   const [packages, setPackages] = useState<IPackage[]>([]);
@@ -22,7 +23,7 @@ export const useHome = () => {
       setDestinationsByCategory((prev) => ({ ...prev, [category]: data }));
     } catch (error: any) {
       toast.error(
-        error.response?.data?.message || "Failed to fetch destinations",
+        error.response?.data?.message || FEEDBACK_MESSAGES.DESTINATON.ERROR.FETCH,
       );
     }
   };
@@ -33,7 +34,7 @@ export const useHome = () => {
 
       setPackages(data.packages || []);
     } catch (error) {
-      console.error("Failed to fetch packages", error);
+      console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     }
   };
 
@@ -44,7 +45,7 @@ export const useHome = () => {
       );
       setPackagesByCategory((prev) => ({ ...prev, [category]: data }));
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to fetch packages");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH);
     }
   };
 

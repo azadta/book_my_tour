@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userRegisterfields } from "../../formConfig/fields";
 import { useEffect, useState } from "react";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const Register = () => {
     const [formData, setFormData] = useState<Record<string, any>>({});
@@ -15,13 +16,13 @@ const Register = () => {
     confirmPassword: string;
   }) => {
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_DONT_MATCH);
       return;
     }
 
     registerUser(formData, (userId, otpExpire) => {
       navigate(`/user/verify-otp/${userId}/?otpExpire=${otpExpire}`);
-      toast.info("OTP has been sent to your registered email");
+      toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_SENT);
     });
   };
 

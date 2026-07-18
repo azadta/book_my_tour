@@ -17,6 +17,7 @@ import { ProfileForm } from "../../components/forms/ProfileForm.js";
 import type { RootState } from "../../redux/store.js";
 import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard.js";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.js";
 
 interface FormDataType {
   [key: string]: any;
@@ -90,13 +91,13 @@ const AdminProfile = () => {
       dispatch(
         updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url }),
       );
-      toast.success("Image uploaded successfully");
+      toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
     } catch (error: any) {
-      console.error("Cloudinary upload Error", error);
+      console.error(FEEDBACK_MESSAGES.MEDIA.ERROR.CLOUDINARY, error);
       dispatch(
         updateAdminFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error uploading image");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD);
     } finally {
       setImageUploading(false);
     }
@@ -110,7 +111,7 @@ const AdminProfile = () => {
       );
 
       dispatch(updateAdminSuccess(updatedAdmin));
-      toast.success("admin updated successfully");
+      toast.success(FEEDBACK_MESSAGES.ADMIN.SUCCESS.UPDATE);
     } catch (error: any) {
       dispatch(
         updateAdminFailure(error.response?.data?.message || error.message),
@@ -120,7 +121,7 @@ const AdminProfile = () => {
 
         return;
       }
-      toast.error(error.response?.data?.message || "Error updating admin");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.UPDATE);
     }
   };
 
@@ -134,7 +135,7 @@ const AdminProfile = () => {
       dispatch(
         adminLogoutFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error logout admin");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.LOGOUT);
     }
   };
 

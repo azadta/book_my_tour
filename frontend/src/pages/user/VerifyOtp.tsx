@@ -8,6 +8,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { OtpForm } from "../../components/forms/OtpForm";
 import { useOtp } from "../../hooks/useOtp";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const VerifyOtp = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -24,7 +25,7 @@ const VerifyOtp = () => {
     useOtp({
       userId: userId || "",
       onSuccess: () => {
-        toast.success("Your account has been registered successfully");
+        toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.REGISTRATION);
         navigate("/user/login");
       },
       initialOtpExpire: expire,

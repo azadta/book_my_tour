@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useAdminDashboard = () => {
   const [usersCount, setUsersCount] = useState<number | null>(null);
@@ -33,7 +34,7 @@ export const useAdminDashboard = () => {
       const message =
         error.response?.data?.message ||
         error.message ||
-        "failed to fetch dashboard data";
+        FEEDBACK_MESSAGES.GLOBAL.ERROR.DASHBOARD_FETCH;
       toast.error(message);
     } finally {
       setLoading(false);

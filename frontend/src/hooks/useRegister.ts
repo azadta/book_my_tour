@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useRegister = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-
 
   const registerUser = async (
     formData: any,
@@ -25,11 +25,14 @@ export const useRegister = () => {
         setLoading(false);
         return;
       }
-      toast.error(error.response?.data?.message || "Error registering user");
+      toast.error(
+        error.response?.data?.message ||
+          FEEDBACK_MESSAGES.AUTH.ERROR.REGISTRATION_FAILED,
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  return { registerUser, loading, fieldError,setFieldError };
+  return { registerUser, loading, fieldError, setFieldError };
 };

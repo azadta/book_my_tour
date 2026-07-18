@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useAdminPackageManagement = (page: number, limit: number) => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -19,7 +20,7 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
         setPackages(data.packages || []);
         setTotalCount(data.totalCount || 0);
       } catch (error) {
-        console.error("Failed to fetch packages", error);
+        console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
       } finally {
         setLoading(false);
       }
@@ -36,7 +37,7 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
       setTotalCount((prev) => prev - 1);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete package");
+      toast.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.DELETE);
     } finally {
       setLoading(false);
     }

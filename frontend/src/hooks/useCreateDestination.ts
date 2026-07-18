@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export interface CreateDestinationFormData {
   name: string;
@@ -55,7 +56,7 @@ export const useCreateDestination = (onSuccess?: () => void) => {
       };
 
       await axiosInstance.post(`/admin/create-destination`, payload);
-      toast.success("Destination created successfully");
+      toast.success(FEEDBACK_MESSAGES.DESTINATON.SUCCESS.CREATE);
       onSuccess?.();
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -66,7 +67,7 @@ export const useCreateDestination = (onSuccess?: () => void) => {
         error?.response?.data?.message ||
         error.response?.data?.error?.message ||
         error.message ||
-        "Failed to create destination.";
+        FEEDBACK_MESSAGES.DESTINATON.ERROR.CREATE;
       toast.error(message);
       throw error;
     } finally {

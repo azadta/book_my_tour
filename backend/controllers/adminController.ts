@@ -9,6 +9,7 @@ import { injectable, inject } from "inversify";
 import { Types } from "../types/types";
 import { IAdminController } from "../interfaces/IAdminController";
 import type { IOperatorService } from "../interfaces/IOperatorService";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class AdminController implements IAdminController {
@@ -46,7 +47,7 @@ export class AdminController implements IAdminController {
   logoutAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
-      res.status(StatusCode.OK).json({ message: "Admin has been logged out" });
+      res.status(StatusCode.OK).json({ message: RESPONSE_MESSAGES.AUTH.SUCCESS.ADMIN_LOGOUT });
     } catch (error) {
       next(error);
     }
@@ -54,7 +55,7 @@ export class AdminController implements IAdminController {
 
   updateAdmin = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || req.user.id !== req.params.id) {
-      return next(new CustomError("Unauthorized", StatusCode.UNAUTHORIZED));
+      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, StatusCode.UNAUTHORIZED));
     }
 
     try {
@@ -63,7 +64,7 @@ export class AdminController implements IAdminController {
         req.body,
       );
       if (!updatedAdmin)
-        return next(new CustomError("Admin not found", StatusCode.NOT_FOUND));
+        return next(new CustomError(RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND, StatusCode.NOT_FOUND));
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedAdmin.toObject();
       res.status(StatusCode.OK).json(rest);
@@ -174,7 +175,7 @@ export class AdminController implements IAdminController {
         req.body.isBlocked,
       );
       res.status(StatusCode.OK).json({
-        message: req.body.isBlocked ? "Operator blocked" : "Operator unblocked",
+        message: req.body.isBlocked ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED :RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED,
         operator: blocked,
       });
     } catch (error) {
@@ -187,7 +188,7 @@ export class AdminController implements IAdminController {
       await this.adminService.deleteOperatorService(req.params.id as string);
       res
         .status(StatusCode.OK)
-        .json({ message: "Operator deleted Successfully" });
+        .json({ message: RESPONSE_MESSAGES.OPERATOR.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }
@@ -250,7 +251,7 @@ export class AdminController implements IAdminController {
         req.body.isBlocked,
       );
       res.status(StatusCode.OK).json({
-        message: req.body.isBlocked ? "user blocked" : "user unblocked",
+        message: req.body.isBlocked ? RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED : RESPONSE_MESSAGES.USER.SUCCESS.UNBLOCKED,
         user: blocked,
       });
     } catch (error) {
@@ -261,7 +262,7 @@ export class AdminController implements IAdminController {
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this.adminService.deleteUserService(req.params.id as string);
-      res.status(StatusCode.OK).json({ message: "User deleted Successfully" });
+      res.status(StatusCode.OK).json({ message:RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }
@@ -276,7 +277,7 @@ export class AdminController implements IAdminController {
       const category = await this.adminService.createCategoryService(req.body);
       res
         .status(StatusCode.CREATED)
-        .json({ message: "Category created", category });
+        .json({ message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED, category });
     } catch (error) {
       next(error);
     }
@@ -306,7 +307,7 @@ export class AdminController implements IAdminController {
       );
       res
         .status(StatusCode.CREATED)
-        .json({ message: "Destination Created", destination });
+        .json({ message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED, destination });
     } catch (error) {
       next(error);
     }
@@ -463,7 +464,7 @@ export class AdminController implements IAdminController {
         req.body,
       );
       if (!updatedPackage) {
-        return next(new CustomError("Package not found", StatusCode.NOT_FOUND));
+        return next(new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND));
       }
       res.status(StatusCode.OK).json(updatedPackage);
     } catch (error) {
@@ -478,11 +479,11 @@ export class AdminController implements IAdminController {
         packageId as string,
       );
       if (!deletePackage) {
-        throw new CustomError("Package not found", StatusCode.NOT_FOUND);
+        throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
       }
       res
         .status(StatusCode.OK)
-        .json({ success: true, message: "Package deleted successfully" });
+        .json({ success: true, message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }

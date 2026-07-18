@@ -9,6 +9,7 @@ import type { AppDispatch } from "../redux/store";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useOperatorLogin = (
   dispatch: AppDispatch,
@@ -23,7 +24,7 @@ export const useOperatorLogin = (
       });
 
       if (!res.data.isVerified) {
-        toast.warning("Your account is not verified by the admin yet");
+        toast.warning(FEEDBACK_MESSAGES.OPERATOR.ERROR.NOT_VERIFIED);
         dispatch(operatorLoginFailure("Not verified"));
         return;
       }
@@ -36,7 +37,7 @@ export const useOperatorLogin = (
         return;
       }
       const errmsg =
-        error.response?.data?.message || "Login failed, please try again";
+        error.response?.data?.message || FEEDBACK_MESSAGES.AUTH.ERROR.LOGIN;
       toast.error(errmsg);
       dispatch(operatorLoginFailure(errmsg));
     }

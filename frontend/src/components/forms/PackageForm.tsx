@@ -15,6 +15,7 @@ import { useOperatorEditPackage } from "@/hooks/useOperatorEditPackage";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import { useAdminEditPackage } from "@/hooks/useAdminEditPackage";
 import type { ItineraryDay } from "../itinerary/types";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 interface IOptions {
   category: Option[];
@@ -69,11 +70,11 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
     try {
       if (mode === "create") {
         await createHook.createPackage(formData);
-        toast.success("Package Created successfully");
+        toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.CREATE);
         setFormData({});
       } else {
         await hook.updatePackage(packageData!._id, formData);
-        toast.success("Package updated successfully");
+        toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.UPDATE);
       }
     } catch (error: any) {
       console.log(fieldError, fieldError);

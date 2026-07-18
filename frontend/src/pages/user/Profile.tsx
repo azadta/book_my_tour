@@ -18,6 +18,7 @@ import { useApi } from "../../hooks/useApi";
 import { ProfileForm } from "../../components/forms/ProfileForm";
 import { userFields } from "../../formConfig/fields";
 import ConfirmationModel from "../../components/ConfirmationModal";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 interface FormDataType {
   [key: string]: any;
@@ -102,13 +103,13 @@ const Profile = () => {
       dispatch(
         updateUserSuccess({ ...currentUser!, image: imgData.secure_url }),
       );
-      toast.success("Image uploaded successfully");
+      toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
     } catch (error: any) {
-      console.error("Cloudinary upload Error", error);
+      console.error(FEEDBACK_MESSAGES.MEDIA.ERROR.CLOUDINARY, error);
       dispatch(
         updateUserFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error uploading image");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD);
     } finally {
       setImageUploading(false);
     }
@@ -124,7 +125,7 @@ const Profile = () => {
 
       dispatch(updateUserSuccess(updatedUser));
 
-      toast.success("User updated successfully");
+      toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.UPDATE);
     } catch (error: any) {
       dispatch(
         updateUserFailure(error.response?.data?.message || error.message),
@@ -134,7 +135,7 @@ const Profile = () => {
 
         return;
       }
-      toast.error(error.response?.data?.message || "Error updating user");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.UPDATE);
     }
   };
   const deleteUser = async () => {
@@ -142,13 +143,13 @@ const Profile = () => {
       dispatch(deleteUserStart());
       await del(`/user/delete/${currentUser?._id}`);
       dispatch(deleteUserSuccess());
-      toast.success("Your account has been deleted successfully");
+      toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.DELETE);
       navigate("/", { replace: true });
     } catch (error: any) {
       dispatch(
         deleteUserFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error deleting user");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.DELETE);
     }
   };
   const handleDeleteUser = async () => {
@@ -169,7 +170,7 @@ const Profile = () => {
       dispatch(
         logoutUserFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error logout user");
+      toast.error(error.response?.data?.message ||FEEDBACK_MESSAGES.USER.ERROR.LOGOUT);
     }
   };
 

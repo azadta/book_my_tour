@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 interface UseOtpProps {
   userId: string;
@@ -41,7 +42,7 @@ export const useOtp = ({
       setOtp("");
       setOtpExpire(Number(data.otpExpire));
       setError(null);
-      toast.info("OTP has been resent to your registered email");
+      toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_RESENT);
     } catch (error: any) {
       setError(error.response?.data?.message || error.message);
     } finally {

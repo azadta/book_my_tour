@@ -5,6 +5,7 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import { inject, injectable } from "inversify";
 import { Types } from "../types/types";
 import { ICommonAuthController } from "../interfaces/ICommonAuthController";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class CommonAuthController implements ICommonAuthController {
@@ -17,7 +18,7 @@ export class CommonAuthController implements ICommonAuthController {
       const refreshToken = req.cookies.refresh_token;
       if (!refreshToken) {
         return next(
-          new CustomError("No refresh token", StatusCode.UNAUTHORIZED),
+          new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.NO_REFRESH_TOKEN, StatusCode.UNAUTHORIZED),
         );
       }
       const { newAccessToken } =

@@ -8,6 +8,7 @@ import {
 } from "../redux/user/userSlice.js";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.js";
 
 export const useLogin = (dispatch: AppDispatch, navigate: NavigateFunction) => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -22,7 +23,7 @@ export const useLogin = (dispatch: AppDispatch, navigate: NavigateFunction) => {
         setFieldError(error.response?.data?.errors);
         return;
       }
-      const errMsg = error.response?.data?.message || "Something went wrong ";
+      const errMsg = error.response?.data?.message || FEEDBACK_MESSAGES.GLOBAL.ERROR.SOMETHINK_WENT_WRONG;
       toast.error(errMsg)
       dispatch(logInFailure(errMsg));
     }

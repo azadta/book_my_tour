@@ -16,6 +16,7 @@ import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
 import { IUser, IUserResponse } from "../interfaces/IUser";
 import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class UserService implements IUserService {
@@ -41,7 +42,7 @@ export class UserService implements IUserService {
   }) {
     const existing = await this.userRepository.findByEmail(userData.email);
     if (existing)
-      throw new CustomError("Email already exists", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS, StatusCode.BAD_REQUEST);
     const hashedPassword = this.hashService.hash(userData.password);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     // const otpExpire = Date.now() + 10 * 60 * 1000;
@@ -66,12 +67,12 @@ export class UserService implements IUserService {
 
   async verifyUserOtp({ userId, otp }: { userId: string; otp: string }) {
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new CustomError("User not found", StatusCode.NOT_FOUND);
+    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     if (user.isEmailVerified)
-      throw new CustomError("Already verified", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_ALREADY_VERIFIED, StatusCode.BAD_REQUEST);
 
     if (user.otp !== otp || !user.otpExpire || user.otpExpire < Date.now()) {
-      throw new CustomError("Invalid or expired OTP", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.OTP_EXPIRED_OR_INVALID, StatusCode.BAD_REQUEST);
     }
 
     user.isEmailVerified = true;
@@ -82,7 +83,7 @@ export class UserService implements IUserService {
 
   async resendUserOtp(userId: string): Promise<{ otpExpire: number }> {
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new CustomError("User not found", StatusCode.NOT_FOUND);
+    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
 
@@ -110,13 +111,13 @@ export class UserService implements IUserService {
     const user = await this.userRepository.findByEmail(email);
     if (!user)
       throw new CustomError(
-        "Invalid email or password",
+        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
         StatusCode.UNAUTHORIZED,
       );
     const isPasswordValid = this.hashService.compare(password, user.password);
     if (!isPasswordValid)
       throw new CustomError(
-        "Invalid email or password",
+        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
         StatusCode.UNAUTHORIZED,
       );
     if (user.isBlocked)
@@ -151,7 +152,7 @@ export class UserService implements IUserService {
     if (user) {
       if (user.isBlocked) {
         throw new CustomError(
-          "Your account has been blocked ,Please contact support",
+          RESPONSE_MESSAGES.AUTH.ERROR.ACCOUNT_BLOCKED,
           StatusCode.FORBIDDEN,
         );
       }
@@ -198,10 +199,10 @@ export class UserService implements IUserService {
 
   async forgotPasswordService(email: string) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new CustomError("User not found", StatusCode.NOT_FOUND);
+    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     if (user.isBlocked) {
       throw new CustomError(
-        "User is blocked, please contact support",
+        RESPONSE_MESSAGES.AUTH.ERROR.ACCOUNT_BLOCKED,
         StatusCode.FORBIDDEN,
       );
     }
@@ -217,19 +218,19 @@ export class UserService implements IUserService {
       `Click this link to reset your password: ${resetUrl}`,
     );
 
-    return { message: "Reset link sent to email " };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.RESET_LINK_SENT};
   }
 
   async resetPasswordService(token: string, newPassword: string) {
     const hashedToken = this.resetTokenHasher.hash(token);
     const user = await this.userRepository.findByResetToken(hashedToken);
     if (!user)
-      throw new CustomError("Token invalid or expired", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN, StatusCode.BAD_REQUEST);
     user.password = this.hashService.hash(newPassword);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await this.userRepository.save(user);
-    return { message: "Password updated successfully" };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
   async updateUserService(id: string, data: Partial<IUser>) {
@@ -249,7 +250,7 @@ export class UserService implements IUserService {
   }
 
   userLogoutService(): { message: string } {
-    return { message: "User has been logged out" };
+    return { message:RESPONSE_MESSAGES.AUTH.SUCCESS.USER_LOGOUT };
   }
 
   async resetPasswordAuthenticatedService(
@@ -259,20 +260,20 @@ export class UserService implements IUserService {
     confirmPassword: string,
   ) {
     if (!userId || !oldPassword || !newPassword || !confirmPassword)
-      throw new CustomError("Please enter all fields", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.VALIDATION.ERROR.ALL_FIELDS_REQUIRED, StatusCode.BAD_REQUEST);
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new CustomError("User not found", StatusCode.NOT_FOUND);
+    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     const isMatch = this.hashService.compare(oldPassword, user.password);
     if (!isMatch)
       throw new CustomError(
-        "Old password is incorrect",
+        RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
         StatusCode.BAD_REQUEST,
       );
     if (confirmPassword !== newPassword)
-      throw new CustomError("Password do not match", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH, StatusCode.BAD_REQUEST);
     user.password = this.hashService.hash(newPassword);
     await this.userRepository.save(user);
-    return { message: "Password updated successfully" };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
   getAllCategories() {
@@ -353,7 +354,7 @@ export class UserService implements IUserService {
   async getPackageByIdService(id: string) {
     const pkg = await this.packageRepository.getPackageById(id);
     if (pkg) {
-      new CustomError("Package not found", 404);
+      new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, 404);
     }
     return pkg;
   }

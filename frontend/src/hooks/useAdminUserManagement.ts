@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { IUser } from "../redux/user/userSlice";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useAdminUserManagement = (page: number, limit: number) => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -16,7 +17,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
       setUsers(res.data.users || []);
       setTotalCount(res.data.totalCount || 0);
     } catch (error) {
-      console.error("failed to fetch users", error);
+      console.error(FEEDBACK_MESSAGES.USER.ERROR.FETCH_USERS, error);
     } finally {
       setLoading(false);
     }
@@ -29,8 +30,8 @@ export const useAdminUserManagement = (page: number, limit: number) => {
         prev.map((user) => (user._id === id ? { ...user, isBlocked } : user)),
       );
     } catch (error) {
-      console.error(`Failed to block user`, error);
-      toast.error(`Failed to update user status`);
+      console.error(FEEDBACK_MESSAGES.USER.ERROR.UPDATE_BLOCK_STATUS, error);
+      toast.error(FEEDBACK_MESSAGES.USER.ERROR.UPDATE_BLOCK_STATUS);
     }
   };
 
@@ -42,7 +43,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
       setTotalCount((prev) => prev - 1);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete user");
+      toast.error(FEEDBACK_MESSAGES.USER.ERROR.DELETE);
     } finally {
       setLoading(false);
     }

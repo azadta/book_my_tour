@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useOperatorRegister = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -22,7 +23,7 @@ export const useOperatorRegister = () => {
         return;
       }
 
-      setError(error?.response?.data?.message || "Registration failed");
+      setError(error?.response?.data?.message ||FEEDBACK_MESSAGES.AUTH.ERROR.REGISTRATION_FAILED);
     } finally {
       setLoading(false);
     }

@@ -7,6 +7,7 @@ import {
 } from "../redux/admin/adminSlice";
 import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useAdminLogin = (
   dispatch: AppDispatch,
@@ -21,7 +22,7 @@ export const useAdminLogin = (
       dispatch(adminLoginSuccess(res.data));
       navigate(`/admin/dashboard`, { replace: true });
     } catch (error: any) {
-      const errMsg = error.response?.data?.message || "Something went wrong";
+      const errMsg = error.response?.data?.message || FEEDBACK_MESSAGES.GLOBAL.ERROR.SOMETHINK_WENT_WRONG;
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
         return;

@@ -3,6 +3,7 @@ import { useAuthenticatedPasswordReset } from "../../hooks/useAuthenticatedPassw
 import { useNavigate } from "react-router-dom";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const AdminResetPasswordAuthenticated: React.FC = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -19,7 +20,7 @@ const AdminResetPasswordAuthenticated: React.FC = () => {
     const { oldPassword, newPassword, confirmPassword } = formData;
     try {
       await resetPassword(oldPassword, newPassword, confirmPassword);
-      setMessage("Password updated successfully");
+      setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
       setTimeout(() => navigate("/admin/profile"), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {

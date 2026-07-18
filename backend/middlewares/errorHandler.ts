@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 const errorHandler = (
   err: unknown,
@@ -50,7 +51,7 @@ const errorHandler = (
   return res.status(500).json({
     success: false,
     statusCode: 500,
-    message: "Internal Server Error",
+    message: RESPONSE_MESSAGES.AUTH.ERROR.SERVER_ERROR,
   });
 };
 

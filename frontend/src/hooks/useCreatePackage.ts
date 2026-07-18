@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../api/axiosInstance";
-import axios from "axios";
-import type { Option } from "../formConfig/fields";
 import type { ItineraryDay } from "@/components/itinerary/types";
 import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../api/axiosInstance";
+import type { Option } from "../formConfig/fields";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useCreatePackage = () => {
   const [categories, setCategories] = useState<Option[]>([]);
@@ -29,7 +29,7 @@ export const useCreatePackage = () => {
         })),
       );
     } catch (error: any) {
-      console.error(`Error fetching dropdown data`, error.message);
+      console.error(FEEDBACK_MESSAGES.GLOBAL.ERROR.DROP_DOWN_FETCH_FAILED, error.message);
     }
   };
 

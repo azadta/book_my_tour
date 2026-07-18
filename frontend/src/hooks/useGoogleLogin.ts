@@ -8,6 +8,7 @@ import {
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../../src/config/firebase";
 import { axiosInstance } from "../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useGoogleLogin = (
   dispatch: AppDispatch,
@@ -28,7 +29,7 @@ export const useGoogleLogin = (
       navigate("/", { replace: true });
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || "Google log-in failed";
+        error.response?.data?.message || FEEDBACK_MESSAGES.AUTH.ERROR.GOOGLE_LOGIN_FAILED;
       dispatch(logInFailure(errorMessage));
     }
   };

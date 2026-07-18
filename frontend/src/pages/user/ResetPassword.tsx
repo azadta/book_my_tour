@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useResetPassword } from "../../hooks/useResetPassword";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userResetPasswordfields } from "../../formConfig/fields";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const ResetPassword = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -17,13 +18,13 @@ export const ResetPassword = () => {
     setError(null);
     const { newPassword, confirmPassword } = formData;
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_DONT_MATCH);
       return;
     }
 
     try {
       await resetUserPassword(token as string, newPassword);
-      setMessage("Password updated! Redirecting...");
+      setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_REDIRECTING);
       setTimeout(() => navigate(`/user/login`), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {

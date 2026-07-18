@@ -1,13 +1,12 @@
 import Loading from "@/components/Loading";
 import { usePackageDetails } from "@/hooks/usePackageDetails";
 import {
-  ArrowLeft,
   Camera,
   CheckCircle2,
   ChevronRight,
   Clock,
   MapPin,
-  Trash2,
+  Trash2
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";

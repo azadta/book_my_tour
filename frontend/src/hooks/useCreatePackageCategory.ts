@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export interface CategoryPayload {
   name: string;
@@ -15,7 +16,7 @@ export const useCreatePackageCategory = () => {
         `/admin/create-package-category`,
         payload,
       );
-      toast.success("Package category created successfully");
+      toast.success(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.SUCCESS.CREATE);
       return data;
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -23,7 +24,7 @@ export const useCreatePackageCategory = () => {
         throw error
       }
       const message =
-        error?.response?.data?.message || "Failed to create category";
+        error?.response?.data?.message ||FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.CREATE;
       toast.error(message);
       throw error
     }

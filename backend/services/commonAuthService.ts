@@ -6,6 +6,7 @@ import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class CommonAuthService implements ICommonAuthService {
@@ -20,7 +21,7 @@ export class CommonAuthService implements ICommonAuthService {
   refreshToken = async (token: string) => {
     const decoded = this.securityService.verifyRefreshToken(token);
     if (!decoded) {
-      throw new CustomError("UnAuthorized, Please login again", 401);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401);
     }
     let user;
     if (decoded.role === "user") {

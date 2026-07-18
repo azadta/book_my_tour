@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import type { IOperator } from "../redux/operator/operatorSlice";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const useAdminOperatorManagement = (page: number, limit: number) => {
   const [operators, setOperators] = useState<IOperator[]>([]);
@@ -17,7 +18,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
       setOperators(res.data.operators || []);
       setTotalCount(res.data.totalCount || 0);
     } catch (error) {
-      console.error("failed to fetch operators", error);
+      console.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.FETCH, error);
     } finally {
       setLoading(false);
     }
@@ -32,8 +33,8 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
         ),
       );
     } catch (error) {
-      console.error(`Failed to block operator`, error);
-      toast.error(`Failed to update operator status`);
+      console.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS, error);
+      toast.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS);
     }
   };
 
@@ -45,7 +46,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
       setTotalCount((prev) => prev - 1);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete operator");
+      toast.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.DELETE);
     } finally {
       setLoading(false);
     }

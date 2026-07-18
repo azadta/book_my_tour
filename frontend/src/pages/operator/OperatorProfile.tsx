@@ -17,6 +17,7 @@ import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
 import type { RootState } from "../../redux/store.ts";
 import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard.tsx";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
 
 interface FormDataType {
   [key: string]: any;
@@ -112,13 +113,13 @@ const OperatorProfile = () => {
           image: imgData.secure_url,
         }),
       );
-      toast.success("Image uploaded successfully");
+      toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
     } catch (error: any) {
-      console.error("Cloudinary upload Error", error);
+      console.error(FEEDBACK_MESSAGES.MEDIA.ERROR.CLOUDINARY, error);
       dispatch(
         updateOperatorFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error uploading image");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD);
     } finally {
       setImageUploadig(false);
     }
@@ -134,7 +135,7 @@ const OperatorProfile = () => {
 
       dispatch(updateOperatorSuccess(updatedUser));
 
-      toast.success("Operator updated successfully");
+      toast.success(FEEDBACK_MESSAGES.OPERATOR.SUCCESS.UPDATE);
     } catch (error: any) {
       dispatch(
         updateOperatorFailure(error.response?.data?.message || error.message),
@@ -145,7 +146,7 @@ const OperatorProfile = () => {
         return;
       }
 
-      toast.error(error.response?.data?.message || "Error updating user");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE);
     }
   };
 
@@ -159,7 +160,7 @@ const OperatorProfile = () => {
       dispatch(
         logoutOperatorFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || "Error logout operator");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.LOGOUT);
     }
   };
 

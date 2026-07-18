@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import { useEffect, useState } from "react";
 
@@ -13,7 +14,7 @@ export const usePackageDetails = (id: string) => {
 
       setPkg(data.pkg);
     } catch (error) {
-      console.error("Failed to fetch package", error);
+      console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
       setLoading(false);
     }

@@ -7,7 +7,7 @@ export interface Ilocation {
 export interface IDestination extends Document {
   name: string;
   location: Ilocation;
-  images: { url: string; public_id: string }[];
+  images: string[];
   createdAt: Date;
 }
 

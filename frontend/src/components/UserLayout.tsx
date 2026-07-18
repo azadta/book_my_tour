@@ -1,8 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
-import Header from "./header/HomeHeader";
 import Footer from "./Footer";
-import HomeHeader from "./header/HomeHeader";
 import AppHeader from "./header/AppHeader";
+import HomeHeader from "./header/HomeHeader";
 
 const UserLayout = () => {
   const location = useLocation();

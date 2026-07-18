@@ -7,6 +7,7 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const EditOperator = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -32,7 +33,7 @@ const EditOperator = () => {
         setData(data);
       } catch (error: any) {
         toast.error(
-          error.response?.data?.message || "Failed to fetching operators",
+          error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.FETCH,
         );
       }
     };
@@ -56,13 +57,13 @@ const EditOperator = () => {
 
       await updateOperator(id, nestedData);
 
-      toast.success("Operator updated successfully");
+      toast.success(FEEDBACK_MESSAGES.OPERATOR.SUCCESS.UPDATE);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
         return;
       }
-      toast.error(error.response?.data?.message || "Failed to update operator");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE);
     }
   };
 
@@ -80,7 +81,7 @@ const EditOperator = () => {
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to uddate operator block status",
+          FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS,
       );
     }
   };
@@ -95,7 +96,7 @@ const EditOperator = () => {
       });
       setModalOpen(true);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Error deleting operator");
+      toast.error(error.response?.data?.message ||FEEDBACK_MESSAGES.OPERATOR.ERROR.DELETE);
     }
   };
 

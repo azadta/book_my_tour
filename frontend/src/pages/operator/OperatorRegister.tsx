@@ -4,6 +4,7 @@ import ReusableForm from "../../components/forms/ReUsableForm.tsx";
 import { operatorRegisterFields } from "../../formConfig/fields.ts";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
 
 const OperatorRegister = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -15,14 +16,14 @@ const OperatorRegister = () => {
   }
   const handleSubmit = (formData: any) => {
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_DONT_MATCH);
       return;
     }
     //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...operatorData } = formData;
 
     registerOperator(operatorData, (operatorId, otpExpire) => {
-      toast.info("OTP has been sent to your registered email");
+      toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_SENT);
       navigate(
         `/operator/otp-verification/${operatorId}?otpExpire=${otpExpire}`,
       );

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { axiosInstance } from "@/api/axiosInstance";
 import type { ICategory, IPackageItem } from "@/interfaces/interfaces";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export const usePackageList = () => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -22,7 +23,7 @@ export const usePackageList = () => {
       setTotalPackagesCount(data.totalCount || 0);
       setUniqueCategoryCount(data.uniqueCategoryCount || 0);
     } catch (error) {
-      console.error("Failed to fetch packages", error);
+      console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
       setLoadingPackages(false);
     }
@@ -37,7 +38,7 @@ export const usePackageList = () => {
 
       setActiveCategories(data.categories || []);
     } catch (error) {
-      console.error("Failed to fetch active categories", error);
+      console.error(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.FETCH_ACTIVE, error);
     } finally {
       setLoadingCategories(false);
     }

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 import { toast } from "react-toastify";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 const ResetPasswordAuthenticated = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -18,7 +19,7 @@ const ResetPasswordAuthenticated = () => {
     const { oldPassword, newPassword, confirmPassword } = formData;
     try {
       await resetPassword(oldPassword, newPassword, confirmPassword);
-      toast.success("Password updated successfully");
+      toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
       navigate(`/user/profile`);
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -26,7 +27,7 @@ const ResetPasswordAuthenticated = () => {
 
         return;
       }
-      toast.error(error.response?.data?.message || "Error reseting password");
+      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_RESET);
     }
   };
 

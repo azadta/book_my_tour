@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import { axiosInstance } from "../../api/axiosInstance";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 interface Destination {
   name: string;
@@ -52,7 +53,7 @@ export const fetchPackages = createAsyncThunk<
 
     return res.data;
   } catch (error: any) {
-    const message = error.response?.data?.message || "failed to fetch packages";
+    const message = error.response?.data?.message || FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH;
     return rejectWithValue(message);
   }
 });

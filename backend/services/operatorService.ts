@@ -18,6 +18,7 @@ import type { ITokenService } from "../interfaces/ITokenService";
 import type { IDestination } from "../models/Destination";
 import { Types } from "../types/types";
 import { IOperator, IOperatorResponse } from "../interfaces/IOperator";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class OperatorService implements IOperatorService {
@@ -41,7 +42,7 @@ export class OperatorService implements IOperatorService {
       data.email as string,
     );
     if (existing) {
-      throw new CustomError("Email already exists", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS, StatusCode.BAD_REQUEST);
     }
     const hashedPassword = this.hashService.hash(data.password as string);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
@@ -68,12 +69,12 @@ export class OperatorService implements IOperatorService {
   async operatorVerifyOtpService(operatorId: string, otp: string) {
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
-      throw new CustomError("User not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     if (operator.isEmailVerified)
-      throw new CustomError("Already verified", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_ALREADY_VERIFIED, StatusCode.BAD_REQUEST);
     if (otp !== operator.otp || operator.otpExpire! < Date.now()) {
       throw new CustomError(
-        "Otp is expired or invalid",
+        RESPONSE_MESSAGES.AUTH.ERROR.OTP_EXPIRED_OR_INVALID,
         StatusCode.BAD_REQUEST,
       );
     }
@@ -88,7 +89,7 @@ export class OperatorService implements IOperatorService {
   ): Promise<{ otpExpire: number }> {
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
-      throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
     operator.otp = otp;
@@ -112,18 +113,18 @@ export class OperatorService implements IOperatorService {
   }> {
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
-      throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     const isMatch = this.hashService.compare(password, operator.password);
     if (!isMatch)
-      throw new CustomError("Invalid Credentials", StatusCode.UNAUTHORIZED);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS, StatusCode.UNAUTHORIZED);
     if (!operator.isVerified)
       throw new CustomError(
-        "Operator not verified by the admin",
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_VERIFIED,
         StatusCode.UNAUTHORIZED,
       );
     if (operator.isBlocked)
       throw new CustomError(
-        "Your account has been blocked, Please contact support",
+        RESPONSE_MESSAGES.AUTH.ERROR.ACCOUNT_BLOCKED,
         StatusCode.UNAUTHORIZED,
       );
     const accessToken = this.securityService.generateAccessToken({
@@ -142,7 +143,7 @@ export class OperatorService implements IOperatorService {
   async operatorForgotPasswordService(email: string) {
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
-      throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     const { resetToken, expireTime, hashedToken } =
       this.tokenService.getPasswordResetToken();
     operator.resetPasswordToken = hashedToken;
@@ -155,7 +156,7 @@ export class OperatorService implements IOperatorService {
       `Click this link to reset your password: ${resetUrl}`,
     );
 
-    return { message: "Reset link sent to email " };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.RESET_LINK_SENT };
   }
 
   async operatorResetPasswordService(token: string, newPassword: string) {
@@ -163,12 +164,12 @@ export class OperatorService implements IOperatorService {
     const operator =
       await this.operatorRepository.findByResetToken(hashedToken);
     if (!operator)
-      throw new CustomError("Token invalid or expired", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN, StatusCode.BAD_REQUEST);
     operator.password = this.hashService.hash(newPassword);
     operator.resetPasswordToken = undefined;
     operator.resetPasswordExpire = undefined;
     await operator.save();
-    return { message: "Password updated successfully" };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
   async updateOperatorService(id: string, data: Partial<IOperator>) {
@@ -184,7 +185,7 @@ export class OperatorService implements IOperatorService {
   }
 
   operatorLogoutService(): { message: string } {
-    return { message: "Operator has been logged out" };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.OPERATOR_LOGOUT };
   }
 
   async createPackageService(data: Partial<Ipackage>): Promise<Ipackage> {
@@ -193,7 +194,7 @@ export class OperatorService implements IOperatorService {
     );
     if (existingPackage) {
       throw new CustomError(
-        "Package  name already exists",
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NAME_ALREADY_EXIST,
         StatusCode.BAD_REQUEST,
       );
     }
@@ -216,7 +217,7 @@ export class OperatorService implements IOperatorService {
     );
     if (!existingPackage) {
       throw new CustomError(
-        "Pacakage not found or unauthorized",
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NOTFOUND_OR_UNAUTHORIZED,
         StatusCode.NOT_FOUND,
       );
     }
@@ -250,18 +251,18 @@ export class OperatorService implements IOperatorService {
   ) {
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
-      throw new CustomError("Operator not found", StatusCode.NOT_FOUND);
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
     const isMatch = this.hashService.compare(oldPassword, operator.password);
     if (!isMatch)
       throw new CustomError(
-        "Old password is incorrect",
+        RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
         StatusCode.BAD_REQUEST,
       );
     if (confirmPassword !== newPassword)
-      throw new CustomError("Password do not match", StatusCode.BAD_REQUEST);
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH, StatusCode.BAD_REQUEST);
     operator.password = this.hashService.hash(newPassword);
     await this.operatorRepository.save(operator);
-    return { message: "Password updated successfully" };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
   getAllCategories() {
     return this.packageCategoryRepository.findAll();
@@ -283,7 +284,7 @@ export class OperatorService implements IOperatorService {
     );
     if (!pkg) {
       throw new CustomError(
-        "Package not found or unauthorized",
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NOTFOUND_OR_UNAUTHORIZED,
         StatusCode.NOT_FOUND,
       );
     }

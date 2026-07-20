@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/api/axiosInstance";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import { useEffect, useState } from "react";
@@ -10,7 +11,7 @@ export const usePackageDetails = (id: string) => {
   const fetchPackage = async () => {
     setLoading(true);
     try {
-      const  {data}  = await axiosInstance.get(`/user/package/${id}`);
+      const  {data}  = await axiosInstance.get( APP_ROUTES.USER.PACKAGE(id));
 
       setPkg(data.pkg);
     } catch (error) {

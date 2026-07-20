@@ -14,6 +14,7 @@ import "./header.css";
 import { useDebounce } from "use-debounce";
 import Logo from "./Logo";
 import HeaderActions from "./HeaderActions";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const HomeHeader = () => {
   const [search, setSearch] = useState("");
@@ -45,15 +46,22 @@ const HomeHeader = () => {
     <>
       <header className="fixed z-50 top-0 left-0 w-full   ">
         <div className="bg-white shadow-md">
-          <div className={`flex flex-col sm:flex-row gap-2 sm:justify-between px-4 overflow-hidden transition-all duration-300 ${hideTopBar?'max-h-0 opacity-0 py-0':'max-h-32 sm:max-h-20 opacity-100 pt-2 pb-1'}`}>
-      
+          <div
+            className={`flex flex-col sm:flex-row gap-2 sm:justify-between px-4 overflow-hidden transition-all duration-300 ${hideTopBar ? "max-h-0 opacity-0 py-0" : "max-h-32 sm:max-h-20 opacity-100 pt-2 pb-1"}`}
+          >
             <div className="flex gap-1">
               {" "}
-              <NavLink to="/about" className='text-orange-900 text-[12px] md:text-[14px]'>
+              <NavLink
+                to={FRONTEND_ROUTES.USER.ABOUT}
+                className="text-orange-900 text-[12px] md:text-[14px]"
+              >
                 About
               </NavLink>
               <span className="text-orange-900">/</span>
-              <NavLink to="/contact" className='text-orange-900 text-[12px] md:text-[14px]'>
+              <NavLink
+                to={FRONTEND_ROUTES.USER.CONTACT}
+                className="text-orange-900 text-[12px] md:text-[14px]"
+              >
                 Contact
               </NavLink>
             </div>
@@ -129,7 +137,6 @@ const HomeHeader = () => {
               </li>
             </ul>
           </div>
-       
 
           <div
             className={`max-w-7xl mx-auto flex justify-between items-center px-4 ${hideTopBar ? "pt-3 pb-3" : "pb-2"}`}
@@ -141,12 +148,12 @@ const HomeHeader = () => {
 
             <div className="flex items-center gap-4">
               <HeaderActions openDrawer={() => setIsOpen(true)} />
-        
             </div>
           </div>
         </div>
       </header>
-      <div onClick={closeDrawer}
+      <div
+        onClick={closeDrawer}
         className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
       ></div>
       <div
@@ -162,13 +169,13 @@ const HomeHeader = () => {
         <ul className="flex flex-col items-center p-4 gap-5">
           {!currentUser && (
             <>
-              <Link to="/user/login" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.LOGIN} onClick={closeDrawer}>
                 <li className="flex items-center gap-2 text-orange-900 ">
                   <MdLogin />
                   Login
                 </li>
               </Link>
-              <Link to="/user/register" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.REGISTER} onClick={closeDrawer}>
                 <li className="flex items-center gap-2 text-orange-900 ">
                   <GrNotes />
                   Register
@@ -176,13 +183,13 @@ const HomeHeader = () => {
               </Link>
             </>
           )}
-          <Link to="/contact" onClick={closeDrawer}>
+          <Link to={FRONTEND_ROUTES.USER.CONTACT} onClick={closeDrawer}>
             <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
               <RiContactsBook2Fill />
               Contact
             </li>
           </Link>
-          <Link to="/about" onClick={closeDrawer}>
+          <Link to={FRONTEND_ROUTES.USER.ABOUT} onClick={closeDrawer}>
             <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
               <PiCardsBold />
               About
@@ -190,13 +197,13 @@ const HomeHeader = () => {
           </Link>
           {currentUser && (
             <>
-              <Link to="/user/favourites" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.FAVOURITES} onClick={closeDrawer}>
                 <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                   <TbFileLike />
                   My Favourites
                 </li>
               </Link>
-              <Link to="/user/profile" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.PROFILE} onClick={closeDrawer}>
                 <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                   <img
                     src={currentUser?.image}
@@ -206,7 +213,10 @@ const HomeHeader = () => {
                   Profile
                 </li>
               </Link>
-              <Link to="/user/notifications" onClick={closeDrawer}>
+              <Link
+                to={FRONTEND_ROUTES.USER.NOTIFICATIONS}
+                onClick={closeDrawer}
+              >
                 <li
                   title="Notifications"
                   className="flex items-center gap-2 text-orange-900"

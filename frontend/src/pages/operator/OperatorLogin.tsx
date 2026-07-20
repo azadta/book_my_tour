@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { useState } from "react";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const OperatorLogin = () => {
     const [formData, setFormData] = useState<Record<string, any>>({});
@@ -34,14 +35,14 @@ const OperatorLogin = () => {
 
       <div className="flex justify-between items-center mt-4">
         <a
-          href="/operator/forgot-password"
+          href={FRONTEND_ROUTES.OPERATOR.FORGOT_PASSWORD}
           className="text-sm text-sky-500 hover:underline"
         >
           Forgot Password?
         </a>
         <p>
           New Operator?
-          <a href="/operator/register" className="text-sky-700 ml-3">
+          <a href={FRONTEND_ROUTES.OPERATOR.REGISTER} className="text-sky-700 ml-3">
             Register
           </a>
         </p>

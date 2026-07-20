@@ -1,0 +1,87 @@
+export const APP_ROUTES = {
+  USER: {
+    REGISER: "/user/register",
+    VERIFY_OTP: "/user/verify-otp",
+    RESEND_OTP: "/user/resend-otp",
+    LOGIN: "/user/login",
+    GOOGLE: "/user/google",
+    FORGOT_PASSWORD: "/user/forgot-password",
+    RESET_PASSWORD: (token: string) => `/user/reset-password/${token}`,
+    LOGOUT: "/user/logout",
+    UPDATE: (id: string) => `/user/update/${id}`,
+    UPDATE_IMAGE: "/user/update-profile-image",
+    DELETE: (id: string) => `/user/delete/${id}`,
+
+    PACKAGE_CATEGORIES: "/user/package-categories",
+    ACTIVE_PACKAGE_CATEGORIES: "/user/active-package-categories",
+    PACKAGES_HOME: "/user/packages/home",
+    PACKAGES: "/user/packages",
+    PACKAGE: (id: string) => `/user/package/${id}`,
+    PACKAGE_FILTER: `/user/packages/filter`,
+
+    DESTINATIONS_BY_PACKAGE_CATEGORY: (category: string) =>
+      `/user/destinations/package-category/${encodeURIComponent(category)}`,
+    PACKAGES_BY_CATEGORY: (category: string) =>
+      `/user/packages/category/${encodeURIComponent(category)}`,
+    RESET_PASSWORD_AUTH: "/user/reset-password-authenticated",
+  },
+  OPERATOR: {
+    REGISTER: "/operator/register",
+    VERIFY_OTP: "/operator/verify-otp",
+    RESEND_OTP: "/operator/resend-otp",
+    LOGIN: "/operator/login",
+    FORGOT_PASSWORD: "/operator/forgot-password",
+    RESET_PASSWORD: (token: string) => `/operator/reset-password/${token}`,
+    LOGOUT: "/operator/logout",
+    UPDATE: (id: string) => `/operator/update/${id}`,
+    UPDATE_IMAGE: "/operator/update-profile-image",
+
+    CREATE_PACKAGE: "/operator/create-package",
+    DESTINATIONS: "/operator/destinations",
+    PACKAGE_CATEGORIES: "/operator/package-categories",
+    MY_PACKAGES_COUNT: "/operator/my-packages-count",
+
+    PACKAGES: (operatorId: string) => `/operator/packages/${operatorId}`,
+    PACKAGE: (id: string) => `/operator/package/${id}`,
+    PACKAGES_UPDATE: (id: string) => `/operator/packages/update/${id}`,
+    DELETE_PACKAGE: (id: string) => `/operator/package/delete/${id}`,
+    RESET_PASSWORD_AUTH: "/operator/reset-password-authenticated",
+  },
+  ADMIN: {
+    LOGIN: "/admin/login",
+    LOGOUT: "/admin/logout",
+    UPDATE_IMAGE: "/admin/update-profile-image",
+    UPDATE: (id: string) => `/admin/update/${id}`,
+
+    OPS_VERIFICATION_REQS: "/admin/operators/get-verification-requests",
+    OPS_VERIFY: (id: string) => `/admin/operators/verify-operator/${id}`,
+    OPS_LIST: "admin/operators",
+    OPS_BLOCK: (id: string) => `/admin/operators/block/${id}`,
+    OPS_DELETE: (id: string) => `/admin/operators/delete/${id}`,
+    OPS_SINGLE: (id: string) => `/admin/operators/single-operator/${id}`,
+    OPS_UPDATE: (id: string) => `/admin/operators/update/${id}`,
+    OPS_COUNT: "/admin/operators/total-count",
+    OPS_PENDING_COUNT: "/admin/operators/pending-verification-count",
+
+    USERS_LIST: "/admin/users",
+    USERS_BLOCK: (id: string) => `/admin/users/block/${id}`,
+    USERS_DELETE: (id: string) => `/admin/users/delete/${id}`,
+    USERS_SINGLE: (id: string) => `/admin/users/single-user/${id}`,
+    USERS_UPDATE: (id: string) => `/admin/users/update/${id}`,
+    USER_COUNT: "/admin/users/total-count",
+    SIGNUP_TODAY: "/admin/users/signup-today",
+
+    CREATE_CATEGORY: "admin/create-package-category",
+    CREATE_DESTINATION: "/admin/create-destination",
+
+    PACKAGES_LIST: "/admin/packages",
+    PACKAGE: (id: string) => `/admin/package/${id}`,
+    PACKAGES_UPDATE: (id: string) => `/admin/packages/update/${id}`,
+    DELETE_PACKAGE: (id: string) => `/admin/package/delete/${id}`,
+    RESET_PASSWORD_AUTH: "/admin/reset-password-authenticated",
+  },
+  EXTERNAL: {
+    CLOUDINARY: (cloudName: string) =>
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+  },
+} as const;

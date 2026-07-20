@@ -10,6 +10,7 @@ import ReUsableTable, {
 import { useAdminPackageManagement } from "../../hooks/useAdminPackageManagement";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const AdminPackageDetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -67,7 +68,7 @@ const AdminPackageDetails = () => {
   const actions: ActionButton<IPackageItem>[] = [
     {
       label: () => "Edit",
-      onClick: (pkg) => navigate(`/admin/edit-package/${pkg._id}`),
+      onClick: (pkg) => navigate( FRONTEND_ROUTES.ADMIN.EDIT_PACKAGE(pkg._id)),
       className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
       disabled: () => false,
       loadingText: "Editing...",
@@ -124,7 +125,7 @@ const AdminPackageDetails = () => {
             />
             <div className="mt-6 flex gap-1.5 sm:gap-5">
               <button
-                onClick={() => navigate(`/admin/create-package-category`)}
+                onClick={() => navigate( FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY)}
                 className="bg-blue-600 text-white  py-2 px-1 sm:px-4 rounded hover:bg-blue-700"
               >
                 Create Package Category

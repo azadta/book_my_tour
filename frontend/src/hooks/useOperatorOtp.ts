@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 interface UseOtpProps {
   operatorId: string;
@@ -21,7 +22,7 @@ export const useOperatorOtp = ({
 
   const verifyOtp = async () => {
     try {
-      await axiosInstance.post("/operator/verify-otp", {
+      await axiosInstance.post( APP_ROUTES.OPERATOR.VERIFY_OTP, {
         operatorId,
         otp,
       });
@@ -33,7 +34,7 @@ export const useOperatorOtp = ({
   const resendOtp = async () => {
     setResendLoading(true);
     try {
-      const { data } = await axiosInstance.post("/operator/resend-otp", {
+      const { data } = await axiosInstance.post( APP_ROUTES.OPERATOR.RESEND_OTP, {
         operatorId,
       });
       setOtp("");

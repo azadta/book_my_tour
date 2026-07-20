@@ -7,6 +7,7 @@ import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 import { userLoginfields } from "../../formConfig/fields";
 import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const Login = () => {
     const [formData, setFormData] = useState<Record<string, any>>({});
@@ -40,14 +41,14 @@ const Login = () => {
 
       <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center mt-4">
         <a
-          href="/user/forgot-password"
+          href={FRONTEND_ROUTES.USER.FORGOT_PASSWORD}
           className="text-sky-500 hover:underline"
         >
           Forgot Password?
         </a>
         <p>
           Don't have an account?{" "}
-          <a href="/user/register" className="text-sky-500 ml-3">
+          <a href={FRONTEND_ROUTES.USER.REGISTER} className="text-sky-500 ml-3">
             Register
           </a>
         </p>

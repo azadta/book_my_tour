@@ -1,5 +1,6 @@
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 import { usePackageList } from "@/hooks/usePackageList";
 import { updateSearchParams } from "@/utils/updateSearchParams";
@@ -397,7 +398,9 @@ const PackagesList = () => {
 
                         <button
                           onClick={() =>
-                            navigate(`/user/package-details/${pkg._id}`)
+                            navigate(
+                              FRONTEND_ROUTES.USER.PACKAGE_DETAILS(pkg._id),
+                            )
                           }
                           className="bg-blue-600 w-full max-w-[150px]  xs:w-auto hover:bg-blue-700 text-white font-semibold text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95 whitespace-nowrap text-center"
                         >

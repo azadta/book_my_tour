@@ -6,6 +6,7 @@ import {
 
 import { axiosInstance } from "../../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 interface Destination {
   name: string;
@@ -48,7 +49,9 @@ export const fetchPackages = createAsyncThunk<
 >("package/fetch", async ({ page, limit }, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.get(
-      `/user/packages/home?page=${page}&limit=${limit}`,
+       APP_ROUTES.USER.PACKAGES_HOME,{params:{
+        page,limit
+       }}
     );
 
     return res.data;

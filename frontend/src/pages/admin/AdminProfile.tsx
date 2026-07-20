@@ -18,6 +18,8 @@ import type { RootState } from "../../redux/store.js";
 import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard.js";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.js";
+import { APP_ROUTES } from "@/constants/AppRoutes.js";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.js";
 
 interface FormDataType {
   [key: string]: any;
@@ -78,16 +80,16 @@ const AdminProfile = () => {
     );
     try {
       const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-        }/image/upload`,
+        APP_ROUTES.EXTERNAL.CLOUDINARY(
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+        ),
         {
           method: "POST",
           body: formData,
         },
       );
       const imgData = await res.json();
-      await post("/admin/update-profile-image", { image: imgData.secure_url });
+      await post(APP_ROUTES.ADMIN.UPDATE_IMAGE, { image: imgData.secure_url });
       dispatch(
         updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url }),
       );
@@ -97,7 +99,9 @@ const AdminProfile = () => {
       dispatch(
         updateAdminFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD,
+      );
     } finally {
       setImageUploading(false);
     }
@@ -106,7 +110,7 @@ const AdminProfile = () => {
     try {
       dispatch(updateAdminStart());
       const updatedAdmin = await post(
-        `/admin/update/${currentAdmin?._id}`,
+        APP_ROUTES.ADMIN.UPDATE(currentAdmin?._id as string),
         formData,
       );
 
@@ -121,21 +125,25 @@ const AdminProfile = () => {
 
         return;
       }
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.UPDATE);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.UPDATE,
+      );
     }
   };
 
   const handleLogOut = async () => {
     try {
       dispatch(adminLogoutStart());
-      await del("/admin/logout");
+      await del(APP_ROUTES.ADMIN.LOGOUT);
       dispatch(adminLogoutSuccess());
-      navigate("/admin/login", { replace: true });
+      navigate(FRONTEND_ROUTES.ADMIN.LOGIN, { replace: true });
     } catch (error: any) {
       dispatch(
         adminLogoutFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.LOGOUT);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.LOGOUT,
+      );
     }
   };
 
@@ -162,22 +170,16 @@ const AdminProfile = () => {
 
   return (
     <div className="flex   justify-center gap-5 ">
-    <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
+      <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
-            onClick={() => navigate("/admin/reset-password")}
-             className="profile-sidebar-button"
+            onClick={() => navigate(FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH)}
+            className="profile-sidebar-button"
           >
             Reset Password
           </button>
 
-   
-   
-
-          <button
-            onClick={handleLogOut}
-             className="profile-sidebar-button"
-          >
+          <button onClick={handleLogOut} className="profile-sidebar-button">
             Log Out
           </button>
         </div>
@@ -185,10 +187,9 @@ const AdminProfile = () => {
 
       <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full max-sm:order-1 ">
         <div className="mb-5">
-             <BackToDashboard path="/admin/dashboard" />
+          <BackToDashboard path="/admin/dashboard" />
         </div>
-     
-      
+
         <ProfileForm
           currentUser={currentAdmin}
           formData={formData}
@@ -206,7 +207,9 @@ const AdminProfile = () => {
         <div className="sm:hidden pt-10">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => navigate("/admin/reset-password")}
+              onClick={() =>
+                navigate(FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH)
+              }
               className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
             >
               Reset Password

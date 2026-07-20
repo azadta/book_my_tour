@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "@/api/axiosInstance";
 import type { ICategory, IPackageItem } from "@/interfaces/interfaces";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const usePackageList = () => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -16,7 +17,7 @@ export const usePackageList = () => {
     setLoadingPackages(true);
     try {
       const { data } = await axiosInstance.get(
-        `/user/packages/filter?${query}`,
+        `${APP_ROUTES.USER.PACKAGE_FILTER}?${query}`,
       );
 
       setPackages(data.packages || []);
@@ -33,12 +34,15 @@ export const usePackageList = () => {
     setLoadingCategories(true);
     try {
       const { data } = await axiosInstance.get(
-        `/user/active-package-categories`,
+        APP_ROUTES.USER.ACTIVE_PACKAGE_CATEGORIES,
       );
 
       setActiveCategories(data.categories || []);
     } catch (error) {
-      console.error(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.FETCH_ACTIVE, error);
+      console.error(
+        FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.FETCH_ACTIVE,
+        error,
+      );
     } finally {
       setLoadingCategories(false);
     }

@@ -8,6 +8,7 @@ import Pagination from "../../components/Pagination";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useAdminOperatorManagement } from "../../hooks/useAdminOperatorManagement";
 import type { IOperator } from "../../redux/operator/operatorSlice";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const AdminOperatorDetails: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -42,7 +43,8 @@ const AdminOperatorDetails: React.FC = () => {
   const actions = [
     {
       label: () => "Edit",
-      onClick: (op: IOperator) => navigate(`/admin/edit-operator/${op._id}`),
+      onClick: (op: IOperator) =>
+        navigate(FRONTEND_ROUTES.ADMIN.EDIT_OPERATOR(op._id)),
       className: "bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600",
       disabled: () => false,
       loadingText: "Editing...",
@@ -112,7 +114,9 @@ const AdminOperatorDetails: React.FC = () => {
               }}
             />
             <button
-              onClick={() => navigate("/admin/operator-verification")}
+              onClick={() =>
+                navigate(FRONTEND_ROUTES.ADMIN.OPERATOR_VERIFICATION)
+              }
               className="bg-blue-400 text-white py-2 px-4 rounded hover:bg-blue-500  mt-6"
             >
               Verification Requests

@@ -8,6 +8,7 @@ import { adminUpdateUserFields } from "../../formConfig/fields";
 import ConfirmationModel from "../../components/ConfirmationModal";
 import BackToDashboard from "../../components/BackToDashboard";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const EditUser = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -69,7 +70,7 @@ const EditUser = () => {
       setModalAction(() => async () => {
         await blockUser(id, !data.isBlocked);
 
-        navigate("/admin/users");
+        navigate(FRONTEND_ROUTES.ADMIN.USERS);
       });
       setModalOpen(true);
     } catch (error: any) {
@@ -84,7 +85,7 @@ const EditUser = () => {
       setModalAction(() => async () => {
         await deleteUser(id);
 
-        navigate("/admin/users");
+        navigate(FRONTEND_ROUTES.ADMIN.USERS);
       });
       setModalOpen(true);
     } catch (error: any) {

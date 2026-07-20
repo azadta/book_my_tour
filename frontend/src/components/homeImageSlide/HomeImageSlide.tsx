@@ -1,3 +1,4 @@
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -59,7 +60,7 @@ const HomeImageSlide = () => {
               className="size-12 lg:size-15  object-contain"
             />
             <button
-              onClick={() => navigate("/user/packages-list")}
+              onClick={() => navigate(FRONTEND_ROUTES.USER.PACKAGES_LIST)}
               className=" flex justify-center items-center gap-2 rounded-full bg-sky-600 px-5  py-2.5 lg:px-7 lg:py-3 text-white text-xs  sm:text-sm font-semibold shadow-lg shadow-sky-600/20 hover:bg-sky-700 hover:shadow-sky-700/30 active:scale-[0.98] transition-all group whitespace-nowrap   "
             >
               Explore Tours

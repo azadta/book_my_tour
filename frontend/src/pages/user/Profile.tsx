@@ -19,6 +19,8 @@ import { ProfileForm } from "../../components/forms/ProfileForm";
 import { userFields } from "../../formConfig/fields";
 import ConfirmationModel from "../../components/ConfirmationModal";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 interface FormDataType {
   [key: string]: any;
@@ -90,16 +92,16 @@ const Profile = () => {
     );
     try {
       const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-        }/image/upload`,
+        APP_ROUTES.EXTERNAL.CLOUDINARY(
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+        ),
         {
           method: "POST",
           body: formData,
         },
       );
       const imgData = await res.json();
-      await post("/user/update-profile-image", { image: imgData.secure_url });
+      await post(APP_ROUTES.USER.UPDATE_IMAGE, { image: imgData.secure_url });
       dispatch(
         updateUserSuccess({ ...currentUser!, image: imgData.secure_url }),
       );
@@ -109,7 +111,9 @@ const Profile = () => {
       dispatch(
         updateUserFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD,
+      );
     } finally {
       setImageUploading(false);
     }
@@ -119,7 +123,7 @@ const Profile = () => {
     try {
       dispatch(updateUserStart());
       const updatedUser = await post(
-        `/user/update/${currentUser?._id}`,
+        APP_ROUTES.USER.UPDATE(currentUser?._id as string),
         formData,
       );
 
@@ -135,21 +139,25 @@ const Profile = () => {
 
         return;
       }
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.UPDATE);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.UPDATE,
+      );
     }
   };
   const deleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      await del(`/user/delete/${currentUser?._id}`);
+      await del(APP_ROUTES.USER.DELETE(currentUser?._id as string));
       dispatch(deleteUserSuccess());
       toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.DELETE);
-      navigate("/", { replace: true });
+      navigate(FRONTEND_ROUTES.USER.HOME, { replace: true });
     } catch (error: any) {
       dispatch(
         deleteUserFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.DELETE);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.DELETE,
+      );
     }
   };
   const handleDeleteUser = async () => {
@@ -163,14 +171,16 @@ const Profile = () => {
   const handleLogOut = async () => {
     try {
       dispatch(logoutUserStart());
-      await del("/user/logout");
+      await del(APP_ROUTES.USER.LOGOUT);
       dispatch(logoutUserSuccess());
-      navigate("/user/login", { replace: true });
+      navigate(FRONTEND_ROUTES.USER.LOGIN, { replace: true });
     } catch (error: any) {
       dispatch(
         logoutUserFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message ||FEEDBACK_MESSAGES.USER.ERROR.LOGOUT);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.LOGOUT,
+      );
     }
   };
 
@@ -204,29 +214,18 @@ const Profile = () => {
       <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
-            onClick={() => navigate("/user/reset-password")}
-             className="profile-sidebar-button"
+            onClick={() => navigate(FRONTEND_ROUTES.USER.RESET_PASSWORD_AUTH)}
+            className="profile-sidebar-button"
           >
             Reset Password
           </button>
 
-          <button
-            
-            className="profile-sidebar-button"
-          >
-            My Wallet
-          </button>
-          <button
-            onClick={handleDeleteUser}
-             className="profile-sidebar-button"
-          >
+          <button className="profile-sidebar-button">My Wallet</button>
+          <button onClick={handleDeleteUser} className="profile-sidebar-button">
             Delete Account
           </button>
 
-          <button
-            onClick={handleLogOut}
-             className="profile-sidebar-button"
-          >
+          <button onClick={handleLogOut} className="profile-sidebar-button">
             Log Out
           </button>
         </div>
@@ -248,7 +247,7 @@ const Profile = () => {
         />
         <div className="sm:hidden pt-10 flex items-center justify-between">
           <button
-            onClick={() => navigate("/user/reset-password")}
+            onClick={() => navigate( FRONTEND_ROUTES.USER.RESET_PASSWORD_AUTH)}
             className=" cursor-pointer bg-yellow-200 px-0.5 sm:px-1 py-1 rounded hover:bg-yellow-300"
           >
             Reset Password

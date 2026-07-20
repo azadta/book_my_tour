@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useOperatorResetPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -7,8 +8,8 @@ export const useOperatorResetPassword = () => {
     try {
       setLoading(true);
       const res = await axiosInstance.post(
-        `/operator/reset-password/${token}`,
-        { newPassword }
+        APP_ROUTES.OPERATOR.RESET_PASSWORD(token),
+        { newPassword },
       );
       return res.data;
     } finally {

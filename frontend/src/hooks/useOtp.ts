@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 interface UseOtpProps {
   userId: string;
@@ -23,7 +24,7 @@ export const useOtp = ({
 
   const verifyOtp = async () => {
     try {
-      await axiosInstance.post("/user/verify-otp", {
+      await axiosInstance.post( APP_ROUTES.USER.VERIFY_OTP, {
         userId,
         otp,
       });
@@ -36,7 +37,7 @@ export const useOtp = ({
   const resendOtp = async () => {
     setResendLoading(true);
     try {
-      const { data } = await axiosInstance.post("/user/resend-otp", {
+      const { data } = await axiosInstance.post( APP_ROUTES.USER.RESEND_OTP, {
         userId,
       });
       setOtp("");

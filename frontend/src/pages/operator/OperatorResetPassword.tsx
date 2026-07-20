@@ -4,6 +4,7 @@ import ReusableForm from "../../components/forms/ReUsableForm";
 import { OperatorResetPasswordFields } from "../../formConfig/fields";
 import { useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const OperatorResetPassword: React.FC = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -26,7 +27,7 @@ const OperatorResetPassword: React.FC = () => {
     try {
       await resetPassword(token!, newPassword);
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_REDIRECTING);
-      setTimeout(() => navigate("/operator/login"), 2000);
+      setTimeout(() => navigate( FRONTEND_ROUTES.OPERATOR.LOGIN), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);

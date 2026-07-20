@@ -3,6 +3,7 @@ import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export interface CreateDestinationFormData {
   name: string;
@@ -31,7 +32,7 @@ export const useCreateDestination = (onSuccess?: () => void) => {
     );
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const { data } = await axios.post(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      APP_ROUTES.EXTERNAL.CLOUDINARY(cloudName),
       formData,
     );
 
@@ -55,7 +56,7 @@ export const useCreateDestination = (onSuccess?: () => void) => {
         images: uploadedImages,
       };
 
-      await axiosInstance.post(`/admin/create-destination`, payload);
+      await axiosInstance.post( APP_ROUTES.ADMIN.CREATE_DESTINATION, payload);
       toast.success(FEEDBACK_MESSAGES.DESTINATON.SUCCESS.CREATE);
       onSuccess?.();
     } catch (error: any) {

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useOperatorLogin = (
   dispatch: AppDispatch,
@@ -19,7 +20,7 @@ export const useOperatorLogin = (
   const login= async (formData: { email: string; password: string }) => {
     try {
       dispatch(operatorLoginStart());
-      const res = await axiosInstance.post("/operator/login", formData, {
+      const res = await axiosInstance.post(APP_ROUTES.OPERATOR.LOGIN, formData, {
         withCredentials: true,
       });
 

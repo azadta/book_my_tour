@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { OtpForm } from "../../components/forms/OtpForm";
 import { useOtp } from "../../hooks/useOtp";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const VerifyOtp = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -26,7 +27,7 @@ const VerifyOtp = () => {
       userId: userId || "",
       onSuccess: () => {
         toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.REGISTRATION);
-        navigate("/user/login");
+        navigate( FRONTEND_ROUTES.USER.LOGIN);
       },
       initialOtpExpire: expire,
     });

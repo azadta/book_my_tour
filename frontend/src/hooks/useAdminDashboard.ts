@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminDashboard = () => {
   const [usersCount, setUsersCount] = useState<number | null>(null);
@@ -14,17 +15,17 @@ export const useAdminDashboard = () => {
 
   const fetchDashboardData = async () => {
     setLoading(true);
-    try {  
+    try {
       const [
         usersCount,
         operatorsCount,
         todaySignups,
         pendingVerificationsCount,
       ] = await Promise.all([
-        axiosInstance.get(`/admin/users/total-count`),
-        axiosInstance.get(`/admin/operators/total-count`),
-        axiosInstance.get(`/admin/users/signup-today`),
-        axiosInstance.get(`/admin/operators/pending-verification-count`),
+        axiosInstance.get(APP_ROUTES.ADMIN.USER_COUNT),
+        axiosInstance.get(APP_ROUTES.ADMIN.OPS_COUNT),
+        axiosInstance.get( APP_ROUTES.ADMIN.SIGNUP_TODAY),
+        axiosInstance.get(`APP_ROUTES.ADMIN.OPS_PENDING_COUNT`),
       ]);
       setUsersCount(usersCount.data.usersCount);
       setOperatorsCount(operatorsCount.data.operatorsCount);

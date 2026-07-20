@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import type { Option } from "../formConfig/fields";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useCreatePackage = () => {
   const [categories, setCategories] = useState<Option[]>([]);
@@ -12,8 +13,8 @@ export const useCreatePackage = () => {
   const fetchDropDownOptions = async () => {
     try {
       const [catRes, destRes] = await Promise.all([
-        await axiosInstance.get(`/operator/package-categories`),
-        await axiosInstance.get(`/operator/destinations`),
+        await axiosInstance.get(APP_ROUTES.OPERATOR.PACKAGE_CATEGORIES),
+        await axiosInstance.get(APP_ROUTES.OPERATOR.DESTINATIONS),
       ]);
       setCategories(
         catRes.data.map((cat: any) => ({
@@ -29,7 +30,10 @@ export const useCreatePackage = () => {
         })),
       );
     } catch (error: any) {
-      console.error(FEEDBACK_MESSAGES.GLOBAL.ERROR.DROP_DOWN_FETCH_FAILED, error.message);
+      console.error(
+        FEEDBACK_MESSAGES.GLOBAL.ERROR.DROP_DOWN_FETCH_FAILED,
+        error.message,
+      );
     }
   };
 
@@ -61,7 +65,7 @@ export const useCreatePackage = () => {
         itinerary: uploadedItinerary,
       };
 
-      await axiosInstance.post("/operator/create-package", payload);
+      await axiosInstance.post(APP_ROUTES.OPERATOR.CREATE_PACKAGE, payload);
     } finally {
       setLoading(false);
     }

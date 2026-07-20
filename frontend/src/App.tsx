@@ -41,6 +41,7 @@ import type { RootState } from "./redux/store";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
 import OperatorEditPackage from "./pages/operator/OperatorEditPackage";
+import { FRONTEND_ROUTES } from "./constants/frontEndRoutes";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -50,44 +51,56 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route element={<UserLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/user/about" element={<About />} />
+          <Route path={FRONTEND_ROUTES.USER.HOME} element={<Home />} />
+          <Route path={FRONTEND_ROUTES.USER.ABOUT} element={<About />} />
           <Route
-            path="/user/reset-password"
+            path={FRONTEND_ROUTES.USER.RESET_PASSWORD_AUTH}
             element={<ResetPasswordAuthenticated />}
           />
           <Route
-            path="/user/reset-password/:token"
+            path={FRONTEND_ROUTES.USER.RESET_PASSWORD_PATTERN}
             element={<ResetPassword />}
           />
-          <Route path="/user/packages-list" element={<PackagesList />} />
           <Route
-            path="/user/package-details/:id"
+            path={FRONTEND_ROUTES.USER.PACKAGES_LIST}
+            element={<PackagesList />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.USER.PACKAGE_DETAILS_PATTERN}
             element={<PackageDetails />}
           />
           <Route
             element={
-              <PublicRoute isAuthenticated={!!currentUser} redirectedPath="/" />
+              <PublicRoute
+                isAuthenticated={!!currentUser}
+                redirectedPath={FRONTEND_ROUTES.USER.HOME}
+              />
             }
           >
+            <Route path={FRONTEND_ROUTES.USER.LOGIN} element={<Login />} />
             <Route
-              path="/user/login"
-              element={currentUser ? <Home /> : <Login />}
+              path={FRONTEND_ROUTES.USER.REGISTER}
+              element={<Register />}
             />
-            <Route path="/user/register" element={<Register />} />
-            <Route path="/user/forgot-password" element={<ForgotPassword />} />
-            <Route path="/user/verify-otp/:userId" element={<VerifyOtp />} />
+            <Route
+              path={FRONTEND_ROUTES.USER.FORGOT_PASSWORD}
+              element={<ForgotPassword />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.USER.VERIFY_OTP_PATTERN}
+              element={<VerifyOtp />}
+            />
           </Route>
 
           <Route
             element={
               <ProtectedRoute
                 isAuthenticated={!!currentUser}
-                redirectedPath="/user/login"
+                redirectedPath={FRONTEND_ROUTES.USER.LOGIN}
               />
             }
           >
-            <Route path="/user/profile" element={<Profile />} />
+            <Route path={FRONTEND_ROUTES.USER.PROFILE} element={<Profile />} />
           </Route>
         </Route>
 
@@ -95,24 +108,27 @@ const App = () => {
           element={
             <PublicRoute
               isAuthenticated={!!currentOperator}
-              redirectedPath="/operator/dashboard"
+              redirectedPath={FRONTEND_ROUTES.OPERATOR.DASHBOARD}
             />
           }
         >
-          <Route path="/operator/register" element={<OperatorRegister />} />
           <Route
-            path="/operator/login"
+            path={FRONTEND_ROUTES.OPERATOR.REGISTER}
+            element={<OperatorRegister />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.OPERATOR.LOGIN}
             element={
               currentOperator ? <OperatorDashboard /> : <OperatorLogin />
             }
           />
 
           <Route
-            path="/operator/otp-verification/:operatorId"
+            path={FRONTEND_ROUTES.OPERATOR.OTP_VERIFICATION_PATTERN}
             element={<OperatorOtpVerification />}
           />
           <Route
-            path="/operator/forgot-password"
+            path={FRONTEND_ROUTES.OPERATOR.FORGOT_PASSWORD}
             element={<OperatorForgotPassword />}
           />
         </Route>
@@ -121,33 +137,39 @@ const App = () => {
           element={
             <ProtectedRoute
               isAuthenticated={!!currentOperator}
-              redirectedPath="/operator/login"
+              redirectedPath={FRONTEND_ROUTES.OPERATOR.LOGIN}
             />
           }
         >
-          <Route path="/operator/profile" element={<OperatorProfile />} />
-          <Route path="/operator/dashboard" element={<OperatorDashboard />} />
           <Route
-            path="/operator/create-package"
+            path={FRONTEND_ROUTES.OPERATOR.PROFILE}
+            element={<OperatorProfile />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.OPERATOR.DASHBOARD}
+            element={<OperatorDashboard />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.OPERATOR.CREATE_PACKAGE}
             element={<OperatorCreatePackage />}
           />
           <Route
-            path="/operator/edit-package/:id"
+            path={FRONTEND_ROUTES.OPERATOR.EDIT_PACKAGE_PATTERN}
             element={<OperatorEditPackage />}
           />
           <Route
-            path="/operator/packages-list/:id"
+            path={FRONTEND_ROUTES.OPERATOR.PACKAGES_LIST_PATTERN}
             element={<OperatorPackagesList />}
           />
         </Route>
 
         <Route
-          path="/operator/reset-password"
+          path={FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH}
           element={<OperatorResetPasswordAuthenticated />}
         />
 
         <Route
-          path="/operator/reset-password/:token"
+          path={FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_PATTERN}
           element={<OperatorResetPassword />}
         />
 
@@ -155,12 +177,12 @@ const App = () => {
           element={
             <PublicRoute
               isAuthenticated={!!currentAdmin}
-              redirectedPath="/admin/dashboard"
+              redirectedPath={FRONTEND_ROUTES.ADMIN.DASHBOARD}
             />
           }
         >
           <Route
-            path="/admin/login"
+            path={FRONTEND_ROUTES.ADMIN.LOGIN}
             element={currentAdmin ? <AdminDashboard /> : <AdminLogin />}
           />
         </Route>
@@ -169,35 +191,59 @@ const App = () => {
           element={
             <ProtectedRoute
               isAuthenticated={!!currentAdmin}
-              redirectedPath="/admin/login"
+              redirectedPath={FRONTEND_ROUTES.ADMIN.LOGIN}
             />
           }
         >
-          <Route path="/admin/profile" element={<AdminProfile />} />
           <Route
-            path="/admin/reset-password"
+            path={FRONTEND_ROUTES.ADMIN.PROFILE}
+            element={<AdminProfile />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH}
             element={<AdminResetPasswordAuthenticated />}
           />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<AdminUserDetails />} />
-          <Route path="/admin/edit-user/:id" element={<EditUser />} />
-          <Route path="/admin/operators" element={<AdminOperatorDetails />} />
-          <Route path="/admin/edit-operator/:id" element={<EditOperator />} />
           <Route
-            path="/admin/operator-verification"
+            path={FRONTEND_ROUTES.ADMIN.DASHBOARD}
+            element={<AdminDashboard />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.USERS}
+            element={<AdminUserDetails />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.EDIT_USER_PATTERN}
+            element={<EditUser />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.OPERATORS}
+            element={<AdminOperatorDetails />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.EDIT_OPERATOR_PATTERN}
+            element={<EditOperator />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.OPERATOR_VERIFICATION}
             element={<AdminOperatorVerification />}
           />
-          <Route path="/admin/packages" element={<AdminPackageDetails />} />
           <Route
-            path="/admin/create-destination"
+            path={FRONTEND_ROUTES.ADMIN.PACKAGES}
+            element={<AdminPackageDetails />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.ADMIN.CREATE_DESTINATION}
             element={<CreateDestination />}
           />
           <Route
-            path="/admin/create-package-category"
+            path={FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY}
             element={<CreatePackageCategory />}
           />
         </Route>
-        <Route path="/admin/edit-package/:id" element={<AdminEditPackage />} />
+        <Route
+          path={FRONTEND_ROUTES.ADMIN.EDIT_PACKAGE_PATTERN}
+          element={<AdminEditPackage />}
+        />
       </Routes>
       <ToastContainer position="top-center" />
     </BrowserRouter>

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useOperatorPackageManagement = (page: number, limit: number) => {
   const { currentOperator } = useSelector((state: RootState) => state.operator);
@@ -15,7 +16,8 @@ export const useOperatorPackageManagement = (page: number, limit: number) => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        `/operator/packages/${currentOperator?._id}?page=${page}&limit=${limit}`,
+        APP_ROUTES.OPERATOR.PACKAGES(currentOperator?._id as string),
+        { params: { page, limit } },
       );
       setPackages(res.data.packages || []);
       setTotalCount(res.data.totalCount || 0);
@@ -29,7 +31,7 @@ export const useOperatorPackageManagement = (page: number, limit: number) => {
   const deletePackage = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/operator/package/delete/${id}`);
+      await axiosInstance.delete(APP_ROUTES.OPERATOR.DELETE_PACKAGE(id));
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

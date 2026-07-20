@@ -2,13 +2,14 @@ import { useCallback, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import type { ItineraryDay } from "@/components/itinerary/types";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminEditPackage = () => {
   const [loading, setLoading] = useState(false);
   const fetchPackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(`/admin/package/${id}`);
+      const res = await axiosInstance.get(APP_ROUTES.ADMIN.PACKAGE(id));
       return res.data;
     } finally {
       setLoading(false);
@@ -41,11 +42,11 @@ export const useAdminEditPackage = () => {
       );
       const payload = {
         ...data,
-        images: [...existingImages,...(uploadedImageUrls??[])],
+        images: [...existingImages, ...(uploadedImageUrls ?? [])],
         itinerary: uploadedItinerary,
       };
 
-      await axiosInstance.put(`/admin/packages/update/${id}`, payload);
+      await axiosInstance.put(APP_ROUTES.ADMIN.PACKAGES_UPDATE(id), payload);
     } finally {
       setLoading(false);
     }
@@ -54,7 +55,7 @@ export const useAdminEditPackage = () => {
   const deletePackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(`/admin/package/delete/${id}`);
+      await axiosInstance.delete(APP_ROUTES.ADMIN.DELETE_PACKAGE(id));
     } finally {
       setLoading(false);
     }

@@ -5,6 +5,7 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userRegisterfields } from "../../formConfig/fields";
 import { useEffect, useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const Register = () => {
     const [formData, setFormData] = useState<Record<string, any>>({});
@@ -21,7 +22,7 @@ const Register = () => {
     }
 
     registerUser(formData, (userId, otpExpire) => {
-      navigate(`/user/verify-otp/${userId}/?otpExpire=${otpExpire}`);
+      navigate(`${FRONTEND_ROUTES.USER.VERIFY_OTP(userId)}?otpExpire=${otpExpire}`)
       toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_SENT);
     });
   };
@@ -49,7 +50,7 @@ const Register = () => {
       />
       <p className="mt-2 font-semibold">
         Already have an account?{" "}
-        <a href="/user/login" className=" text-md ml-3 font-bold">
+        <a href={FRONTEND_ROUTES.USER.LOGIN} className=" text-md ml-3 font-bold">
           Login
         </a>
       </p>

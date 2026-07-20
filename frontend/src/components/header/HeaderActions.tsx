@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { Link, useNavigate } from "react-router-dom";
 import { HiMenu } from "react-icons/hi";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 interface Props {
   openDrawer: () => void;
@@ -19,7 +20,7 @@ const HeaderActions = ({ openDrawer }: Props) => {
         <NavItem to="/">Home</NavItem>
         {!currentUser && (
           <>
-            <Link to="/user/login">
+            <Link to={FRONTEND_ROUTES.USER.LOGIN}>
               <div className="flex items-center gap-0.5 text-orange-900  ">
                 <button className="relative  bg-gray-300 cursor-pointer py-3 px-4 text-center font-sans inline-flex justify-center text-base uppercase  rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">
                   <span className="relative z-20">Login</span>
@@ -33,7 +34,7 @@ const HeaderActions = ({ openDrawer }: Props) => {
                 </button>
               </div>
             </Link>
-            <Link to="/user/register">
+            <Link to={FRONTEND_ROUTES.USER.REGISTER}>
               <div className="flex items-center gap-0.5 text-orange-900 ">
                 <button className="relative bg-gray-300 cursor-pointer py-3 px-4 text-center font-sans inline-flex justify-center text-base uppercase  rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4  focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">
                   <span className="relative z-20">Register</span>
@@ -54,7 +55,7 @@ const HeaderActions = ({ openDrawer }: Props) => {
           <>
             <NavItem to="/favourites">My Favourites</NavItem>
             <NavItem to="/user/notifications">Notifications</NavItem>
-            <Link to="/user/profile">
+            <Link to={FRONTEND_ROUTES.USER.PROFILE}>
               <div className="flex items-center gap-0.5  ">
                 <button className="relative  cursor-pointer py-2 px-4 text-center font-sans inline-flex justify-center   text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">
                   <span className="relative z-20">

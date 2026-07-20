@@ -7,6 +7,7 @@ import { Swiper as swiperType } from "swiper";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useNavigate } from "react-router-dom";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const HomeSlideThree = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const HomeSlideThree = () => {
             {packagesByCategory["Adventure Packages"]?.map((pkg: any) => (
               <SwiperSlide key={pkg?._id}>
                 <div
-                  onClick={() => navigate(`/user/package-details/${pkg?._id}`)}
+                  onClick={() => navigate(FRONTEND_ROUTES.USER.PACKAGE_DETAILS(pkg?._id))}
                   className=" w-full h-[240px] relative hover:cursor-pointer  "
                 >
                   <img

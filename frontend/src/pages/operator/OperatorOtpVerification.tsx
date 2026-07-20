@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { OtpForm } from "../../components/forms/OtpForm";
 import { useOperatorOtp } from "../../hooks/useOperatorOtp";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const OperatorOtpVerification = () => {
   const { operatorId } = useParams<{ operatorId: string }>();
@@ -22,7 +23,7 @@ const OperatorOtpVerification = () => {
       operatorId: operatorId || "",
       onSuccess: () => {
         toast.success(FEEDBACK_MESSAGES.OPERATOR.SUCCESS.REGISTRATION_AWAITING);
-        navigate("/");
+        navigate(FRONTEND_ROUTES.USER.HOME);
       },
       initialOtpExpire: expire,
     });

@@ -11,6 +11,7 @@ import { RiContactsBook2Fill } from "react-icons/ri";
 import { PiBellRingingBold, PiCardsBold } from "react-icons/pi";
 import { TbFileLike } from "react-icons/tb";
 import { HiX } from "react-icons/hi";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 interface Props {
   showNavigation: boolean;
@@ -56,13 +57,13 @@ const AppHeader = ({ showNavigation }: Props) => {
         <ul className="flex flex-col items-center p-4 gap-5">
           {!currentUser && (
             <>
-              <Link to="/user/login" onClick={closeDrawer}>
+              <Link  to={FRONTEND_ROUTES.USER.LOGIN} onClick={closeDrawer}>
                 <li className="flex items-center gap-2 text-orange-900 ">
                   <MdLogin />
                   Login
                 </li>
               </Link>
-              <Link to="/user/register" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.REGISTER} onClick={closeDrawer}>
                 <li className="flex items-center gap-2 text-orange-900 ">
                   <GrNotes />
                   Register
@@ -70,13 +71,13 @@ const AppHeader = ({ showNavigation }: Props) => {
               </Link>
             </>
           )}
-          <Link to="/contact" onClick={closeDrawer}>
+          <Link to={FRONTEND_ROUTES.USER.CONTACT} onClick={closeDrawer}>
             <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
               <RiContactsBook2Fill />
               Contact
             </li>
           </Link>
-          <Link to="/about" onClick={closeDrawer}>
+          <Link to={FRONTEND_ROUTES.USER.ABOUT} onClick={closeDrawer}>
             <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
               <PiCardsBold />
               About
@@ -84,13 +85,13 @@ const AppHeader = ({ showNavigation }: Props) => {
           </Link>
           {currentUser && (
             <>
-              <Link to="/user/favourites" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.FAVOURITES} onClick={closeDrawer}>
                 <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                   <TbFileLike />
                   My Favourites
                 </li>
               </Link>
-              <Link to="/user/profile" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.PROFILE} onClick={closeDrawer}>
                 <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                   <img
                     src={currentUser?.image}
@@ -100,7 +101,7 @@ const AppHeader = ({ showNavigation }: Props) => {
                   Profile
                 </li>
               </Link>
-              <Link to="/user/notifications" onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.NOTIFICATIONS} onClick={closeDrawer}>
                 <li
                   title="Notifications"
                   className="flex items-center gap-2 text-orange-900"

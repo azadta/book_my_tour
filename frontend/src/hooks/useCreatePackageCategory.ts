@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export interface CategoryPayload {
   name: string;
@@ -13,7 +14,7 @@ export const useCreatePackageCategory = () => {
   const createPackageCategory = async (payload: CategoryPayload) => {
     try {
       const { data } = await axiosInstance.post(
-        `/admin/create-package-category`,
+        APP_ROUTES.ADMIN.CREATE_CATEGORY,
         payload,
       );
       toast.success(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.SUCCESS.CREATE);

@@ -9,7 +9,7 @@ const UserLayout = () => {
 
   const showNavigation =
     location.pathname === "/" ||
-    location.pathname.startsWith("/user/package-details/");
+    location.pathname.startsWith("/user/package-details/")
   return (
     <div className="flex flex-col min-h-screen  ">
       {isHomePage ? (

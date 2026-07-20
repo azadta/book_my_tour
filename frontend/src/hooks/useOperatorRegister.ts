@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useOperatorRegister = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -13,7 +14,7 @@ export const useOperatorRegister = () => {
     try {
       setLoading(true);
       setError("");
-      const res = await axiosInstance.post("/operator/register", operatorData);
+      const res = await axiosInstance.post( APP_ROUTES.OPERATOR.REGISTER, operatorData);
       const { operatorId, otpExpire } = res.data;
       onSuccess(operatorId, otpExpire);
     } catch (error: any) {

@@ -9,6 +9,7 @@ import type { ActionButton, Column } from "../../components/ReUsableTable";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useAdminUserManagement } from "../../hooks/useAdminUserManagement";
 import type { IUser } from "../../redux/user/userSlice";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const AdminUserDetails = () => {
   const [open, setOpen] = useState(false);
@@ -37,7 +38,7 @@ const AdminUserDetails = () => {
   const actions: ActionButton<IUser>[] = [
     {
       label: () => "Edit",
-      onClick: (user) => navigate(`/admin/edit-user/${user._id}`),
+      onClick: (user) => navigate( FRONTEND_ROUTES.ADMIN.EDIT_USER(user._id)),
       className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
       disabled: () => false,
       loadingText: "Editing...",

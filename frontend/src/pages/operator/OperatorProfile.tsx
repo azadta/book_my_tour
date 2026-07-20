@@ -18,6 +18,8 @@ import type { RootState } from "../../redux/store.ts";
 import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard.tsx";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
+import { APP_ROUTES } from "@/constants/AppRoutes.ts";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.ts";
 
 interface FormDataType {
   [key: string]: any;
@@ -95,16 +97,16 @@ const OperatorProfile = () => {
     );
     try {
       const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-        }/image/upload`,
+        APP_ROUTES.EXTERNAL.CLOUDINARY(
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+        ),
         {
           method: "POST",
           body: formData,
         },
       );
       const imgData = await res.json();
-      await post("/operator/update-profile-image", {
+      await post(APP_ROUTES.OPERATOR.UPDATE_IMAGE, {
         image: imgData.secure_url,
       });
       dispatch(
@@ -119,7 +121,9 @@ const OperatorProfile = () => {
       dispatch(
         updateOperatorFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD);
+      toast.error(
+        error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD,
+      );
     } finally {
       setImageUploadig(false);
     }
@@ -129,7 +133,7 @@ const OperatorProfile = () => {
     try {
       dispatch(updateOperatorStart());
       const updatedUser = await post(
-        `/operator/update/${currentOperator?._id}`,
+        APP_ROUTES.OPERATOR.UPDATE(currentOperator?._id as string),
         formData,
       );
 
@@ -146,21 +150,27 @@ const OperatorProfile = () => {
         return;
       }
 
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE);
+      toast.error(
+        error.response?.data?.message ||
+          FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE,
+      );
     }
   };
 
   const handleLogOut = async () => {
     try {
       dispatch(logoutOperatorStart());
-      await del("/operator/logout");
+      await del(APP_ROUTES.OPERATOR.LOGOUT);
       dispatch(logoutOperatorSuccess());
-      navigate("/operator/login", { replace: true });
+      navigate(FRONTEND_ROUTES.OPERATOR.LOGIN, { replace: true });
     } catch (error: any) {
       dispatch(
         logoutOperatorFailure(error.response?.data?.message || error.message),
       );
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.LOGOUT);
+      toast.error(
+        error.response?.data?.message ||
+          FEEDBACK_MESSAGES.OPERATOR.ERROR.LOGOUT,
+      );
     }
   };
 
@@ -208,19 +218,15 @@ const OperatorProfile = () => {
       <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
-            onClick={() => navigate("/operator/reset-password")}
-             className="profile-sidebar-button"
+            onClick={() =>
+              navigate(FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH)
+            }
+            className="profile-sidebar-button"
           >
             Reset Password
           </button>
 
-   
-   
-
-          <button
-            onClick={handleLogOut}
-             className="profile-sidebar-button"
-          >
+          <button onClick={handleLogOut} className="profile-sidebar-button">
             Log Out
           </button>
         </div>
@@ -248,7 +254,7 @@ const OperatorProfile = () => {
         />
         <div className="sm:hidden pt-10 flex items-center justify-between">
           <button
-            onClick={() => navigate("/operator/reset-password")}
+            onClick={() => navigate( FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH)}
             className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
           >
             Reset Password

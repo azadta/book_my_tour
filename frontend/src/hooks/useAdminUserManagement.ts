@@ -3,6 +3,7 @@ import type { IUser } from "../redux/user/userSlice";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminUserManagement = (page: number, limit: number) => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -11,9 +12,12 @@ export const useAdminUserManagement = (page: number, limit: number) => {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(
-        `/admin/users?page=${page}&limit=${limit}`,
-      );
+      const res = await axiosInstance.get(APP_ROUTES.ADMIN.USERS_LIST, {
+        params: {
+          page,
+          limit,
+        },
+      });
       setUsers(res.data.users || []);
       setTotalCount(res.data.totalCount || 0);
     } catch (error) {
@@ -25,7 +29,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
 
   const blockUser = async (id: string, isBlocked: boolean) => {
     try {
-      await axiosInstance.put(`/admin/users/block/${id}`, { isBlocked });
+      await axiosInstance.put(APP_ROUTES.ADMIN.USERS_BLOCK(id), { isBlocked });
       setUsers((prev) =>
         prev.map((user) => (user._id === id ? { ...user, isBlocked } : user)),
       );
@@ -38,7 +42,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
   const deleteUser = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/admin/users/delete/${id}`);
+      await axiosInstance.delete(APP_ROUTES.ADMIN.USERS_DELETE(id));
       setUsers((prev) => prev.filter((user) => user._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

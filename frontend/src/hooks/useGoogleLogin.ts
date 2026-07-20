@@ -9,6 +9,7 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../../src/config/firebase";
 import { axiosInstance } from "../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useGoogleLogin = (
   dispatch: AppDispatch,
@@ -21,7 +22,7 @@ export const useGoogleLogin = (
       provider.setCustomParameters({ prompt: "select_account" });
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const res = await axiosInstance.post(`/user/google`, {
+      const res = await axiosInstance.post(APP_ROUTES.USER.GOOGLE, {
         name: result.user.displayName,
         email: result.user.email,
       });
@@ -29,7 +30,8 @@ export const useGoogleLogin = (
       navigate("/", { replace: true });
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || FEEDBACK_MESSAGES.AUTH.ERROR.GOOGLE_LOGIN_FAILED;
+        error.response?.data?.message ||
+        FEEDBACK_MESSAGES.AUTH.ERROR.GOOGLE_LOGIN_FAILED;
       dispatch(logInFailure(errorMessage));
     }
   };

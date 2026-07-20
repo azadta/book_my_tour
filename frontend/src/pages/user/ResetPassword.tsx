@@ -4,6 +4,7 @@ import { useResetPassword } from "../../hooks/useResetPassword";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userResetPasswordfields } from "../../formConfig/fields";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 export const ResetPassword = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -25,7 +26,7 @@ export const ResetPassword = () => {
     try {
       await resetUserPassword(token as string, newPassword);
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_REDIRECTING);
-      setTimeout(() => navigate(`/user/login`), 2000);
+      setTimeout(() => navigate(FRONTEND_ROUTES.USER.LOGIN), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
@@ -38,9 +39,8 @@ export const ResetPassword = () => {
 
   return (
     <div className="w-full max-w-lg mx-auto pb-5">
-    
       <ReUsableForm
-      heading="Reset Password"
+        heading="Reset Password"
         formData={formData}
         setFormData={setFormData}
         fields={userResetPasswordfields}

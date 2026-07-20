@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import type { RootState } from "../redux/store";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const OperatorDashboardSideBar = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const OperatorDashboardSideBar = () => {
     <div className="  max-w-64 bg-gray-100 shadow-xl text-white flex flex-col p-6 justify-between h-full ">
       <div className="flex flex-col justify-center px-1.5   gap-10">
         <NavLink
-          to="/operator/dashboard"
+          to={FRONTEND_ROUTES.OPERATOR.DASHBOARD}
           className={({ isActive }) =>
             ` relative py-2 shadow-md px-4 rounded-xl transition w-full text-center ${isActive ? "bg-emerald-400  hover:bg-emerald-500" : " bg-sky-400   hover:bg-sky-500"} `
           }
@@ -25,7 +26,7 @@ const OperatorDashboardSideBar = () => {
         </NavLink>
 
         <NavLink
-          to={`/operator/packages-list/${currentOperator?._id}`}
+          to={FRONTEND_ROUTES.OPERATOR.PACKAGES_LIST(currentOperator?._id as string)}
           className={({ isActive }) =>
             ` relative py-2 shadow-md px-4 rounded-xl transition w-full text-center ${isActive ? "bg-emerald-400  hover:bg-emerald-500" : " bg-sky-400   hover:bg-sky-500"} `
           }
@@ -42,7 +43,7 @@ const OperatorDashboardSideBar = () => {
       </div>
 
       <button
-        onClick={() => navigate("/operator/profile")}
+        onClick={() => navigate(FRONTEND_ROUTES.OPERATOR.PROFILE)}
         className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-mono font-light uppercase text-base"
       >
         <span className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-lg transform translate-y-0.5 transition duration-600 ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-250 group-active:translate-y-px"></span>

@@ -4,6 +4,7 @@ import { axiosInstance } from "../api/axiosInstance";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminPackageManagement = (page: number, limit: number) => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -14,7 +15,13 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
       setLoading(true);
       try {
         const { data } = await axiosInstance.get(
-          `/admin/packages?page=${page}&limit=${limit}`,
+          APP_ROUTES.ADMIN.PACKAGES_LIST,
+          {
+            params: {
+              page,
+              limit,
+            },
+          },
         );
 
         setPackages(data.packages || []);
@@ -32,7 +39,7 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
   const deletePackage = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/admin/package/delete/${id}`);
+      await axiosInstance.delete(APP_ROUTES.ADMIN.DELETE_PACKAGE(id));
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

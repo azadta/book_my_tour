@@ -8,6 +8,7 @@ import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import { toast } from "react-toastify";
 import BackToDashboard from "../../components/BackToDashboard";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const EditOperator = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -33,7 +34,8 @@ const EditOperator = () => {
         setData(data);
       } catch (error: any) {
         toast.error(
-          error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.FETCH,
+          error.response?.data?.message ||
+            FEEDBACK_MESSAGES.OPERATOR.ERROR.FETCH,
         );
       }
     };
@@ -63,7 +65,10 @@ const EditOperator = () => {
         setFieldError(error.response?.data?.errors);
         return;
       }
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE);
+      toast.error(
+        error.response?.data?.message ||
+          FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE,
+      );
     }
   };
 
@@ -75,7 +80,7 @@ const EditOperator = () => {
       );
       setModalAction(() => async () => {
         await blockOperator(id, !data.isBlocked);
-        navigate("/admin/operators");
+        navigate(FRONTEND_ROUTES.ADMIN.OPERATORS);
       });
       setModalOpen(true);
     } catch (error: any) {
@@ -92,11 +97,14 @@ const EditOperator = () => {
       setModalMessage("Are you sure want to delete this operator?");
       setModalAction(() => async () => {
         await deleteOperator(id);
-        navigate("/admin/operators");
+        navigate( FRONTEND_ROUTES.ADMIN.OPERATORS);
       });
       setModalOpen(true);
     } catch (error: any) {
-      toast.error(error.response?.data?.message ||FEEDBACK_MESSAGES.OPERATOR.ERROR.DELETE);
+      toast.error(
+        error.response?.data?.message ||
+          FEEDBACK_MESSAGES.OPERATOR.ERROR.DELETE,
+      );
     }
   };
 

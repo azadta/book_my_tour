@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./homeTopSlideCard.css";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const HomeTopSlideCard = ({ pkg }: { pkg: any }) => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const HomeTopSlideCard = ({ pkg }: { pkg: any }) => {
           <button
             onClick={() =>
               navigate(
-                `/user/packages-list?destination=${pkg?.destinations[0]?._id}&destinationName=${pkg?.destinations[0]?.name}`,
+                `${FRONTEND_ROUTES.USER.PACKAGES_LIST}?destination=${pkg?.destinations[0]?._id}&destinationName=${pkg?.destinations[0]?.name}`,
               )
             }
             className="see-more absolute bottom-10 tracking-widest text-[#059699]"

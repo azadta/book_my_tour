@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import type { ItineraryDay } from "@/components/itinerary/types";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useOperatorEditPackage = () => {
   const [loading, setLoading] = useState(false);
@@ -41,11 +42,11 @@ export const useOperatorEditPackage = () => {
       );
       const payload = {
         ...data,
-        images: [...existingImages,...(uploadedImageUrls??[])],
+        images: [...existingImages, ...(uploadedImageUrls ?? [])],
         itinerary: uploadedItinerary,
       };
 
-      await axiosInstance.put(`/operator/packages/update/${id}`, payload);
+      await axiosInstance.put(APP_ROUTES.OPERATOR.PACKAGES_UPDATE(id), payload);
     } finally {
       setLoading(false);
     }
@@ -54,7 +55,7 @@ export const useOperatorEditPackage = () => {
   const deletePackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(`/operator/package/delete/${id}`);
+      await axiosInstance.delete(APP_ROUTES.OPERATOR.DELETE_PACKAGE(id));
     } finally {
       setLoading(false);
     }

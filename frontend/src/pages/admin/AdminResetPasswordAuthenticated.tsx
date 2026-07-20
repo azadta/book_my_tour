@@ -4,13 +4,15 @@ import { useNavigate } from "react-router-dom";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const AdminResetPasswordAuthenticated: React.FC = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const endPoint: string = "/admin/reset-password-authenticated";
+  const endPoint: string = APP_ROUTES.ADMIN.RESET_PASSWORD_AUTH;
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ const AdminResetPasswordAuthenticated: React.FC = () => {
     try {
       await resetPassword(oldPassword, newPassword, confirmPassword);
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
-      setTimeout(() => navigate("/admin/profile"), 2000);
+      setTimeout(() => navigate(FRONTEND_ROUTES.ADMIN.PROFILE), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);

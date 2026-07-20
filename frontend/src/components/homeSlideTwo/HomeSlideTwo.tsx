@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 import { Swiper as swiperType } from "swiper";
 import { useHome } from "@/hooks/useHome";
 import { useNavigate } from "react-router-dom";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const HomeSlideTwo = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const HomeSlideTwo = () => {
                   <div
                     onClick={() =>
                       navigate(
-                        `user/packages-list?destination=${destination._id}&destinationName=${encodeURIComponent(destination.name)}`,
+                        `${FRONTEND_ROUTES.USER.PACKAGES_LIST}?destination=${destination._id}&destinationName=${encodeURIComponent(destination.name)}`,
                       )
                     }
                     className=" w-full h-[240px] relative hover:cursor-pointer  "

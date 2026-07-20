@@ -10,6 +10,7 @@ import Pagination from "../../components/Pagination";
 import type { ActionButton } from "../../components/ReUsableTable";
 import ReUsableTable from "../../components/ReUsableTable";
 import CreateButton from "@/components/createButton/CreateButton";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const OperatorPackagesList = () => {
   const [open, setOpen] = useState(false);
@@ -66,7 +67,7 @@ const OperatorPackagesList = () => {
   const actions: ActionButton<IPackageItem>[] = [
     {
       label: () => "Edit",
-      onClick: (pkg) => navigate(`/operator/edit-package/${pkg._id}`),
+      onClick: (pkg) => navigate( FRONTEND_ROUTES.OPERATOR.EDIT_PACKAGE(pkg._id)),
       className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
       disabled: () => false,
       loadingText: "Editing...",
@@ -111,7 +112,7 @@ const OperatorPackagesList = () => {
               loading={loading}
             />
             <div className="mt-5">
-              <CreateButton onClick={()=>navigate('/operator/create-package')}>Create Package</CreateButton>
+              <CreateButton onClick={()=>navigate(FRONTEND_ROUTES.OPERATOR.CREATE_PACKAGE)}>Create Package</CreateButton>
             </div>
 
             <Pagination

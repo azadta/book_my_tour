@@ -3,6 +3,7 @@ import { axiosInstance } from "../api/axiosInstance";
 import type { IOperator } from "../redux/operator/operatorSlice";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminOperatorManagement = (page: number, limit: number) => {
   const [operators, setOperators] = useState<IOperator[]>([]);
@@ -12,9 +13,9 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
   const fetchOperators = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(
-        `/admin/operators?page=${page}&limit=${limit}`,
-      );
+      const res = await axiosInstance.get(APP_ROUTES.ADMIN.OPS_LIST, {
+        params: { page, limit },
+      });
       setOperators(res.data.operators || []);
       setTotalCount(res.data.totalCount || 0);
     } catch (error) {
@@ -26,14 +27,17 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
 
   const blockOperator = async (id: string, isBlocked: boolean) => {
     try {
-      await axiosInstance.put(`/admin/operators/block/${id}`, { isBlocked });
+      await axiosInstance.put(APP_ROUTES.ADMIN.OPS_BLOCK(id), { isBlocked });
       setOperators((prev) =>
         prev.map((operator) =>
           operator._id === id ? { ...operator, isBlocked } : operator,
         ),
       );
     } catch (error) {
-      console.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS, error);
+      console.error(
+        FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS,
+        error,
+      );
       toast.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS);
     }
   };
@@ -41,7 +45,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
   const deleteOperator = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/admin/operators/delete/${id}`);
+      await axiosInstance.delete(APP_ROUTES.ADMIN.OPS_DELETE(id));
       setOperators((prev) => prev.filter((operator) => operator._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 
 import { axiosInstance } from "@/api/axiosInstance";
-import type { ICategory, IPackageItem } from "@/interfaces/interfaces";
+import type {
+  ICategory,
+  IPackageItem,
+  IWishlistGroup,
+} from "@/interfaces/interfaces";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 export const usePackageList = () => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -12,6 +19,12 @@ export const usePackageList = () => {
   const [activeCategories, setActiveCategories] = useState<ICategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [uniqueCategoryCount, setUniqueCategoryCount] = useState(0);
+  const [wishlistGroups, setWishlistGroups] = useState<IWishlistGroup[]>([]);
+  const [selectedPackageForWishList, setSelectedPackageForWishlist] = useState<
+    string | null
+  >(null);
+
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   const fetchPackages = async (query: string) => {
     setLoadingPackages(true);
@@ -48,9 +61,63 @@ export const usePackageList = () => {
     }
   };
 
+  const fetchWishlists = async () => {
+    try {
+      const { data } = await axiosInstance.get(APP_ROUTES.USER.WISHLISTS);
+
+      setWishlistGroups(data.wishlistGroups);
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        FEEDBACK_MESSAGES.WISHLIST.ERROR.FETCH;
+      toast.error(message);
+
+      console.error(message, error);
+    }
+  };
+
+  const handleToggleWishlistGroup = async (groupId: string) => {
+    if (!selectedPackageForWishList) return;
+    try {
+      await axiosInstance.post(APP_ROUTES.USER.WISHLIST_TOGGLE, {
+        groupId,
+        packageId: selectedPackageForWishList,
+      });
+      await fetchWishlists();
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        FEEDBACK_MESSAGES.WISHLIST.ERROR.TOGGLE;
+      toast.error(message);
+      console.error(message, error);
+    }
+  };
+
+  const handleCreateWishlistGroup = async (title: string) => {
+    try {
+      const { data } = await axiosInstance.post(
+        APP_ROUTES.USER.WISHLIST_CREATE,
+        { title },
+      );
+
+      if (data.success && selectedPackageForWishList) {
+        await handleToggleWishlistGroup(data.wishlistGroup._id);
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        FEEDBACK_MESSAGES.WISHLIST.ERROR.CREATE_GROUP;
+      toast.error(message);
+      console.error(message, error);
+    }
+  };
+
   useEffect(() => {
     fetchActiveCategories();
   }, []);
+  useEffect(() => {
+    if (currentUser) fetchWishlists();
+  }, [currentUser]);
 
   return {
     packages,
@@ -60,5 +127,10 @@ export const usePackageList = () => {
     activeCategories,
     loadingCategories,
     uniqueCategoryCount,
+    wishlistGroups,
+    selectedPackageForWishList,
+    setSelectedPackageForWishlist,
+    handleCreateWishlistGroup,
+    handleToggleWishlistGroup,
   };
 };

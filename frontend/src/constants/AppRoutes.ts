@@ -24,6 +24,28 @@ export const APP_ROUTES = {
     PACKAGES_BY_CATEGORY: (category: string) =>
       `/user/packages/category/${encodeURIComponent(category)}`,
     RESET_PASSWORD_AUTH: "/user/reset-password-authenticated",
+    WISHLISTS: "/user/wishlists",
+    WISHLIST_TOGGLE: "/user/wishlist/toggle",
+    WISHLIST_CREATE: "/user/wishlist/create",
+    WISHLIST_UPDATE: (groupId: string) => `/user/wishlist/update/${groupId}`,
+    WISHLIST_DELETE: (groupId: string) => `/user/wishlist/delete/${groupId}`,
+
+    WISHLIST_ADD_NOTE: (groupId: string) =>
+      `/user/wishlist/add-note/${groupId}`,
+    WISHLIST_UPDATE_NOTE: (groupId: string, noteId: string) =>
+      `/user/wishlist/update-note/${groupId}/${noteId}`,
+    WISHLIST_DELETE_NOTE: (groupId: string, noteId: string) =>
+      `/user/wishlist/delete-note/${groupId}/${noteId}`,
+    WISHLIST_SHARE_LINK: (groupId: string) =>
+      `/user/wishlist/share-link/${groupId}`,
+    WISHLIST_SHARED_GROUP: (sharedToken: string) =>
+      `/user/wishlist/shared/${sharedToken}`,
+    REVIEWS: (packageId: string) => `/user/reviews/${packageId}`,
+    CREATE_REVIEW: (packageId: string) => `/user/review/create/${packageId}`,
+    UPDATE_REVIEW: (reviewId: string, packageId: string) =>
+      `/user/review/update/${reviewId}/${packageId}`,
+    DELETE_REVIEW: (reviewId: string, packageId: string) =>
+      `/user/review/delete/${reviewId}/${packageId}`,
   },
   OPERATOR: {
     REGISTER: "/operator/register",

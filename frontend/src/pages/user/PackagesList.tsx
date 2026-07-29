@@ -1,21 +1,27 @@
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
+import SaveToWishlistModal from "@/components/SaveToWishlistModal";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 import { usePackageList } from "@/hooks/usePackageList";
+import type { RootState } from "@/redux/store";
 import { updateSearchParams } from "@/utils/updateSearchParams";
 
 import {
   Calendar,
   Clock,
   Compass,
+  Heart,
   MapPin,
   Search,
   ShieldCheck,
   SlidersHorizontal,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useDebounce } from "use-debounce";
 
 const PackagesList = () => {
@@ -23,6 +29,7 @@ const PackagesList = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   const {
     packages,
@@ -32,6 +39,11 @@ const PackagesList = () => {
     uniqueCategoryCount,
     fetchPackages,
     activeCategories,
+    wishlistGroups,
+    selectedPackageForWishList,
+    setSelectedPackageForWishlist,
+    handleCreateWishlistGroup,
+    handleToggleWishlistGroup,
   } = usePackageList();
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -76,24 +88,22 @@ const PackagesList = () => {
   useEffect(() => {
     const value = debouncedMaxBudget === 100000 ? null : debouncedMaxBudget;
     setSearchParams((prev) => {
-      return updateSearchParams(prev, { maxBudget: value, page: 1 });
+      return updateSearchParams(prev, { maxBudget: value });
     });
   }, [debouncedMaxBudget]);
 
   useEffect(() => {
     const value = debouncedMaxDuration === 15 ? null : debouncedMaxDuration;
-    setSearchParams((prev) =>
-      updateSearchParams(prev, { maxDuration: value, page: 1 }),
-    );
+    setSearchParams((prev) => updateSearchParams(prev, { maxDuration: value }));
   }, [debouncedMaxDuration]);
   useEffect(() => {
     const value = debouncedSearch === "" ? null : debouncedSearch;
     setSearchParams((prev) => {
-      return updateSearchParams(prev, { search: value, page: 1 });
+      return updateSearchParams(prev, { search: value });
     });
   }, [debouncedSearch]);
 
-  if (loadingCategories || loadingPackages) return <Loading />;
+ 
 
   return (
     <div className="min-h-screen  bg-gray-50  font-sans ">
@@ -107,15 +117,10 @@ const PackagesList = () => {
         <aside
           className={`fixed inset-y-0 left-0 w-80 bg-white p-6 z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto border-r border-gray-200 ${showMobileFilters ? "translate-x-0 max-w-[250px]" : "-translate-x-full"} md:sticky md:translate-x-0 md:top-15 md:h-[calc(100vh-60px)] md:z-40 md:block  `}
         >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-6 ">
-              Filter Tours
-            </h2>
-            <button
-              className="md:hidden p-1 text-gray-500 hover:text-gray-800 "
-              onClick={() => setShowMobileFilters(false)}
-            ></button>
-          </div>
+          <h2 className="text-lg font-bold text-gray-900 mb-6 mt-5">
+            Filter Tours
+          </h2>
+
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -291,12 +296,19 @@ const PackagesList = () => {
           </div>
 
           {packages.length > 0 ? (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 px-1">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 px-1 relative  ">
+              {(loadingCategories || loadingPackages)&&<Loading/>}
               {packages.map((pkg) => {
+                const isSavedAnywhere = wishlistGroups.some((g) =>
+                  g.packages.some((p: any) => {
+                    const id = typeof p === "string" ? p : p._id;
+                    return id === pkg._id;
+                  }),
+                );
                 return (
                   <div
                     key={pkg._id}
-                    className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm  hover:shadow-xl transition-all duration-300 flex flex-col  group  "
+                    className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm  hover:shadow-xl transition-all duration-300 flex flex-col  group relative  "
                   >
                     <div className="relative h-64 overflow-hidden ">
                       <img
@@ -304,16 +316,35 @@ const PackagesList = () => {
                         alt={pkg.name}
                         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
+                      <div className="absolute top-4 right-4 z-10 flex gap-2 items-center justify-center">
+                        {pkg.discount && (
+                          <div className=" bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-pulse ">
+                            Save {pkg.discount}%
+                          </div>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!currentUser) {
+                              toast.info(
+                                FEEDBACK_MESSAGES.WISHLIST.ERROR.LOGIN,
+                              );
+                              navigate(FRONTEND_ROUTES.USER.LOGIN);
+                            }
+                            setSelectedPackageForWishlist(pkg._id);
+                          }}
+                          className=" p-2.5 rounded-full bg-white/80 backdrop-blur-md shadow-md hover:scale-110 transition-all active:scale-95 "
+                        >
+                          <Heart
+                            className={`w-5 h-5 ${isSavedAnywhere ? "fill-rose-500 text-rose-500" : "text-gray-600 hover:text-rose-500"}`}
+                          />
+                        </button>
+                      </div>
                       <div className="absolute top-4 left-4 rigt-4 bg-white/90 backdrop-blur-md text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm ">
                         <MapPin className="w-3.5 h-3.5 text-blue-600" />
                         {pkg.destinations[0].name}
                       </div>
 
-                      {pkg.discount && (
-                        <div className="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-pulse ">
-                          Save {pkg.discount}%
-                        </div>
-                      )}
                       <div className="absolute bottom-4 left-4 bg-gray-900/60 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded">
                         {pkg?.category?.name}
                       </div>
@@ -369,7 +400,7 @@ const PackagesList = () => {
                       <div className="border-t border-gray-100 pt-4 mt-auto xs:flex xs:flex-row flex-col  justify-between   gap-3">
                         {pkg?.discount ? (
                           <div>
-                            <span className="text-xs text-gray-400 line-through block">
+                            <span className="text-xs text-gray-400 line-through  block">
                               Rs {pkg.amount.toFixed(2)}
                             </span>
 
@@ -439,6 +470,14 @@ const PackagesList = () => {
           />
         </main>
       </div>
+      <SaveToWishlistModal
+        isOpen={Boolean(selectedPackageForWishList)}
+        onClose={() => setSelectedPackageForWishlist(null)}
+        groups={wishlistGroups}
+        packageId={selectedPackageForWishList || ""}
+        onToggleGroup={handleToggleWishlistGroup}
+        onCreateGroup={handleCreateWishlistGroup}
+      />
     </div>
   );
 };

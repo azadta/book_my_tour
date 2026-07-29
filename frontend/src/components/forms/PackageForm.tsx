@@ -77,7 +77,7 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
         toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.UPDATE);
       }
     } catch (error: any) {
-      console.log(fieldError, fieldError);
+   
       if (error.response?.data?.errors) {
         setFieldError(error.response.data.errors);
         return;

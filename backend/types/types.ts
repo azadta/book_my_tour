@@ -2,9 +2,9 @@ export const Types = {
   UserRepository: Symbol.for("UserRepository"),
   OperatorRepository: Symbol.for("OperatorRepository"),
   AdminRepository: Symbol.for("AdminRepository"),
-  DestinationRepository:Symbol.for('DestinationRepository'),
-  PackageCategoryRepository:Symbol.for('PackageCategoryRepository'),
-  PackageRepository:Symbol.for('PackageRepository'),
+  DestinationRepository: Symbol.for("DestinationRepository"),
+  PackageCategoryRepository: Symbol.for("PackageCategoryRepository"),
+  PackageRepository: Symbol.for("PackageRepository"),
   UserService: Symbol.for("UserService"),
   OperatorService: Symbol.for("OperatorService"),
   AdminService: Symbol.for("AdminService"),
@@ -19,4 +19,6 @@ export const Types = {
   AdminController: Symbol.for("AdminController"),
   CommonAuthController: Symbol.for("CommonAuthController"),
   AuthMiddleware: Symbol.for("AuthMiddleware"),
+  WishlistRepository: Symbol.for("WishlistRepository"),
+  ReviewRepository:Symbol.for('ReviewRepository')
 };

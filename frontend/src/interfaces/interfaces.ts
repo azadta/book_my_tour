@@ -74,3 +74,52 @@ export interface IPackageItem {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface INote {
+  _id: string;
+  text: string;
+  createdAt: string;
+}
+
+export interface IWishlistGroup {
+  _id: string;
+  userId: string;
+  title: string;
+  description: string;
+  packages: IPackageItem[];
+  notes: INote[];
+  shareToken?: string;
+  isPublic: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IReviewItem {
+  _id: string;
+  userId: {_id:string, name: string; image?: string };
+  rating: number;
+  categoryRatings: {
+    guide: number;
+    value: number;
+    itinerary: number;
+    transport: number;
+  };
+  comment: string;
+  travelerType: string;
+  createdAt: string;
+  images?: string[];
+}
+
+export interface IReviewStats {
+  totalReviews: number;
+  averageRating: number;
+  avgGuide: number;
+  avgValue: number;
+  avgItinerary: number;
+  avgTransport: number;
+  fiveStar: number;
+  fourStar: number;
+  threeStar: number;
+  twoStar: number;
+  oneStar: number;
+}

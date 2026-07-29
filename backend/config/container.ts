@@ -41,6 +41,11 @@ import { SecurityService } from "../services/securityService";
 import { TokenService } from "../services/tokenService";
 import { UserService } from "../services/userService";
 import { Types } from "../types/types";
+import { IWishlistRepository } from "../interfaces/IWishlistRepository";
+import { WishlistRepository } from "../repositories/wishlistRepository";
+import { IReview } from "../models/Review";
+import { ReviewRepository } from "../repositories/reviewRepository";
+import { IReviewRepository } from "../interfaces/IReviewRepository";
 
 const container = new Container();
 
@@ -128,7 +133,14 @@ container
   .bind<IAuthMiddleware>(Types.AuthMiddleware)
   .to(AuthMiddleware)
   .inSingletonScope();
-  
+container
+  .bind<IWishlistRepository>(Types.WishlistRepository)
+  .to(WishlistRepository)
+  .inSingletonScope();
+container
+  .bind<IReviewRepository>(Types.ReviewRepository)
+  .to(ReviewRepository)
+  .inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,

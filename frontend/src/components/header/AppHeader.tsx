@@ -24,7 +24,7 @@ const AppHeader = ({ showNavigation }: Props) => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   return (
     <>
-      <header className="fixed z-50 top-0 left-0 w-full   ">
+      <header className="fixed z-60 top-0 left-0 w-full   ">
         <div className="bg-white shadow-md">
           <div
             className={`max-w-7xl mx-auto flex justify-between items-center px-4  pt-3 pb-3 `}
@@ -85,10 +85,10 @@ const AppHeader = ({ showNavigation }: Props) => {
           </Link>
           {currentUser && (
             <>
-              <Link to={FRONTEND_ROUTES.USER.FAVOURITES} onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.WISHLIST} onClick={closeDrawer}>
                 <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                   <TbFileLike />
-                  My Favourites
+                  My Wishlist
                 </li>
               </Link>
               <Link to={FRONTEND_ROUTES.USER.PROFILE} onClick={closeDrawer}>

@@ -25,7 +25,7 @@ export const useAdminDashboard = () => {
         axiosInstance.get(APP_ROUTES.ADMIN.USER_COUNT),
         axiosInstance.get(APP_ROUTES.ADMIN.OPS_COUNT),
         axiosInstance.get( APP_ROUTES.ADMIN.SIGNUP_TODAY),
-        axiosInstance.get(`APP_ROUTES.ADMIN.OPS_PENDING_COUNT`),
+        axiosInstance.get(APP_ROUTES.ADMIN.OPS_PENDING_COUNT),
       ]);
       setUsersCount(usersCount.data.usersCount);
       setOperatorsCount(operatorsCount.data.operatorsCount);

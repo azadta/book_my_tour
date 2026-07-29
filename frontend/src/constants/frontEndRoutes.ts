@@ -2,13 +2,14 @@ export const FRONTEND_ROUTES = {
   USER: {
     HOME: "/",
     ABOUT: "/user/about",
-    CONTACT:"/user/contact",
-    FAVOURITES:'/user/favourites',
-    NOTIFICATIONS:'/user/notifications',
+    CONTACT: "/user/contact",
+    FAVOURITES: "/user/favourites",
+    NOTIFICATIONS: "/user/notifications",
     LOGIN: "/user/login",
     REGISTER: "/user/register",
     FORGOT_PASSWORD: "/user/forgot-password",
     PROFILE: "/user/profile",
+    WISHLIST: "/user/wishlist",
     PACKAGES_LIST: "/user/packages-list",
     RESET_PASSWORD_AUTH: "/user/reset-password",
 
@@ -19,6 +20,8 @@ export const FRONTEND_ROUTES = {
     VERIFY_OTP: (userId: string) => `/user/verify-otp/${userId}`,
     RESET_PASSWORD: (token: string) => `/user/reset-password/${token}`,
     PACKAGE_DETAILS: (id: string) => `/user/package-details/${id}`,
+    SHARED_WISHLIST: (shareToken: string) => `/shared-wishlist/${shareToken}`,
+    SHARED_WISHLIST_PATTERN: `/shared-wishlist/:shareToken`,
   },
 
   OPERATOR: {
@@ -33,7 +36,7 @@ export const FRONTEND_ROUTES = {
     OTP_VERIFICATION_PATTERN: "/operator/otp-verification/:operatorId",
     RESET_PASSWORD_PATTERN: "/operator/reset-password/:token",
     EDIT_PACKAGE_PATTERN: "/operator/edit-package/:id",
-    PACKAGES_LIST_PATTERN: "/operator/package-list/:id",
+    PACKAGES_LIST_PATTERN: "/operator/packages-list/:id",
 
     OTP_VERIFICATION: (operatorId: string) =>
       `/operator/otp-verification/${operatorId}`,
@@ -61,4 +64,4 @@ export const FRONTEND_ROUTES = {
     EDIT_OPERATOR: (id: string) => `/admin/edit-operator/${id}`,
     EDIT_PACKAGE: (id: string) => `/admin/edit-package/${id}`,
   },
-} as const
+} as const;

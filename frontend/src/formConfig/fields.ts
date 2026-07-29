@@ -900,3 +900,32 @@ export const createPackageCategoryFields: FormField[] = [
     required: false,
   },
 ];
+
+export const reviewFields = [
+  {
+    id: "travelerType",
+    label: "Who did you travel with?",
+    type: "select",
+    required: true,
+    options: [
+      { label: "Couple", value: "Couple" },
+      { label: "Solo", value: "Solo" },
+      { label: "Family", value: "Family" },
+      { label: "Friends", value: "Friends" },
+    ],
+  },
+  {
+    id: "comment",
+    label: "Your review",
+    type: "textarea",
+    placeholder: "What made this package special?",
+    required: true,
+  },
+  {
+    id: "images",
+    label: "Add photos",
+    type: "file",
+    multiple: true,
+    required: false,
+  },
+];

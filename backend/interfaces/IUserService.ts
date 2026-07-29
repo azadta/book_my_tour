@@ -1,7 +1,10 @@
 import { IDestination } from "../models/Destination";
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
+
+import { CreateReviewDto, IReview } from "./IReview";
 import { IUser, IUserResponse } from "./IUser";
+import { ICreateWishlistDTO, IWishlistGroup } from "./IWishList";
 
 export interface IUserService {
   registerUser(userData: {
@@ -56,4 +59,68 @@ export interface IUserService {
   getDestinationsByPackageCategoryService(categoryName: string): Promise<any[]>;
 
   getPackagesByCategoryService(categoryName: string): Promise<Ipackage[]>;
+  getUserWishlists(userId: string): Promise<IWishlistGroup[]>;
+  createGroup(userId: string, dto: ICreateWishlistDTO): Promise<IWishlistGroup>;
+  togglePackageInGroup(
+    userId: string,
+    groupId: string,
+    packageId: string,
+  ): Promise<IWishlistGroup>;
+  addNoteToGroup(
+    userId: string,
+    groupId: string,
+    text: string,
+  ): Promise<IWishlistGroup>;
+  generateShareableLink(
+    userId: string,
+    groupId: string,
+  ): Promise<{
+    shareToken: string;
+  }>;
+  getSharedGroup(shareToken: string): Promise<IWishlistGroup>;
+  editGroup(
+    userId: string,
+    groupId: string,
+    dto: {
+      title?: string;
+      description?: string;
+    },
+  ): Promise<IWishlistGroup>;
+  deleteGroup(userId: string, groupId: string): Promise<IWishlistGroup | null>;
+  deleteNote(
+    userId: string,
+    groupId: string,
+    noteId: string,
+  ): Promise<IWishlistGroup>;
+  editNote(
+    userId: string,
+    groupId: string,
+    noteId: string,
+    text: string,
+  ): Promise<IWishlistGroup>;
+  getPackageReviewService(
+    packageId: string,
+    page?: number,
+    limit?: number,
+  ): Promise<{
+    reviews: IReview[];
+    stats: any;
+  }>;
+  createPackageReviewService(reviewData: CreateReviewDto): Promise<IReview>;
+  updatePackageReviewService(
+    userId: string,
+    reviewId: string,
+    packageId: string,
+    updatePayload: any,
+  ): Promise<{
+    review: IReview | null;
+    stats: any;
+  }>;
+  deletePackageReviewService(
+    userId: string,
+    reviewId: string,
+    packageId: string,
+  ): Promise<{
+    stats: any;
+  }>;
 }

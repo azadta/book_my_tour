@@ -12,7 +12,7 @@ export const RESPONSE_MESSAGES = {
     },
     ERROR: {
       UNAUTHORIZED: "Unauthorized,Please Login Again",
-      ACCESS_DENIED:"Access denied: Insufficient permissions",
+      ACCESS_DENIED: "Access denied: Insufficient permissions",
       TOKEN_MISSING: "Unauthorized: No token provided",
       NO_REFRESH_TOKEN: "No refresh token",
       INVALID_CREDENTIALS: "Invalid email or password",
@@ -22,9 +22,9 @@ export const RESPONSE_MESSAGES = {
       EMAIL_ALREADY_VERIFIED: "Email is already verified",
       OTP_EXPIRED_OR_INVALID: "OTP is expired or invalid",
       INVALID_TOKEN: "Token invalid or expired",
-      EXPIRED_TOKEN:"Token expired",
+      EXPIRED_TOKEN: "Token expired",
       ACCOUNT_BLOCKED: "Your account has been blocked, Please contact support",
-      SERVER_ERROR:'Internal server error'
+      SERVER_ERROR: "Internal server error",
     },
   },
   ADMIN: {
@@ -93,6 +93,30 @@ export const RESPONSE_MESSAGES = {
     ERROR: {
       ALL_FIELDS_REQUIRED: "Please enter all fields",
       VALIDATION_ERROR: "Validation Error",
+    },
+  },
+  WISHLIST: {
+    SUCCESS: {
+      DELETE: "Wishlist Group deleted successfully",
+    },
+    ERROR: {
+      NOT_FOUND: "Wishlist group not found",
+      UPDATE: "Failed to update wishlist group",
+      UNAUTHORIZED_OR_NOT_FOUND: "Unauthorized or group not found",
+      ADD_NOTE: "Failed to add note",
+      LINK_EXPIRE_OR_NOT_FOUND:
+        "Shared wishlist folder not found or link expired",
+    },
+  },
+  REVIEW: {
+    SUCCESS: {
+      UPDATE: "review updated successfully",
+      DELETE: "review deleted successfully",
+    },
+    ERROR: {
+      ALREADY_EXIST: "You have already submitted a review for this package",
+      NOT_FOUND: "User review not found",
+      FORBIDDEN: "Unauthorized to edit this review",
     },
   },
 } as const;

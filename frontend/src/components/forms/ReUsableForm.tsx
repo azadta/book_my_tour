@@ -1,7 +1,11 @@
 import { Country, State, type IState } from "country-state-city";
 import { useEffect, useState } from "react";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
-import type { FormField, IActivity, IOptionalActivity } from "../../interfaces/interfaces";
+import type {
+  FormField,
+  IActivity,
+  IOptionalActivity,
+} from "../../interfaces/interfaces";
 import type { ItineraryDay } from "../itinerary/types";
 
 interface ReUsableFormProps {
@@ -332,6 +336,36 @@ const ReUsableForm = ({
                   </p>
                 )}
               </div>
+            );
+          }
+
+          if (field.type === "textarea") {
+            return (
+              <>
+                <textarea
+                  key={field.id}
+                  id={field.id}
+                  placeholder={field.placeholder || field.label}
+                  value={formData[field.id] || ""}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      [field.id]: e.target.value,
+                    }));
+                    setFieldError((prev) => ({ ...prev, [field.id]: "" }));
+                  }}
+                  rows={3}
+                  className="w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 resize-none"
+                  disabled={field.disabled}
+                  readOnly={field.readOnly}
+                />
+
+                {fieldError[field.id] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldError[field.id]}
+                  </p>
+                )}
+              </>
             );
           }
 

@@ -1,5 +1,6 @@
-import { IUser } from "../models/User";
+
 import { IBaseRepository } from "./IBaseRepository";
+import { IUser } from "./IUser";
 
 export interface IUserRepository extends IBaseRepository<IUser> {
   findByEmail(email: string): Promise<IUser | null>;

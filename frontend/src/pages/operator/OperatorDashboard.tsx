@@ -35,7 +35,7 @@ const OperatorDashboard = () => {
               <div className={style.card}>
                 <div className={`${style.image} flex items-center justify-center`}>
                   {" "}
-                  <LuClipboardPenLine className="size-[40px]" />
+                  <LuClipboardPenLine className="size-[40px]  text-amber-300" />
                 </div>
                 <div className={style['card-info']}>
                   <span>Total Bookings</span>
@@ -46,7 +46,7 @@ const OperatorDashboard = () => {
               <div className={style.card}>
                 <div className={`${style.image} flex items-center justify-center`}>
                   {" "}
-                  <BsBoxSeamFill className="size-[37px]" />
+                  <BsBoxSeamFill className="size-[35px]  text-amber-300" />
                 </div>
                 <div className={style['card-info']}>
                   <span> Total Packages</span>
@@ -57,7 +57,7 @@ const OperatorDashboard = () => {
               <div className={style.card}>
                 <div className={`${style.image} flex items-center justify-center`}>
                   {" "}
-                  <HiCash className="size-[50px] text-emerald-200" />
+                  <HiCash className="size-[50px] text-amber-300" />
                 </div>
                 <div className={style['card-info']}>
                   <span> Payouts Recieved</span>

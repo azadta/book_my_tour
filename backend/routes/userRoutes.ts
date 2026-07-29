@@ -67,4 +67,86 @@ router.get(
   userController.getPackagesByCategory,
 );
 
+router.get(
+  ROUTES.USER.WISHLISTS,
+  authMiddleware.verifyRole("user"),
+
+  userController.getWishlists,
+);
+router.post(
+  ROUTES.USER.CREATE_WISHLIST_GROUP,
+  authMiddleware.verifyRole("user"),
+
+  userController.createWhishlistGroup,
+);
+router.put(
+  ROUTES.USER.UPDATE_WISHLIST_GROUP,
+  authMiddleware.verifyRole("user"),
+
+  userController.editWishlistGroup,
+);
+router.delete(
+  ROUTES.USER.DELETE_WISHLIST_GROUP,
+  authMiddleware.verifyRole("user"),
+
+  userController.deleteWishlistGroup,
+);
+router.post(
+  ROUTES.USER.WISHLIST_TOGGLE,
+  authMiddleware.verifyRole("user"),
+
+  userController.toggleWhishlistPackage,
+);
+router.post(
+  ROUTES.USER.WISHLIST_ADD_NOTE,
+  authMiddleware.verifyRole("user"),
+
+  userController.addWishlistNote,
+);
+router.put(
+  ROUTES.USER.WISHLIST_UPDATE_NOTE,
+  authMiddleware.verifyRole("user"),
+
+  userController.editWishlistNote,
+);
+router.delete(
+  ROUTES.USER.WISHLIST_DELETE_NOTE,
+  authMiddleware.verifyRole("user"),
+
+  userController.deleteWishlistNote,
+);
+
+router.get(
+  ROUTES.USER.WISHLIST_SHARE_LINK,
+  authMiddleware.verifyRole("user"),
+
+  userController.getWishlistShareLink,
+);
+router.get(
+  ROUTES.USER.WISHLIST_SHARED,
+
+  userController.getSharedWishlist,
+);
+router.get(
+  ROUTES.USER.REVIEWS,
+
+  userController.getPackageReviews,
+);
+router.post(
+  ROUTES.USER.CREATE_REVIEW,
+  authMiddleware.verifyRole("user"),
+  userController.createPackageReview,
+);
+router.put(
+  ROUTES.USER.UPDATE_REVIEW,
+  authMiddleware.verifyRole("user"),
+  userController.updatePackageReview,
+);
+
+router.delete(
+  ROUTES.USER.DELETE_REVIEW,
+  authMiddleware.verifyRole("user"),
+  userController.deletePackageReview,
+);
+
 export default router;

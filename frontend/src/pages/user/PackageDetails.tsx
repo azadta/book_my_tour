@@ -1,4 +1,6 @@
+import AddUserReviewModal from "@/components/AddUserReviewModal";
 import Loading from "@/components/Loading";
+import PackageReviews from "@/components/PackageReviews";
 import { usePackageDetails } from "@/hooks/usePackageDetails";
 import {
   Camera,
@@ -6,19 +8,38 @@ import {
   ChevronRight,
   Clock,
   MapPin,
-  Trash2
+  MessageSquare,
+  Star,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const PackageDetails = () => {
   const { id } = useParams();
-  const { pkg: data, loading } = usePackageDetails(id as string);
+  const {
+    pkg: data,
+    loading,
+    reviewStats,
+    reviews,
+    closeModal,
+    editingReview,
+    isModalOpen,
+    openCreateModal,
+    openEditModal,
+    saveReview,
+    setEditingReview,
+
+    submittingReview,
+    deleteReview,
+    updateReview,
+  } = usePackageDetails(id as string);
 
   const [removedActivityIds, setRemovedActivityIds] = useState<string[]>([]);
   const [addedActivityIds, setAddedActivityIds] = useState<string[]>([]);
   const [activeDay, setActiveDay] = useState(1);
   const dayRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
   const isAutoScrolling = useRef(false);
 
   const removedCost =
@@ -76,6 +97,12 @@ const PackageDetails = () => {
         isAutoScrolling.current = false;
       }, 800);
     }
+  };
+
+  const scrollToReviews = () => {
+    document
+      .getElementById("reviews-section")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -192,11 +219,42 @@ const PackageDetails = () => {
 
           <main className=" lg:col-span-5 space-y-8">
             <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-              <div className="flex justify-between items-start gap-4 mb-4 ">
+              <div className="flex justify-between items-start gap-4 mb-2 ">
                 <div>
-                  <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md mb -2 inline-block">
-                    {data.category.name} Experience
-                  </span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md mb -2 inline-block">
+                      {data.category.name} Experience
+                    </span>
+                    {reviewStats && reviewStats?.totalReviews > 0 ? (
+                      <button
+                        onClick={(e) => {
+                          scrollToReviews();
+                          e.currentTarget.blur();
+                        }}
+                        className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-md transition-colors cursor-pointer "
+                      >
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <span>{reviewStats?.averageRating.toFixed(1)}</span>
+                        <span className="text-amber-600 font-normal">
+                          ({reviewStats?.totalReviews})
+                        </span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          scrollToReviews();
+                          e.currentTarget.blur();
+                        }}
+                        className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-md transition-colors cursor-pointer "
+                      >
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+
+                        <span className="text-amber-600 font-normal">
+                          Be the first to review
+                        </span>
+                      </button>
+                    )}
+                  </div>
                   <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
                     {data.name}
                   </h1>
@@ -501,6 +559,37 @@ const PackageDetails = () => {
           </aside>
         </div>
       </div>
+      {reviewStats?.totalReviews === 0 && (
+        <section id="reviews-section">
+          <div className="max-w-[1540px] mx-auto px-4 mt-5 bg-white border border-gray-100 rounded-3xl py-10 shadow-sm ">
+            <div className="flex flex-col items-center text-center space-y-4 ">
+              <MessageSquare className="w-12 h-12 text-blue-500 " />
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  No Reviews Yet
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Be the first traveler to share your experience.
+                </p>
+              </div>
+              <button
+                onClick={() => openCreateModal()}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition"
+              >
+                Write a Review
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <PackageReviews
+        onDeleteReview={deleteReview}
+        onEditReview={openEditModal}
+        stats={reviewStats}
+        reviews={reviews}
+        openCreateModal={openCreateModal}
+      />
       <div className="lg:hidden sticky  bottom-0 z-20  left-0 right-0  bg-white border-t border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)] px-4 py-3 pb-safe flex items-center justify-between gap-4 ">
         <div>
           <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">
@@ -514,6 +603,14 @@ const PackageDetails = () => {
           Book Package
         </button>
       </div>
+
+      <AddUserReviewModal
+        isOpen={isModalOpen}
+        loading={submittingReview}
+        initialData={editingReview}
+        onClose={closeModal}
+        onSubmit={saveReview}
+      />
     </div>
   );
 };

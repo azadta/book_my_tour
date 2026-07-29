@@ -1,7 +1,9 @@
 import { Types as mongooseType } from "mongoose";
 
 import { inject, injectable } from "inversify";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
 import type { IHashGenerator } from "../interfaces/IHashGenerator";
 import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
@@ -9,14 +11,20 @@ import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryR
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
+import { IUser, IUserResponse } from "../interfaces/IUser";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import type { IUserService } from "../interfaces/IUserService";
+import type { IWishlistRepository } from "../interfaces/IWishlistRepository";
 import type { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { IUser, IUserResponse } from "../interfaces/IUser";
-import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
-import { RESPONSE_MESSAGES } from "../constants/messages";
+import { ICreateWishlistDTO, IWishlistGroup } from "../interfaces/IWishList";
+import { ROUTES } from "../constants/routesConstants";
+import { randomBytes } from "node:crypto";
+import type { IReviewRepository } from "../interfaces/IReviewRepository";
+
+import { STATUS_CODES } from "node:http";
+import { CreateReviewDto } from "../interfaces/IReview";
 
 @injectable()
 export class UserService implements IUserService {
@@ -33,6 +41,10 @@ export class UserService implements IUserService {
     @inject(Types.SecurityService) private securityService: ISecurityService,
     @inject(Types.TokenService) private tokenService: ITokenService,
     @inject(Types.CryptoHashService) private resetTokenHasher: IHashGenerator,
+    @inject(Types.WishlistRepository)
+    private wishlistRepository: IWishlistRepository,
+    @inject(Types.ReviewRepository)
+    private reviewRepository: IReviewRepository,
   ) {}
 
   async registerUser(userData: {
@@ -42,7 +54,10 @@ export class UserService implements IUserService {
   }) {
     const existing = await this.userRepository.findByEmail(userData.email);
     if (existing)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS,
+        StatusCode.BAD_REQUEST,
+      );
     const hashedPassword = this.hashService.hash(userData.password);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     // const otpExpire = Date.now() + 10 * 60 * 1000;
@@ -67,12 +82,22 @@ export class UserService implements IUserService {
 
   async verifyUserOtp({ userId, otp }: { userId: string; otp: string }) {
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+    if (!user)
+      throw new CustomError(
+        RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     if (user.isEmailVerified)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_ALREADY_VERIFIED, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_ALREADY_VERIFIED,
+        StatusCode.BAD_REQUEST,
+      );
 
     if (user.otp !== otp || !user.otpExpire || user.otpExpire < Date.now()) {
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.OTP_EXPIRED_OR_INVALID, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.OTP_EXPIRED_OR_INVALID,
+        StatusCode.BAD_REQUEST,
+      );
     }
 
     user.isEmailVerified = true;
@@ -83,7 +108,11 @@ export class UserService implements IUserService {
 
   async resendUserOtp(userId: string): Promise<{ otpExpire: number }> {
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+    if (!user)
+      throw new CustomError(
+        RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
 
@@ -199,7 +228,11 @@ export class UserService implements IUserService {
 
   async forgotPasswordService(email: string) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+    if (!user)
+      throw new CustomError(
+        RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     if (user.isBlocked) {
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.ACCOUNT_BLOCKED,
@@ -218,14 +251,17 @@ export class UserService implements IUserService {
       `Click this link to reset your password: ${resetUrl}`,
     );
 
-    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.RESET_LINK_SENT};
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.RESET_LINK_SENT };
   }
 
   async resetPasswordService(token: string, newPassword: string) {
     const hashedToken = this.resetTokenHasher.hash(token);
     const user = await this.userRepository.findByResetToken(hashedToken);
     if (!user)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN,
+        StatusCode.BAD_REQUEST,
+      );
     user.password = this.hashService.hash(newPassword);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
@@ -250,7 +286,7 @@ export class UserService implements IUserService {
   }
 
   userLogoutService(): { message: string } {
-    return { message:RESPONSE_MESSAGES.AUTH.SUCCESS.USER_LOGOUT };
+    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.USER_LOGOUT };
   }
 
   async resetPasswordAuthenticatedService(
@@ -260,9 +296,16 @@ export class UserService implements IUserService {
     confirmPassword: string,
   ) {
     if (!userId || !oldPassword || !newPassword || !confirmPassword)
-      throw new CustomError(RESPONSE_MESSAGES.VALIDATION.ERROR.ALL_FIELDS_REQUIRED, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.VALIDATION.ERROR.ALL_FIELDS_REQUIRED,
+        StatusCode.BAD_REQUEST,
+      );
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+    if (!user)
+      throw new CustomError(
+        RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const isMatch = this.hashService.compare(oldPassword, user.password);
     if (!isMatch)
       throw new CustomError(
@@ -270,7 +313,10 @@ export class UserService implements IUserService {
         StatusCode.BAD_REQUEST,
       );
     if (confirmPassword !== newPassword)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
+        StatusCode.BAD_REQUEST,
+      );
     user.password = this.hashService.hash(newPassword);
     await this.userRepository.save(user);
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
@@ -388,5 +434,251 @@ export class UserService implements IUserService {
     return this.packageRepository.findPackageByCategory(
       category._id.toString(),
     );
+  }
+
+  async getUserWishlists(userId: string): Promise<IWishlistGroup[]> {
+    return this.wishlistRepository.findByUserId(userId);
+  }
+
+  async createGroup(
+    userId: string,
+    dto: ICreateWishlistDTO,
+  ): Promise<IWishlistGroup> {
+    return this.wishlistRepository.createGroup(userId, dto);
+  }
+
+  async togglePackageInGroup(
+    userId: string,
+    groupId: string,
+    packageId: string,
+  ): Promise<IWishlistGroup> {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (group.userId.toString() !== userId) {
+      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED);
+    }
+
+    const hasPackage = group.packages.some(
+      (pkg: any) =>
+        (pkg._id ? pkg._id.toString() : pkg.toString()) === packageId,
+    );
+    const updatedGroup = hasPackage
+      ? await this.wishlistRepository.removePackageToGroup(groupId, packageId)
+      : await this.wishlistRepository.addPackageToGroup(groupId, packageId);
+    if (!updatedGroup) {
+      throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
+    }
+    return updatedGroup;
+  }
+
+  async addNoteToGroup(
+    userId: string,
+    groupId: string,
+    text: string,
+  ): Promise<IWishlistGroup> {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group || group.userId.toString() !== userId) {
+      new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+
+    const updatedGroup = await this.wishlistRepository.addNote(groupId, text);
+    if (!updatedGroup) {
+      throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.ADD_NOTE);
+    }
+    return updatedGroup;
+  }
+
+  async generateShareableLink(
+    userId: string,
+    groupId: string,
+  ): Promise<{ shareToken: string }> {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group || group.userId.toString() !== userId) {
+      new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+
+    if (group?.shareToken) {
+      return { shareToken: group.shareToken };
+    }
+
+    const token = randomBytes(12).toString("hex");
+    await this.wishlistRepository.updateShareToken(groupId, token, true);
+    return { shareToken: token };
+  }
+
+  async getSharedGroup(shareToken: string): Promise<IWishlistGroup> {
+    const group = await this.wishlistRepository.findByShareToken(shareToken);
+    if (!group) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.LINK_EXPIRE_OR_NOT_FOUND,
+      );
+    }
+    return group;
+  }
+
+  async editGroup(
+    userId: string,
+    groupId: string,
+    dto: { title?: string; description?: string },
+  ): Promise<IWishlistGroup> {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group || group.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+    const updated = await this.wishlistRepository.updateById(groupId, dto);
+    if (!updated) {
+      throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
+    }
+    return updated;
+  }
+
+  async deleteGroup(
+    userId: string,
+    groupId: string,
+  ): Promise<IWishlistGroup | null> {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group || group.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+
+    return this.wishlistRepository.deleteById(groupId);
+  }
+
+  async deleteNote(userId: string, groupId: string, noteId: string) {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group || group.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+
+    const updated = await this.wishlistRepository.deleteNote(groupId, noteId);
+    if (!updated) {
+      throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
+    }
+    return updated;
+  }
+
+  async editNote(
+    userId: string,
+    groupId: string,
+    noteId: string,
+    text: string,
+  ): Promise<IWishlistGroup> {
+    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    if (!group || group.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+
+    const updated = await this.wishlistRepository.updateNote(
+      groupId,
+      noteId,
+      text,
+    );
+    if (!updated) {
+      throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
+    }
+    return updated;
+  }
+
+  async getPackageReviewService(packageId: string, page = 1, limit = 1) {
+    const skip = (page - 1) * limit;
+    const [reviews, stats] = await Promise.all([
+      this.reviewRepository.getReviewsByPackageId(packageId, skip, limit),
+      this.reviewRepository.getReviewStatsByPackageId(packageId),
+    ]);
+
+    return { reviews, stats };
+  }
+
+  async createPackageReviewService(reviewData: CreateReviewDto) {
+    const existingReview = await this.reviewRepository.findUserReviewForPackage(
+      reviewData.userId,
+      reviewData.packageId,
+    );
+    if (existingReview) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.REVIEW.ERROR.ALREADY_EXIST,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+
+    return this.reviewRepository.createReview(reviewData);
+  }
+
+  async updatePackageReviewService(
+    userId: string,
+    reviewId: string,
+    packageId: string,
+    updatePayload: any,
+  ) {
+    const review = await this.reviewRepository.findById(reviewId);
+    if (!review) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.REVIEW.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (review.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.REVIEW.ERROR.FORBIDDEN,
+        StatusCode.FORBIDDEN,
+      );
+    }
+    const updatedReview = await this.reviewRepository.updateReview(
+      reviewId,
+      updatePayload,
+    );
+    const stats =
+      await this.reviewRepository.getReviewStatsByPackageId(packageId);
+    return { review: updatedReview, stats };
+  }
+
+  async deletePackageReviewService(
+    userId: string,
+    reviewId: string,
+    packageId: string,
+  ) {
+  
+    const review = await this.reviewRepository.findById(reviewId);
+    if (!review) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.REVIEW.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    if (review.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.REVIEW.ERROR.FORBIDDEN,
+        StatusCode.FORBIDDEN,
+      );
+    }
+
+    await this.reviewRepository.deleteById(reviewId);
+    const stats =
+      await this.reviewRepository.getReviewStatsByPackageId(packageId);
+    return { stats };
   }
 }

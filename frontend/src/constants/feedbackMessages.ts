@@ -22,7 +22,6 @@ export const FEEDBACK_MESSAGES = {
       GOOGLE_LOGIN_FAILED: "Google log-in failed",
 
       REGISTRATION_FAILED: "Registration failed",
-  
 
       PASSWORD_DONT_MATCH: "Passwords do not match",
       FORGOT_PASSWORD: "Failed to process forgot password request",
@@ -72,9 +71,9 @@ export const FEEDBACK_MESSAGES = {
     },
   },
   PACKAGE: {
-    SUCCESS:{
-      CREATE:'Package created successfully',
-      UPDATE:'Package updated successfully'
+    SUCCESS: {
+      CREATE: "Package created successfully",
+      UPDATE: "Package updated successfully",
     },
     ERROR: {
       FETCH: "Failed to fetch packages",
@@ -107,6 +106,33 @@ export const FEEDBACK_MESSAGES = {
     ERROR: {
       UPLOAD: "Error uploading image",
       CLOUDINARY: "Cloudinary upload error",
+    },
+  },
+  WISHLIST: {
+    ERROR: {
+      FETCH: "Failed to fetch wishlist groups",
+      TOGGLE: "Failed to toggle wishlist",
+      CREATE_GROUP: "Failed to create wishlist group",
+      UPDATE_GROUP: "Failed to update wishlist group ",
+      DELETE_GROUP: "Failed to delete wishlist group ",
+      ADD_NOTE: "Failed to add note in wishlist group",
+      UPDATE_NOTE: "Failed to update note in wishlist group",
+      DELETE_NOTE: "Failed to delete note in wishlist group",
+      LOGIN: "Please sign in to save packages to your wishlist!",
+      SHARED_GROUP: "Failed to fetch shared group",
+    },
+  },
+  REVIEWS: {
+    SUCCESS: {
+      CREATE: "You review has been posted successfully",
+      UPDATE: "You review has been updated successfully",
+      DELETE: "You review has been deleted successfully",
+    },
+    ERROR: {
+      FETCH: "Failed to fetch user reviews",
+      CREATE: "Failed to create user review",
+      UPDATE: "Failed to update user review",
+      DELETE: "Failed to delete user review",
     },
   },
 } as const;

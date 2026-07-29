@@ -25,9 +25,11 @@ export class UserController implements IUserController {
         action: "REGISTER",
       });
       const result = await this.userService.registerUser(req.body);
-      res
-        .status(StatusCode.CREATED)
-        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL, ...result });
+      res.status(StatusCode.CREATED).json({
+        success: true,
+        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
+        ...result,
+      });
     } catch (error) {
       next(error);
     }
@@ -37,9 +39,10 @@ export class UserController implements IUserController {
     try {
       const { userId, otp } = req.body;
       await this.userService.verifyUserOtp({ userId, otp });
-      res
-        .status(StatusCode.OK)
-        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED });
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
+      });
     } catch (error) {
       next(error);
     }
@@ -49,9 +52,11 @@ export class UserController implements IUserController {
     try {
       const { userId } = req.body;
       const data = await this.userService.resendUserOtp(userId);
-      res
-        .status(StatusCode.OK)
-        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_RESENT_EMAIL, ...data });
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_RESENT_EMAIL,
+        ...data,
+      });
     } catch (error) {
       next(error);
     }
@@ -135,11 +140,15 @@ export class UserController implements IUserController {
 
   updateUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
+      return next(
+        new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
+      );
     }
 
     if (req.user.id !== req.params.id) {
-      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
+      return next(
+        new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
+      );
     }
     try {
       const updatedUser = await this.userService.updateUserService(
@@ -147,7 +156,9 @@ export class UserController implements IUserController {
         req.body,
       );
       if (!updatedUser) {
-        return next(new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404));
+        return next(
+          new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404),
+        );
       }
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
@@ -159,12 +170,16 @@ export class UserController implements IUserController {
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     if (req.user?.id !== req.params.id) {
-      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
+      return next(
+        new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
+      );
     }
     try {
       await this.userService.deleteUserService(req.params.id as string);
       res.clearCookie("access_token");
-      res.status(StatusCode.OK).json({ message:RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
+      res
+        .status(StatusCode.OK)
+        .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }
@@ -327,6 +342,344 @@ export class UserController implements IUserController {
         category as string,
       );
       res.status(200).json(packages);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getWishlists = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+
+      const wishlistGroups = await this.userService.getUserWishlists(userId);
+      res.status(200).json({ success: true, wishlistGroups });
+    } catch (error: any) {
+      next(error);
+    }
+  };
+
+  createWhishlistGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+      const { title, description } = req.body;
+      const wishlistGroup = await this.userService.createGroup(userId, {
+        title,
+        description,
+      });
+      res.status(201).json({ success: true, wishlistGroup });
+    } catch (error: any) {
+      next(error);
+    }
+  };
+
+  toggleWhishlistPackage = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+
+      const { groupId, packageId } = req.body;
+      const data = await this.userService.togglePackageInGroup(
+        userId,
+        groupId,
+        packageId,
+      );
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  addWishlistNote = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+
+      const { groupId } = req.params;
+      const { text } = req.body;
+      const data = await this.userService.addNoteToGroup(
+        userId,
+        groupId as string,
+        text,
+      );
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getWishlistShareLink = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+
+      const { groupId } = req.params;
+      const data = await this.userService.generateShareableLink(
+        userId,
+        groupId as string,
+      );
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getSharedWishlist = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { shareToken } = req.params;
+      const data = await this.userService.getSharedGroup(shareToken as string);
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  editWishlistGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+      const { groupId } = req.params;
+      const { title, description } = req.body;
+      const data = await this.userService.editGroup(userId, groupId as string, {
+        title,
+        description,
+      });
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteWishlistGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+      const { groupId } = req.params;
+
+      await this.userService.deleteGroup(userId, groupId as string);
+      res.status(200).json({
+        success: true,
+        message: RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  editWishlistNote = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+      const { groupId, noteId } = req.params;
+      const { text } = req.body;
+
+      const data = await this.userService.editNote(
+        userId,
+        groupId as string,
+        noteId as string,
+        text,
+      );
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+  deleteWishlistNote = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+        });
+        return;
+      }
+      const { groupId, noteId } = req.params;
+
+      const data = await this.userService.deleteNote(
+        userId,
+        groupId as string,
+        noteId as string,
+      );
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      next(error);
+    }
+  };
+  getPackageReviews = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { packageId } = req.params;
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 5;
+      const data = await this.userService.getPackageReviewService(
+        packageId as string,
+        page,
+        limit,
+      );
+      res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createPackageReview = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { packageId } = req.params;
+
+      const userId = req.user?.id;
+      const data = await this.userService.createPackageReviewService({
+        packageId,
+        userId,
+        ...req.body,
+      });
+      res.status(StatusCode.CREATED).json(data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updatePackageReview = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { reviewId, packageId } = req.params;
+    
+
+      const userId = req.user?.id;
+      if (!userId || userId === "") {
+        return next(
+          new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
+        );
+      }
+
+      const data = await this.userService.updatePackageReviewService(
+        userId!,
+        reviewId as string,
+        packageId as string,
+        req.body,
+      );
+      res.status(200).json({
+        success: true,
+        message: RESPONSE_MESSAGES.REVIEW.SUCCESS.UPDATE,
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deletePackageReview = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { reviewId, packageId } = req.params;
+      const userId = req.user?.id;
+      const data = await this.userService.deletePackageReviewService(
+        userId!,
+        reviewId as string,
+        packageId as string,
+      );
+      res.status(200).json({
+        success: true,
+        message: RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
+        data,
+      });
     } catch (error) {
       next(error);
     }

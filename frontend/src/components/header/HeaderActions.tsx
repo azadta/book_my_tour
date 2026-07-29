@@ -17,7 +17,7 @@ const HeaderActions = ({ openDrawer }: Props) => {
   return (
     <div>
       <div className="md:flex  md:items-center md:justify-center md:gap-5 hidden ">
-        <NavItem to="/">Home</NavItem>
+        <NavItem to={FRONTEND_ROUTES.USER.HOME}>Home</NavItem>
         {!currentUser && (
           <>
             <Link to={FRONTEND_ROUTES.USER.LOGIN}>
@@ -53,8 +53,8 @@ const HeaderActions = ({ openDrawer }: Props) => {
 
         {currentUser && (
           <>
-            <NavItem to="/favourites">My Favourites</NavItem>
-            <NavItem to="/user/notifications">Notifications</NavItem>
+            <NavItem to={FRONTEND_ROUTES.USER.WISHLIST}>My Wishlist</NavItem>
+            <NavItem to={FRONTEND_ROUTES.USER.NOTIFICATIONS}>Notifications</NavItem>
             <Link to={FRONTEND_ROUTES.USER.PROFILE}>
               <div className="flex items-center gap-0.5  ">
                 <button className="relative  cursor-pointer py-2 px-4 text-center font-sans inline-flex justify-center   text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">

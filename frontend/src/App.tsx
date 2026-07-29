@@ -42,6 +42,9 @@ import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
 import OperatorEditPackage from "./pages/operator/OperatorEditPackage";
 import { FRONTEND_ROUTES } from "./constants/frontEndRoutes";
+import Wishlist from "./pages/user/Wishlist";
+import SharedWishlist from "./pages/user/SharedWishlist";
+import AddUserReviewModal from "./components/AddUserReviewModal";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -101,7 +104,18 @@ const App = () => {
             }
           >
             <Route path={FRONTEND_ROUTES.USER.PROFILE} element={<Profile />} />
+            <Route
+              path={FRONTEND_ROUTES.USER.WISHLIST}
+              element={<Wishlist />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
+              element={<SharedWishlist />}
+            />
+         
+
           </Route>
+
         </Route>
 
         <Route

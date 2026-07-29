@@ -197,10 +197,10 @@ const HomeHeader = () => {
           </Link>
           {currentUser && (
             <>
-              <Link to={FRONTEND_ROUTES.USER.FAVOURITES} onClick={closeDrawer}>
+              <Link to={FRONTEND_ROUTES.USER.WISHLIST} onClick={closeDrawer}>
                 <li className="flex gap-0.5 text-orange-900 hover:underline items-center justify-center">
                   <TbFileLike />
-                  My Favourites
+                  My Wishlist
                 </li>
               </Link>
               <Link to={FRONTEND_ROUTES.USER.PROFILE} onClick={closeDrawer}>

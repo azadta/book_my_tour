@@ -135,4 +135,16 @@ export const FEEDBACK_MESSAGES = {
       DELETE: "Failed to delete user review",
     },
   },
+  BOOKING: {
+    SUCCESS: {
+      BOOKING: "Booking confirmed succesfully",
+    },
+    ERROR: {
+      RAZORPAY_LOAD: "Failed to load razorpay SDK. Are you online?",
+      PAYMENT_VERIFICATION: "Payment verification failed",
+      PAYMENT_POPUP: "Payment popup closed.",
+      FETCH: "Failed to fetch booking",
+      FETCH_USER_BOOKINGS: "Failed to fetch user bookings",
+    },
+  },
 } as const;

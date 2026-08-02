@@ -20,5 +20,8 @@ export const Types = {
   CommonAuthController: Symbol.for("CommonAuthController"),
   AuthMiddleware: Symbol.for("AuthMiddleware"),
   WishlistRepository: Symbol.for("WishlistRepository"),
-  ReviewRepository:Symbol.for('ReviewRepository')
+  ReviewRepository: Symbol.for("ReviewRepository"),
+  PaymentService: Symbol.for("PaymentService"),
+  BookingRepository: Symbol.for("BookingRepository"),
+  WebhookController: Symbol.for("WebhookController"),
 };

@@ -154,4 +154,24 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
+  createBookingOrder: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  verifyBookingPayment: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  findBookingByOrderId: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  getUserBookings: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

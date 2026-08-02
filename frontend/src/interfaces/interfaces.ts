@@ -96,7 +96,7 @@ export interface IWishlistGroup {
 
 export interface IReviewItem {
   _id: string;
-  userId: {_id:string, name: string; image?: string };
+  userId: { _id: string; name: string; image?: string };
   rating: number;
   categoryRatings: {
     guide: number;
@@ -122,4 +122,18 @@ export interface IReviewStats {
   threeStar: number;
   twoStar: number;
   oneStar: number;
+}
+
+export interface IBookingResponse {
+  _id: string;
+  userId: string;
+  packageId: IPackageItem;
+  razorpayOrderId: string;
+  razorpayPaymentId: string | null;
+  totalAmount: number;
+  addedActivityIds: string[];
+  removedActivityIds: string[];
+  status: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

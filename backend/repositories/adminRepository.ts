@@ -20,7 +20,10 @@ export class AdminRepository
     return admin.save();
   }
 
-  async updateProfieImage(id: string, image: string): Promise<HydratedDocument<IAdmin> | null>  {
+  async updateProfieImage(
+    id: string,
+    image: string,
+  ): Promise<HydratedDocument<IAdmin> | null> {
     return Admin.findByIdAndUpdate(id, { image }, { new: true });
   }
 }

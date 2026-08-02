@@ -1,6 +1,7 @@
 import { Types as mongooseType } from "mongoose";
 
 import { inject, injectable } from "inversify";
+import { randomBytes } from "node:crypto";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
@@ -9,22 +10,21 @@ import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
 import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
+import type { IReviewRepository } from "../interfaces/IReviewRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
 import { IUser, IUserResponse } from "../interfaces/IUser";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import type { IUserService } from "../interfaces/IUserService";
+import { ICreateWishlistDTO, IWishlistGroup } from "../interfaces/IWishList";
 import type { IWishlistRepository } from "../interfaces/IWishlistRepository";
 import type { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { ICreateWishlistDTO, IWishlistGroup } from "../interfaces/IWishList";
-import { ROUTES } from "../constants/routesConstants";
-import { randomBytes } from "node:crypto";
-import type { IReviewRepository } from "../interfaces/IReviewRepository";
 
-import { STATUS_CODES } from "node:http";
 import { CreateReviewDto } from "../interfaces/IReview";
+import type { IPaymentService } from "../interfaces/IPaymentService";
+import type { IBookingRepository } from "../interfaces/IBookingRepository";
 
 @injectable()
 export class UserService implements IUserService {
@@ -45,6 +45,10 @@ export class UserService implements IUserService {
     private wishlistRepository: IWishlistRepository,
     @inject(Types.ReviewRepository)
     private reviewRepository: IReviewRepository,
+    @inject(Types.PaymentService)
+    private paymentService: IPaymentService,
+    @inject(Types.BookingRepository)
+    private bookingRepository: IBookingRepository,
   ) {}
 
   async registerUser(userData: {
@@ -660,7 +664,6 @@ export class UserService implements IUserService {
     reviewId: string,
     packageId: string,
   ) {
-  
     const review = await this.reviewRepository.findById(reviewId);
     if (!review) {
       throw new CustomError(
@@ -680,5 +683,150 @@ export class UserService implements IUserService {
     const stats =
       await this.reviewRepository.getReviewStatsByPackageId(packageId);
     return { stats };
+  }
+
+  async createBookingOrder(
+    userId: string,
+    dto: {
+      packageId: string;
+      addedActivityIds: string[];
+      removedActivityIds: string[];
+    },
+  ) {
+    const { addedActivityIds = [], packageId, removedActivityIds = [] } = dto;
+    const pkg = await this.packageRepository.getPackageById(packageId);
+    if (!pkg) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    const removedCost = pkg.itinerary.reduce((acc: number, day: any) => {
+      const dayDeductions = day.activities.reduce((sum: number, act: any) => {
+        return (
+          sum +
+          (act.customizable && removedActivityIds.includes(act.id)
+            ? act.cost
+            : 0)
+        );
+      }, 0);
+      return acc + dayDeductions;
+    }, 0);
+
+    const addedCost = pkg.itinerary.reduce((acc: number, day: any) => {
+      const dayaddedCost = day?.optionalActivities?.reduce(
+        (sum: number, act: any) => {
+          return (
+            sum +
+            (act.customizable && addedActivityIds.includes(act.id)
+              ? act.cost
+              : 0)
+          );
+        },
+        0,
+      );
+      return acc + dayaddedCost;
+    }, 0);
+
+    const finalAmount = Math.max(0, pkg.amount + addedCost - removedCost);
+
+    const order = await this.paymentService.createOrder({
+      amount: finalAmount,
+      receipt: `reciept_pkg_${Date.now()}`,
+      notes: {
+        userId,
+        packageId,
+        addedActivityIds: JSON.stringify(addedActivityIds),
+        removedActivityIds: JSON.stringify(removedActivityIds),
+      },
+    });
+    if (!order) return;
+
+    await this.bookingRepository.createBooking({
+      userId,
+      packageId,
+      razorpayOrderId: order.id,
+      totalAmount: finalAmount,
+      addedActivityIds,
+      removedActivityIds,
+      status: "PENDING",
+    });
+
+    return {
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.RAZORPAY_KEY_ID,
+      packageName: pkg.name,
+      packageDescription: `${pkg.duration.day}D / ${pkg.duration.night}N Tour Package`,
+    };
+  }
+
+  async verifyAndConfirmBooking(dto: {
+    razorpayOrderId: string;
+    razorpayPaymentId: string;
+    razorpaySignature: string;
+    packageId: string;
+    userId: string;
+  }) {
+    const isValid = this.paymentService.verifySignature({
+      razorpayOrderId: dto.razorpayOrderId,
+      razorpayPaymentId: dto.razorpayPaymentId,
+      razorpaySignature: dto.razorpaySignature,
+    });
+
+    if (!isValid) {
+      await this.bookingRepository.updateStatusByOrderId(dto.razorpayOrderId, {
+        status: "FAILED",
+      });
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_SIGNATURE,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+
+    const updatedBooking = await this.bookingRepository.updateStatusByOrderId(
+      dto.razorpayOrderId,
+      {
+        status: "CONFIRMED",
+        razorpayPaymentId: dto.razorpayPaymentId,
+      },
+    );
+
+    if (!updatedBooking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    return {
+      message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CONFIRM,
+      booking: updatedBooking,
+    };
+  }
+
+  async findBookingByOrderId(razorpayOrderId: string) {
+    const booking = await this.bookingRepository.findByOrderId(razorpayOrderId);
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_ORDER_ID,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    return booking;
+  }
+
+  async getUserBookings(userId: string) {
+    if (!userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.USER_ID_MISSING,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const bookings = await this.bookingRepository.getUserBookings(userId);
+
+    return bookings;
   }
 }

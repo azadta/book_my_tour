@@ -22,6 +22,11 @@ export const FRONTEND_ROUTES = {
     PACKAGE_DETAILS: (id: string) => `/user/package-details/${id}`,
     SHARED_WISHLIST: (shareToken: string) => `/shared-wishlist/${shareToken}`,
     SHARED_WISHLIST_PATTERN: `/shared-wishlist/:shareToken`,
+
+    BOOKING_SUCCESS_PATTERN: "/booking/success",
+    BOOKING_SUCCESS: (orderId: string) =>
+      `/booking/success/?order_id=${encodeURIComponent(orderId)}`,
+    MY_BOOKINGS:'/user/my-bookings'
   },
 
   OPERATOR: {

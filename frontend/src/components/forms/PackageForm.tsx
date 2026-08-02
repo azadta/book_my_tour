@@ -1,21 +1,19 @@
+import ItineraryEditor from "@/components/itinerary/ItineraryEditor";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { useAdminEditPackage } from "@/hooks/useAdminEditPackage";
+import { useOperatorEditPackage } from "@/hooks/useOperatorEditPackage";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { flattenObjects } from "../../../../backend/utils/flattenObject";
+import BackToDashboard from "../../components/BackToDashboard";
+import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createPackageFields, type Option } from "../../formConfig/fields";
 import { useCreatePackage } from "../../hooks/useCreatePackage";
-import ReUsableForm from "../../components/forms/ReUsableForm";
-import { useEffect, useState } from "react";
 import type {
   FormField,
-  IActivity,
-  IOptionalActivity,
-  IPackageItem,
+  IPackageItem
 } from "../../interfaces/interfaces";
-import BackToDashboard from "../../components/BackToDashboard";
-import ItineraryEditor from "@/components/itinerary/ItineraryEditor";
-import { useOperatorEditPackage } from "@/hooks/useOperatorEditPackage";
-import { flattenObjects } from "../../../../backend/utils/flattenObject";
-import { useAdminEditPackage } from "@/hooks/useAdminEditPackage";
 import type { ItineraryDay } from "../itinerary/types";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 interface IOptions {
   category: Option[];

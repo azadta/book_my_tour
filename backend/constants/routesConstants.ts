@@ -36,6 +36,10 @@ export const ROUTES = {
     CREATE_REVIEW: "/review/create/:packageId",
     UPDATE_REVIEW: "/review/update/:reviewId/:packageId",
     DELETE_REVIEW: "/review/delete/:reviewId/:packageId",
+    CREATE_BOOKING: "/booking",
+    PAYMENT_VERIFY: "/booking/payment/verify",
+    BOOKING_BY_ORDER_ID: "/booking/:orderId",
+    MY_BOOKINGS:'/my-bookings'
   },
   OPERATOR: {
     REGISTER: "/register",
@@ -94,5 +98,8 @@ export const ROUTES = {
   },
   COMMON: {
     REFRESH: "/refresh",
+  },
+  RAZORPAY_WEBHOOK: {
+    PAYMENTS: "/payments/razorpay-webhook",
   },
 } as const;

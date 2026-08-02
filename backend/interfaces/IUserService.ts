@@ -1,6 +1,7 @@
 import { IDestination } from "../models/Destination";
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
+import { IBooking } from "./IBookingRepository";
 
 import { CreateReviewDto, IReview } from "./IReview";
 import { IUser, IUserResponse } from "./IUser";
@@ -123,4 +124,34 @@ export interface IUserService {
   ): Promise<{
     stats: any;
   }>;
+  createBookingOrder(
+    userId: string,
+    dto: {
+      packageId: string;
+      addedActivityIds: string[];
+      removedActivityIds: string[];
+    },
+  ): Promise<
+    | {
+        orderId: string;
+        amount: number;
+        currency: string;
+        keyId: string | undefined;
+        packageName: string;
+        packageDescription: string;
+      }
+    | undefined
+  >;
+  verifyAndConfirmBooking(dto: {
+    razorpayOrderId: string;
+    razorpayPaymentId: string;
+    razorpaySignature: string;
+    packageId: string;
+    userId: string;
+  }): Promise<{
+    message: "Booking confirmed successfully";
+    booking: IBooking;
+  }>;
+  findBookingByOrderId(razorpayOrderId: string): Promise<IBooking>;
+  getUserBookings(userId: string): Promise<IBooking[]>;
 }

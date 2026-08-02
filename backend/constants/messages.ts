@@ -1,3 +1,5 @@
+import { StatusCode } from "./statusCodeConstants";
+
 export const RESPONSE_MESSAGES = {
   AUTH: {
     SUCCESS: {
@@ -117,6 +119,19 @@ export const RESPONSE_MESSAGES = {
       ALREADY_EXIST: "You have already submitted a review for this package",
       NOT_FOUND: "User review not found",
       FORBIDDEN: "Unauthorized to edit this review",
+    },
+  },
+  BOOKING: {
+    SUCCESS: {
+      CONFIRM: "Booking confirmed successfully",
+    },
+    ERROR: {
+      INVALID_SIGNATURE:
+        "Payment verification failed. Invalid transaction signature.",
+      NOT_FOUND: "Booking records not found",
+      INVALID_ORDER_ID: "Invalid order ID",
+      INVALID_USER_ID: "Invalid user ID",
+      USER_ID_MISSING: "User ID is required",
     },
   },
 } as const;

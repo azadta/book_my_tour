@@ -2,17 +2,23 @@ import AddUserReviewModal from "@/components/AddUserReviewModal";
 import Loading from "@/components/Loading";
 import PackageReviews from "@/components/PackageReviews";
 import { usePackageDetails } from "@/hooks/usePackageDetails";
+import type { RootState } from "@/redux/store";
 import {
   Camera,
   CheckCircle2,
   ChevronRight,
   Clock,
+  Loader2,
   MapPin,
   MessageSquare,
+  ShieldCheck,
+  Sparkles,
   Star,
   Trash2,
+  Wallet,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const PackageDetails = () => {
@@ -33,12 +39,16 @@ const PackageDetails = () => {
     submittingReview,
     deleteReview,
     updateReview,
+    handleBooking,
+    isBookingLoading,
   } = usePackageDetails(id as string);
 
   const [removedActivityIds, setRemovedActivityIds] = useState<string[]>([]);
   const [addedActivityIds, setAddedActivityIds] = useState<string[]>([]);
   const [activeDay, setActiveDay] = useState(1);
   const dayRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   const isAutoScrolling = useRef(false);
 
@@ -103,6 +113,14 @@ const PackageDetails = () => {
     document
       .getElementById("reviews-section")
       ?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const onProceedToBooking = () => {
+    if (!id) return;
+    handleBooking(addedActivityIds, removedActivityIds, {
+      name: currentUser?.name as string,
+      email: currentUser?.email as string,
+    });
   };
 
   useEffect(() => {
@@ -453,13 +471,20 @@ const PackageDetails = () => {
 
           <aside className="col-span-1 lg:col-span-3 lg:sticky self-start min-w-[320px]  lg:top-24 order-3 space-y-4 hidden lg:block">
             <div className=" space-y-4">
-              <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-4 shadow-lg">
-                <h3 className="text-base font-bold text-gray-900 mb-4">
-                  Pricing Summary
-                </h3>
+              <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-5 shadow-gray-100/50">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-bold text-gray-900 ">
+                    Booking Summary
+                  </h3>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full ">
+                    <ShieldCheck className="w-3.5 h-3.5 " />
+                    Instant Confirmation
+                  </span>
+                </div>
+
                 <div className="space-y-2 mb-6">
                   <div className="flex justify-between text-sm text-gray-900">
-                    <span>Base Package Cost</span>
+                    <span>Base Package Price</span>
                     <span className="font-semibold text-gray-800">
                       Rs {data.amount.toFixed(2)}
                     </span>
@@ -521,10 +546,29 @@ const PackageDetails = () => {
                   </div>
                 </div>
 
-                <button className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-sm rounded-xl px-4 py-3 shadow-md shadow-blue-200 text-white transition-all active:scale-98">
-                  Proceed to booking
+                <button
+                  onClick={onProceedToBooking}
+                  disabled={isBookingLoading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-sm rounded-xl px-4 py-3 shadow-md shadow-blue-200 text-white transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {isBookingLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Opening payment Gateway...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Wallet className="w-4 h-4" />
+                      <span>Pay with Razorpay</span>
+                    </>
+                  )}
                 </button>
+                <p className="text-[11px] text-center text-gray-500 mt-3 flex items-center justify-center gap-1 ">
+                  <Sparkles className="w-3 h-3 text-amber-500 " />
+                  UPI, CREDIT/DEBIT Cards, NetBanking, Wallets Supported
+                </p>
               </div>
+
               <div className="  hidden lg:flex flex-col bg-white p-4 rounded-2xl border border-gray-100 shadow-sm h-[350px] ">
                 <h3 className="text-xs font-bold uppercase text-gray-400 tracking-wider p-4 pb-3 border-b border-gray-100">
                   Itinerary Schedule
@@ -599,8 +643,19 @@ const PackageDetails = () => {
             Rs {currentPrice.toLocaleString("en-IN")}
           </span>
         </div>
-        <button className="flex-1 max-w-[200px] bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl text-center shadow-md active:scale-95 transition-all ">
-          Book Package
+        <button
+          onClick={onProceedToBooking}
+          disabled={isBookingLoading}
+          className="flex-1 max-w-[200px] bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer "
+        >
+          {isBookingLoading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Processing...</span>
+            </>
+          ) : (
+            <span>Pay with Razorpay</span>
+          )}
         </button>
       </div>
 

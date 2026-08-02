@@ -149,4 +149,26 @@ router.delete(
   userController.deletePackageReview,
 );
 
+router.post(
+  ROUTES.USER.CREATE_BOOKING,
+  authMiddleware.verifyRole("user"),
+  userController.createBookingOrder,
+);
+router.post(
+  ROUTES.USER.PAYMENT_VERIFY,
+  authMiddleware.verifyRole("user"),
+  userController.verifyBookingPayment,
+);
+
+router.get(
+  ROUTES.USER.BOOKING_BY_ORDER_ID,
+  authMiddleware.verifyRole("user"),
+  userController.findBookingByOrderId,
+);
+
+router.get(
+  ROUTES.USER.MY_BOOKINGS,
+  authMiddleware.verifyRole("user"),
+  userController.getUserBookings,
+);
 export default router;

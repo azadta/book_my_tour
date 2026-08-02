@@ -45,6 +45,8 @@ import { FRONTEND_ROUTES } from "./constants/frontEndRoutes";
 import Wishlist from "./pages/user/Wishlist";
 import SharedWishlist from "./pages/user/SharedWishlist";
 import AddUserReviewModal from "./components/AddUserReviewModal";
+import BookingSuccessPage from "./pages/user/BookingSuccessPage";
+import MyBookingsPage from "./pages/user/MyBookingsPage";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -112,10 +114,15 @@ const App = () => {
               path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
               element={<SharedWishlist />}
             />
-         
-
+            <Route
+              path={FRONTEND_ROUTES.USER.BOOKING_SUCCESS_PATTERN}
+              element={<BookingSuccessPage />}
+            />
+                  <Route
+              path={FRONTEND_ROUTES.USER.MY_BOOKINGS}
+              element={<MyBookingsPage/>}
+            />
           </Route>
-
         </Route>
 
         <Route

@@ -213,6 +213,13 @@ const Profile = () => {
     <div className="flex flex-col sm:flex-row  justify-center gap-5  ">
       <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+                  <button
+            onClick={() => navigate(FRONTEND_ROUTES.USER.MY_BOOKINGS)}
+            className="profile-sidebar-button"
+          >
+            My Bookings
+          </button>
+             
              <button
             onClick={() => navigate(FRONTEND_ROUTES.USER.WISHLIST)}
             className="profile-sidebar-button"

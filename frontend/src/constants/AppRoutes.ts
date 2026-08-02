@@ -46,6 +46,10 @@ export const APP_ROUTES = {
       `/user/review/update/${reviewId}/${packageId}`,
     DELETE_REVIEW: (reviewId: string, packageId: string) =>
       `/user/review/delete/${reviewId}/${packageId}`,
+    CREATE_BOOKING: "/user/booking",
+    VERIFY_BOOKING_PAYMENT: "/user/booking/payment/verify",
+    BOOKING_BY_ORDER_ID: (orderId: string) => `/user/booking/${orderId}`,
+    MY_BOOKINGS:'/user/my-bookings'
   },
   OPERATOR: {
     REGISTER: "/operator/register",
@@ -102,6 +106,7 @@ export const APP_ROUTES = {
     DELETE_PACKAGE: (id: string) => `/admin/package/delete/${id}`,
     RESET_PASSWORD_AUTH: "/admin/reset-password-authenticated",
   },
+
   EXTERNAL: {
     CLOUDINARY: (cloudName: string) =>
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,

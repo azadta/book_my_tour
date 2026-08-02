@@ -1,13 +1,16 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import type {
   IPackageItem,
   IReviewItem,
   IReviewStats,
 } from "@/interfaces/interfaces";
+import { loadRazorpayScript } from "@/utils/loadRazorpay";
 import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const usePackageDetails = (packageId: string) => {
@@ -20,6 +23,8 @@ export const usePackageDetails = (packageId: string) => {
     undefined,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBookingLoading, setIsBookingLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchPackage = async () => {
     setLoading(true);
@@ -165,6 +170,91 @@ export const usePackageDetails = (packageId: string) => {
     }
   };
 
+  const handleBooking = async (
+    addedActivityIds: string[],
+    removedActivityIds: string[],
+    userProfile?: { name: string; email: string; phone?: string },
+  ) => {
+    setIsBookingLoading(true);
+    try {
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        toast.error(FEEDBACK_MESSAGES.BOOKING.ERROR.RAZORPAY_LOAD);
+        setIsBookingLoading(false);
+        return;
+      }
+
+      const { data: response } = await axiosInstance.post(
+        APP_ROUTES.USER.CREATE_BOOKING,
+        { packageId, addedActivityIds, removedActivityIds },
+      );
+      const {
+        orderId,
+        amount,
+        currency,
+        keyId,
+        packageName,
+        packageDescription,
+      } = response.data;
+      const options = {
+        key: keyId,
+        amount: amount,
+        currency: currency,
+        name: "Book My Tour",
+        description: packageName || packageDescription,
+        order_id: orderId,
+        handler: async (response: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            await axiosInstance.post(APP_ROUTES.USER.VERIFY_BOOKING_PAYMENT, {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              packageId,
+            });
+            toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.BOOKING);
+            navigate(
+              FRONTEND_ROUTES.USER.BOOKING_SUCCESS(response.razorpay_order_id),
+            );
+          } catch (error: any) {
+            toast.error(
+              error.response?.data?.message ||
+                FEEDBACK_MESSAGES.BOOKING.ERROR.PAYMENT_VERIFICATION,
+            );
+          } finally {
+            setIsBookingLoading(false);
+          }
+        },
+
+        prefill: {
+          name: userProfile?.name || "",
+          email: userProfile?.email || "",
+          contact: userProfile?.phone || "",
+        },
+        theme: {
+          color: "#2563eb",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsBookingLoading(false);
+            toast.info(FEEDBACK_MESSAGES.BOOKING.ERROR.PAYMENT_POPUP);
+          },
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to initiate booking",
+      );
+      setIsBookingLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchPackage();
     fetchReviews();
@@ -185,5 +275,7 @@ export const usePackageDetails = (packageId: string) => {
     openEditModal,
     closeModal,
     saveReview,
+    handleBooking,
+    isBookingLoading,
   };
 };

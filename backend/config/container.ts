@@ -19,33 +19,38 @@ import { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import { IOperatorService } from "../interfaces/IOperatorService";
 import { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
 import { IPackageRepository } from "../interfaces/IPackageRepository";
+import { IPaymentService } from "../interfaces/IPaymentService";
+import { IReviewRepository } from "../interfaces/IReviewRepository";
 import { ISecurityService } from "../interfaces/ISecurityService";
 import { ITokenService } from "../interfaces/ITokenService";
 import { IUserController } from "../interfaces/IUserController";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUserService } from "../interfaces/IUserService";
+import { IWishlistRepository } from "../interfaces/IWishlistRepository";
 import { AuthMiddleware } from "../middlewares/authMiddleware";
 import { AdminRepository } from "../repositories/adminRepository";
 import { DestinationRepository } from "../repositories/destinationRepository";
 import { OperatorRepository } from "../repositories/operatorRepository";
 import { PackageCategoryRepository } from "../repositories/packageCategoryRepository";
 import { PackageRepository } from "../repositories/packageRepository";
+import { ReviewRepository } from "../repositories/reviewRepository";
 import { UserRepository } from "../repositories/userRepository";
+import { WishlistRepository } from "../repositories/wishlistRepository";
 import { AdminService } from "../services/adminService";
 import { BcryptHashService } from "../services/bcryptHashService";
 import { CommonAuthService } from "../services/commonAuthService";
 import { CryptoHashService } from "../services/cryptoHashService";
 import { MailService } from "../services/mailService";
 import { OperatorService } from "../services/operatorService";
+import { RazorpayPaymentService } from "../services/RazorpayPaymentService";
 import { SecurityService } from "../services/securityService";
 import { TokenService } from "../services/tokenService";
 import { UserService } from "../services/userService";
 import { Types } from "../types/types";
-import { IWishlistRepository } from "../interfaces/IWishlistRepository";
-import { WishlistRepository } from "../repositories/wishlistRepository";
-import { IReview } from "../models/Review";
-import { ReviewRepository } from "../repositories/reviewRepository";
-import { IReviewRepository } from "../interfaces/IReviewRepository";
+import { IBookingRepository } from "../interfaces/IBookingRepository";
+import { BookingRepository } from "../repositories/bookingRepository";
+import { IWebhookController } from "../interfaces/IWebhookController";
+import { WebhookController } from "../controllers/webhookController";
 
 const container = new Container();
 
@@ -141,6 +146,18 @@ container
   .bind<IReviewRepository>(Types.ReviewRepository)
   .to(ReviewRepository)
   .inSingletonScope();
+container
+  .bind<IPaymentService>(Types.PaymentService)
+  .to(RazorpayPaymentService)
+  .inSingletonScope();
+container
+  .bind<IBookingRepository>(Types.BookingRepository)
+  .to(BookingRepository)
+  .inSingletonScope();
+container
+  .bind<IWebhookController>(Types.WebhookController)
+  .to(WebhookController)
+  .inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,
@@ -156,4 +173,8 @@ export const authMiddleware = container.get<IAuthMiddleware>(
 );
 export const commonAuthController = container.get<ICommonAuthController>(
   Types.CommonAuthController,
+);
+
+export const webhookController = container.get<IWebhookController>(
+  Types.WebhookController,
 );

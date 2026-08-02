@@ -637,7 +637,6 @@ export class UserController implements IUserController {
   ) => {
     try {
       const { reviewId, packageId } = req.params;
-    
 
       const userId = req.user?.id;
       if (!userId || userId === "") {
@@ -680,6 +679,78 @@ export class UserController implements IUserController {
         message: RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
         data,
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createBookingOrder = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { packageId, addedActivityIds, removedActivityIds } = req.body;
+      const userId = req.user?.id;
+      const result = await this.userService.createBookingOrder(
+        userId as string,
+        { packageId, addedActivityIds, removedActivityIds },
+      );
+
+      res.status(StatusCode.OK).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  };
+  verifyBookingPayment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const {
+        razorpayOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
+        packageId,
+        orderId,
+      } = req.body;
+      const userId = req.user?.id;
+      const result = await this.userService.verifyAndConfirmBooking({
+        razorpayOrderId,
+        packageId,
+        razorpayPaymentId,
+        razorpaySignature,
+        userId: userId as string,
+      });
+      res
+        .status(StatusCode.OK)
+        .json({ success: true, message: result.message });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  findBookingByOrderId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { orderId } = req.params;
+      const booking = await this.userService.findBookingByOrderId(
+        orderId as string,
+      );
+      res.status(200).json(booking);
+    } catch (error) {
+      next(error);
+    }
+  };
+  getUserBookings = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id;
+      const bookings = await this.userService.getUserBookings(userId as string);
+      res.status(200).json(bookings);
     } catch (error) {
       next(error);
     }

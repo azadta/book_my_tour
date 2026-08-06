@@ -28,9 +28,11 @@ export class OperatorController implements IOperatorController {
       const result = await this.operatorService.operatorRegisterService(
         req.body,
       );
-      res
-        .status(StatusCode.CREATED)
-        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL, ...result });
+      res.status(StatusCode.CREATED).json({
+        success: true,
+        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
+        ...result,
+      });
     } catch (error) {
       next(error);
     }
@@ -44,9 +46,10 @@ export class OperatorController implements IOperatorController {
     const { operatorId, otp } = req.body;
     try {
       await this.operatorService.operatorVerifyOtpService(operatorId, otp);
-      res
-        .status(StatusCode.OK)
-        .json({ success: true, message:RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED });
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
+      });
     } catch (error) {
       next(error);
     }
@@ -61,9 +64,11 @@ export class OperatorController implements IOperatorController {
     try {
       const { otpExpire } =
         await this.operatorService.operatorResendOtpService(operatorId);
-      res
-        .status(StatusCode.OK)
-        .json({ succuss: true, message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL, otpExpire });
+      res.status(StatusCode.OK).json({
+        succuss: true,
+        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
+        otpExpire,
+      });
     } catch (error) {
       next(error);
     }
@@ -137,11 +142,15 @@ export class OperatorController implements IOperatorController {
 
   updateOperator = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401));
+      return next(
+        new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
+      );
     }
 
     if (req.user.id !== req.params.id) {
-      return next(new CustomError("RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED", 401));
+      return next(
+        new CustomError("RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED", 401),
+      );
     }
     try {
       const updatedUser = await this.operatorService.updateOperatorService(
@@ -149,7 +158,9 @@ export class OperatorController implements IOperatorController {
         req.body,
       );
       if (!updatedUser) {
-        return next(new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404));
+        return next(
+          new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404),
+        );
       }
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
@@ -325,7 +336,10 @@ export class OperatorController implements IOperatorController {
     try {
       const operatorId = req.user?.id;
       if (!operatorId) {
-        throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, StatusCode.UNAUTHORIZED);
+        throw new CustomError(
+          RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+          StatusCode.UNAUTHORIZED,
+        );
       }
       const { id: packageId } = req.params;
       const deletePackage = await this.operatorService.deletePackageService(
@@ -333,11 +347,15 @@ export class OperatorController implements IOperatorController {
         operatorId,
       );
       if (!deletePackage) {
-        throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+        throw new CustomError(
+          RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+          StatusCode.NOT_FOUND,
+        );
       }
-      res
-        .status(StatusCode.OK)
-        .json({ success: true, message:RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED });
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
+      });
     } catch (error) {
       next(error);
     }
@@ -352,11 +370,116 @@ export class OperatorController implements IOperatorController {
         req.body,
       );
       if (!updatedPackage) {
-        return next(new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND));
+        return next(
+          new CustomError(
+            RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+            StatusCode.NOT_FOUND,
+          ),
+        );
       }
       res.status(StatusCode.OK).json(updatedPackage);
     } catch (error) {
       next(error);
+    }
+  };
+
+  getCoupons = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.operatorService.getAllAvailableCoupons();
+      res.status(StatusCode.OK).json(data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { code, bookingAmount, cardBin } = req.body;
+      if (!code || !bookingAmount) {
+        res
+          .status(StatusCode.BAD_REQUEST)
+          .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
+      }
+      const result = await this.operatorService.validateAndCalculateDiscount(
+        code,
+        bookingAmount,
+        cardBin,
+      );
+      res.status(StatusCode.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getAllCoupons = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const result = await this.operatorService.getAllCoupons(page, limit);
+      res.status(StatusCode.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getCouponById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const coupon = await this.operatorService.getCouponById(id as string);
+      res.status(StatusCode.OK).json(coupon);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createCoupon = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const coupon = await this.operatorService.createCoupon(req.body);
+      res
+        .status(StatusCode.CREATED)
+        .json({ message: RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED, coupon });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateCoupon = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+
+      const updatedCoupon = await this.operatorService.updateCoupon(
+        id as string,
+        req.body,
+      );
+      res.status(StatusCode.OK).json({
+        message: RESPONSE_MESSAGES.COUPON.SUCCESS.UPDATE,
+        updatedCoupon,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  toggleCouponStatus = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { id } = req.params;
+      const { isActive } = req.body;
+      const updatedCoupon = await this.operatorService.toggleCouponStatus(
+        id as string,
+        isActive,
+      );
+      res
+        .status(StatusCode.OK)
+        .json({
+          message: RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
+          coupon: updatedCoupon,
+        });
+    } catch (error) {
+      next(error)
     }
   };
 }

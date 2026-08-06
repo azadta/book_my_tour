@@ -7,6 +7,7 @@ import {
   Printer,
   Receipt,
   ShieldCheck,
+  Tag,
 } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -17,6 +18,7 @@ const BookingSuccessPage = () => {
 
   const { booking, fetchBookingDetails, isLoading } = useBookingSuccessPage();
   const packageName = booking?.packageId.name;
+  const pricing = booking?.pricing;
 
   useEffect(() => {
     if (orderId) {
@@ -68,10 +70,76 @@ const BookingSuccessPage = () => {
               </div>
             )}
 
-            <div className="flex justify-between text-sm ">
+            {/* <div className="flex justify-between text-sm ">
               <span className="text-gray-500">Amount Paid</span>
               <span className="font-extrabold text-blue-600">
                 Rs {booking?.totalAmount?.toLocaleString("en-IN") || "-"}
+              </span>
+            </div> */}
+
+            {pricing && (
+              <div className="pt-3 border-t border-gray-200/60 space-y-2 text-xs">
+                <div className="flex justify-between text-gray-600">
+                  <span>Base Amount</span>
+                  <span>Rs {pricing.baseAmount?.toLocaleString("en-IN")}</span>
+                </div>
+
+                {pricing.addedActivitiesAmount > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Added Activities</span>
+                    <span>
+                      + Rs{" "}
+                      {pricing.addedActivitiesAmount?.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
+
+                {pricing.removedActivitiesAmount > 0 && (
+                  <div className="flex justify-between text-emerald-600">
+                    <span>Customization Discount</span>
+                    <span>
+                      - Rs{" "}
+                      {pricing.removedActivitiesAmount?.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
+
+                {pricing.generalCoupon && (
+                  <div className="flex justify-between text-emerald-600 font-medium">
+                    <span className="flex items-center gap-1">
+                      <Tag className="w-3 h-3" />
+                      Promo Code ({pricing.generalCoupon.code})
+                    </span>
+                    <span>
+                      - Rs{" "}
+                      {pricing.generalCoupon.discountAmount?.toLocaleString(
+                        "en-IN",
+                      )}
+                    </span>
+                  </div>
+                )}
+
+                {pricing.bankCoupon && (
+                  <div className="flex justify-between text-emerald-600 font-medium">
+                    <span className="flex items-center gap-1">
+                      <Tag className="w-3 h-3" />
+                      Bank Offer ({pricing.bankCoupon.code})
+                    </span>
+                    <span>
+                      - Rs{" "}
+                      {pricing.bankCoupon.discountAmount?.toLocaleString(
+                        "en-IN",
+                      )}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="flex justify-between text-sm pt-3 border-t border-gray-200">
+              <span className="text-gray-900 font-bold">Amount Paid</span>
+              <span className="font-extrabold text-blue-600 text-base">
+                Rs {pricing?.finalAmount?.toLocaleString("en-IN")}
               </span>
             </div>
           </div>

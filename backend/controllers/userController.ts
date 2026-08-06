@@ -690,11 +690,17 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const { packageId, addedActivityIds, removedActivityIds } = req.body;
+      const {
+        packageId,
+        addedActivityIds,
+        removedActivityIds,
+        generalCouponCode,
+        bankCouponCode,
+      } = req.body;
       const userId = req.user?.id;
       const result = await this.userService.createBookingOrder(
         userId as string,
-        { packageId, addedActivityIds, removedActivityIds },
+        { packageId, addedActivityIds, removedActivityIds, generalCouponCode, bankCouponCode },
       );
 
       res.status(StatusCode.OK).json({ success: true, data: result });
@@ -751,6 +757,33 @@ export class UserController implements IUserController {
       const userId = req.user?.id;
       const bookings = await this.userService.getUserBookings(userId as string);
       res.status(200).json(bookings);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getCoupons = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.userService.getAllAvailableCoupons();
+      res.status(StatusCode.OK).json(data);
+    } catch (error) {
+      next(error);
+    }
+  };
+  validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { code, bookingAmount, cardBin } = req.body;
+      if (!code || !bookingAmount) {
+        return res
+          .status(StatusCode.BAD_REQUEST)
+          .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
+      }
+      const result = await this.userService.validateAndCalculateDiscount(
+        code,
+        bookingAmount,
+        cardBin,
+      );
+      res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
     }

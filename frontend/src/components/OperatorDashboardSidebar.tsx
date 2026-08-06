@@ -26,7 +26,9 @@ const OperatorDashboardSideBar = () => {
         </NavLink>
 
         <NavLink
-          to={FRONTEND_ROUTES.OPERATOR.PACKAGES_LIST(currentOperator?._id as string)}
+          to={FRONTEND_ROUTES.OPERATOR.PACKAGES_LIST(
+            currentOperator?._id as string,
+          )}
           className={({ isActive }) =>
             ` relative py-2 shadow-md px-4 rounded-xl transition w-full text-center ${isActive ? "bg-emerald-400  hover:bg-emerald-500" : " bg-sky-400   hover:bg-sky-500"} `
           }
@@ -37,6 +39,22 @@ const OperatorDashboardSideBar = () => {
                 <div className="bg-emerald-500 absolute w-1.5 h-8 rounded-l-full top-1/2 -translate-y-1/2 -right-6  "></div>
               )}
               Package Management
+            </>
+          )}
+        </NavLink>
+
+        <NavLink
+          to={FRONTEND_ROUTES.OPERATOR.COUPONS_LIST}
+          className={({ isActive }) =>
+            ` relative py-2 shadow-md px-4 rounded-xl transition w-full text-center ${isActive ? "bg-emerald-400  hover:bg-emerald-500" : " bg-sky-400   hover:bg-sky-500"} `
+          }
+        >
+          {({ isActive }) => (
+            <>
+              {isActive && (
+                <div className="bg-emerald-500 absolute w-1.5 h-8 rounded-l-full top-1/2 -translate-y-1/2 -right-6  "></div>
+              )}
+              Coupon Management
             </>
           )}
         </NavLink>

@@ -4,6 +4,7 @@ import { IDestination } from "../models/Destination";
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
 import { IOperator, IOperatorResponse } from "./IOperator";
+import { ICouponDocument } from "../models/Coupon";
 
 export interface IOperatorService {
   operatorRegisterService(data: Partial<IOperator>): Promise<{
@@ -48,7 +49,7 @@ export interface IOperatorService {
     packageId: string,
     operatorId: string,
     data: Partial<Ipackage>,
-  ):Promise<Ipackage | null>;
+  ): Promise<Ipackage | null>;
   deletePackageService(
     operatorId: string,
     packageId: string,
@@ -70,5 +71,34 @@ export interface IOperatorService {
   getAllCategories(): Promise<IPackageCategory[]>;
   getAllDestinationsServise(): Promise<IDestination[]>;
   getMyPackagesCountService(operatorId: string): Promise<number>;
-  getPackageByIdAndOperatorService(packageId: string, operatorId: string): Promise<Ipackage>
+  getPackageByIdAndOperatorService(
+    packageId: string,
+    operatorId: string,
+  ): Promise<Ipackage>;
+  getAllCoupons(
+    page: number,
+    limit: number,
+  ): Promise<{
+    coupons: ICouponDocument[];
+    totalCount: number;
+  }>;
+  getCouponById(id: string): Promise<ICouponDocument>;
+  createCoupon(couponData: Partial<ICouponDocument>): Promise<ICouponDocument>;
+  updateCoupon(
+    id: string,
+    couponData: Partial<ICouponDocument>,
+  ): Promise<ICouponDocument | null>;
+  toggleCouponStatus(
+    id: string,
+    isActive: boolean,
+  ): Promise<ICouponDocument | null>;
+  getAllAvailableCoupons(): Promise<{
+    bankOffers: ICouponDocument[];
+    generalCoupons: ICouponDocument[];
+  }>;
+  validateAndCalculateDiscount(code: string, bookingAmount: number, cardBin?: string | undefined): Promise<{
+    discountAmount: number;
+    finalPrice: number;
+    coupon: ICouponDocument;
+}>
 }

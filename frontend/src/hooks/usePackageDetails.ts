@@ -173,6 +173,9 @@ export const usePackageDetails = (packageId: string) => {
   const handleBooking = async (
     addedActivityIds: string[],
     removedActivityIds: string[],
+    generalCouponCode: string,
+    bankCouponCode: string,
+
     userProfile?: { name: string; email: string; phone?: string },
   ) => {
     setIsBookingLoading(true);
@@ -186,7 +189,13 @@ export const usePackageDetails = (packageId: string) => {
 
       const { data: response } = await axiosInstance.post(
         APP_ROUTES.USER.CREATE_BOOKING,
-        { packageId, addedActivityIds, removedActivityIds },
+        {
+          packageId,
+          addedActivityIds,
+          removedActivityIds,
+          generalCouponCode,
+          bankCouponCode,
+        },
       );
       const {
         orderId,
@@ -195,6 +204,7 @@ export const usePackageDetails = (packageId: string) => {
         keyId,
         packageName,
         packageDescription,
+        offerId,
       } = response.data;
       const options = {
         key: keyId,
@@ -203,6 +213,7 @@ export const usePackageDetails = (packageId: string) => {
         name: "Book My Tour",
         description: packageName || packageDescription,
         order_id: orderId,
+        ...(offerId ? { offer_id: offerId } : {}),
         handler: async (response: {
           razorpay_order_id: string;
           razorpay_payment_id: string;

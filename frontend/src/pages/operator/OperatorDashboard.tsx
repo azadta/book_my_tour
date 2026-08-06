@@ -7,7 +7,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import Loading from "../../components/Loading";
 import OperatorDashboardSideBar from "../../components/OperatorDashboardSidebar";
 import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
-import style from  "../../css/operatorDashboard.module.css";
+import style from "../../css/operatorDashboard.module.css";
 
 const OperatorDashboard = () => {
   const [open, setOpen] = useState(false);
@@ -33,50 +33,56 @@ const OperatorDashboard = () => {
           <main className="flex-1 p-8 bg-gray-100 pt-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6  justify-items-center max-sm:w-60 mx-auto   ">
               <div className={style.card}>
-                <div className={`${style.image} flex items-center justify-center`}>
+                <div
+                  className={`${style.image} flex items-center justify-center`}
+                >
                   {" "}
                   <LuClipboardPenLine className="size-[40px]  text-amber-300" />
                 </div>
-                <div className={style['card-info']}>
+                <div className={style["card-info"]}>
                   <span>Total Bookings</span>
                   <p> </p>
                 </div>
               </div>
 
               <div className={style.card}>
-                <div className={`${style.image} flex items-center justify-center`}>
+                <div
+                  className={`${style.image} flex items-center justify-center`}
+                >
                   {" "}
                   <BsBoxSeamFill className="size-[35px]  text-amber-300" />
                 </div>
-                <div className={style['card-info']}>
+                <div className={style["card-info"]}>
                   <span> Total Packages</span>
                   <p> {PackagesCount} </p>
                 </div>
               </div>
 
               <div className={style.card}>
-                <div className={`${style.image} flex items-center justify-center`}>
+                <div
+                  className={`${style.image} flex items-center justify-center`}
+                >
                   {" "}
                   <HiCash className="size-[50px] text-amber-300" />
                 </div>
-                <div className={style['card-info']}>
+                <div className={style["card-info"]}>
                   <span> Payouts Recieved</span>
                   <p> </p>
                 </div>
               </div>
 
-                <div className={style.card}>
-                <div className={`${style.image} flex items-center justify-center`}>
+              <div className={style.card}>
+                <div
+                  className={`${style.image} flex items-center justify-center`}
+                >
                   {" "}
                   <HiCash className="size-[50px] text-red-300" />
                 </div>
-                <div className={style['card-info']}>
+                <div className={style["card-info"]}>
                   <span> Pending Payouts</span>
                   <p> </p>
                 </div>
               </div>
-
-       
             </div>
           </main>
         </div>

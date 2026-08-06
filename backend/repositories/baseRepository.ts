@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
 import { IBaseRepository } from "../interfaces/IBaseRepository";
 import { flattenObjects } from "../utils/flattenObject";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument,QueryFilter } from "mongoose";
 
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
   protected model: Model<T>;
@@ -38,5 +38,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
 
   findAll(): Promise<T[]> {
     return this.model.find();
+  }
+
+  async findOne(filter:QueryFilter<T>):Promise<T|null>{
+    return this.model.findOne(filter)
   }
 }

@@ -91,5 +91,30 @@ router.get(
   authMiddleware.verifyRole("operator"),
   operatorController.getPaginatedPackages,
 );
+router.get(
+  ROUTES.OPERATOR.COUPONS,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getAllCoupons,
+);
+router.post(
+  ROUTES.OPERATOR.CREATE_COUPON,
+  authMiddleware.verifyRole("operator"),
+  operatorController.createCoupon,
+);
+router.get(
+  ROUTES.OPERATOR.COUPON,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getCouponById,
+);
+router.put(
+  ROUTES.OPERATOR.UPDATE_COUPON,
+  authMiddleware.verifyRole("operator"),
+  operatorController.updateCoupon,
+);
+router.patch(
+  ROUTES.OPERATOR.TOGGLE_COUPON_STATUS,
+  authMiddleware.verifyRole("operator"),
+  operatorController.toggleCouponStatus,
+);
 
 export default router;

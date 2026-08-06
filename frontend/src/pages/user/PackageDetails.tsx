@@ -14,12 +14,22 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
+  Tag,
+  Ticket,
   Trash2,
   Wallet,
+  X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import Coupon from "./Coupon";
+import type { ICouponItem } from "@/interfaces/interfaces";
+
+interface AppliedCouponsState {
+  general?: ICouponItem | null;
+  bank?: ICouponItem | null;
+}
 
 const PackageDetails = () => {
   const { id } = useParams();
@@ -34,14 +44,18 @@ const PackageDetails = () => {
     openCreateModal,
     openEditModal,
     saveReview,
-    setEditingReview,
 
     submittingReview,
     deleteReview,
-    updateReview,
+
     handleBooking,
     isBookingLoading,
   } = usePackageDetails(id as string);
+  const [appliedCoupons, setAppliedCoupons] = useState<AppliedCouponsState>({
+    general: null,
+    bank: null,
+  });
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
 
   const [removedActivityIds, setRemovedActivityIds] = useState<string[]>([]);
   const [addedActivityIds, setAddedActivityIds] = useState<string[]>([]);
@@ -51,6 +65,24 @@ const PackageDetails = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
 
   const isAutoScrolling = useRef(false);
+
+  const calculateCouponDiscount = (
+    coupon: ICouponItem | null | undefined,
+    baseAmount: number,
+  ) => {
+    if (!coupon || baseAmount <= 0) return 0;
+    if (baseAmount < coupon?.minBookingAmount) return 0;
+    let discount = 0;
+    if (coupon?.discountType === "PERCENTAGE") {
+      discount = (baseAmount * coupon.discountValue) / 100;
+      if (coupon.maxDiscountAmount && discount > coupon.maxDiscountAmount) {
+        discount = coupon.maxDiscountAmount;
+      }
+    } else {
+      discount = coupon?.discountValue as number;
+    }
+    return Math.min(discount, baseAmount);
+  };
 
   const removedCost =
     data?.itinerary.reduce((acc, day) => {
@@ -75,7 +107,33 @@ const PackageDetails = () => {
       );
     }, 0) ?? 0;
 
-  const currentPrice = (data?.amount ?? 0) + addedCost - removedCost;
+  const subTotalPrice = (data?.amount ?? 0) + addedCost - removedCost;
+  const generalDiscount = useMemo(() => {
+    return calculateCouponDiscount(appliedCoupons.general, subTotalPrice);
+  }, [appliedCoupons.general, subTotalPrice]);
+
+  const priceAfterGeneral = Math.max(0, subTotalPrice - generalDiscount);
+  const bankDiscount = useMemo(() => {
+    return calculateCouponDiscount(appliedCoupons.bank, priceAfterGeneral);
+  }, [appliedCoupons.bank, priceAfterGeneral]);
+  const totalDiscount = generalDiscount + bankDiscount;
+  const finalPayablePrice = Math.max(0, subTotalPrice - totalDiscount);
+
+  const handleApplyCoupon = (coupon: ICouponItem) => {
+    if (coupon.type === "GENERAL") {
+      setAppliedCoupons((prev) => ({ ...prev, general: coupon }));
+    } else if (coupon.type === "BANK") {
+      setAppliedCoupons((prev) => ({ ...prev, bank: coupon }));
+    }
+  };
+
+  const handleRemoveCoupon = (type: "GENERAL" | "BANK") => {
+    if (type === "GENERAL") {
+      setAppliedCoupons((prev) => ({ ...prev, general: null }));
+    } else if (type === "BANK") {
+      setAppliedCoupons((prev) => ({ ...prev, bank: null }));
+    }
+  };
 
   const toggleRemovedActivity = (id: string) => {
     if (removedActivityIds.includes(id)) {
@@ -117,10 +175,17 @@ const PackageDetails = () => {
 
   const onProceedToBooking = () => {
     if (!id) return;
-    handleBooking(addedActivityIds, removedActivityIds, {
-      name: currentUser?.name as string,
-      email: currentUser?.email as string,
-    });
+    handleBooking(
+      addedActivityIds,
+      removedActivityIds,
+      appliedCoupons.general?.code as string,
+      appliedCoupons.bank?.code as string,
+      {
+        name: currentUser?.name as string,
+        email: currentUser?.email as string,
+        phone: currentUser?.mobile,
+      },
+    );
   };
 
   useEffect(() => {
@@ -471,7 +536,7 @@ const PackageDetails = () => {
 
           <aside className="col-span-1 lg:col-span-3 lg:sticky self-start min-w-[320px]  lg:top-24 order-3 space-y-4 hidden lg:block">
             <div className=" space-y-4">
-              <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-5 shadow-gray-100/50">
+              <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-5 shadow-gray-100/50 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-bold text-gray-900 ">
                     Booking Summary
@@ -482,14 +547,14 @@ const PackageDetails = () => {
                   </span>
                 </div>
 
-                <div className="space-y-2 mb-6">
-                  <div className="flex justify-between text-sm text-gray-900">
+                <div className="space-y-2 mb-4 text-sm flex-1 overflow-y-auto pr-2">
+                  <div className="flex justify-between  text-gray-900">
                     <span>Base Package Price</span>
                     <span className="font-semibold text-gray-800">
                       Rs {data.amount.toFixed(2)}
                     </span>
                   </div>
-                  <div className="overflow-y-auto max-h-[100px]">
+                  <div className="overflow-y-auto max-h-[120px] space-y-1">
                     {data.itinerary.map((day) =>
                       day.activities.map((act) => {
                         if (
@@ -499,9 +564,9 @@ const PackageDetails = () => {
                           return (
                             <div
                               key={act.id}
-                              className=" flex justify-between text-xs text-red-400 font-medium bg-red-50/50 rounded-md px-1.5 py-1"
+                              className=" flex justify-between text-xs text-red-500 font-medium bg-red-50/50 rounded-md px-1.5 py-1"
                             >
-                              <span className="truncate max-w-[200px]">
+                              <span className="truncate max-w-[180px]">
                                 Removed {act.name}
                               </span>
                               <span>- Rs {act.cost.toFixed(2)}</span>
@@ -517,9 +582,9 @@ const PackageDetails = () => {
                           return (
                             <div
                               key={act.id}
-                              className=" flex justify-between text-xs text-emerald-400 font-medium bg-emerald-50/50 rounded-md px-1.5 py-1"
+                              className=" flex justify-between text-xs text-emerald-600 font-medium bg-emerald-50/50 rounded-md px-1.5 py-1"
                             >
-                              <span className="truncate max-w-[200px]">
+                              <span className="truncate max-w-[180px]">
                                 Added {act.name}
                               </span>
                               <span>+ Rs {act.cost.toFixed(2)}</span>
@@ -531,16 +596,84 @@ const PackageDetails = () => {
                     )}
                   </div>
 
-                  <div className="border-t border-gray-100 pt-1 flex justify-between items-baseline">
-                    <span className="font-bold text-sm text-gray-900">
+                  {(addedCost > 0 || removedCost > 0) && (
+                    <div className="flex justify-between text-xs text-gray-500 pt-2 border-t border-gray-100 font-medium">
+                      <span>Sub Total</span>
+                      <span>Rs {subTotalPrice.toFixed(2)}</span>
+                    </div>
+                  )}
+
+                  {(appliedCoupons.general || appliedCoupons.bank) && (
+                    <div className="pt-2 border-t border-gray-100 space-y-1.5">
+                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
+                        Discounts Applied
+                      </span>
+
+                      {appliedCoupons.general && (
+                        <div className="flex items-center justify-between bg-emerald-50/80 border border-emerald-100 text-emerald-800 text-xs px-2.5 py-1.5 rounded-xl">
+                          <div className="flex items-center gap-1.5 truncate">
+                            <Tag className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <span className="font-bold truncate">
+                              {appliedCoupons.general.code}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="font-bold text-emerald-700">
+                              - Rs {generalDiscount.toFixed(2)}
+                            </span>
+                            <button
+                              onClick={() => handleRemoveCoupon("GENERAL")}
+                              className="text-gray-400 hover:text-red-500 transition cursor-pointer"
+                              title="Remove Coupon"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {appliedCoupons.bank && (
+                        <div className="flex items-center justify-between bg-amber-50/80 border border-amber-100 text-amber-800 text-xs px-2.5 py-1.5 rounded-xl">
+                          <div className="flex items-center gap-1.5 truncate">
+                            <Tag className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                            <span className="font-bold truncate">
+                              {appliedCoupons.bank.code}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="font-bold text-amber-700">
+                              - Rs {bankDiscount.toFixed(2)}
+                            </span>
+                            <button
+                              onClick={() => handleRemoveCoupon("BANK")}
+                              className="text-gray-400 hover:text-red-500 transition cursor-pointer"
+                              title="Remove Coupon"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
+                    <div className="font-bold text-sm text-gray-900">
                       Final Total
-                    </span>
+                    </div>
                     <div className="text-right">
                       <span className="text-xl font-black text-blue-600">
-                        Rs {currentPrice.toFixed(2)}
+                        Rs {finalPayablePrice.toFixed(2)}
                       </span>
-                      <span className="block text-[12px] text-gray-400 mt-0.5">
-                        per person / all taxes incl.
+                      {totalDiscount > 0 && (
+                        <span className="block text-[11px] text-emerald-600 font-bold">
+                          Total saved:Rs {totalDiscount.toFixed(2)}
+                        </span>
+                      )}
+
+                      <span className="block text-[11px] text-gray-400 mt-0.5 ">
+                        per person/ all taxes incl.
                       </span>
                     </div>
                   </div>
@@ -567,6 +700,35 @@ const PackageDetails = () => {
                   <Sparkles className="w-3 h-3 text-amber-500 " />
                   UPI, CREDIT/DEBIT Cards, NetBanking, Wallets Supported
                 </p>
+              </div>
+
+              <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-3 flex items-center justify-between mb-4 ">
+                <div className="flex items-center gap-2.5">
+                  <div className="bg-blue-600 text-white p-2 rounded-xl">
+                    <Ticket className="w-4 h-4" />
+                  </div>
+
+                  <div>
+                    <span className="text-xs font-bold text-gray-900 block">
+                      Bank Offers & Promo Codes
+                    </span>
+                    <span className="text-[11px] text-gray-500">
+                      {totalDiscount > 0
+                        ? `Rs ${totalDiscount.toFixed(2)} total savings applied`
+                        : "Combine One Promo + 1 Bank Offer"}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setIsCouponModalOpen(true)}
+                  className="text-xs font-bold text-blue-700 hover:text-blue-800 bg-white px-3 py-1.5 rounded-lg border border-blue-200
+                shadow-xs hover:bg-blue-50 transition cursor-pointer "
+                >
+                  {appliedCoupons.general || appliedCoupons.bank
+                    ? "Manage"
+                    : "Apply Offers"}
+                </button>
               </div>
 
               <div className="  hidden lg:flex flex-col bg-white p-4 rounded-2xl border border-gray-100 shadow-sm h-[350px] ">
@@ -637,10 +799,10 @@ const PackageDetails = () => {
       <div className="lg:hidden sticky  bottom-0 z-20  left-0 right-0  bg-white border-t border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)] px-4 py-3 pb-safe flex items-center justify-between gap-4 ">
         <div>
           <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">
-            Total Est. Cost
+            Total Payable
           </span>
           <span className="text-lg font-black text-blue-600 ">
-            Rs {currentPrice.toLocaleString("en-IN")}
+            Rs {finalPayablePrice.toLocaleString("en-IN")}
           </span>
         </div>
         <button
@@ -665,6 +827,14 @@ const PackageDetails = () => {
         initialData={editingReview}
         onClose={closeModal}
         onSubmit={saveReview}
+      />
+      <Coupon
+        isOpen={isCouponModalOpen}
+        onClose={() => setIsCouponModalOpen(false)}
+        bookingAmount={subTotalPrice}
+        appliedCoupons={appliedCoupons}
+        onApplyCoupon={handleApplyCoupon}
+        onRemoveCoupon={handleRemoveCoupon}
       />
     </div>
   );

@@ -124,16 +124,68 @@ export interface IReviewStats {
   oneStar: number;
 }
 
+export interface IAppliedCoupon {
+  couponId: string;
+  code: string;
+  title: string;
+  type: "GENERAL" | "BANK";
+  discountAmount: number;
+}
+export interface IPricing {
+  baseAmount: number;
+  addedActivitiesAmount: number;
+  removedActivitiesAmount: number;
+  subtotal: number;
+  generalCoupon: IAppliedCoupon | null;
+  bankCoupon: IAppliedCoupon | null;
+  totalDiscount: number;
+  finalAmount: number;
+}
+
 export interface IBookingResponse {
   _id: string;
   userId: string;
   packageId: IPackageItem;
   razorpayOrderId: string;
   razorpayPaymentId: string | null;
-  totalAmount: number;
+  pricing: IPricing;
   addedActivityIds: string[];
   removedActivityIds: string[];
   status: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ICouponItem {
+  _id: string;
+  code: string;
+  title: string;
+  description: string;
+  type: "GENERAL" | "BANK";
+  discountType: "PERCENTAGE" | "FLAT";
+  discountValue: number;
+  maxDiscountAmount?: number;
+  minBookingAmount: number;
+  bankName?: string;
+  allowedBins?: string[];
+  razorpayOfferId?: string;
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  validTill: string;
+}
+
+export interface CouponFormValues {
+  code: string;
+  title: string;
+  description: string;
+  type: "GENERAL" | "BANK";
+  discountType: "PERCENTAGE" | "FLAT";
+  discountValue: number;
+  maxDiscountAmount?: number;
+  minBookingAmount: number;
+  bankName?: string;
+  allowedBins?: string;
+  isActive: boolean;
+  validTill: string;
 }

@@ -929,3 +929,101 @@ export const reviewFields = [
     required: false,
   },
 ];
+
+export const getCouponFields = (formData: Record<string, any>): FormField[] => {
+  const isBankOffer = formData?.type === "BANK";
+  const baseFields = [
+    {
+      id: "code",
+      label: "Coupon Code",
+      type: "text",
+      placeholder: "Enter coupon code",
+      required: true,
+    },
+    {
+      id: "title",
+      label: "Title",
+      type: "text",
+      placeholder: "Enter coupon title",
+      required: true,
+    },
+    {
+      id: "description",
+      label: "Description",
+      type: "textarea",
+
+      required: true,
+    },
+    {
+      id: "type",
+      label: "Coupon Type",
+      type: "select",
+
+      required: true,
+      options: [
+        { label: "General Promo", value: "GENERAL" },
+        { label: "Bank Offer", value: "BANK" },
+      ],
+    },
+    {
+      id: "discountType",
+      label: "Discount Type",
+      type: "select",
+
+      required: true,
+      options: [
+        { label: "Percentage(%)", value: "PERCENTAGE" },
+        { label: "Flat Amount(Rs)", value: "FLAT" },
+      ],
+    },
+    {
+      id: "discountValue",
+      label: "Discount Value",
+      type: "number",
+      required: true,
+    },
+    {
+      id: "maxDiscountAmount",
+      label: "Max Discount Amount",
+      type: "number",
+      required: true,
+    },
+    {
+      id: "minBookingAmount",
+      label: "Min Booking Amount",
+      type: "number",
+      required: false,
+    },
+  ];
+  if (isBankOffer) {
+    baseFields.push(
+      {
+        id: "bankName",
+        label: "Bank Name (For Bank Offers)",
+        type: "text",
+        required: false,
+      },
+      {
+        id: "allowedBins",
+        label: "Allowed Bins (Comma Seperated)",
+        type: "text",
+        required: false,
+      },
+    );
+  }
+  baseFields.push(
+    {
+      id: "validTill",
+      label: "Valid Till Date",
+      type: "date",
+      required: true,
+    },
+    {
+      id: "isActive",
+      label: "Active Status",
+      type: "checkbox",
+      required: false,
+    },
+  );
+  return baseFields;
+};

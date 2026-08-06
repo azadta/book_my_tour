@@ -134,4 +134,33 @@ export const RESPONSE_MESSAGES = {
       USER_ID_MISSING: "User ID is required",
     },
   },
+  PAYMENT: {
+    ERROR: {
+      INITIATE: "Failed to initiate payment order",
+      RAZORPAY_OFFER:'Razorpay offer creation error'
+    },
+  },
+
+  COUPON: {
+    SUCCESS: {
+      CREATED: "Coupon created successfully",
+      UPDATE: "Coupon updated successfully",
+      TOGGLE_STATUS: (isActive: boolean) =>
+        `Coupon ${isActive ? "activated" : "deactivated"} successfully`,
+    },
+    ERROR: {
+      INVALID_CODE: "Invalid or expired coupon code",
+      MINIMUM_AMOUNT: (minAmount: Number) =>
+        `Minimum booking amount of Rs ${minAmount} required for this coupon`,
+      CARD_BIN_MISSING:
+        "Card Bin (first 6 digits) required to validate bank offer",
+      BANK_MISMATCH: (bankName: string) =>
+        `This offer is only for selected ${bankName || "Bank"} cards`,
+      CODE_AND_BOOKING_AMOUNT_MISSING:
+        "Coupon code and booking amount are required",
+      NOT_FOUND: "Coupon not found",
+      COUPON_CODE_MISSING: "Coupon code is required",
+      CODE_ALREADY_EXIST: "Coupon code already exist",
+    },
+  },
 } as const;

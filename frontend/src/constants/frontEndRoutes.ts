@@ -26,7 +26,7 @@ export const FRONTEND_ROUTES = {
     BOOKING_SUCCESS_PATTERN: "/booking/success",
     BOOKING_SUCCESS: (orderId: string) =>
       `/booking/success/?order_id=${encodeURIComponent(orderId)}`,
-    MY_BOOKINGS:'/user/my-bookings'
+    MY_BOOKINGS: "/user/my-bookings",
   },
 
   OPERATOR: {
@@ -48,6 +48,10 @@ export const FRONTEND_ROUTES = {
     RESET_PASSWORD: (token: string) => `/operator/reset-password/${token}`,
     EDIT_PACKAGE: (id: string) => `/operator/edit-package/${id}`,
     PACKAGES_LIST: (id: string) => `/operator/packages-list/${id}`,
+    UPDATE_COUPON_PATTERN: "/operator/update-coupon/:couponId",
+    UPDATE_COUPON: (couponId: string) => `/operator/update-coupon/${couponId}`,
+    CREATE_COUPON: "/operator/create-coupon",
+    COUPONS_LIST: `/operator/coupons-list`,
   },
   ADMIN: {
     LOGIN: "/admin/login",

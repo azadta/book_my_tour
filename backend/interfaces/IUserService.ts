@@ -1,3 +1,4 @@
+import { ICouponDocument } from "../models/Coupon";
 import { IDestination } from "../models/Destination";
 import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
@@ -130,6 +131,8 @@ export interface IUserService {
       packageId: string;
       addedActivityIds: string[];
       removedActivityIds: string[];
+      generalCouponCode: string;
+      bankCouponCode: string;
     },
   ): Promise<
     | {
@@ -154,4 +157,17 @@ export interface IUserService {
   }>;
   findBookingByOrderId(razorpayOrderId: string): Promise<IBooking>;
   getUserBookings(userId: string): Promise<IBooking[]>;
+  getAllAvailableCoupons(): Promise<{
+    bankOffers: ICouponDocument[];
+    generalCoupons: ICouponDocument[];
+  }>;
+  validateAndCalculateDiscount(
+    code: string,
+    bookingAmount: number,
+    cardBin?: string | undefined,
+  ): Promise<{
+    discountAmount: number;
+    finalPrice: number;
+    coupon: ICouponDocument;
+  }>;
 }

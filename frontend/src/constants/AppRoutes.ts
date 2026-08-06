@@ -49,7 +49,8 @@ export const APP_ROUTES = {
     CREATE_BOOKING: "/user/booking",
     VERIFY_BOOKING_PAYMENT: "/user/booking/payment/verify",
     BOOKING_BY_ORDER_ID: (orderId: string) => `/user/booking/${orderId}`,
-    MY_BOOKINGS:'/user/my-bookings'
+    MY_BOOKINGS: "/user/my-bookings",
+    COUPONS: "/user/coupons",
   },
   OPERATOR: {
     REGISTER: "/operator/register",
@@ -72,6 +73,12 @@ export const APP_ROUTES = {
     PACKAGES_UPDATE: (id: string) => `/operator/packages/update/${id}`,
     DELETE_PACKAGE: (id: string) => `/operator/package/delete/${id}`,
     RESET_PASSWORD_AUTH: "/operator/reset-password-authenticated",
+    COUPONS: "/operator/coupons",
+    TOGGLE_COUPON_STATUS: (couponId: string) =>
+      `/operator/coupon/${couponId}/toggle-status`,
+    CREATE_COUPON: "/operator/coupon/create",
+    FETCH_COUPON_BY_ID:(couponId:string)=> `/operator/coupon/${couponId}`,
+    UPDATE_COUPON:(couponId:string)=> `/operator/coupon/update/${couponId}`,
   },
   ADMIN: {
     LOGIN: "/admin/login",

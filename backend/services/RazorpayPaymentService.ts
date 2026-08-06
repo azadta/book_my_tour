@@ -25,6 +25,7 @@ export class RazorpayPaymentService implements IPaymentService {
         currency: data.currency || "INR",
         receipt: data.receipt,
         notes: data.notes || {},
+        ...(data.offerId && { offer: data.offerId }),
       };
 
       const order = await this.razorpay.orders.create(options);

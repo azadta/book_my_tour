@@ -147,4 +147,13 @@ export const FEEDBACK_MESSAGES = {
       FETCH_USER_BOOKINGS: "Failed to fetch user bookings",
     },
   },
+  COUPON: {
+    SUCCESS: {
+      CREATE: "Coupon created successfully",
+      UPDATE: "Coupon updated successfully",
+    },
+    ERROR: {
+      FETCH: "Failed to fetch coupons",
+    },
+  },
 } as const;

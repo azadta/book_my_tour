@@ -22,9 +22,12 @@ import type { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
 
-import { CreateReviewDto } from "../interfaces/IReview";
-import type { IPaymentService } from "../interfaces/IPaymentService";
+import { IBookingPricing } from "../interfaces/IBookingPricing";
 import type { IBookingRepository } from "../interfaces/IBookingRepository";
+import type { ICouponRepository } from "../interfaces/ICouponRepository";
+import type { IPaymentService } from "../interfaces/IPaymentService";
+import { CreateReviewDto } from "../interfaces/IReview";
+import { CouponType, ICouponDocument } from "../models/Coupon";
 
 @injectable()
 export class UserService implements IUserService {
@@ -49,6 +52,8 @@ export class UserService implements IUserService {
     private paymentService: IPaymentService,
     @inject(Types.BookingRepository)
     private bookingRepository: IBookingRepository,
+    @inject(Types.CouponRepository)
+    private couponRepository: ICouponRepository,
   ) {}
 
   async registerUser(userData: {
@@ -691,9 +696,18 @@ export class UserService implements IUserService {
       packageId: string;
       addedActivityIds: string[];
       removedActivityIds: string[];
+      generalCouponCode?: string;
+      bankCouponCode?: string;
     },
   ) {
-    const { addedActivityIds = [], packageId, removedActivityIds = [] } = dto;
+    const {
+      addedActivityIds = [],
+      packageId,
+      removedActivityIds = [],
+      generalCouponCode,
+      bankCouponCode,
+    } = dto;
+
     const pkg = await this.packageRepository.getPackageById(packageId);
     if (!pkg) {
       throw new CustomError(
@@ -702,52 +716,173 @@ export class UserService implements IUserService {
       );
     }
 
-    const removedCost = pkg.itinerary.reduce((acc: number, day: any) => {
-      const dayDeductions = day.activities.reduce((sum: number, act: any) => {
-        return (
-          sum +
-          (act.customizable && removedActivityIds.includes(act.id)
-            ? act.cost
-            : 0)
-        );
-      }, 0);
-      return acc + dayDeductions;
-    }, 0);
+    let addedActivitiesAmount = 0;
+    for (const day of pkg.itinerary) {
+      for (const activity of day.optionalActivities) {
+        if (dto.addedActivityIds.includes(activity.id)) {
+          addedActivitiesAmount += activity.cost;
+        }
+      }
+    }
 
-    const addedCost = pkg.itinerary.reduce((acc: number, day: any) => {
-      const dayaddedCost = day?.optionalActivities?.reduce(
-        (sum: number, act: any) => {
-          return (
-            sum +
-            (act.customizable && addedActivityIds.includes(act.id)
-              ? act.cost
-              : 0)
-          );
-        },
-        0,
+    let removedActivitiesAmount = 0;
+    for (const day of pkg.itinerary) {
+      for (const activity of day.activities) {
+        if (
+          activity.customizable &&
+          dto.removedActivityIds.includes(activity.id)
+        ) {
+          removedActivitiesAmount += activity.cost;
+        }
+      }
+    }
+
+    const baseAmount = pkg.amount;
+    const subtotal = Math.max(
+      0,
+      baseAmount + addedActivitiesAmount - removedActivitiesAmount,
+    );
+
+    let generalCoupon: ICouponDocument | null = null;
+    let bankCoupon: ICouponDocument | null = null;
+    let generalDiscount = 0;
+    let bankDiscount = 0;
+    let runningAmount = subtotal;
+    if (generalCouponCode?.trim()) {
+      generalCoupon = await this.couponRepository.findByCode(
+        generalCouponCode?.trim(),
       );
-      return acc + dayaddedCost;
-    }, 0);
+      if (!generalCoupon) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+      if (generalCoupon.type !== CouponType.GENERAL) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
+          StatusCode.BAD_REQUEST,
+        );
+      }
 
-    const finalAmount = Math.max(0, pkg.amount + addedCost - removedCost);
+      if (subtotal < generalCoupon.minBookingAmount) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(
+            generalCoupon.minBookingAmount,
+          ),
+          StatusCode.BAD_REQUEST,
+        );
+      }
+
+      if (generalCoupon.discountType === "PERCENTAGE") {
+        generalDiscount = (subtotal * generalCoupon.discountValue) / 100;
+        if (
+          generalCoupon.maxDiscountAmount &&
+          generalDiscount > generalCoupon.maxDiscountAmount
+        ) {
+          generalDiscount = generalCoupon.maxDiscountAmount;
+        }
+      } else {
+        generalDiscount = generalCoupon.discountValue;
+      }
+      runningAmount -= generalDiscount;
+    }
+
+    if (bankCouponCode?.trim()) {
+      bankCoupon = await this.couponRepository.findByCode(
+        bankCouponCode.trim(),
+      );
+      if (!bankCoupon) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+      if (bankCoupon.type !== CouponType.BANK) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+      if (subtotal < bankCoupon.minBookingAmount) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(
+            bankCoupon.minBookingAmount,
+          ),
+          StatusCode.BAD_REQUEST,
+        );
+      }
+
+      if (bankCoupon.discountType === "PERCENTAGE") {
+        bankDiscount = (runningAmount * bankCoupon.discountValue) / 100;
+        if (
+          bankCoupon.maxDiscountAmount &&
+          bankDiscount > bankCoupon.maxDiscountAmount
+        ) {
+          bankDiscount = bankCoupon.maxDiscountAmount;
+        }
+      } else {
+        bankDiscount = bankCoupon.discountValue;
+      }
+      runningAmount -= bankDiscount;
+    }
+
+    const finalAmount = Math.max(0, runningAmount);
+
+    const pricing: IBookingPricing = {
+      baseAmount,
+      addedActivitiesAmount,
+      removedActivitiesAmount,
+      subtotal,
+      ...(generalCoupon && {
+        generalCoupon: {
+          couponId: generalCoupon._id.toString(),
+          code: generalCoupon.code,
+          title: generalCoupon.title,
+          type: generalCoupon.type,
+          discountAmount: generalDiscount,
+        },
+      }),
+      ...(bankCoupon && {
+        bankCoupon: {
+          couponId: bankCoupon._id.toString(),
+          code: bankCoupon.code,
+          title: bankCoupon.title,
+          type: bankCoupon.type,
+          discountAmount: bankDiscount,
+        },
+      }),
+      totalDiscount: generalDiscount + bankDiscount,
+      finalAmount,
+    };
 
     const order = await this.paymentService.createOrder({
-      amount: finalAmount,
-      receipt: `reciept_pkg_${Date.now()}`,
+      amount: pricing.finalAmount,
+      receipt: `receipt_pkg_${Date.now()}`,
+      ...(bankCoupon && {
+        offerId: bankCoupon.razorpayOfferId,
+      }),
       notes: {
         userId,
         packageId,
+        generalCouponCode: generalCouponCode || "",
+        bankCouponCode: bankCouponCode || "",
         addedActivityIds: JSON.stringify(addedActivityIds),
         removedActivityIds: JSON.stringify(removedActivityIds),
       },
     });
-    if (!order) return;
+    if (!order)
+      throw new CustomError(
+        RESPONSE_MESSAGES.PAYMENT.ERROR.INITIATE,
+        StatusCode.INTERNAL_SERVER_ERROR,
+      );
 
     await this.bookingRepository.createBooking({
       userId,
       packageId,
       razorpayOrderId: order.id,
-      totalAmount: finalAmount,
+      pricing,
+
       addedActivityIds,
       removedActivityIds,
       status: "PENDING",
@@ -760,6 +895,7 @@ export class UserService implements IUserService {
       keyId: process.env.RAZORPAY_KEY_ID,
       packageName: pkg.name,
       packageDescription: `${pkg.duration.day}D / ${pkg.duration.night}N Tour Package`,
+      offerId: bankCoupon?.razorpayOfferId || null,
     };
   }
 
@@ -828,5 +964,64 @@ export class UserService implements IUserService {
     const bookings = await this.bookingRepository.getUserBookings(userId);
 
     return bookings;
+  }
+
+  async getAllAvailableCoupons() {
+    const coupons = await this.couponRepository.findActiveCoupons();
+    const bankOffers = coupons.filter((c) => c.type === CouponType.BANK);
+    const generalCoupons = coupons.filter((c) => c.type === CouponType.GENERAL);
+    return { bankOffers, generalCoupons };
+  }
+
+  async validateAndCalculateDiscount(
+    code: string,
+    bookingAmount: number,
+    cardBin?: string,
+  ): Promise<{
+    discountAmount: number;
+    finalPrice: number;
+    coupon: ICouponDocument;
+  }> {
+    const coupon = await this.couponRepository.findByCode(code);
+    if (!coupon) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    if (bookingAmount < coupon.minBookingAmount) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(coupon.minBookingAmount),
+      );
+    }
+    if (coupon.type === CouponType.BANK) {
+      if (!cardBin) {
+        throw new CustomError(RESPONSE_MESSAGES.COUPON.ERROR.CARD_BIN_MISSING);
+      }
+      if (
+        coupon.allowedBins &&
+        coupon.allowedBins.length > 0 &&
+        !coupon.allowedBins.includes(cardBin)
+      ) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.BANK_MISMATCH(coupon.bankName),
+        );
+      }
+    }
+
+    let discountAmount = 0;
+    if (coupon.discountType === "PERCENTAGE") {
+      discountAmount = (bookingAmount * coupon.discountValue) / 100;
+      if (
+        coupon.maxDiscountAmount &&
+        discountAmount > coupon.maxDiscountAmount
+      ) {
+        discountAmount = coupon.maxDiscountAmount;
+      }
+    } else {
+      discountAmount = coupon.discountValue;
+    }
+    const finalPrice = Math.max(0, bookingAmount - discountAmount);
+    return { discountAmount, finalPrice, coupon };
   }
 }

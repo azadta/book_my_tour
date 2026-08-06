@@ -19,6 +19,9 @@ import type { IDestination } from "../models/Destination";
 import { Types } from "../types/types";
 import { IOperator, IOperatorResponse } from "../interfaces/IOperator";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import type { ICouponRepository } from "../interfaces/ICouponRepository";
+
+import { CouponType, ICouponDocument } from "../models/Coupon";
 
 @injectable()
 export class OperatorService implements IOperatorService {
@@ -36,13 +39,18 @@ export class OperatorService implements IOperatorService {
     private packageCategoryRepository: IPackageCategoryRepository,
     @inject(Types.DestinationRepository)
     private destinationRepository: IDestinationRepository,
+    @inject(Types.CouponRepository)
+    private couponRepository: ICouponRepository,
   ) {}
   async operatorRegisterService(data: Partial<IOperator>) {
     const existing = await this.operatorRepository.findByEmail(
       data.email as string,
     );
     if (existing) {
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS,
+        StatusCode.BAD_REQUEST,
+      );
     }
     const hashedPassword = this.hashService.hash(data.password as string);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
@@ -69,9 +77,15 @@ export class OperatorService implements IOperatorService {
   async operatorVerifyOtpService(operatorId: string, otp: string) {
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
-      throw new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     if (operator.isEmailVerified)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_ALREADY_VERIFIED, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_ALREADY_VERIFIED,
+        StatusCode.BAD_REQUEST,
+      );
     if (otp !== operator.otp || operator.otpExpire! < Date.now()) {
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.OTP_EXPIRED_OR_INVALID,
@@ -89,7 +103,10 @@ export class OperatorService implements IOperatorService {
   ): Promise<{ otpExpire: number }> {
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
-      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
     operator.otp = otp;
@@ -113,10 +130,16 @@ export class OperatorService implements IOperatorService {
   }> {
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
-      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const isMatch = this.hashService.compare(password, operator.password);
     if (!isMatch)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS, StatusCode.UNAUTHORIZED);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
+        StatusCode.UNAUTHORIZED,
+      );
     if (!operator.isVerified)
       throw new CustomError(
         RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_VERIFIED,
@@ -143,7 +166,10 @@ export class OperatorService implements IOperatorService {
   async operatorForgotPasswordService(email: string) {
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
-      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const { resetToken, expireTime, hashedToken } =
       this.tokenService.getPasswordResetToken();
     operator.resetPasswordToken = hashedToken;
@@ -164,7 +190,10 @@ export class OperatorService implements IOperatorService {
     const operator =
       await this.operatorRepository.findByResetToken(hashedToken);
     if (!operator)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN,
+        StatusCode.BAD_REQUEST,
+      );
     operator.password = this.hashService.hash(newPassword);
     operator.resetPasswordToken = undefined;
     operator.resetPasswordExpire = undefined;
@@ -251,7 +280,10 @@ export class OperatorService implements IOperatorService {
   ) {
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
-      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     const isMatch = this.hashService.compare(oldPassword, operator.password);
     if (!isMatch)
       throw new CustomError(
@@ -259,7 +291,10 @@ export class OperatorService implements IOperatorService {
         StatusCode.BAD_REQUEST,
       );
     if (confirmPassword !== newPassword)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
+        StatusCode.BAD_REQUEST,
+      );
     operator.password = this.hashService.hash(newPassword);
     await this.operatorRepository.save(operator);
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
@@ -289,5 +324,158 @@ export class OperatorService implements IOperatorService {
       );
     }
     return pkg;
+  }
+
+  async getAllCoupons(page: number, limit: number) {
+    return await this.couponRepository.findAllCoupons(page, limit);
+  }
+  async getCouponById(id: string) {
+    const coupon = await this.couponRepository.findById(id);
+    if (!coupon) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    return coupon;
+  }
+
+  async createCoupon(couponData: Partial<ICouponDocument>) {
+    if (!couponData.code) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.COUPON_CODE_MISSING,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const existingCoupon = await this.couponRepository.findOne({
+      code: couponData.code.toUpperCase(),
+    });
+    if (existingCoupon) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.CODE_ALREADY_EXIST,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+
+    return await this.couponRepository.create({
+      ...couponData,
+      code: couponData.code.toUpperCase(),
+    });
+  }
+
+  async updateCoupon(
+    id: string,
+    couponData: Partial<ICouponDocument>,
+  ): Promise<ICouponDocument | null> {
+    const existingCoupon = await this.couponRepository.findById(id);
+    if (!existingCoupon) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    if (
+      couponData.code &&
+      couponData.code.toUpperCase() !== existingCoupon.code
+    ) {
+      const codeTaken = await this.couponRepository.findOne({
+        code: couponData.code.toUpperCase(),
+        _id: { $ne: id },
+      });
+
+      if (codeTaken) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.CODE_ALREADY_EXIST,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+    }
+    if (couponData.code) couponData.code = couponData.code.toUpperCase();
+    const updatedPayload: {
+      $set: Partial<ICouponDocument>;
+      $unset: Record<string, string>;
+    } = {
+      $set: { ...couponData },
+      $unset: {},
+    };
+
+    if (couponData.type === CouponType.GENERAL) {
+      ((updatedPayload.$unset.bankName = ""),
+        (updatedPayload.$unset.allowedBins = ""),
+        delete updatedPayload.$set.bankName);
+      delete updatedPayload.$set.allowedBins;
+    }
+
+    return this.couponRepository.updateCouponById(id, updatedPayload);
+  }
+
+  async toggleCouponStatus(id: string, isActive: boolean) {
+    const coupon = await this.couponRepository.findById(id);
+    if (!coupon) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    return this.couponRepository.toggleStatus(id, isActive);
+  }
+  async getAllAvailableCoupons() {
+    const coupons = await this.couponRepository.findActiveCoupons();
+    const bankOffers = coupons.filter((c) => c.type === CouponType.BANK);
+    const generalCoupons = coupons.filter((c) => c.type === CouponType.GENERAL);
+    return { bankOffers, generalCoupons };
+  }
+
+  async validateAndCalculateDiscount(
+    code: string,
+    bookingAmount: number,
+    cardBin?: string,
+  ): Promise<{
+    discountAmount: number;
+    finalPrice: number;
+    coupon: ICouponDocument;
+  }> {
+    const coupon = await this.couponRepository.findByCode(code);
+    if (!coupon) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    if (bookingAmount < coupon.minBookingAmount) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(coupon.minBookingAmount),
+      );
+    }
+    if (coupon.type === CouponType.BANK) {
+      if (!cardBin) {
+        throw new CustomError(RESPONSE_MESSAGES.COUPON.ERROR.CARD_BIN_MISSING);
+      }
+      if (
+        coupon.allowedBins &&
+        coupon.allowedBins.length > 0 &&
+        !coupon.allowedBins.includes(cardBin)
+      ) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.BANK_MISMATCH(coupon.bankName),
+        );
+      }
+    }
+
+    let discountAmount = 0;
+    if (coupon.discountType === "PERCENTAGE") {
+      discountAmount = (bookingAmount * coupon.discountValue) / 100;
+      if (
+        coupon.maxDiscountAmount &&
+        discountAmount > coupon.maxDiscountAmount
+      ) {
+        discountAmount = coupon.maxDiscountAmount;
+      }
+    } else {
+      discountAmount = coupon.discountValue;
+    }
+    const finalPrice = Math.max(0, bookingAmount - discountAmount);
+    return { discountAmount, finalPrice, coupon };
   }
 }

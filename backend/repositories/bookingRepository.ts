@@ -23,7 +23,7 @@ export class BookingRepository
       packageId: dto.packageId,
       razorpayOrderId: dto.razorpayOrderId,
       razorpayPaymentId: dto.razorpayPaymentId || null,
-      totalAmount: dto.totalAmount,
+      pricing:dto.pricing,
       addedActivityIds: dto.addedActivityIds || [],
       removedActivityIds: dto.removedActivityIds || [],
       status: dto.status || "PENDING",

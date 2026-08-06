@@ -39,7 +39,9 @@ export const ROUTES = {
     CREATE_BOOKING: "/booking",
     PAYMENT_VERIFY: "/booking/payment/verify",
     BOOKING_BY_ORDER_ID: "/booking/:orderId",
-    MY_BOOKINGS:'/my-bookings'
+    MY_BOOKINGS: "/my-bookings",
+    COUPONS: "/coupons",
+    VALIDATE_COUPONS: "/coupons/validate",
   },
   OPERATOR: {
     REGISTER: "/register",
@@ -62,6 +64,11 @@ export const ROUTES = {
     DELETE_PACKAGE: "/package/delete/:id",
     PACKAGES_UPDATE: "/packages/update/:id",
     PACKAGES: "/packages/:id",
+    COUPONS: "/coupons",
+    CREATE_COUPON: "/coupon/create",
+    COUPON: "/coupon/:id",
+    UPDATE_COUPON: "/coupon/update/:id",
+    TOGGLE_COUPON_STATUS: "/coupon/:id/toggle-status",
   },
   ADMIN: {
     LOGIN: "/login",

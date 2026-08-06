@@ -4,12 +4,15 @@ import { AdminController } from "../controllers/adminController";
 import { CommonAuthController } from "../controllers/commonAuthController";
 import { OperatorController } from "../controllers/operatorController";
 import { UserController } from "../controllers/userController";
+import { WebhookController } from "../controllers/webhookController";
 import { IAdminController } from "../interfaces/IAdminController";
 import { IAdminRepository } from "../interfaces/IAdminRepository";
 import { IAdminService } from "../interfaces/IAdminService";
 import { IAuthMiddleware } from "../interfaces/IAuthMiddleware";
+import { IBookingRepository } from "../interfaces/IBookingRepository";
 import { ICommonAuthController } from "../interfaces/ICommonAuthController";
 import { ICommonAuthService } from "../interfaces/ICommonAuthService";
+import { ICouponRepository } from "../interfaces/ICouponRepository";
 import { IDestinationRepository } from "../interfaces/IDestinationRepository";
 import { IHashGenerator } from "../interfaces/IHashGenerator";
 import { IHashService } from "../interfaces/IHashService";
@@ -26,9 +29,12 @@ import { ITokenService } from "../interfaces/ITokenService";
 import { IUserController } from "../interfaces/IUserController";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUserService } from "../interfaces/IUserService";
+import { IWebhookController } from "../interfaces/IWebhookController";
 import { IWishlistRepository } from "../interfaces/IWishlistRepository";
 import { AuthMiddleware } from "../middlewares/authMiddleware";
 import { AdminRepository } from "../repositories/adminRepository";
+import { BookingRepository } from "../repositories/bookingRepository";
+import { CouponRepository } from "../repositories/couponRepository";
 import { DestinationRepository } from "../repositories/destinationRepository";
 import { OperatorRepository } from "../repositories/operatorRepository";
 import { PackageCategoryRepository } from "../repositories/packageCategoryRepository";
@@ -47,10 +53,6 @@ import { SecurityService } from "../services/securityService";
 import { TokenService } from "../services/tokenService";
 import { UserService } from "../services/userService";
 import { Types } from "../types/types";
-import { IBookingRepository } from "../interfaces/IBookingRepository";
-import { BookingRepository } from "../repositories/bookingRepository";
-import { IWebhookController } from "../interfaces/IWebhookController";
-import { WebhookController } from "../controllers/webhookController";
 
 const container = new Container();
 
@@ -158,6 +160,11 @@ container
   .bind<IWebhookController>(Types.WebhookController)
   .to(WebhookController)
   .inSingletonScope();
+  container
+  .bind<ICouponRepository>(Types.CouponRepository)
+  .to(CouponRepository)
+  .inSingletonScope();
+
 
 export const userController = container.get<IUserController>(
   Types.UserController,

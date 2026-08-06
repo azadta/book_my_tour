@@ -3,6 +3,7 @@ export interface ICreateRazorpayOrderDTO {
   currency?: string;
   receipt: string;
   notes?: Record<string, string>;
+  offerId?:string
 }
 
 export interface IVerifyPaymentDTO {

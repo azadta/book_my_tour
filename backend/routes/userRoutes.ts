@@ -171,4 +171,14 @@ router.get(
   authMiddleware.verifyRole("user"),
   userController.getUserBookings,
 );
+router.get(
+  ROUTES.USER.COUPONS,
+  authMiddleware.verifyRole("user"),
+  userController.getCoupons,
+);
+router.get(
+  ROUTES.USER.VALIDATE_COUPONS,
+  authMiddleware.verifyRole("user"),
+  userController.validateCoupon,
+);
 export default router;

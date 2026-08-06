@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import UserLayout from "./components/UserLayout";
+import { FRONTEND_ROUTES } from "./constants/frontEndRoutes";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminEditPackage from "./pages/admin/AdminEditPackage";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -18,6 +19,7 @@ import EditOperator from "./pages/admin/EditOperator";
 import EditUser from "./pages/admin/EditUser";
 import OperatorCreatePackage from "./pages/operator/OperatorCreatePackage";
 import OperatorDashboard from "./pages/operator/OperatorDashboard";
+import OperatorEditPackage from "./pages/operator/OperatorEditPackage";
 import OperatorForgotPassword from "./pages/operator/OperatorForgotPassword";
 import OperatorLogin from "./pages/operator/OperatorLogin";
 import OperatorOtpVerification from "./pages/operator/OperatorOtpVerification";
@@ -27,26 +29,26 @@ import OperatorRegister from "./pages/operator/OperatorRegister";
 import OperatorResetPassword from "./pages/operator/OperatorResetPassword";
 import OperatorResetPasswordAuthenticated from "./pages/operator/OperatorResetPasswordAuthenticated";
 import { About } from "./pages/user/About";
+import BookingSuccessPage from "./pages/user/BookingSuccessPage";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import Home from "./pages/user/Home";
 import Login from "./pages/user/Login";
+import MyBookingsPage from "./pages/user/MyBookingsPage";
 import PackageDetails from "./pages/user/PackageDetails";
 import PackagesList from "./pages/user/PackagesList";
 import Profile from "./pages/user/Profile";
 import Register from "./pages/user/Register";
 import { ResetPassword } from "./pages/user/ResetPassword";
 import ResetPasswordAuthenticated from "./pages/user/ResetPasswordAuthenticated";
+import SharedWishlist from "./pages/user/SharedWishlist";
 import VerifyOtp from "./pages/user/VerifyOtp";
+import Wishlist from "./pages/user/Wishlist";
 import type { RootState } from "./redux/store";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
-import OperatorEditPackage from "./pages/operator/OperatorEditPackage";
-import { FRONTEND_ROUTES } from "./constants/frontEndRoutes";
-import Wishlist from "./pages/user/Wishlist";
-import SharedWishlist from "./pages/user/SharedWishlist";
-import AddUserReviewModal from "./components/AddUserReviewModal";
-import BookingSuccessPage from "./pages/user/BookingSuccessPage";
-import MyBookingsPage from "./pages/user/MyBookingsPage";
+import CouponList from "./pages/operator/CouponList";
+import CreateCoupon from "./pages/operator/CreateCoupon";
+import EditCoupon from "./pages/operator/EditCoupon";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -118,9 +120,9 @@ const App = () => {
               path={FRONTEND_ROUTES.USER.BOOKING_SUCCESS_PATTERN}
               element={<BookingSuccessPage />}
             />
-                  <Route
+            <Route
               path={FRONTEND_ROUTES.USER.MY_BOOKINGS}
-              element={<MyBookingsPage/>}
+              element={<MyBookingsPage />}
             />
           </Route>
         </Route>
@@ -181,6 +183,18 @@ const App = () => {
           <Route
             path={FRONTEND_ROUTES.OPERATOR.PACKAGES_LIST_PATTERN}
             element={<OperatorPackagesList />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.OPERATOR.COUPONS_LIST}
+            element={<CouponList />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.OPERATOR.CREATE_COUPON}
+            element={<CreateCoupon />}
+          />
+              <Route
+            path={FRONTEND_ROUTES.OPERATOR.UPDATE_COUPON_PATTERN}
+            element={<EditCoupon />}
           />
         </Route>
 

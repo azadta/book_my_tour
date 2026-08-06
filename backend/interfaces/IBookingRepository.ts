@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { IBaseRepository } from "./IBaseRepository";
 import { IBookingDocument } from "../models/Booking";
+import { IBookingPricing } from "./IBookingPricing";
 
 export type BookingStatus = "PENDING" | "CONFIRMED" | "FAILED" | "CANCELLED";
 
@@ -9,11 +10,13 @@ export interface IBooking {
   userId: Types.ObjectId | string;
   packageId: Types.ObjectId | string;
   razorpayOrderId: string;
-  razorpayPaymentId: string|null
-  totalAmount: number;
+  razorpayPaymentId: string | null;
+
   addedActivityIds: string[];
   removedActivityIds: string[];
   status: BookingStatus;
+  pricing: IBookingPricing;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,10 +26,11 @@ export interface ICreateBookingDTO {
   packageId: string;
   razorpayOrderId: string;
   razorpayPaymentId?: string;
-  totalAmount: number;
+ 
   addedActivityIds?: string[];
   removedActivityIds?: string[];
   status: BookingStatus;
+  pricing: IBookingPricing;
 }
 
 export interface IUpdateBookingStatusDTO {
@@ -42,5 +46,5 @@ export interface IBookingRepository extends IBaseRepository<IBookingDocument> {
     dto: IUpdateBookingStatusDTO,
   ): Promise<IBooking | null>;
   getUserBookings(userId: string): Promise<IBooking[]>;
-  findByBookingId(bookingId: string): Promise<IBooking | null>
+  findByBookingId(bookingId: string): Promise<IBooking | null>;
 }

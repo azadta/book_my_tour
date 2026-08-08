@@ -51,6 +51,9 @@ export const APP_ROUTES = {
     BOOKING_BY_ORDER_ID: (orderId: string) => `/user/booking/${orderId}`,
     MY_BOOKINGS: "/user/my-bookings",
     COUPONS: "/user/coupons",
+    WALLET: "/user/wallet",
+    WALLET_TOPUP: "/user/wallet/topup",
+    VERIFY_WALLET_TOPUP: "/user/wallet/verify-topup",
   },
   OPERATOR: {
     REGISTER: "/operator/register",
@@ -77,8 +80,8 @@ export const APP_ROUTES = {
     TOGGLE_COUPON_STATUS: (couponId: string) =>
       `/operator/coupon/${couponId}/toggle-status`,
     CREATE_COUPON: "/operator/coupon/create",
-    FETCH_COUPON_BY_ID:(couponId:string)=> `/operator/coupon/${couponId}`,
-    UPDATE_COUPON:(couponId:string)=> `/operator/coupon/update/${couponId}`,
+    FETCH_COUPON_BY_ID: (couponId: string) => `/operator/coupon/${couponId}`,
+    UPDATE_COUPON: (couponId: string) => `/operator/coupon/update/${couponId}`,
   },
   ADMIN: {
     LOGIN: "/admin/login",

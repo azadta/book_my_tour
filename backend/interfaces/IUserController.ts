@@ -184,4 +184,15 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ) => Promise<Response<any, Record<string, any>> | undefined>;
+  getWallet: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  createWalletTopupOrder: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  verifyWalletTopupPayment: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

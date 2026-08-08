@@ -1,6 +1,7 @@
 import Loading from "@/components/Loading";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
-import { useMyBookings, type Booking } from "@/hooks/useMyBookings";
+import { useMyBookings, type IBooking } from "@/hooks/useMyBookings";
+import type { IPricing } from "@/interfaces/interfaces";
 import {
   AlertCircle,
   Calendar,
@@ -9,13 +10,14 @@ import {
   MapPin,
   PackageX,
   Receipt,
+  Wallet,
   XCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MyBookingsPage = () => {
   const { bookings, isLoading } = useMyBookings();
-  const getStatusBadge = (status: Booking["status"]) => {
+  const getStatusBadge = (status: IBooking["status"]) => {
     switch (status) {
       case "CONFIRMED":
         return (
@@ -46,6 +48,31 @@ const MyBookingsPage = () => {
           </span>
         );
     }
+  };
+
+  const getPaymentMethodBadge = (pricing?: IPricing) => {
+    if (!pricing) return null;
+    const { walletApplied, finalAmount } = pricing;
+    if (walletApplied > 0 && finalAmount === 0) {
+      return (
+        <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-[11px] font-medium px-2 py-0.5 rounded border border-indigo-100">
+          <Wallet className="w-3 h-3" />
+          Wallet Paid
+        </span>
+      );
+    }
+    if (walletApplied > 0 && finalAmount > 0) {
+      return (
+        <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 text-[11px] font-medium px-2 py-0.5 rounded border border-purple-100">
+          <Wallet className="w-3 h-3" />
+          Wallet + Online
+        </span>
+      );
+    }
+    return (<span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[11px] font-medium px-2 py-0.5 rounded border border-blue-100">
+          <Wallet className="w-3 h-3" />
+          Online Gateway
+        </span>)
   };
 
   if (isLoading) return <Loading />;
@@ -82,6 +109,8 @@ const MyBookingsPage = () => {
         <div className="space-y-4">
           {bookings.map((booking) => {
             const pkg = booking.packageId;
+            const pricing=booking.pricing
+            const totalPaid=(pricing?.walletApplied||0)+(pricing?.finalAmount||0)
             const bookingDate = new Date(booking.createdAt).toLocaleDateString(
               "en-IN",
               { day: "numeric", month: "short", year: "numeric" },
@@ -107,8 +136,9 @@ const MyBookingsPage = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {getStatusBadge(booking.status)}
+                      {getPaymentMethodBadge(pricing)}
                     </div>
                     <h2 className="text-base font-bold text-gray-900 line-clamp-1 ">
                       {pkg?.name || "Tour Package"}
@@ -129,10 +159,10 @@ const MyBookingsPage = () => {
                 <div className="w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 flex sm:flex-col items-center sm:items-end justify-between gap-2">
                   <div className="text-left sm:text-right ">
                     <span className="text-[11px] text-gray-400 block">
-                      Total Amount
+                      Total Paid
                     </span>
                     <span className="text-lg font-black text-blue-600">
-                      Rs {booking.totalAmount.toLocaleString("en-IN")}
+                      Rs {totalPaid.toLocaleString("en-IN")}
                     </span>
                   </div>
 
@@ -143,7 +173,8 @@ const MyBookingsPage = () => {
                       )}
                       className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
                     >
-                        <Receipt className="w-3.5 h-3.5"/>View Reciept
+                      <Receipt className="w-3.5 h-3.5" />
+                      View Reciept
                     </Link>
                   )}
                 </div>

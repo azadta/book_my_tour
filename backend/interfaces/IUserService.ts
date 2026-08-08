@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { ICouponDocument } from "../models/Coupon";
 import { IDestination } from "../models/Destination";
 import { Ipackage } from "../models/Package";
@@ -131,19 +132,33 @@ export interface IUserService {
       packageId: string;
       addedActivityIds: string[];
       removedActivityIds: string[];
-      generalCouponCode: string;
-      bankCouponCode: string;
+      generalCouponCode?: string;
+      bankCouponCode?: string;
+      useWallet: boolean;
     },
   ): Promise<
     | {
+        isFullyPaidByWallet: boolean;
+        bookingId: string | mongoose.Types.ObjectId;
+        orderId: string;
+        amount?: never;
+        currency?: never;
+        keyId?: never;
+        packageName?: never;
+        packageDescription?: never;
+        offerId?: never;
+      }
+    | {
+        isFullyPaidByWallet: boolean;
         orderId: string;
         amount: number;
         currency: string;
         keyId: string | undefined;
         packageName: string;
         packageDescription: string;
+        offerId: string | null;
+        bookingId?: never;
       }
-    | undefined
   >;
   verifyAndConfirmBooking(dto: {
     razorpayOrderId: string;
@@ -153,8 +168,9 @@ export interface IUserService {
     userId: string;
   }): Promise<{
     message: "Booking confirmed successfully";
-    booking: IBooking;
+    booking: IBooking | null;
   }>;
+
   findBookingByOrderId(razorpayOrderId: string): Promise<IBooking>;
   getUserBookings(userId: string): Promise<IBooking[]>;
   getAllAvailableCoupons(): Promise<{

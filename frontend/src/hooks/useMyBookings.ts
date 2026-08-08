@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import type { IPricing } from "@/interfaces/interfaces";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -18,20 +19,20 @@ export interface PopulatedPackage {
   amount: number;
 }
 
-export interface Booking {
+export interface IBooking {
   _id: string;
   packageId: PopulatedPackage;
   razorpayOrderId: string;
-  razorpayPaymentId?: string;
-  totalAmount: number;
-  addedActivityIds?: string[];
-  removedActivityIds?: string[];
+  razorpayPaymentId: string | null;
+  pricing: IPricing;
+  addedActivityIds: string[];
+  removedActivityIds: string[];
   status: "PENDING" | "CONFIRMED" | "FAILED" | "CANCELLED";
   createdAt: string;
 }
 
 export const useMyBookings = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<IBooking[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const fetchBookings = async () => {
     setIsLoading(true);

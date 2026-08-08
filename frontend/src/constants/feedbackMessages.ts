@@ -140,11 +140,9 @@ export const FEEDBACK_MESSAGES = {
       BOOKING: "Booking confirmed succesfully",
     },
     ERROR: {
-      RAZORPAY_LOAD: "Failed to load razorpay SDK. Are you online?",
-      PAYMENT_VERIFICATION: "Payment verification failed",
-      PAYMENT_POPUP: "Payment popup closed.",
       FETCH: "Failed to fetch booking",
       FETCH_USER_BOOKINGS: "Failed to fetch user bookings",
+      INITIATE:'Failed to initiate booking'
     },
   },
   COUPON: {
@@ -154,6 +152,23 @@ export const FEEDBACK_MESSAGES = {
     },
     ERROR: {
       FETCH: "Failed to fetch coupons",
+    },
+  },
+  PAYMENT: {
+    ERROR: {
+      RAZORPAY_LOAD: "Failed to load razorpay SDK. Are you online?",
+      PAYMENT_VERIFICATION: "Payment verification failed",
+      PAYMENT_POPUP: "Payment popup closed.",
+    },
+  },
+  WALLET: {
+    SUCCESS:{
+      RECHARGE:'Wallet rechareged successfully'
+    },
+    ERROR: {
+      FETCH: "Failed to load wallet data",
+      INVALID_TOPUP_AMOUNT: "Please enter a valid amount",
+      INITIATE_TOPUP:'Failed to initiate top-up'
     },
   },
 } as const;

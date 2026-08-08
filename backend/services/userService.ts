@@ -28,6 +28,7 @@ import type { ICouponRepository } from "../interfaces/ICouponRepository";
 import type { IPaymentService } from "../interfaces/IPaymentService";
 import { CreateReviewDto } from "../interfaces/IReview";
 import { CouponType, ICouponDocument } from "../models/Coupon";
+import type { IWalletRepository } from "../interfaces/IWalletRepository";
 
 @injectable()
 export class UserService implements IUserService {
@@ -54,6 +55,7 @@ export class UserService implements IUserService {
     private bookingRepository: IBookingRepository,
     @inject(Types.CouponRepository)
     private couponRepository: ICouponRepository,
+    @inject(Types.WalletRepository) private walletRepository: IWalletRepository,
   ) {}
 
   async registerUser(userData: {
@@ -698,6 +700,7 @@ export class UserService implements IUserService {
       removedActivityIds: string[];
       generalCouponCode?: string;
       bankCouponCode?: string;
+      useWallet: boolean;
     },
   ) {
     const {
@@ -706,6 +709,7 @@ export class UserService implements IUserService {
       removedActivityIds = [],
       generalCouponCode,
       bankCouponCode,
+      useWallet,
     } = dto;
 
     const pkg = await this.packageRepository.getPackageById(packageId);
@@ -765,7 +769,10 @@ export class UserService implements IUserService {
         );
       }
 
-      if (subtotal < generalCoupon.minBookingAmount) {
+      if (
+        generalCoupon?.minBookingAmount &&
+        subtotal < generalCoupon.minBookingAmount
+      ) {
         throw new CustomError(
           RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(
             generalCoupon.minBookingAmount,
@@ -804,7 +811,10 @@ export class UserService implements IUserService {
           StatusCode.BAD_REQUEST,
         );
       }
-      if (subtotal < bankCoupon.minBookingAmount) {
+      if (
+        bankCoupon.minBookingAmount &&
+        subtotal < bankCoupon.minBookingAmount
+      ) {
         throw new CustomError(
           RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(
             bankCoupon.minBookingAmount,
@@ -828,6 +838,15 @@ export class UserService implements IUserService {
     }
 
     const finalAmount = Math.max(0, runningAmount);
+    let walletDeduction = 0;
+    let remainingPayable = finalAmount;
+    if (useWallet) {
+      const wallet = await this.walletRepository.findOne({ userId });
+      if (wallet && wallet?.balance > 0) {
+        walletDeduction = Math.min(wallet?.balance, finalAmount);
+        remainingPayable = finalAmount - walletDeduction;
+      }
+    }
 
     const pricing: IBookingPricing = {
       baseAmount,
@@ -853,11 +872,50 @@ export class UserService implements IUserService {
         },
       }),
       totalDiscount: generalDiscount + bankDiscount,
-      finalAmount,
+      walletApplied: walletDeduction,
+      finalAmount: remainingPayable,
     };
 
+    if (remainingPayable === 0) {
+      const internalOrderId = `ORDER_WALLET_${Date.now()}`;
+      const updatedWallet = await this.walletRepository.deductBalance(
+        userId,
+        walletDeduction,
+        {
+          transactionId: `TXN_${Date.now()}`,
+          type: "DEBIT",
+          purpose: "BOOKING_PAYMENT",
+          amount: walletDeduction,
+          status: "SUCCESS",
+          description: `Payment for tour: ${pkg.name}`,
+        },
+      );
+      if (!updatedWallet) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.WALLET.ERROR.TRANSACTION_FAILED,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+
+      const booking = await this.bookingRepository.createBooking({
+        userId,
+        packageId,
+        razorpayOrderId: internalOrderId,
+        pricing,
+
+        addedActivityIds,
+        removedActivityIds,
+        status: "CONFIRMED",
+      });
+      return {
+        isFullyPaidByWallet: true,
+        bookingId: booking._id,
+        orderId: internalOrderId,
+      };
+    }
+
     const order = await this.paymentService.createOrder({
-      amount: pricing.finalAmount,
+      amount: remainingPayable,
       receipt: `receipt_pkg_${Date.now()}`,
       ...(bankCoupon && {
         offerId: bankCoupon.razorpayOfferId,
@@ -889,6 +947,7 @@ export class UserService implements IUserService {
     });
 
     return {
+      isFullyPaidByWallet: false,
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
@@ -922,6 +981,30 @@ export class UserService implements IUserService {
       );
     }
 
+    const booking = await this.bookingRepository.findByOrderId(
+      dto.razorpayOrderId,
+    );
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (booking.pricing.walletApplied && booking.pricing.walletApplied > 0) {
+      await this.walletRepository.deductBalance(
+        dto.userId,
+        booking.pricing.walletApplied,
+        {
+          transactionId: `TXN_${Date.now()}`,
+          type: "DEBIT",
+          purpose: "BOOKING_PAYMENT",
+          amount: booking.pricing.walletApplied,
+          status: "SUCCESS",
+          description: `Partial wallet payment for booking order: ${dto.razorpayOrderId}`,
+        },
+      );
+    }
+
     const updatedBooking = await this.bookingRepository.updateStatusByOrderId(
       dto.razorpayOrderId,
       {
@@ -929,13 +1012,6 @@ export class UserService implements IUserService {
         razorpayPaymentId: dto.razorpayPaymentId,
       },
     );
-
-    if (!updatedBooking) {
-      throw new CustomError(
-        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
-        StatusCode.NOT_FOUND,
-      );
-    }
 
     return {
       message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CONFIRM,
@@ -989,7 +1065,7 @@ export class UserService implements IUserService {
         StatusCode.BAD_REQUEST,
       );
     }
-    if (bookingAmount < coupon.minBookingAmount) {
+    if (coupon?.minBookingAmount && bookingAmount < coupon.minBookingAmount) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(coupon.minBookingAmount),
       );

@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Coupon from "./Coupon";
 import type { ICouponItem } from "@/interfaces/interfaces";
+import { useWallet } from "@/hooks/useWallet";
 
 interface AppliedCouponsState {
   general?: ICouponItem | null;
@@ -51,6 +52,7 @@ const PackageDetails = () => {
     handleBooking,
     isBookingLoading,
   } = usePackageDetails(id as string);
+  const {balance:walletBalance}=useWallet()
   const [appliedCoupons, setAppliedCoupons] = useState<AppliedCouponsState>({
     general: null,
     bank: null,
@@ -60,6 +62,8 @@ const PackageDetails = () => {
   const [removedActivityIds, setRemovedActivityIds] = useState<string[]>([]);
   const [addedActivityIds, setAddedActivityIds] = useState<string[]>([]);
   const [activeDay, setActiveDay] = useState(1);
+
+  const [isWalletApplied, setIsWalletApplied] = useState(false);
   const dayRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -117,7 +121,11 @@ const PackageDetails = () => {
     return calculateCouponDiscount(appliedCoupons.bank, priceAfterGeneral);
   }, [appliedCoupons.bank, priceAfterGeneral]);
   const totalDiscount = generalDiscount + bankDiscount;
-  const finalPayablePrice = Math.max(0, subTotalPrice - totalDiscount);
+  const payablePrice = Math.max(0, subTotalPrice - totalDiscount);
+  const walletDeduction = isWalletApplied
+    ? Math.min(walletBalance, payablePrice)
+    : 0;
+  const finalPayablePrice = Math.max(0, payablePrice - walletDeduction);
 
   const handleApplyCoupon = (coupon: ICouponItem) => {
     if (coupon.type === "GENERAL") {
@@ -180,6 +188,7 @@ const PackageDetails = () => {
       removedActivityIds,
       appliedCoupons.general?.code as string,
       appliedCoupons.bank?.code as string,
+      isWalletApplied,
       {
         name: currentUser?.name as string,
         email: currentUser?.email as string,
@@ -658,6 +667,43 @@ const PackageDetails = () => {
                     </div>
                   )}
 
+                  <div className="pt-3 border-t border-gray-100 ">
+                    <div className="bg-blue-50/60 border border-blue-100 rounded-2xl p-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Wallet className="w-4 h-4 text-blue-600" />
+                          <div>
+                            <p className="text-xs font-bold text-gray-900 ">
+                              Use Wallet Balance
+                            </p>
+                            <p className="text-[11px] text-gray-500">
+                              Available: Rs {walletBalance.toFixed()}
+                            </p>
+                          </div>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={isWalletApplied}
+                            onChange={(e) =>
+                              setIsWalletApplied(e.target.checked)
+                            }
+                            disabled={walletBalance <= 0}
+                            className="sr-only peer"
+                          />
+                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600 " />
+                        </label>
+                      </div>
+
+                      {isWalletApplied && walletDeduction > 0 && (
+                        <div className="mt-2 text-xs flex justify-between font-semibold text-blue-700 bg-blue-100/60 px-2 py-1 rounded-lg ">
+                          <span>Wallet Discount</span>
+                          <span>-Rs {walletDeduction.toFixed(2)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
                     <div className="font-bold text-sm text-gray-900">
                       Final Total
@@ -687,12 +733,21 @@ const PackageDetails = () => {
                   {isBookingLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Opening payment Gateway...</span>
+                      <span>Processing Payment...</span>
+                    </>
+                  ) : finalPayablePrice === 0 ? (
+                    <>
+                      <Wallet className="w-4 h-4" />
+                      <span>Pay Full Amount Via Wallet</span>
                     </>
                   ) : (
                     <>
                       <Wallet className="w-4 h-4" />
-                      <span>Pay with Razorpay</span>
+                      <span>
+                        {isWalletApplied && walletDeduction > 0
+                          ? `Pay remaining Rs ${finalPayablePrice.toFixed(2)}`
+                          : `Pay with Razorpay`}
+                      </span>
                     </>
                   )}
                 </button>
@@ -802,7 +857,7 @@ const PackageDetails = () => {
             Total Payable
           </span>
           <span className="text-lg font-black text-blue-600 ">
-            Rs {finalPayablePrice.toLocaleString("en-IN")}
+            Rs {payablePrice.toLocaleString("en-IN")}
           </span>
         </div>
         <button

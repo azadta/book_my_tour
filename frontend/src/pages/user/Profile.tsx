@@ -233,7 +233,7 @@ const Profile = () => {
             Reset Password
           </button>
 
-          <button className="profile-sidebar-button">My Wallet</button>
+          <button onClick={()=>navigate(FRONTEND_ROUTES.USER.WALLET)} className="profile-sidebar-button">My Wallet</button>
           <button onClick={handleDeleteUser} className="profile-sidebar-button">
             Delete Account
           </button>

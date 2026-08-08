@@ -139,6 +139,7 @@ export interface IPricing {
   generalCoupon: IAppliedCoupon | null;
   bankCoupon: IAppliedCoupon | null;
   totalDiscount: number;
+  walletApplied:number
   finalAmount: number;
 }
 
@@ -188,4 +189,15 @@ export interface CouponFormValues {
   allowedBins?: string;
   isActive: boolean;
   validTill: string;
+}
+
+export interface IWalletTransaction {
+  _id: string;
+  transactionId: string;
+  type: "DEBIT" | "CREDIT";
+  purpose: string;
+  amount: number;
+  status: "PENDING" | "SUCCESS" | "FAILED";
+  description: string;
+  createdAt: string;
 }

@@ -61,6 +61,10 @@ const pricingSchema = new Schema<IBookingPricing>(
       type: Number,
       default: 0,
     },
+    walletApplied: {
+      type: Number,
+      default: 0,
+    },
     finalAmount: {
       type: Number,
       required: true,

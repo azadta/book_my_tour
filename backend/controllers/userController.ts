@@ -10,12 +10,14 @@ import { Types } from "../types/types";
 import { IUserController } from "../interfaces/IUserController";
 import type { IAdminService } from "../interfaces/IAdminService";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import type { IWalletService } from "../interfaces/IWalletService";
 
 @injectable()
 export class UserController implements IUserController {
   constructor(
     @inject(Types.UserService) private userService: IUserService,
     @inject(Types.AdminService) private adminService: IAdminService,
+    @inject(Types.WalletService) private walletService: IWalletService,
   ) {}
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -696,11 +698,19 @@ export class UserController implements IUserController {
         removedActivityIds,
         generalCouponCode,
         bankCouponCode,
+        useWallet=false
       } = req.body;
       const userId = req.user?.id;
       const result = await this.userService.createBookingOrder(
         userId as string,
-        { packageId, addedActivityIds, removedActivityIds, generalCouponCode, bankCouponCode },
+        {
+          packageId,
+          addedActivityIds,
+          removedActivityIds,
+          generalCouponCode,
+          bankCouponCode,
+          useWallet
+        },
       );
 
       res.status(StatusCode.OK).json({ success: true, data: result });
@@ -784,6 +794,48 @@ export class UserController implements IUserController {
         cardBin,
       );
       res.status(StatusCode.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  getWallet = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req?.user?.id as string;
+      const wallet = await this.walletService.getWallet(userId);
+      res.status(StatusCode.OK).json(wallet);
+    } catch (error) {
+      next(error);
+    }
+  };
+  createWalletTopupOrder = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id as string;
+      const { amount } = req.body;
+      const result = await this.walletService.createTopupOrder(userId, amount);
+      res.status(StatusCode.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  verifyWalletTopupPayment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id as string;
+      const { razorpayOrderId, razorpayPaymentId, razorpaySignature } =
+        req.body;
+      const wallet = await this.walletService.verifyTopupPayment(userId, {
+        razorpayOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
+      });
+      res.status(StatusCode.OK).json(wallet);
     } catch (error) {
       next(error);
     }

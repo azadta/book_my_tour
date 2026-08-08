@@ -49,6 +49,7 @@ import PublicRoute from "./Routes/PublicRoute";
 import CouponList from "./pages/operator/CouponList";
 import CreateCoupon from "./pages/operator/CreateCoupon";
 import EditCoupon from "./pages/operator/EditCoupon";
+import Wallet from "./pages/user/Wallet";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -124,6 +125,7 @@ const App = () => {
               path={FRONTEND_ROUTES.USER.MY_BOOKINGS}
               element={<MyBookingsPage />}
             />
+            <Route path={FRONTEND_ROUTES.USER.WALLET} element={<Wallet />} />
           </Route>
         </Route>
 
@@ -192,7 +194,7 @@ const App = () => {
             path={FRONTEND_ROUTES.OPERATOR.CREATE_COUPON}
             element={<CreateCoupon />}
           />
-              <Route
+          <Route
             path={FRONTEND_ROUTES.OPERATOR.UPDATE_COUPON_PATTERN}
             element={<EditCoupon />}
           />

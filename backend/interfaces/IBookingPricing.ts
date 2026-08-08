@@ -14,7 +14,8 @@ export interface IBookingPricing {
   removedActivitiesAmount: number;
   subtotal: number;
   generalCoupon?: IAppliedCoupon;
-  bankCoupon?: IAppliedCoupon
+  bankCoupon?: IAppliedCoupon;
   totalDiscount: number;
   finalAmount: number;
+  walletApplied: number;
 }

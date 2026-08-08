@@ -137,7 +137,8 @@ export const RESPONSE_MESSAGES = {
   PAYMENT: {
     ERROR: {
       INITIATE: "Failed to initiate payment order",
-      RAZORPAY_OFFER:'Razorpay offer creation error'
+      RAZORPAY_OFFER: "Razorpay offer creation error",
+      PAYMETNT_SIGNATURE:'Invalid payment signature'
     },
   },
 
@@ -161,6 +162,12 @@ export const RESPONSE_MESSAGES = {
       NOT_FOUND: "Coupon not found",
       COUPON_CODE_MISSING: "Coupon code is required",
       CODE_ALREADY_EXIST: "Coupon code already exist",
+    },
+  },
+  WALLET: {
+    ERROR: {
+      NON_POSITIVE_AMOUNT: "Amount must be greater than zero",
+      TRANSACTION_FAILED:'Failed to process wallet transaction'
     },
   },
 } as const;

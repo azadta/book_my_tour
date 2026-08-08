@@ -24,6 +24,7 @@ export const usePackageDetails = (packageId: string) => {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchPackage = async () => {
@@ -175,18 +176,11 @@ export const usePackageDetails = (packageId: string) => {
     removedActivityIds: string[],
     generalCouponCode: string,
     bankCouponCode: string,
-
+    isWalletApplied: boolean = false,
     userProfile?: { name: string; email: string; phone?: string },
   ) => {
     setIsBookingLoading(true);
     try {
-      const isLoaded = await loadRazorpayScript();
-      if (!isLoaded) {
-        toast.error(FEEDBACK_MESSAGES.BOOKING.ERROR.RAZORPAY_LOAD);
-        setIsBookingLoading(false);
-        return;
-      }
-
       const { data: response } = await axiosInstance.post(
         APP_ROUTES.USER.CREATE_BOOKING,
         {
@@ -195,6 +189,7 @@ export const usePackageDetails = (packageId: string) => {
           removedActivityIds,
           generalCouponCode,
           bankCouponCode,
+          useWallet: isWalletApplied,
         },
       );
       const {
@@ -205,7 +200,22 @@ export const usePackageDetails = (packageId: string) => {
         packageName,
         packageDescription,
         offerId,
+        isFullyPaidByWallet,
       } = response.data;
+      if (isFullyPaidByWallet) {
+        toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.BOOKING);
+        setIsBookingLoading(false);
+        navigate(
+          FRONTEND_ROUTES.USER.BOOKING_SUCCESS(orderId),
+        );
+        return;
+      }
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        toast.error(FEEDBACK_MESSAGES.PAYMENT.ERROR.RAZORPAY_LOAD);
+        setIsBookingLoading(false);
+        return;
+      }
       const options = {
         key: keyId,
         amount: amount,
@@ -233,7 +243,7 @@ export const usePackageDetails = (packageId: string) => {
           } catch (error: any) {
             toast.error(
               error.response?.data?.message ||
-                FEEDBACK_MESSAGES.BOOKING.ERROR.PAYMENT_VERIFICATION,
+                FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_VERIFICATION,
             );
           } finally {
             setIsBookingLoading(false);
@@ -251,7 +261,7 @@ export const usePackageDetails = (packageId: string) => {
         modal: {
           ondismiss: () => {
             setIsBookingLoading(false);
-            toast.info(FEEDBACK_MESSAGES.BOOKING.ERROR.PAYMENT_POPUP);
+            toast.info(FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_POPUP);
           },
         },
       };
@@ -260,7 +270,8 @@ export const usePackageDetails = (packageId: string) => {
       paymentObject.open();
     } catch (error: any) {
       toast.error(
-        error.response?.data?.message || "Failed to initiate booking",
+        error.response?.data?.message ||
+          FEEDBACK_MESSAGES.BOOKING.ERROR.INITIATE,
       );
       setIsBookingLoading(false);
     }

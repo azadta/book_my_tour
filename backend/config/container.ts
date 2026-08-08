@@ -53,6 +53,10 @@ import { SecurityService } from "../services/securityService";
 import { TokenService } from "../services/tokenService";
 import { UserService } from "../services/userService";
 import { Types } from "../types/types";
+import { WalletRepository } from "../repositories/walletRepository";
+import { IWalletRepository } from "../interfaces/IWalletRepository";
+import { IWalletService } from "../interfaces/IWalletService";
+import { WalletService } from "../services/walletService";
 
 const container = new Container();
 
@@ -160,11 +164,18 @@ container
   .bind<IWebhookController>(Types.WebhookController)
   .to(WebhookController)
   .inSingletonScope();
-  container
+container
   .bind<ICouponRepository>(Types.CouponRepository)
   .to(CouponRepository)
   .inSingletonScope();
-
+container
+  .bind<IWalletRepository>(Types.WalletRepository)
+  .to(WalletRepository)
+  .inSingletonScope();
+  container
+  .bind<IWalletService>(Types.WalletService)
+  .to(WalletService)
+  .inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,

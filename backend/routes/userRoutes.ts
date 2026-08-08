@@ -181,4 +181,25 @@ router.get(
   authMiddleware.verifyRole("user"),
   userController.validateCoupon,
 );
+
+router.get(
+  ROUTES.USER.WALLET,
+  authMiddleware.verifyRole("user"),
+  userController.getWallet,
+);
+router.get(
+  ROUTES.USER.WALLET,
+  authMiddleware.verifyRole("user"),
+  userController.getWallet,
+);
+router.post(
+  ROUTES.USER.WALLET_TOPUP,
+  authMiddleware.verifyRole("user"),
+  userController.createWalletTopupOrder,
+);
+router.post(
+  ROUTES.USER.VERIFY_WALLET_TOPUP,
+  authMiddleware.verifyRole("user"),
+  userController.verifyWalletTopupPayment,
+);
 export default router;

@@ -8,6 +8,7 @@ import {
   Receipt,
   ShieldCheck,
   Tag,
+  Wallet,
 } from "lucide-react";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -19,6 +20,8 @@ const BookingSuccessPage = () => {
   const { booking, fetchBookingDetails, isLoading } = useBookingSuccessPage();
   const packageName = booking?.packageId.name;
   const pricing = booking?.pricing;
+  const totalPaid=(pricing?.walletApplied||0)+(pricing?.finalAmount||0)
+
 
   useEffect(() => {
     if (orderId) {
@@ -70,12 +73,6 @@ const BookingSuccessPage = () => {
               </div>
             )}
 
-            {/* <div className="flex justify-between text-sm ">
-              <span className="text-gray-500">Amount Paid</span>
-              <span className="font-extrabold text-blue-600">
-                Rs {booking?.totalAmount?.toLocaleString("en-IN") || "-"}
-              </span>
-            </div> */}
 
             {pricing && (
               <div className="pt-3 border-t border-gray-200/60 space-y-2 text-xs">
@@ -133,13 +130,33 @@ const BookingSuccessPage = () => {
                     </span>
                   </div>
                 )}
+
+                <div  className="flex justify-between text-gray-900 font-semibold pt-2 border-t border-gray-200/40 ">
+                <span >Total Payable</span>
+                <span>Rs {totalPaid.toLocaleString('en-IN')}</span>
+                </div>
+
+                {pricing.walletApplied>0&&(<div className="flex justify-between text-indigo-600 font-semibold pt-1">
+                  <span className="flex items-center gap-1">
+                    <Wallet className="w-3.5 h-3.5"/>
+                    Paid via Wallet
+                  </span>
+                  <span>
+                    -Rs {pricing.walletApplied.toLocaleString('en-IN')}
+                  </span>
+                </div>)}
+
+                {pricing.finalAmount>0&&pricing.walletApplied>0&&(<div className="flex justify-between text-gray-600 font-medium ">
+                  <span>Paid via Online Gateway</span>
+                  <span>{pricing.finalAmount.toLocaleString('en-IN')}</span>
+                </div>)}
               </div>
             )}
 
             <div className="flex justify-between text-sm pt-3 border-t border-gray-200">
-              <span className="text-gray-900 font-bold">Amount Paid</span>
+              <span className="text-gray-900 font-bold">Total Amount Paid</span>
               <span className="font-extrabold text-blue-600 text-base">
-                Rs {pricing?.finalAmount?.toLocaleString("en-IN")}
+                Rs {totalPaid?.toLocaleString("en-IN")}
               </span>
             </div>
           </div>

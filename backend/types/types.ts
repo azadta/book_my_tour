@@ -25,4 +25,6 @@ export const Types = {
   BookingRepository: Symbol.for("BookingRepository"),
   WebhookController: Symbol.for("WebhookController"),
   CouponRepository: Symbol.for("CouponRepository"),
+  WalletRepository: Symbol.for("WalletRepository"),
+  WalletService: Symbol.for("WalletService"),
 };

@@ -42,6 +42,9 @@ export const ROUTES = {
     MY_BOOKINGS: "/my-bookings",
     COUPONS: "/coupons",
     VALIDATE_COUPONS: "/coupons/validate",
+    WALLET: "/wallet",
+    WALLET_TOPUP: "/wallet/topup",
+    VERIFY_WALLET_TOPUP: "/wallet/verify-topup",
   },
   OPERATOR: {
     REGISTER: "/register",

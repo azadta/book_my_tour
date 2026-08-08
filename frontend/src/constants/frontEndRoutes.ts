@@ -27,6 +27,7 @@ export const FRONTEND_ROUTES = {
     BOOKING_SUCCESS: (orderId: string) =>
       `/booking/success/?order_id=${encodeURIComponent(orderId)}`,
     MY_BOOKINGS: "/user/my-bookings",
+    WALLET: "/user/wallet",
   },
 
   OPERATOR: {

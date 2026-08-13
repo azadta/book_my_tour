@@ -10,12 +10,14 @@ import { Types } from "../types/types";
 import { IAdminController } from "../interfaces/IAdminController";
 import type { IOperatorService } from "../interfaces/IOperatorService";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import type { IUserService } from "../interfaces/IUserService";
 
 @injectable()
 export class AdminController implements IAdminController {
   constructor(
     @inject(Types.AdminService) private adminService: IAdminService,
     @inject(Types.OperatorService) private operatorService: IOperatorService,
+    @inject(Types.UserService) private userService: IUserService,
   ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
@@ -47,7 +49,9 @@ export class AdminController implements IAdminController {
   logoutAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
-      res.status(StatusCode.OK).json({ message: RESPONSE_MESSAGES.AUTH.SUCCESS.ADMIN_LOGOUT });
+      res
+        .status(StatusCode.OK)
+        .json({ message: RESPONSE_MESSAGES.AUTH.SUCCESS.ADMIN_LOGOUT });
     } catch (error) {
       next(error);
     }
@@ -55,7 +59,12 @@ export class AdminController implements IAdminController {
 
   updateAdmin = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || req.user.id !== req.params.id) {
-      return next(new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, StatusCode.UNAUTHORIZED));
+      return next(
+        new CustomError(
+          RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+          StatusCode.UNAUTHORIZED,
+        ),
+      );
     }
 
     try {
@@ -64,7 +73,12 @@ export class AdminController implements IAdminController {
         req.body,
       );
       if (!updatedAdmin)
-        return next(new CustomError(RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND, StatusCode.NOT_FOUND));
+        return next(
+          new CustomError(
+            RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+            StatusCode.NOT_FOUND,
+          ),
+        );
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedAdmin.toObject();
       res.status(StatusCode.OK).json(rest);
@@ -175,7 +189,9 @@ export class AdminController implements IAdminController {
         req.body.isBlocked,
       );
       res.status(StatusCode.OK).json({
-        message: req.body.isBlocked ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED :RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED,
+        message: req.body.isBlocked
+          ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED
+          : RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED,
         operator: blocked,
       });
     } catch (error) {
@@ -251,7 +267,9 @@ export class AdminController implements IAdminController {
         req.body.isBlocked,
       );
       res.status(StatusCode.OK).json({
-        message: req.body.isBlocked ? RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED : RESPONSE_MESSAGES.USER.SUCCESS.UNBLOCKED,
+        message: req.body.isBlocked
+          ? RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED
+          : RESPONSE_MESSAGES.USER.SUCCESS.UNBLOCKED,
         user: blocked,
       });
     } catch (error) {
@@ -262,7 +280,9 @@ export class AdminController implements IAdminController {
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this.adminService.deleteUserService(req.params.id as string);
-      res.status(StatusCode.OK).json({ message:RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
+      res
+        .status(StatusCode.OK)
+        .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }
@@ -275,9 +295,10 @@ export class AdminController implements IAdminController {
   ) => {
     try {
       const category = await this.adminService.createCategoryService(req.body);
-      res
-        .status(StatusCode.CREATED)
-        .json({ message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED, category });
+      res.status(StatusCode.CREATED).json({
+        message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED,
+        category,
+      });
     } catch (error) {
       next(error);
     }
@@ -305,9 +326,10 @@ export class AdminController implements IAdminController {
       const destination = await this.adminService.createDestinationService(
         req.body,
       );
-      res
-        .status(StatusCode.CREATED)
-        .json({ message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED, destination });
+      res.status(StatusCode.CREATED).json({
+        message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED,
+        destination,
+      });
     } catch (error) {
       next(error);
     }
@@ -464,7 +486,12 @@ export class AdminController implements IAdminController {
         req.body,
       );
       if (!updatedPackage) {
-        return next(new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND));
+        return next(
+          new CustomError(
+            RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+            StatusCode.NOT_FOUND,
+          ),
+        );
       }
       res.status(StatusCode.OK).json(updatedPackage);
     } catch (error) {
@@ -479,11 +506,52 @@ export class AdminController implements IAdminController {
         packageId as string,
       );
       if (!deletePackage) {
-        throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+        throw new CustomError(
+          RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+          StatusCode.NOT_FOUND,
+        );
       }
-      res
-        .status(StatusCode.OK)
-        .json({ success: true, message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED });
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  getPendingCancellations = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const requests = await this.adminService.getPendingCancelationRequests();
+      res.status(StatusCode.OK).json(requests);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  processCancellationRequests = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const { approve, adminNotes } = req.body;
+      const updatedBooking = await this.adminService.processAdminCancellation(
+        bookingId as string,
+        approve,
+        adminNotes,
+      );
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: approve
+          ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
+          : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED,
+        data: updatedBooking,
+      });
     } catch (error) {
       next(error);
     }

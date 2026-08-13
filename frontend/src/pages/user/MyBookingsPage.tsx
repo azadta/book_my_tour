@@ -7,16 +7,29 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
+  HelpCircle,
   MapPin,
   PackageX,
   Receipt,
   Wallet,
+  X,
   XCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MyBookingsPage = () => {
-  const { bookings, isLoading } = useMyBookings();
+  const {
+    bookings,
+    isLoading,
+    handleCancelBooking,
+    handleCloseModal,
+    cancelReason,
+    setCancelReason,
+    isCancelling,
+
+    selectedBookingId,
+    handleOpenCancelModel,
+  } = useMyBookings();
   const getStatusBadge = (status: IBooking["status"]) => {
     switch (status) {
       case "CONFIRMED":
@@ -47,6 +60,13 @@ const MyBookingsPage = () => {
             Cancelled
           </span>
         );
+      case "CANCEL_REQUESTED":
+        return (
+          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200/60">
+            <Clock className="w-3.5 h-3.5 animate-spin" />
+            Cancellation Pending
+          </span>
+        );
     }
   };
 
@@ -69,10 +89,12 @@ const MyBookingsPage = () => {
         </span>
       );
     }
-    return (<span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[11px] font-medium px-2 py-0.5 rounded border border-blue-100">
-          <Wallet className="w-3 h-3" />
-          Online Gateway
-        </span>)
+    return (
+      <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[11px] font-medium px-2 py-0.5 rounded border border-blue-100">
+        <Wallet className="w-3 h-3" />
+        Online Gateway
+      </span>
+    );
   };
 
   if (isLoading) return <Loading />;
@@ -109,8 +131,11 @@ const MyBookingsPage = () => {
         <div className="space-y-4">
           {bookings.map((booking) => {
             const pkg = booking.packageId;
-            const pricing=booking.pricing
-            const totalPaid=(pricing?.walletApplied||0)+(pricing?.finalAmount||0)
+            const startDate = pkg?.startDate ? new Date(pkg.startDate) : null;
+            const isPastOrToday = startDate ? new Date() >= startDate : false;
+            const pricing = booking.pricing;
+            const totalPaid =
+              (pricing?.walletApplied || 0) + (pricing?.finalAmount || 0);
             const bookingDate = new Date(booking.createdAt).toLocaleDateString(
               "en-IN",
               { day: "numeric", month: "short", year: "numeric" },
@@ -167,20 +192,96 @@ const MyBookingsPage = () => {
                   </div>
 
                   {booking.status === "CONFIRMED" && (
-                    <Link
-                      to={FRONTEND_ROUTES.USER.BOOKING_SUCCESS(
-                        booking.razorpayOrderId,
+                    <div className="flex items-center gap-2">
+                      <Link
+                        to={FRONTEND_ROUTES.USER.BOOKING_SUCCESS(
+                          booking.razorpayOrderId,
+                        )}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        <Receipt className="w-3.5 h-3.5" />
+                        View Reciept
+                      </Link>
+                      {!isPastOrToday && (
+                        <button
+                          onClick={() => handleOpenCancelModel(booking._id)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-800 bg-rose-50 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <XCircle className="w-3.5 h-3.5" />
+                          Cancel
+                        </button>
                       )}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
-                    >
-                      <Receipt className="w-3.5 h-3.5" />
-                      View Reciept
-                    </Link>
+                    </div>
                   )}
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {selectedBookingId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdropblur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-100 relative animate-in fade-in zoom-in-95 duration-150">
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 roudnded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 bg-rose-50 text-rose-600 rounded-xl ">
+                <AlertCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">
+                  Cancel Booking
+                </h3>
+                <p className="text-xs text-gray-500">
+                  Please let us know why you are cancelling.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200/60 rounded-xl p-3 mb-4 text-xs text-amber-800 flex items-start gap-2">
+              <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <p>
+                <strong>Policy:</strong> Cancellation made more than 7 days
+                prior recieve a <strong>100% instant wallet refund</strong>.
+                Later requests require admin approval. (
+                <strong>50% wallet refund</strong>)
+              </p>
+            </div>
+
+            <div className="space-y-2 mb-6">
+              <label className="text-xs font-semibold text-gray-700 block">
+                Reason for cancellation <span className="text-rose-500">*</span>
+              </label>
+              <textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                rows={3}
+                className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all resize-none"
+              ></textarea>
+            </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={handleCloseModal}
+                disabled={isCancelling}
+                className="px-4 py-2 font-semibold text-xs text-gray-600 hover:bg-gray-100 rounded-xl transition-colors "
+              >
+                Keep booking
+              </button>
+              <button
+                onClick={handleCancelBooking}
+                disabled={isCancelling || !cancelReason.trim()}
+                className="px-4 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-all shadow-md shadow-rose-200 disabled:cursor-not-allowed disabled:opacity-50 flex items-center gap-1.5"
+              >
+                {isCancelling ? "Processing" : "Confirm Cancellation"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -138,11 +138,25 @@ export const FEEDBACK_MESSAGES = {
   BOOKING: {
     SUCCESS: {
       BOOKING: "Booking confirmed succesfully",
+      UPDATE_GUEST_STATUS: (newStatus: string) =>
+        `Guest attendance marked as ${newStatus.replace("_", " ")}`,
+      CANCEL: "Tour cancelled and full refund credited to guest wallet",
+      RESCHEDULE:'Tour date successfully rescheduled',
+        APPROVE_CANCEL_REQ:'Cancelation approved and  50% refund credited to guest wallet.',
+        REJECT_CANCEL_REQ:'Cancelation request rejected.',
     },
     ERROR: {
       FETCH: "Failed to fetch booking",
       FETCH_USER_BOOKINGS: "Failed to fetch user bookings",
-      INITIATE:'Failed to initiate booking'
+      FETCH_OPERATOR_BOOKINGS: "Failed to fetch operator bookings",
+      INITIATE: "Failed to initiate booking",
+      CANCEL: "Failed to cancel booking",
+      UPDATE_ATTENDANCE: "Failed to update attendance",
+      BOOKING_DETAILS: "Failed to fetch booking details",
+      CANCEL_REASON_MISSING: "Please provide a reason for cancelling this tour",
+      DATE_MISSING:'Please pick a valid future date',
+      RESCHEDULE:'Failed to reschedule tour',
+      CANCEL_REQ_VERIFICATION:'Cancel request verification failed'
     },
   },
   COUPON: {
@@ -162,13 +176,13 @@ export const FEEDBACK_MESSAGES = {
     },
   },
   WALLET: {
-    SUCCESS:{
-      RECHARGE:'Wallet rechareged successfully'
+    SUCCESS: {
+      RECHARGE: "Wallet rechareged successfully",
     },
     ERROR: {
       FETCH: "Failed to load wallet data",
       INVALID_TOPUP_AMOUNT: "Please enter a valid amount",
-      INITIATE_TOPUP:'Failed to initiate top-up'
+      INITIATE_TOPUP: "Failed to initiate top-up",
     },
   },
 } as const;

@@ -1,4 +1,4 @@
-import { Types as mongooseType } from "mongoose";
+import { Types as mongooseType, UpdateQuery } from "mongoose";
 import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import type { IOperatorService } from "../interfaces/IOperatorService";
 import type { Ipackage } from "../models/Package";
@@ -22,6 +22,11 @@ import { RESPONSE_MESSAGES } from "../constants/messages";
 import type { ICouponRepository } from "../interfaces/ICouponRepository";
 
 import { CouponType, ICouponDocument } from "../models/Coupon";
+import type { IBookingRepository } from "../interfaces/IBookingRepository";
+import { IOperatorBookingFilter } from "../interfaces/IBooking";
+import type { IWalletRepository } from "../interfaces/IWalletRepository";
+import { AttendanceStatus, IBookingDocument } from "../models/Booking";
+import { start } from "node:repl";
 
 @injectable()
 export class OperatorService implements IOperatorService {
@@ -41,6 +46,10 @@ export class OperatorService implements IOperatorService {
     private destinationRepository: IDestinationRepository,
     @inject(Types.CouponRepository)
     private couponRepository: ICouponRepository,
+    @inject(Types.BookingRepository)
+    private bookingRepository: IBookingRepository,
+    @inject(Types.WalletRepository)
+    private walletRepository: IWalletRepository,
   ) {}
   async operatorRegisterService(data: Partial<IOperator>) {
     const existing = await this.operatorRepository.findByEmail(
@@ -443,7 +452,7 @@ export class OperatorService implements IOperatorService {
         StatusCode.BAD_REQUEST,
       );
     }
-    if (bookingAmount < coupon.minBookingAmount) {
+    if (coupon.minBookingAmount && bookingAmount < coupon.minBookingAmount) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(coupon.minBookingAmount),
       );
@@ -477,5 +486,184 @@ export class OperatorService implements IOperatorService {
     }
     const finalPrice = Math.max(0, bookingAmount - discountAmount);
     return { discountAmount, finalPrice, coupon };
+  }
+
+  async getOperatorDashboardStatsService(operatorId: string) {
+    const [stats, packagesCount] = await Promise.all([
+      this.bookingRepository.getOperatorStats(operatorId),
+      this.packageRepository.countPackagesByOperatorId(operatorId),
+    ]);
+    return { ...stats, packagesCount };
+  }
+
+  async getOperatorBookingsService(
+    operatorId: string,
+    status: string | undefined,
+    skip: number,
+    limit: number,
+  ) {
+    const filter: IOperatorBookingFilter = { operatorId, status };
+    const [bookings, totalCount] = await Promise.all([
+      this.bookingRepository.getOperatorBookings(filter, skip, limit),
+      this.bookingRepository.getOperatorBookingsCount(filter),
+    ]);
+    return { bookings, totalCount };
+  }
+
+  async getOperatorBookingDetailsService(
+    bookingId: string,
+    operatorId: string,
+  ) {
+    const booking = await this.bookingRepository.getOperatorBookingDetails(
+      bookingId,
+      operatorId,
+    );
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    return booking;
+  }
+
+  async operatorCancelBookingService(
+    bookingId: string,
+    operatorId: string,
+    reason: string,
+  ) {
+    const booking = await this.bookingRepository.getOperatorBookingDetails(
+      bookingId,
+      operatorId,
+    );
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    const totalPaid =
+      (booking.pricing.walletApplied ?? 0) + (booking.pricing.finalAmount ?? 0);
+    await this.walletRepository.addTransaction(booking.userId._id.toString(), {
+      transactionId: `REFUND_OPERATOR_${Date.now()}`,
+      type: "CREDIT",
+      purpose: "REFUND",
+      amount: totalPaid,
+      status: "SUCCESS",
+      description: `Full refund (Operator cancelled tour): ${reason}`,
+    });
+
+    return await this.bookingRepository.updateById(bookingId, {
+      status: "CANCELLED",
+      "cancellation.requestedAt": new Date(),
+      "cancellation.processedAt": new Date(),
+      "cancellation.refundAmount": totalPaid,
+      "cancellation.reason": `Operator Cancelled: ${reason}`,
+    } as UpdateQuery<IBookingDocument>);
+  }
+
+  async operatorRescheduleBookingService(
+    bookingId: string,
+    operatorId: string,
+    newStartDate: string,
+  ) {
+    const booking = await this.bookingRepository.getOperatorBookingDetails(
+      bookingId,
+      operatorId,
+    );
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    return await this.packageRepository.updatePackageById(
+      booking.packageId._id.toString(),
+      {
+        startDate: new Date(newStartDate),
+      },
+    );
+  }
+  async updateAttendanceService(
+    bookingId: string,
+    operatorId: string,
+    attendance: AttendanceStatus,
+  ) {
+    const booking = await this.bookingRepository.getOperatorBookingDetails(
+      bookingId,
+      operatorId,
+    );
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (booking.status !== "CONFIRMED") {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.ATTENDANCE_CHANGE_FOR_NOT_CONFIRMED,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const updateData: Record<string, any> = { attendance };
+    if (attendance === "CHECKED_IN" || attendance === "COMPLETED") {
+      updateData.checkInTime = new Date();
+    }
+    return await this.bookingRepository.updateById(bookingId, updateData);
+  }
+
+  async verifyCancellationService(
+    bookingId: string,
+    operatorId: string,
+    action: "APPROVE" | "REJECT",
+    operatorNotes?: string,
+  ) {
+    const booking = await this.bookingRepository.getOperatorBookingDetails(
+      bookingId,
+      operatorId,
+    );
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (booking.status !== "CANCEL_REQUESTED") {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_CANCEL_REQUESTED_STATUS,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    if (action === "APPROVE") {
+      const totalPaid =
+        (booking.pricing.walletApplied ?? 0) +
+        (booking.pricing.finalAmount ?? 0);
+      const refundAmount = Math.round(totalPaid * 0.5);
+      await this.walletRepository.addTransaction(
+        booking.userId._id.toString(),
+        {
+          transactionId: `REFUND_50_OPERATOR_${Date.now()}`,
+          type: "CREDIT",
+          purpose: "REFUND",
+          amount: refundAmount,
+          status: "SUCCESS",
+          description: `50% Partial refund Approved: ${booking.cancellation.reason || "Guest requested cancellation"}`,
+        },
+      );
+
+      return await this.bookingRepository.updateById(bookingId, {
+        status: "CANCELLED",
+        "cancellation.processedAt": new Date(),
+        "cancellation.refundAmount": refundAmount,
+        "cancellation.reason": `Approved by Operator: ${operatorNotes || "50% refund issued"}`,
+      } as UpdateQuery<IBookingDocument>);
+    } else {
+      return await this.bookingRepository.updateById(bookingId, {
+        status: "CONFIRMED",
+        "cancellation.processedAt": Date.now(),
+        "cancellation.reason": `Rejected by Operator: ${operatorNotes || "Request denied."}`,
+      } as UpdateQuery<IBookingDocument>);
+    }
   }
 }

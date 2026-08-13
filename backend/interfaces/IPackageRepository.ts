@@ -24,5 +24,9 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
     packageId: string,
     operatorId: string,
   ): Promise<Ipackage | null>;
-  findPackageByCategory(categoryId: string): Promise<Ipackage[]>
+  findPackageByCategory(categoryId: string): Promise<Ipackage[]>;
+  updatePackageById(
+    packageId: string,
+    data: Partial<Ipackage>,
+  ): Promise<Ipackage | null>;
 }

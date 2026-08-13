@@ -1,8 +1,14 @@
 import { model, Schema } from "mongoose";
 import { IBooking } from "../interfaces/IBookingRepository";
 import { IBookingPricing } from "../interfaces/IBookingPricing";
+import { Ipackage } from "./Package";
 
 export interface IBookingDocument extends Omit<IBooking, "_id">, Document {}
+export interface IPopulatedBooking extends Omit<IBooking, "packageId"> {
+  packageId: Ipackage;
+}
+
+export type AttendanceStatus='PENDING'|'CHECKED_IN'|'NOT_SHOW'|'COMPLETED'
 
 const AppliedCoupnSchema = new Schema(
   {
@@ -104,8 +110,21 @@ const bookingSchema = new Schema<IBookingDocument>(
     removedActivityIds: [{ type: String }],
     status: {
       type: String,
-      enum: ["PENDING", "CONFIRMED", "FAILED", "CANCELLED"],
+      enum: ["PENDING", "CONFIRMED", "CANCEL_REQUESTED", "FAILED", "CANCELLED"],
       default: "PENDING",
+    },
+    attendance: {
+      type: String,
+      enum: ["PENDING", "CHECKED_IN", "NOT_SHOW", "COMPLETED"],
+      default: "PENDING",
+    },
+    checkInTime: { type: Date, default: null },
+    cancellation: {
+      requestedAt: { type: Date, default: null },
+      processedAt: { type: Date, default: null },
+      refundAmount: { type: Number, default: 0 },
+      reason: { type: String, default: "" },
+      adminNotes: { type: String, default: "" },
     },
     pricing: {
       type: pricingSchema,

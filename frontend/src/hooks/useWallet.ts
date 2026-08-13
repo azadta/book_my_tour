@@ -2,8 +2,10 @@ import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IWalletTransaction } from "@/interfaces/interfaces";
+import type { RootState } from "@/redux/store";
 import { loadRazorpayScript } from "@/utils/loadRazorpay";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export const useWallet = () => {
@@ -11,6 +13,7 @@ export const useWallet = () => {
   const [transactions, setTransactions] = useState<IWalletTransaction[]>([]);
   const [topupAmount, setTopupAmount] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   const fetchWallet = async () => {
     try {
@@ -86,8 +89,10 @@ export const useWallet = () => {
     }
   };
   useEffect(() => {
-    fetchWallet();
-  }, []);
+    if (currentUser) {
+      fetchWallet();
+    }
+  }, [currentUser]);
 
   return {
     handleTopup,

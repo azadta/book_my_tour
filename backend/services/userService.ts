@@ -1,4 +1,4 @@
-import { Types as mongooseType } from "mongoose";
+import { Types as mongooseType, UpdateQuery } from "mongoose";
 
 import { inject, injectable } from "inversify";
 import { randomBytes } from "node:crypto";
@@ -29,6 +29,8 @@ import type { IPaymentService } from "../interfaces/IPaymentService";
 import { CreateReviewDto } from "../interfaces/IReview";
 import { CouponType, ICouponDocument } from "../models/Coupon";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
+import { IBookingDocument } from "../models/Booking";
+import { bookingConfirmationMessage } from "../utils/bookingConfirmationMessage";
 
 @injectable()
 export class UserService implements IUserService {
@@ -907,6 +909,25 @@ export class UserService implements IUserService {
         removedActivityIds,
         status: "CONFIRMED",
       });
+
+      const user = await this.userRepository.findById(userId);
+      if (!user) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+          StatusCode.NOT_FOUND,
+        );
+      }
+
+      await this.mailService.sendEmail(
+        user?.email,
+        "Tour booking confirmed",
+        bookingConfirmationMessage({
+          userName: user?.name,
+          amount: booking.pricing.walletApplied,
+          bookingId: booking._id as string,
+          packageName: pkg.name,
+        }),
+      );
       return {
         isFullyPaidByWallet: true,
         bookingId: booking._id,
@@ -1012,6 +1033,34 @@ export class UserService implements IUserService {
         razorpayPaymentId: dto.razorpayPaymentId,
       },
     );
+    const user = await this.userRepository.findById(dto.userId);
+
+    if (!user) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    const pkg = await this.packageRepository.findById(dto.packageId);
+    if (!pkg) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    await this.mailService.sendEmail(
+      user?.email,
+      "Tour booking confirmed",
+      bookingConfirmationMessage({
+        userName: user?.name,
+        amount:
+          (updatedBooking?.pricing.walletApplied ?? 0) +
+          (updatedBooking?.pricing.finalAmount ?? 0),
+        bookingId: updatedBooking?._id as string,
+        packageName: pkg.name,
+      }),
+    );
 
     return {
       message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CONFIRM,
@@ -1040,6 +1089,84 @@ export class UserService implements IUserService {
     const bookings = await this.bookingRepository.getUserBookings(userId);
 
     return bookings;
+  }
+  async cancelBooking(userId: string, bookingId: string, reason?: string) {
+    const booking = await this.bookingRepository.findByBookingId(bookingId);
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (booking.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.ACCESS_DENIED,
+        StatusCode.FORBIDDEN,
+      );
+    }
+    if (booking.status !== "CONFIRMED") {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_NOT_CONFIRM_STATUS,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const tourStartDate = booking.packageId.startDate;
+    const now = new Date();
+    const diffInTime = tourStartDate.getTime() - now.getTime();
+    const diffInDays = diffInTime / (1000 * 3600 * 24);
+    if (diffInDays <= 0) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_AFTER_START_DATE,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const totalPaid =
+      (booking.pricing.walletApplied ?? 0) + (booking.pricing.finalAmount ?? 0);
+    if (diffInDays > 7) {
+      const refundAmount = totalPaid;
+      await this.walletRepository.addTransaction(userId, {
+        transactionId: `REFUND_${Date.now()}`,
+        type: "CREDIT",
+        purpose: "REFUND",
+        amount: refundAmount,
+        status: "SUCCESS",
+        description: `Full refund for cancelled tour: ${booking.packageId.name}`,
+      });
+
+      const updatedBooking = await this.bookingRepository.updateById(
+        bookingId,
+        {
+          status: "CANCELLED",
+          "cancellation.requestedAt": now,
+          "cancellation.processedAt": now,
+          "cancellation.refundAmount": refundAmount,
+          "cancellation.reason": reason || "User cancelled (>7 days prior)",
+        } as UpdateQuery<IBookingDocument>,
+      );
+      return {
+        requiresAdminApproval: false,
+        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_WITH_FULL_REFUND,
+        refundAmount,
+        booking: updatedBooking,
+      };
+    }
+
+    const estimatedRefund = Math.round(totalPaid * 0.5);
+    const updatedBooking = await this.bookingRepository.updateById(bookingId, {
+      status: "CANCEL_REQUESTED",
+      "cancellation.requestedAt": now,
+
+      "cancellation.refundAmount": estimatedRefund,
+      "cancellation.reason":
+        reason || "User requested cancellation (<=7 days prior)",
+    } as UpdateQuery<IBookingDocument>);
+
+    return {
+      requiresAdminApproval: true,
+      message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_SUBMITTED,
+      estimatedRefund,
+      booking: updatedBooking,
+    };
   }
 
   async getAllAvailableCoupons() {

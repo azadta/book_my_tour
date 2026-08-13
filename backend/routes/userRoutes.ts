@@ -202,4 +202,9 @@ router.post(
   authMiddleware.verifyRole("user"),
   userController.verifyWalletTopupPayment,
 );
+router.post(
+  ROUTES.USER.CANCEL_BOOKING,
+  authMiddleware.verifyRole("user"),
+  userController.cancelBooking,
+);
 export default router;

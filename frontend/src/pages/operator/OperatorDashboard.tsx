@@ -12,7 +12,7 @@ import style from "../../css/operatorDashboard.module.css";
 const OperatorDashboard = () => {
   const [open, setOpen] = useState(false);
 
-  const { PackagesCount, loading } = useOperatorDashboard();
+  const { dashBoardData, loading } = useOperatorDashboard();
   if (loading) {
     return <Loading />;
   }
@@ -31,17 +31,17 @@ const OperatorDashboard = () => {
             <OperatorDashboardSideBar />
           </div>
           <main className="flex-1 p-8 bg-gray-100 pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6  justify-items-center max-sm:w-60 mx-auto   ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6  justify-items-center max-sm:w-60 mx-auto space-y-10  ">
               <div className={style.card}>
                 <div
                   className={`${style.image} flex items-center justify-center`}
                 >
                   {" "}
-                  <LuClipboardPenLine className="size-[40px]  text-amber-300" />
+                  <HiCash className="size-[50px] text-emerald-300" />
                 </div>
                 <div className={style["card-info"]}>
-                  <span>Total Bookings</span>
-                  <p> </p>
+                  <span>Total Revenue</span>
+                  <p>{dashBoardData?.totalRevenue} </p>
                 </div>
               </div>
 
@@ -54,7 +54,7 @@ const OperatorDashboard = () => {
                 </div>
                 <div className={style["card-info"]}>
                   <span> Total Packages</span>
-                  <p> {PackagesCount} </p>
+                  <p> {dashBoardData?.packagesCount} </p>
                 </div>
               </div>
 
@@ -63,11 +63,11 @@ const OperatorDashboard = () => {
                   className={`${style.image} flex items-center justify-center`}
                 >
                   {" "}
-                  <HiCash className="size-[50px] text-amber-300" />
+                  <HiCash className="size-[50px] text-rose-300" />
                 </div>
                 <div className={style["card-info"]}>
-                  <span> Payouts Recieved</span>
-                  <p> </p>
+                  <span> Cancel Request</span>
+                  <p> {dashBoardData?.cancelRequestedBookings}</p>
                 </div>
               </div>
 
@@ -76,11 +76,24 @@ const OperatorDashboard = () => {
                   className={`${style.image} flex items-center justify-center`}
                 >
                   {" "}
-                  <HiCash className="size-[50px] text-red-300" />
+                  <LuClipboardPenLine className="size-[40px]  text-amber-300" />
                 </div>
                 <div className={style["card-info"]}>
-                  <span> Pending Payouts</span>
-                  <p> </p>
+                  <span>Confirm Bookings</span>
+                  <p>{dashBoardData?.confirmedBookings} </p>
+                </div>
+              </div>
+
+              <div className={style.card}>
+                <div
+                  className={`${style.image} flex items-center justify-center`}
+                >
+                  {" "}
+                  <LuClipboardPenLine className="size-[40px]  text-emerald-300" />
+                </div>
+                <div className={style["card-info"]}>
+                  <span>Total Bookings</span>
+                  <p>{dashBoardData?.totalBookings} </p>
                 </div>
               </div>
             </div>

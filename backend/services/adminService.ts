@@ -21,8 +21,14 @@ import { IAdmin, IAdminResponse } from "../interfaces/IAdmin";
 
 import { IOperator } from "../interfaces/IOperator";
 import { IUser } from "../interfaces/IUser";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, UpdateQuery } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import type {
+  IBooking,
+  IBookingRepository,
+} from "../interfaces/IBookingRepository";
+import { IBookingDocument } from "../models/Booking";
+import type { IWalletRepository } from "../interfaces/IWalletRepository";
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -37,6 +43,10 @@ export class AdminService implements IAdminService {
     private packageRepository: IPackageRepository,
     @inject(Types.DestinationRepository)
     private destinationRepository: IDestinationRepository,
+    @inject(Types.BookingRepository)
+    private bookingRepository: IBookingRepository,
+    @inject(Types.WalletRepository)
+    private walletRepository: IWalletRepository,
 
     @inject(Types.MailService) private mailService: IMailService,
     @inject(Types.BcryptHashService) private hashService: IHashService,
@@ -194,7 +204,10 @@ export class AdminService implements IAdminService {
   async getDestinationByIdService(id: string): Promise<IDestination> {
     const destination = await this.destinationRepository.findById(id);
     if (!destination) {
-      throw new CustomError(RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
     }
     return destination;
   }
@@ -202,7 +215,10 @@ export class AdminService implements IAdminService {
   async deleteDestinationByIdService(id: string): Promise<void> {
     const deleted = await this.destinationRepository.deleteById(id);
     if (!deleted)
-      throw new CustomError(RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND, StatusCode.NOT_FOUND);
+      throw new CustomError(
+        RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
   }
 
   async resetPasswordAuthenticatedService(
@@ -224,7 +240,10 @@ export class AdminService implements IAdminService {
         StatusCode.BAD_REQUEST,
       );
     if (confirmPassword !== newPassword)
-      throw new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH, StatusCode.BAD_REQUEST);
+      throw new CustomError(
+        RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
+        StatusCode.BAD_REQUEST,
+      );
     admin.password = this.hashService.hash(newPassword);
     await this.adminRepository.save(admin);
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
@@ -296,5 +315,44 @@ export class AdminService implements IAdminService {
   }
   async getSinglePackageService(packageId: string): Promise<Ipackage | null> {
     return this.packageRepository.findById(packageId);
+  }
+  async processAdminCancellation(
+    bookingId: string,
+    approve: boolean,
+    adminNotes?: string,
+  ) {
+    const booking = await this.bookingRepository.findByBookingId(bookingId);
+    if (!booking || booking.status !== "CANCEL_REQUESTED") {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_REQ_NOT_FOUND,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const now = new Date();
+    if (approve) {
+      const refundAmound = booking.cancellation?.refundAmount || 0;
+      await this.walletRepository.addTransaction(booking.userId.toString(), {
+        transactionId: `REFUND_${Date.now()}`,
+        type: "CREDIT",
+        purpose: "REFUND",
+        amount: refundAmound,
+        status: "SUCCESS",
+        description: `50% refund approved for cancelled tour: ${booking.packageId.name}`,
+      });
+      return await this.bookingRepository.updateById(bookingId, {
+        status: "CANCELLED",
+        "cancellation.processedAt": now,
+        "cancellation.adminNotes": adminNotes || "Approved by admin",
+      } as UpdateQuery<IBookingDocument>);
+    } else {
+      return await this.bookingRepository.updateById(bookingId, {
+        status: "CONFIRMED",
+        "cancellation.adminNotes": adminNotes || "Rejected by Admin",
+      } as UpdateQuery<IBookingDocument>);
+    }
+  }
+
+  async getPendingCancelationRequests(): Promise<IBooking[]> {
+    return await this.bookingRepository.getPendingCancellationRequests();
   }
 }

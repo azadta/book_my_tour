@@ -11,6 +11,7 @@ import { IUserController } from "../interfaces/IUserController";
 import type { IAdminService } from "../interfaces/IAdminService";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import type { IWalletService } from "../interfaces/IWalletService";
+import refunds from "razorpay/dist/types/refunds";
 
 @injectable()
 export class UserController implements IUserController {
@@ -698,7 +699,7 @@ export class UserController implements IUserController {
         removedActivityIds,
         generalCouponCode,
         bankCouponCode,
-        useWallet=false
+        useWallet = false,
       } = req.body;
       const userId = req.user?.id;
       const result = await this.userService.createBookingOrder(
@@ -709,7 +710,7 @@ export class UserController implements IUserController {
           removedActivityIds,
           generalCouponCode,
           bankCouponCode,
-          useWallet
+          useWallet,
         },
       );
 
@@ -836,6 +837,34 @@ export class UserController implements IUserController {
         razorpaySignature,
       });
       res.status(StatusCode.OK).json(wallet);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  cancelBooking = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id as string;
+      const { bookingId } = req.params;
+      const { reason } = req.body;
+      const result = await this.userService.cancelBooking(
+        userId,
+        bookingId as string,
+        reason,
+      );
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: result.message,
+        data: {
+          requiresAdminApproval: result.requiresAdminApproval,
+          refundAmount: result.refundAmount ?? result.estimatedRefund,
+          booking: result.booking,
+        },
+      });
     } catch (error) {
       next(error);
     }

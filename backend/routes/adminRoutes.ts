@@ -106,7 +106,11 @@ router.post(
   adminController.createDestination,
 );
 
-router.get(ROUTES.ADMIN.PACKAGES_LIST,authMiddleware.verifyRole("admin"), adminController.getAllPackages);
+router.get(
+  ROUTES.ADMIN.PACKAGES_LIST,
+  authMiddleware.verifyRole("admin"),
+  adminController.getAllPackages,
+);
 router.post(
   ROUTES.ADMIN.RESET_PASSWORD_AUTH,
   authMiddleware.verifyRole("admin"),
@@ -151,6 +155,18 @@ router.put(
   validatePackage,
 
   adminController.updatePackage,
+);
+router.get(
+  ROUTES.ADMIN.CANCELLATION_REQUESTS,
+  authMiddleware.verifyRole("admin"),
+
+  adminController.getPendingCancellations,
+);
+router.patch(
+  ROUTES.ADMIN.PROCESS_CANCELLATION,
+  authMiddleware.verifyRole("admin"),
+
+  adminController.processCancellationRequests,
 );
 
 export default router;

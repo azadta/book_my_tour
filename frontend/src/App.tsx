@@ -50,6 +50,9 @@ import CouponList from "./pages/operator/CouponList";
 import CreateCoupon from "./pages/operator/CreateCoupon";
 import EditCoupon from "./pages/operator/EditCoupon";
 import Wallet from "./pages/user/Wallet";
+import OperatorBookingList from "./pages/operator/OperatorBookingList";
+import OperatorBookingDetails from "./pages/operator/OperatorBookingDetails";
+
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -198,6 +201,15 @@ const App = () => {
             path={FRONTEND_ROUTES.OPERATOR.UPDATE_COUPON_PATTERN}
             element={<EditCoupon />}
           />
+          <Route
+            path={FRONTEND_ROUTES.OPERATOR.BOOKING_LIST}
+            element={<OperatorBookingList />}
+          />
+               <Route
+            path={FRONTEND_ROUTES.OPERATOR.BOOKING_DETAILS_PATTERN}
+            element={<OperatorBookingDetails />}
+          />
+     
         </Route>
 
         <Route

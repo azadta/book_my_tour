@@ -116,5 +116,40 @@ router.patch(
   authMiddleware.verifyRole("operator"),
   operatorController.toggleCouponStatus,
 );
+router.get(
+  ROUTES.OPERATOR.BOOKINGS,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getOperatorBookings,
+);
+router.get(
+  ROUTES.OPERATOR.DASHBOARD_DATA,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getOperatorDashboardData,
+);
+router.get(
+  ROUTES.OPERATOR.BOOKING_DETAILS,
+  authMiddleware.verifyRole("operator"),
+  operatorController.getOperatorBookingDetails,
+);
+router.patch(
+  ROUTES.OPERATOR.UPDATE_GUEST_ATTENDANCE,
+  authMiddleware.verifyRole("operator"),
+  operatorController.updateGuestAttendance,
+);
+router.patch(
+  ROUTES.OPERATOR.RESCHEDULE_BOOKING,
+  authMiddleware.verifyRole("operator"),
+  operatorController.operatorRescheduleBooking,
+);
+router.post(
+  ROUTES.OPERATOR.CANCEL_BOOKING,
+  authMiddleware.verifyRole("operator"),
+  operatorController.operatorCancelBooking,
+);
+router.post(
+  ROUTES.OPERATOR.VERIFY_CANCELLATION,
+  authMiddleware.verifyRole("operator"),
+  operatorController.verifyCancellationRequest,
+);
 
 export default router;

@@ -70,7 +70,15 @@ export class PackageRepository
     return Package.findOne({ _id: packageId, operatorId });
   }
 
-  async findPackageByCategory(categoryId:string):Promise<Ipackage[]>{
-    return Package.find({category:categoryId}).populate('destinations category')
+  async findPackageByCategory(categoryId: string): Promise<Ipackage[]> {
+    return Package.find({ category: categoryId }).populate(
+      "destinations category",
+    );
+  }
+  async updatePackageById(
+    packageId: string,
+    data: Partial<Ipackage>,
+  ): Promise<Ipackage | null> {
+    return Package.findByIdAndUpdate(packageId, data, { new: true });
   }
 }

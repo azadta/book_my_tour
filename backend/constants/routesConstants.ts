@@ -45,6 +45,7 @@ export const ROUTES = {
     WALLET: "/wallet",
     WALLET_TOPUP: "/wallet/topup",
     VERIFY_WALLET_TOPUP: "/wallet/verify-topup",
+    CANCEL_BOOKING: "/booking/cancel/:bookingId",
   },
   OPERATOR: {
     REGISTER: "/register",
@@ -72,6 +73,13 @@ export const ROUTES = {
     COUPON: "/coupon/:id",
     UPDATE_COUPON: "/coupon/update/:id",
     TOGGLE_COUPON_STATUS: "/coupon/:id/toggle-status",
+    BOOKINGS: "/bookings",
+    DASHBOARD_DATA: "/dashboard-data",
+    BOOKING_DETAILS:'/booking-details/:bookingId',
+    UPDATE_GUEST_ATTENDANCE:'/booking/guest-attendance/:bookingId',
+    CANCEL_BOOKING:'/booking/cancel/:bookingId',
+    RESCHEDULE_BOOKING:'/booking/reschedule/:bookingId',
+    VERIFY_CANCELLATION:'/booking/verify-cancellation/:bookingId'
   },
   ADMIN: {
     LOGIN: "/login",
@@ -105,6 +113,8 @@ export const ROUTES = {
     PACKAGES_UPDATE: "/packages/update/:id",
     DELETE_PACKAGE: "/package/delete/:id",
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
+    CANCELLATION_REQUESTS: "/booking/cancellation-requests",
+    PROCESS_CANCELLATION: "/booking/process-cancellation/:bookingId",
   },
   COMMON: {
     REFRESH: "/refresh",

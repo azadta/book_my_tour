@@ -53,6 +53,10 @@ export const FRONTEND_ROUTES = {
     UPDATE_COUPON: (couponId: string) => `/operator/update-coupon/${couponId}`,
     CREATE_COUPON: "/operator/create-coupon",
     COUPONS_LIST: `/operator/coupons-list`,
+    BOOKING_DETAILS_PATTERN: "/operator/booking-details/:bookingId",
+    BOOKING_DETAILS: (bookingId: string) =>
+      `/operator/booking-details/${bookingId}`,
+    BOOKING_LIST: "/operator/booking-list",
   },
   ADMIN: {
     LOGIN: "/admin/login",

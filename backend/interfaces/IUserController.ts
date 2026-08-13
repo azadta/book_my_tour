@@ -195,4 +195,9 @@ export interface IUserController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
+  cancelBooking: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

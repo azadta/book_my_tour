@@ -8,6 +8,7 @@ import { IBooking } from "./IBookingRepository";
 import { CreateReviewDto, IReview } from "./IReview";
 import { IUser, IUserResponse } from "./IUser";
 import { ICreateWishlistDTO, IWishlistGroup } from "./IWishList";
+import { IBookingDocument } from "../models/Booking";
 
 export interface IUserService {
   registerUser(userData: {
@@ -186,4 +187,25 @@ export interface IUserService {
     finalPrice: number;
     coupon: ICouponDocument;
   }>;
+
+  cancelBooking(
+    userId: string,
+    bookingId: string,
+    reason?: string | undefined,
+  ): Promise<
+    | {
+        requiresAdminApproval: boolean;
+        message: "Booking cancelled successfully. 100% refund added to your wallet";
+        refundAmount: number;
+        booking: IBookingDocument | null;
+        estimatedRefund?: never;
+      }
+    | {
+        requiresAdminApproval: boolean;
+        message: "Cancellation request submitted. Subject to admin approval(50% estimated refund).";
+        estimatedRefund: number;
+        booking: IBookingDocument | null;
+        refundAmount?: never;
+      }
+  >;
 }

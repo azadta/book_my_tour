@@ -472,14 +472,184 @@ export class OperatorController implements IOperatorController {
         id as string,
         isActive,
       );
+      res.status(StatusCode.OK).json({
+        message: RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
+        coupon: updatedCoupon,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getOperatorDashboardData = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const operatorId = req.user?.id as string;
+      const stats =
+        await this.operatorService.getOperatorDashboardStatsService(operatorId);
+      res.status(StatusCode.OK).json(stats);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getOperatorBookings = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const operatorId = req.user?.id as string;
+      const { page = 1, limit = 5, status } = req.query;
+      const skip = (Number(page) - 1) * Number(limit);
+      const data = await this.operatorService.getOperatorBookingsService(
+        operatorId,
+        status as string,
+        skip,
+        Number(limit),
+      );
+      res.status(StatusCode.OK).json(data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getOperatorBookingDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const operatorId = req.user?.id as string;
+      const booking =
+        await this.operatorService.getOperatorBookingDetailsService(
+          bookingId as string,
+          operatorId,
+        );
+      res.status(StatusCode.OK).json(booking);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateGuestAttendance = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const { attendance } = req.body;
+      const operatorId = req.user?.id as string;
+      console.log("attendance from controller", attendance);
+      const updatedBooking = await this.operatorService.updateAttendanceService(
+        bookingId as string,
+        operatorId,
+        attendance,
+      );
+      res.status(StatusCode.OK).json({
+        message: `Guest attendance updated to ${attendance}`,
+        booking: updatedBooking,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  operatorCancelBooking = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const { reason } = req.body;
+      const operatorId = req.user?.id as string;
+      if (!reason || reason.trim() === "") {
+        throw new CustomError(
+          RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_REASON_MISSING,
+        );
+      }
+      const updatedBooking =
+        await this.operatorService.operatorCancelBookingService(
+          bookingId as string,
+          operatorId,
+          reason,
+        );
+      res.status(StatusCode.OK).json({
+        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_BY_OPERATOR,
+        booking: updatedBooking,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  operatorRescheduleBooking = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const { startDate } = req.body;
+      const operatorId = req.user?.id as string;
+      if (!startDate) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.BOOKING.ERROR.START_DATE_MISSING,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+      const updatedPackage =
+        await this.operatorService.operatorRescheduleBookingService(
+          bookingId as string,
+          operatorId,
+          startDate,
+        );
+      res.status(StatusCode.OK).json({
+        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.DATE_RESCHEDULED_BY_OPERATOR,
+        package: updatedPackage,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  verifyCancellationRequest = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const { action, operatorNotes } = req.body;
+      const operatorId = req.user?.id as string;
+      if (!["APPROVE", "REJECT"].includes(action)) {
+        throw new CustomError(
+          RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_ACTION,
+          StatusCode.BAD_REQUEST,
+        );
+      }
+      const updatedBooking =
+        await this.operatorService.verifyCancellationService(
+          bookingId as string,
+          operatorId,
+          action,
+          operatorNotes,
+        );
       res
         .status(StatusCode.OK)
         .json({
-          message: RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
-          coupon: updatedCoupon,
+          message:
+            action === "APPROVE"
+              ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
+              : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED,
+          booking: updatedBooking,
         });
     } catch (error) {
-      next(error)
+      next(error);
     }
   };
 }

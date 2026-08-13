@@ -5,6 +5,12 @@ import { Ipackage } from "../models/Package";
 import { IPackageCategory } from "../models/PackageCategory";
 import { IOperator, IOperatorResponse } from "./IOperator";
 import { ICouponDocument } from "../models/Coupon";
+import {
+  AttendanceStatus,
+  IBookingDocument,
+  IPopulatedBooking,
+} from "../models/Booking";
+import { IOperatorBookingDetails } from "./IBooking";
 
 export interface IOperatorService {
   operatorRegisterService(data: Partial<IOperator>): Promise<{
@@ -96,9 +102,55 @@ export interface IOperatorService {
     bankOffers: ICouponDocument[];
     generalCoupons: ICouponDocument[];
   }>;
-  validateAndCalculateDiscount(code: string, bookingAmount: number, cardBin?: string | undefined): Promise<{
+  validateAndCalculateDiscount(
+    code: string,
+    bookingAmount: number,
+    cardBin?: string | undefined,
+  ): Promise<{
     discountAmount: number;
     finalPrice: number;
     coupon: ICouponDocument;
-}>
+  }>;
+  getOperatorDashboardStatsService(operatorId: string): Promise<{
+    packagesCount: number;
+    totalBookings: number;
+    confirmedBookings: number;
+    cancelRequestedBookings: number;
+    totalRevenue: number;
+  }>;
+  getOperatorBookingsService(
+    operatorId: string,
+    status: string | undefined,
+    skip: number,
+    limit: number,
+  ): Promise<{
+    bookings: IPopulatedBooking[];
+    totalCount: number;
+  }>;
+  getOperatorBookingDetailsService(
+    bookingId: string,
+    operatorId: string,
+  ): Promise<IOperatorBookingDetails>;
+  operatorCancelBookingService(
+    bookingId: string,
+    operatorId: string,
+    reason: string,
+  ): Promise<IBookingDocument | null>;
+  operatorRescheduleBookingService(
+    bookingId: string,
+    operatorId: string,
+    newStartDate: string,
+  ): Promise<Ipackage | null>;
+
+  updateAttendanceService(
+    bookingId: string,
+    operatorId: string,
+    attendance: AttendanceStatus,
+  ): Promise<IBookingDocument | null>;
+  verifyCancellationService(
+    bookingId: string,
+    operatorId: string,
+    action: "APPROVE" | "REJECT",
+    operatorNotes?: string | undefined,
+  ): Promise<IBookingDocument | null>;
 }

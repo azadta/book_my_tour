@@ -54,6 +54,7 @@ export const APP_ROUTES = {
     WALLET: "/user/wallet",
     WALLET_TOPUP: "/user/wallet/topup",
     VERIFY_WALLET_TOPUP: "/user/wallet/verify-topup",
+    CANCEL_BOOKING: (packageId: string) => `/user/booking/cancel/${packageId}`,
   },
   OPERATOR: {
     REGISTER: "/operator/register",
@@ -82,6 +83,18 @@ export const APP_ROUTES = {
     CREATE_COUPON: "/operator/coupon/create",
     FETCH_COUPON_BY_ID: (couponId: string) => `/operator/coupon/${couponId}`,
     UPDATE_COUPON: (couponId: string) => `/operator/coupon/update/${couponId}`,
+    BOOKINGS: "/operator/bookings",
+    DASHBOARD_DATA: "/operator/dashboard-data",
+    BOOKING_DETAILS: (bookingId: string) =>
+      `/operator/booking-details/${bookingId}`,
+    UPDATE_GUEST_ATTENDANCE: (bookingId: string) =>
+      `/operator/booking/guest-attendance/${bookingId}`,
+    CANCEL_BOOKING: (bookingId: string) =>
+      `/operator/booking/cancel/${bookingId}`,
+    RESCHEDULE_BOOKING: (bookingId: string) =>
+      `operator/booking/reschedule/${bookingId}`,
+    VERIFY_BOOKING: (bookingId: string) =>
+      `/operator/booking/verify-cancellation/${bookingId}`,
   },
   ADMIN: {
     LOGIN: "/admin/login",

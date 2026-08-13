@@ -139,7 +139,7 @@ export interface IPricing {
   generalCoupon: IAppliedCoupon | null;
   bankCoupon: IAppliedCoupon | null;
   totalDiscount: number;
-  walletApplied:number
+  walletApplied: number;
   finalAmount: number;
 }
 
@@ -155,6 +155,67 @@ export interface IBookingResponse {
   status: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export type IBookingStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "CANCEL_REQUESTED"
+  | "FAILED"
+  | "CANCELLED";
+
+export interface IBookingCancellation {
+  requestedAt?: string | null;
+  processedAt?: string | null;
+  refundAmount: number;
+  reason: string;
+  adminNotes: string;
+}
+
+export interface IBookingCustomer {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+export interface IBookingPackageDestination {
+  _id?: string;
+  name: string;
+}
+export interface IBookingPackage {
+  _id: string;
+  name: string;
+  amount: number;
+  startDate: string;
+  destinations: IBookingPackageDestination[];
+  duration: {
+    day: number;
+    night: number;
+  };
+  images?: string[];
+  operatorId: string;
+}
+export type IAttendanceStatus =
+  | "PENDING"
+  | "CHECKED_IN"
+  | "COMPLETED"
+  | "NOT_SHOW";
+
+export interface IPopulatedBooking {
+  _id: string;
+  userId: IBookingCustomer;
+  packageId: IBookingPackage;
+  razorpayOrderId: string;
+  razorpayPaymentId: string | null;
+  addedActivityIds: string[];
+  removedActivityIds: string[];
+  status: IBookingStatus;
+  attendance: IAttendanceStatus;
+  checkInTime: string | null;
+  cancellation: IBookingCancellation;
+  pricing: IPricing;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ICouponItem {

@@ -124,6 +124,17 @@ export const RESPONSE_MESSAGES = {
   BOOKING: {
     SUCCESS: {
       CONFIRM: "Booking confirmed successfully",
+      CANCEL_WITH_FULL_REFUND:
+        "Booking cancelled successfully. 100% refund added to your wallet",
+      CANCEL_REQ_SUBMITTED:
+        "Cancellation request submitted. Subject to admin approval(50% estimated refund).",
+      CANCEL_REQ_APPROVED_REFUND:
+        "Cancellation request approved and refund processed to wallet",
+      CANCEL_REQ_REJECTED:
+        "Cancellation request rejected. Booking remains confirmed.",
+      CANCEL_BY_OPERATOR:
+        "Booking cancelled successfully and full refund issued to guest wallet",
+      DATE_RESCHEDULED_BY_OPERATOR: "Tour date rescheduled successfully",
     },
     ERROR: {
       INVALID_SIGNATURE:
@@ -132,13 +143,23 @@ export const RESPONSE_MESSAGES = {
       INVALID_ORDER_ID: "Invalid order ID",
       INVALID_USER_ID: "Invalid user ID",
       USER_ID_MISSING: "User ID is required",
+      CANCEL_NOT_CONFIRM_STATUS: "Only confirmed bookings can be cancelled",
+      CANCEL_AFTER_START_DATE:
+        "Cannot cancel a tour that has already started or passed",
+      CANCEL_REQ_NOT_FOUND: "No pending cancellation request found",
+      ATTENDANCE_CHANGE_FOR_NOT_CONFIRMED:
+        "Attendance can only be updated for confirmed bookings",
+      CANCEL_REASON_MISSING: "Cancellation reason is required",
+      START_DATE_MISSING: "New start date is required",
+      NOT_CANCEL_REQUESTED_STATUS: "Booking is not in CANCEL_REQUESTED status",
+      INVALID_ACTION: "Invalid action type",
     },
   },
   PAYMENT: {
     ERROR: {
       INITIATE: "Failed to initiate payment order",
       RAZORPAY_OFFER: "Razorpay offer creation error",
-      PAYMETNT_SIGNATURE:'Invalid payment signature'
+      PAYMETNT_SIGNATURE: "Invalid payment signature",
     },
   },
 
@@ -167,7 +188,7 @@ export const RESPONSE_MESSAGES = {
   WALLET: {
     ERROR: {
       NON_POSITIVE_AMOUNT: "Amount must be greater than zero",
-      TRANSACTION_FAILED:'Failed to process wallet transaction'
+      TRANSACTION_FAILED: "Failed to process wallet transaction",
     },
   },
 } as const;

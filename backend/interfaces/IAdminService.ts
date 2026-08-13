@@ -7,6 +7,7 @@ import { IPackageCategory } from "../models/PackageCategory";
 import { IAdmin, IAdminResponse } from "./IAdmin";
 import { IOperator } from "./IOperator";
 import { IUser } from "./IUser";
+import { IBooking } from "./IBookingRepository";
 
 export interface IAdminService {
   loginAdminService(
@@ -86,5 +87,11 @@ export interface IAdminService {
     packageId: string,
     data: Partial<Ipackage>,
   ): Promise<Ipackage | null>;
-  getSinglePackageService(packageId: string): Promise<Ipackage | null>
+  getSinglePackageService(packageId: string): Promise<Ipackage | null>;
+  processAdminCancellation(
+    bookingId: string,
+    approve: boolean,
+    adminNotes?: string | undefined,
+  ): Promise<IBooking | null>;
+  getPendingCancelationRequests(): Promise<IBooking[]>;
 }

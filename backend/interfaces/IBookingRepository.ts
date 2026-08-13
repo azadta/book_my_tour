@@ -1,9 +1,15 @@
 import { Types } from "mongoose";
 import { IBaseRepository } from "./IBaseRepository";
-import { IBookingDocument } from "../models/Booking";
+import { IBookingDocument, IPopulatedBooking } from "../models/Booking";
 import { IBookingPricing } from "./IBookingPricing";
+import { IOperatorBookingDetails, IOperatorBookingFilter, IOperatorBookingStats } from "./IBooking";
 
-export type BookingStatus = "PENDING" | "CONFIRMED" | "FAILED" | "CANCELLED";
+export type BookingStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "CANCEL_REQUESTED"
+  | "FAILED"
+  | "CANCELLED";
 
 export interface IBooking {
   _id: string | Types.ObjectId;
@@ -15,8 +21,16 @@ export interface IBooking {
   addedActivityIds: string[];
   removedActivityIds: string[];
   status: BookingStatus;
+  attendance:string,
+  checkInTime:Date
   pricing: IBookingPricing;
-
+  cancellation: {
+    requestedAt: Date;
+    processedAt: Date;
+    refundAmount: number;
+    reason: string;
+    adminNotes: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,7 +40,7 @@ export interface ICreateBookingDTO {
   packageId: string;
   razorpayOrderId: string;
   razorpayPaymentId?: string;
- 
+
   addedActivityIds?: string[];
   removedActivityIds?: string[];
   status: BookingStatus;
@@ -46,5 +60,17 @@ export interface IBookingRepository extends IBaseRepository<IBookingDocument> {
     dto: IUpdateBookingStatusDTO,
   ): Promise<IBooking | null>;
   getUserBookings(userId: string): Promise<IBooking[]>;
-  findByBookingId(bookingId: string): Promise<IBooking | null>;
+  findByBookingId(bookingId: string): Promise<IPopulatedBooking | null>;
+  getPendingCancellationRequests(): Promise<IBooking[]>;
+  getOperatorBookings(
+    filter: IOperatorBookingFilter,
+    skip: number,
+    limit: number,
+  ): Promise<IPopulatedBooking[]>;
+  getOperatorBookingsCount(filter: IOperatorBookingFilter): Promise<number>;
+  getOperatorBookingDetails(
+    bookingId: string,
+    operatorId: string,
+  ): Promise<IOperatorBookingDetails | null>;
+  getOperatorStats(operatorId: string): Promise<IOperatorBookingStats>;
 }

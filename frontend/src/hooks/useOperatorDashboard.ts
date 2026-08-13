@@ -4,19 +4,28 @@ import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 
+export interface IOperatorDashboardData {
+  packagesCount: number;
+  totalBookings: number;
+  confirmedBookings: number;
+  cancelRequestedBookings: number;
+  totalRevenue: number;
+}
+
 export const useOperatorDashboard = () => {
-  const [PackagesCount, setPackagesCount] = useState<number | null>(null);
+  const [dashBoardData, setDashboardData] =
+    useState<IOperatorDashboardData | null>(null);
 
   const [loading, setLoading] = useState(false);
 
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const packagesCount = await axiosInstance.get(
-        APP_ROUTES.OPERATOR.MY_PACKAGES_COUNT,
+      const { data } = await axiosInstance.get(
+        APP_ROUTES.OPERATOR.DASHBOARD_DATA,
       );
 
-      setPackagesCount(packagesCount.data.totalPakagesCount);
+      setDashboardData(data);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||
@@ -32,7 +41,7 @@ export const useOperatorDashboard = () => {
   }, []);
 
   return {
-    PackagesCount,
+    dashBoardData,
     loading,
   };
 };

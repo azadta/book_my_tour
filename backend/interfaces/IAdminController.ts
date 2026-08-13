@@ -148,5 +148,19 @@ export interface IAdminController {
     res: Response,
     next: NextFunction,
   ) => Promise<void>;
-  getPackageById: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  getPackageById: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  getPendingCancellations: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
+  processCancellationRequests: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => Promise<void>;
 }

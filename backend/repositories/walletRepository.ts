@@ -16,9 +16,14 @@ export class WalletRepository
     userId: string,
     transaction: IWalletTransaction,
   ): Promise<IWalletDocument | null> {
+    const balanceAdjustment =
+      transaction.type === "CREDIT" ? transaction.amount : -transaction.amount;
     return await Wallet.findOneAndUpdate(
       { userId },
-      { $push: { transactions: transaction } },
+      {
+        $inc: { balance: balanceAdjustment },
+        $push: { transactions: transaction },
+      },
       { new: true, upsert: true },
     );
   }

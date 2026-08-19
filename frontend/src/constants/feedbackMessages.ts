@@ -141,9 +141,10 @@ export const FEEDBACK_MESSAGES = {
       UPDATE_GUEST_STATUS: (newStatus: string) =>
         `Guest attendance marked as ${newStatus.replace("_", " ")}`,
       CANCEL: "Tour cancelled and full refund credited to guest wallet",
-      RESCHEDULE:'Tour date successfully rescheduled',
-        APPROVE_CANCEL_REQ:'Cancelation approved and  50% refund credited to guest wallet.',
-        REJECT_CANCEL_REQ:'Cancelation request rejected.',
+      RESCHEDULE: "Tour date successfully rescheduled",
+      APPROVE_CANCEL_REQ:
+        "Cancelation approved and  50% refund credited to guest wallet.",
+      REJECT_CANCEL_REQ: "Cancelation request rejected.",
     },
     ERROR: {
       FETCH: "Failed to fetch booking",
@@ -154,9 +155,9 @@ export const FEEDBACK_MESSAGES = {
       UPDATE_ATTENDANCE: "Failed to update attendance",
       BOOKING_DETAILS: "Failed to fetch booking details",
       CANCEL_REASON_MISSING: "Please provide a reason for cancelling this tour",
-      DATE_MISSING:'Please pick a valid future date',
-      RESCHEDULE:'Failed to reschedule tour',
-      CANCEL_REQ_VERIFICATION:'Cancel request verification failed'
+      DATE_MISSING: "Please pick a valid future date",
+      RESCHEDULE: "Failed to reschedule tour",
+      CANCEL_REQ_VERIFICATION: "Cancel request verification failed",
     },
   },
   COUPON: {
@@ -183,6 +184,13 @@ export const FEEDBACK_MESSAGES = {
       FETCH: "Failed to load wallet data",
       INVALID_TOPUP_AMOUNT: "Please enter a valid amount",
       INITIATE_TOPUP: "Failed to initiate top-up",
+    },
+  },
+  CHATS: {
+    ERROR: {
+      FETCH_CHATS: "Failed to fetch chats",
+      FETCH_MESSAGES: "Failed to fetch messages",
+      START_CHAT: "Failed to start chat session",
     },
   },
 } as const;

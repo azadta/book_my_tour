@@ -78,4 +78,8 @@ export const FRONTEND_ROUTES = {
     EDIT_OPERATOR: (id: string) => `/admin/edit-operator/${id}`,
     EDIT_PACKAGE: (id: string) => `/admin/edit-package/${id}`,
   },
+  CHAT:{
+    USER_CHAT_PAGE:'/user/chat',
+    OPERATOR_CHAT_PAGE:'/operator/chat'
+  }
 } as const;

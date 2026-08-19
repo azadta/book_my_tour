@@ -27,6 +27,7 @@ export const RESPONSE_MESSAGES = {
       EXPIRED_TOKEN: "Token expired",
       ACCOUNT_BLOCKED: "Your account has been blocked, Please contact support",
       SERVER_ERROR: "Internal server error",
+      FAILED:'Authentication failed'
     },
   },
   ADMIN: {
@@ -191,4 +192,9 @@ export const RESPONSE_MESSAGES = {
       TRANSACTION_FAILED: "Failed to process wallet transaction",
     },
   },
+  CHAT:{
+    ERROR:{
+      RETRIEVE_AFTER_CREATION:'Failed to retrieve chat after creation'
+    }
+  }
 } as const;

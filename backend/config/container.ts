@@ -57,6 +57,16 @@ import { WalletRepository } from "../repositories/walletRepository";
 import { IWalletRepository } from "../interfaces/IWalletRepository";
 import { IWalletService } from "../interfaces/IWalletService";
 import { WalletService } from "../services/walletService";
+import { IChatRepository } from "../interfaces/IChatRepository";
+import { ChatRepository } from "../repositories/chatRepositories";
+import { IMessageRepository } from "../interfaces/IMessageRepository";
+import { MessageRepository } from "../repositories/messageRepository";
+import { IChatService } from "../interfaces/IChatService";
+import { ChatService } from "../services/chatService";
+import { ISocketService } from "../interfaces/ISocketService";
+import { SocketService } from "../services/SocketService";
+import { IChatController } from "../interfaces/IChatController";
+import { ChatController } from "../controllers/chatController";
 
 const container = new Container();
 
@@ -172,9 +182,29 @@ container
   .bind<IWalletRepository>(Types.WalletRepository)
   .to(WalletRepository)
   .inSingletonScope();
-  container
+container
   .bind<IWalletService>(Types.WalletService)
   .to(WalletService)
+  .inSingletonScope();
+container
+  .bind<IChatRepository>(Types.ChatRepository)
+  .to(ChatRepository)
+  .inSingletonScope();
+container
+  .bind<IMessageRepository>(Types.MessageRepository)
+  .to(MessageRepository)
+  .inSingletonScope();
+container
+  .bind<IChatService>(Types.ChatService)
+  .to(ChatService)
+  .inSingletonScope();
+container
+  .bind<ISocketService>(Types.SocketService)
+  .to(SocketService)
+  .inSingletonScope();
+container
+  .bind<IChatController>(Types.ChatController)
+  .to(ChatController)
   .inSingletonScope();
 
 export const userController = container.get<IUserController>(
@@ -196,3 +226,8 @@ export const commonAuthController = container.get<ICommonAuthController>(
 export const webhookController = container.get<IWebhookController>(
   Types.WebhookController,
 );
+
+export const chatController = container.get<IChatController>(
+  Types.ChatController,
+);
+export const socketService = container.get<ISocketService>(Types.SocketService);

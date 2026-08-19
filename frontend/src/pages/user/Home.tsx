@@ -2,7 +2,6 @@ import HomeSlideThree from "@/components/homeSlideThree/HomeSlideThree";
 import HomeSlideTwo from "@/components/homeSlideTwo/HomeSlideTwo";
 import HomeSlideTop from "@/components/homeTopSlide/HomeSlideTop";
 import HomeImageSlide from "../../components/homeImageSlide/HomeImageSlide";
-import PackageReviews from "@/components/PackageReviews";
 export const reviewStats = {
   totalReviews: 128,
   averageRating: 4.6,

@@ -21,6 +21,8 @@ import ConfirmationModel from "../../components/ConfirmationModal";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { disconnectSocket } from "@/socket/socket";
+import { setActiveChat, setChats, setMessages } from "@/redux/chatSlice";
 
 interface FormDataType {
   [key: string]: any;
@@ -172,6 +174,10 @@ const Profile = () => {
     try {
       dispatch(logoutUserStart());
       await del(APP_ROUTES.USER.LOGOUT);
+      disconnectSocket();
+      dispatch(setActiveChat(null));
+      dispatch(setMessages([]));
+      dispatch(setChats([]));
       dispatch(logoutUserSuccess());
       navigate(FRONTEND_ROUTES.USER.LOGIN, { replace: true });
     } catch (error: any) {
@@ -213,14 +219,14 @@ const Profile = () => {
     <div className="flex flex-col sm:flex-row  justify-center gap-5  ">
       <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
-                  <button
+          <button
             onClick={() => navigate(FRONTEND_ROUTES.USER.MY_BOOKINGS)}
             className="profile-sidebar-button"
           >
             My Bookings
           </button>
-             
-             <button
+
+          <button
             onClick={() => navigate(FRONTEND_ROUTES.USER.WISHLIST)}
             className="profile-sidebar-button"
           >
@@ -233,7 +239,12 @@ const Profile = () => {
             Reset Password
           </button>
 
-          <button onClick={()=>navigate(FRONTEND_ROUTES.USER.WALLET)} className="profile-sidebar-button">My Wallet</button>
+          <button
+            onClick={() => navigate(FRONTEND_ROUTES.USER.WALLET)}
+            className="profile-sidebar-button"
+          >
+            My Wallet
+          </button>
           <button onClick={handleDeleteUser} className="profile-sidebar-button">
             Delete Account
           </button>
@@ -260,7 +271,7 @@ const Profile = () => {
         />
         <div className="sm:hidden pt-10 flex items-center justify-between">
           <button
-            onClick={() => navigate( FRONTEND_ROUTES.USER.RESET_PASSWORD_AUTH)}
+            onClick={() => navigate(FRONTEND_ROUTES.USER.RESET_PASSWORD_AUTH)}
             className=" cursor-pointer bg-yellow-200 px-0.5 sm:px-1 py-1 rounded hover:bg-yellow-300"
           >
             Reset Password

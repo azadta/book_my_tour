@@ -10,6 +10,10 @@ import commonAuthRouter from "./routes/commonAuthRoutes";
 import webhookRouter from "./routes/webhookRoutes";
 import operatorRouter from "./routes/operatorRoutes";
 import userRouter from "./routes/userRoutes";
+import chatRouter from "./routes/chatRoutes";
+import { socketService } from "./config/container";
+import { createServer } from "node:http";
+
 dotenv.config();
 
 const app = express();
@@ -25,13 +29,18 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morganMiddleware);
 connectDb();
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+
 
 app.use("/api/user", userRouter);
 app.use("/api/operator", operatorRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/auth", commonAuthRouter);
 app.use("/api/v1", webhookRouter);
+app.use("/api/chat", chatRouter);
 app.use(errorHandler);
+
+const httpServer = createServer(app);
+socketService.init(httpServer);
+httpServer.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});

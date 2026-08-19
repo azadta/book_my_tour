@@ -52,7 +52,7 @@ import EditCoupon from "./pages/operator/EditCoupon";
 import Wallet from "./pages/user/Wallet";
 import OperatorBookingList from "./pages/operator/OperatorBookingList";
 import OperatorBookingDetails from "./pages/operator/OperatorBookingDetails";
-
+import ChatPage from "./pages/chat/ChatPage";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -129,6 +129,10 @@ const App = () => {
               element={<MyBookingsPage />}
             />
             <Route path={FRONTEND_ROUTES.USER.WALLET} element={<Wallet />} />
+            <Route
+              path={FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}
+              element={<ChatPage />}
+            />
           </Route>
         </Route>
 
@@ -205,11 +209,14 @@ const App = () => {
             path={FRONTEND_ROUTES.OPERATOR.BOOKING_LIST}
             element={<OperatorBookingList />}
           />
-               <Route
+          <Route
             path={FRONTEND_ROUTES.OPERATOR.BOOKING_DETAILS_PATTERN}
             element={<OperatorBookingDetails />}
           />
-     
+          <Route
+            path={FRONTEND_ROUTES.CHAT.OPERATOR_CHAT_PAGE}
+            element={<ChatPage />}
+          />
         </Route>
 
         <Route

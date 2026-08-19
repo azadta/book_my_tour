@@ -12,6 +12,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import type { IPopulatedBooking } from "@/interfaces/interfaces";
 import { AlertCircle } from "lucide-react";
+import { useChat } from "@/hooks/useChats";
 
 const OperatorBookingList = () => {
   const [open, setOpen] = useState(false);
@@ -21,6 +22,7 @@ const OperatorBookingList = () => {
   const navigate = useNavigate();
   const { bookings, loading, totalCount, pendingCancelCount } =
     useOperatorBookings(currentPage, resultPerPage, statusFilter);
+  const { accessChat } = useChat();
 
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const handleCancellationFilterToggle = () => {
@@ -45,7 +47,7 @@ const OperatorBookingList = () => {
         </div>
       ),
     },
-      {
+    {
       label: "Booking ID",
       render: (booking) => booking._id || "N/A",
     },
@@ -87,13 +89,30 @@ const OperatorBookingList = () => {
       },
     },
   ];
-  const actions: ActionButton<any>[] = [
+
+  const handleNotification = async (booking: IPopulatedBooking) => {
+    if (!booking.userId._id) return;
+    await accessChat(booking.userId._id, "User");
+    navigate(
+      `${FRONTEND_ROUTES.CHAT.OPERATOR_CHAT_PAGE}?userId=${booking.userId._id}`,
+    );
+  };
+  const actions: ActionButton<IPopulatedBooking>[] = [
     {
       label: () => "Manage",
-      onClick: (pkg) => {
-        navigate(FRONTEND_ROUTES.OPERATOR.BOOKING_DETAILS(pkg._id));
+      onClick: (booking) => {
+        navigate(FRONTEND_ROUTES.OPERATOR.BOOKING_DETAILS(booking._id));
       },
-      className: `bg-sky-500 text-white px-3 py-1 rounded hover:bg-sky-600 transition`,
+      className: `bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700 transition cursor-pointer`,
+      disabled: () => false,
+      loadingText: "Opening...",
+    },
+    {
+      label: () => "Notify 🔔",
+      onClick: (booking) => {
+        handleNotification(booking);
+      },
+      className: `bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700 transition cursor-pointer`,
       disabled: () => false,
       loadingText: "Opening...",
     },

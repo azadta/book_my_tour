@@ -87,6 +87,7 @@ const AdminUserDetails = () => {
             <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
               User Management
             </h1>
+            <input />
 
             <ReUsableTable
               data={users}

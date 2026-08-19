@@ -10,23 +10,19 @@ export class SecurityService implements ISecurityService {
   private get accessSecret(): string {
     const accessSecret = process.env.JWT_ACCESS_SECRET;
     if (!accessSecret) {
-      throw new Error(
-        RESPONSE_MESSAGES.SYSTEM.ERROR.MISSNG_ACCESS_SECRET,
-      );
+      throw new Error(RESPONSE_MESSAGES.SYSTEM.ERROR.MISSNG_ACCESS_SECRET);
     }
     return accessSecret;
   }
   private get refreshSecret(): string {
     const refreshSecret = process.env.JWT_REFRESH_SECRET;
     if (!refreshSecret) {
-      throw new Error(
-        RESPONSE_MESSAGES.SYSTEM.ERROR.MISSING_REFRESH_SECRET,
-      );
+      throw new Error(RESPONSE_MESSAGES.SYSTEM.ERROR.MISSING_REFRESH_SECRET);
     }
     return refreshSecret;
   }
   generateAccessToken(payload: ISecurityPayload): string {
-    return jwt.sign(payload, this.accessSecret, { expiresIn: "5m" });
+    return jwt.sign(payload, this.accessSecret, { expiresIn: "55m" });
   }
   verifyAccessToken(token: string): ISecurityPayload {
     const decoded = jwt.verify(token, this.accessSecret) as JwtPayload &

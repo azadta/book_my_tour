@@ -27,4 +27,9 @@ export const Types = {
   CouponRepository: Symbol.for("CouponRepository"),
   WalletRepository: Symbol.for("WalletRepository"),
   WalletService: Symbol.for("WalletService"),
+  ChatRepository: Symbol.for("ChatRepository"),
+  MessageRepository: Symbol.for("MessageRepository"),
+  ChatService: Symbol.for("ChatService"),
+  ChatController: Symbol.for("ChatController"),
+  SocketService: Symbol.for("SocketService"),
 };

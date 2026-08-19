@@ -75,11 +75,11 @@ export const ROUTES = {
     TOGGLE_COUPON_STATUS: "/coupon/:id/toggle-status",
     BOOKINGS: "/bookings",
     DASHBOARD_DATA: "/dashboard-data",
-    BOOKING_DETAILS:'/booking-details/:bookingId',
-    UPDATE_GUEST_ATTENDANCE:'/booking/guest-attendance/:bookingId',
-    CANCEL_BOOKING:'/booking/cancel/:bookingId',
-    RESCHEDULE_BOOKING:'/booking/reschedule/:bookingId',
-    VERIFY_CANCELLATION:'/booking/verify-cancellation/:bookingId'
+    BOOKING_DETAILS: "/booking-details/:bookingId",
+    UPDATE_GUEST_ATTENDANCE: "/booking/guest-attendance/:bookingId",
+    CANCEL_BOOKING: "/booking/cancel/:bookingId",
+    RESCHEDULE_BOOKING: "/booking/reschedule/:bookingId",
+    VERIFY_CANCELLATION: "/booking/verify-cancellation/:bookingId",
   },
   ADMIN: {
     LOGIN: "/login",
@@ -121,5 +121,10 @@ export const ROUTES = {
   },
   RAZORPAY_WEBHOOK: {
     PAYMENTS: "/payments/razorpay-webhook",
+  },
+  CHAT: {
+    MY_CHATS: "/my_chats",
+    ACCESS_CHAT: "/access_chat",
+    CHAT_MESSAGES: "/chat_messages/:chatId",
   },
 } as const;

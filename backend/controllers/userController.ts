@@ -2,16 +2,15 @@ import { NextFunction, Request, Response } from "express";
 
 import { CustomError } from "../utils/customError";
 
-import type { IUserService } from "../interfaces/IUserService";
-import { logger } from "../utils/logger";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { injectable, inject } from "inversify";
-import { Types } from "../types/types";
-import { IUserController } from "../interfaces/IUserController";
-import type { IAdminService } from "../interfaces/IAdminService";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { StatusCode } from "../constants/statusCodeConstants";
+import type { IAdminService } from "../interfaces/IAdminService";
+import { IUserController } from "../interfaces/IUserController";
+import type { IUserService } from "../interfaces/IUserService";
 import type { IWalletService } from "../interfaces/IWalletService";
-import refunds from "razorpay/dist/types/refunds";
+import { Types } from "../types/types";
+import { logger } from "../utils/logger";
 
 @injectable()
 export class UserController implements IUserController {

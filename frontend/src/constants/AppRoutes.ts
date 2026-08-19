@@ -134,4 +134,9 @@ export const APP_ROUTES = {
     CLOUDINARY: (cloudName: string) =>
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
   },
+  CHATS:{
+    MY_CHATS:'/chat/my_chats',
+    ACCESS_CHAT:'/chat/access_chat',
+    CHAT_MESSAGES:(chatId:string)=>`/chat/chat_messages/${chatId}`
+  }
 } as const;

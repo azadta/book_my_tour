@@ -22,10 +22,11 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Coupon from "./Coupon";
 import type { ICouponItem } from "@/interfaces/interfaces";
 import { useWallet } from "@/hooks/useWallet";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 interface AppliedCouponsState {
   general?: ICouponItem | null;
@@ -52,7 +53,8 @@ const PackageDetails = () => {
     handleBooking,
     isBookingLoading,
   } = usePackageDetails(id as string);
-  const {balance:walletBalance}=useWallet()
+  const navigate = useNavigate();
+  const { balance: walletBalance } = useWallet();
   const [appliedCoupons, setAppliedCoupons] = useState<AppliedCouponsState>({
     general: null,
     bank: null,
@@ -197,6 +199,12 @@ const PackageDetails = () => {
     );
   };
 
+  const handleStartChat = () => {
+    navigate(
+      `${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${data?.operatorId}`,
+    );
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (isAutoScrolling.current) {
@@ -277,12 +285,12 @@ const PackageDetails = () => {
           <div className="lg:col-span-4">
             <div className=" hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] ">
               <h3 className="font-bold text-lg mb-4">Day Gallery</h3>
-
-              <div className="grid grid-cols-2 gap-4 animate-fade-in">
-                {galleryImages?.map((image, index) => (
-                  <div
-                    key={index}
-                    className="
+              <div className="flex flex-col items-center justify-between gap-10">
+                <div className="grid grid-cols-2 gap-4 animate-fade-in">
+                  {galleryImages?.map((image, index) => (
+                    <div
+                      key={index}
+                      className="
                         aspect-square
                         rounded-3xl
                         overflow-hidden
@@ -291,10 +299,10 @@ const PackageDetails = () => {
                         border-gray-100
                         group
                         "
-                  >
-                    <img
-                      src={image}
-                      className="
+                    >
+                      <img
+                        src={image}
+                        className="
                             w-full
                             h-full
                             object-cover
@@ -302,9 +310,19 @@ const PackageDetails = () => {
                             duration-500
                             group-hover:scale-110
                             "
-                    />
-                  </div>
-                ))}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleStartChat}
+                  type="button"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transtion-all duration-200 cursor-pointer border border-emerald-500/20 "
+                >
+                  <MessageSquare className="w-4 h-4 transition-transform group-hover:scale-110" />
+                  <span>Chat with Host</span>
+                </button>
               </div>
             </div>
           </div>
@@ -463,7 +481,7 @@ const PackageDetails = () => {
                                       <p className="hidden bg-red-100 hover:bg-red-200 min-[360px]:inline rounded-md text-red-600 px-1 cursor-pointer">
                                         Remove
                                       </p>
-                                      <span className=" min-[360px]:hidden text-red-500 inline-flex items-cener justify-center bg-red-200 hover:bg-red-300 p-1 rounded-lg ">
+                                      <span className=" min-[360px]:hidden text-red-500 inline-flex items-center justify-center bg-red-200 hover:bg-red-300 p-1 rounded-lg ">
                                         <Trash2 className="size-4" />
                                       </span>
                                     </>

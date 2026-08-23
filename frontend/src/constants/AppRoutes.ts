@@ -56,6 +56,9 @@ export const APP_ROUTES = {
     VERIFY_WALLET_TOPUP: "/user/wallet/verify-topup",
     CANCEL_BOOKING: (packageId: string) => `/user/booking/cancel/${packageId}`,
   },
+  COMMON_AUTH: {
+    REFRESH_TOKEN: "/auth/refresh",
+  },
   OPERATOR: {
     REGISTER: "/operator/register",
     VERIFY_OTP: "/operator/verify-otp",
@@ -134,9 +137,18 @@ export const APP_ROUTES = {
     CLOUDINARY: (cloudName: string) =>
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
   },
-  CHATS:{
-    MY_CHATS:'/chat/my_chats',
-    ACCESS_CHAT:'/chat/access_chat',
-    CHAT_MESSAGES:(chatId:string)=>`/chat/chat_messages/${chatId}`
-  }
+  CHATS: {
+    MY_CHATS: "/chat/my_chats",
+    ACCESS_CHAT: "/chat/access_chat",
+    CHAT_MESSAGES: (chatId: string) => `/chat/chat_messages/${chatId}`,
+    CLEAR_MESSAGES: (chatId: string) => `/chat/clear-messages/${chatId}`,
+  },
+  NOTIFICATIONS: {
+    USER_NOTIFICATIONS: "/notification/user-notifications",
+    CREATE: "/notification/create",
+    MARK_AS_READ: (notificationId: string) =>
+      `notification/mark-as-read/${notificationId}`,
+    MARK_ALL_READ: "/notification/mark-all-as-read",
+    CLEAR_ALL: "/notification/clear-all",
+  },
 } as const;

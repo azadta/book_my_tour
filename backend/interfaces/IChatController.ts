@@ -8,4 +8,5 @@ export interface IChatController {
     res: Response,
     next: NextFunction,
   ): Promise<void>;
+  clearChat: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

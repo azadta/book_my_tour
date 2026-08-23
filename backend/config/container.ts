@@ -67,6 +67,12 @@ import { ISocketService } from "../interfaces/ISocketService";
 import { SocketService } from "../services/SocketService";
 import { IChatController } from "../interfaces/IChatController";
 import { ChatController } from "../controllers/chatController";
+import { INotificationRepository } from "../interfaces/INotificationRepository";
+import { NotificationRepository } from "../repositories/notificationRepository";
+import { INotificationService } from "../interfaces/INotificationService";
+import { NotificationService } from "../services/notificationService";
+import { INotificationController } from "../interfaces/INotificationController";
+import { NotificationController } from "../controllers/notificationController";
 
 const container = new Container();
 
@@ -206,6 +212,18 @@ container
   .bind<IChatController>(Types.ChatController)
   .to(ChatController)
   .inSingletonScope();
+container
+  .bind<INotificationRepository>(Types.NotificationRepository)
+  .to(NotificationRepository)
+  .inSingletonScope();
+container
+  .bind<INotificationService>(Types.NotificationService)
+  .to(NotificationService)
+  .inSingletonScope();
+container
+  .bind<INotificationController>(Types.NotificationController)
+  .to(NotificationController)
+  .inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,
@@ -229,5 +247,9 @@ export const webhookController = container.get<IWebhookController>(
 
 export const chatController = container.get<IChatController>(
   Types.ChatController,
+);
+
+export const notificationController = container.get<INotificationController>(
+  Types.NotificationController,
 );
 export const socketService = container.get<ISocketService>(Types.SocketService);

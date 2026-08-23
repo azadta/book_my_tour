@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import NavItem from "../NavItem";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/redux/store";
-import { Link, useNavigate } from "react-router-dom";
-import { HiMenu } from "react-icons/hi";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
-import { PiBellRingingBold } from "react-icons/pi";
+import { useNotifications } from "@/hooks/useNotifications";
+import type { RootState } from "@/redux/store";
+import { useEffect } from "react";
+import { HiMenu } from "react-icons/hi";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import NavItem from "../NavItem";
+import NotificationBadgeButton from "./NotificationBadgeButton";
 
 interface Props {
   openDrawer: () => void;
@@ -14,6 +15,15 @@ interface Props {
 const HeaderActions = ({ openDrawer }: Props) => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const unreadCount = useSelector(
+    (state: RootState) => state.notification.unreadCount,
+  );
+  const { fetchNotifications } = useNotifications();
+  useEffect(() => {
+    if (currentUser) {
+      fetchNotifications();
+    }
+  }, [currentUser]);
 
   return (
     <div>
@@ -55,7 +65,7 @@ const HeaderActions = ({ openDrawer }: Props) => {
         {currentUser && (
           <>
             <NavItem to={FRONTEND_ROUTES.USER.WISHLIST}>My Wishlist</NavItem>
-            <button
+            {/* <button
               className="cursor-pointer group"
               onClick={() => navigate(FRONTEND_ROUTES.USER.NOTIFICATIONS)}
             >
@@ -64,7 +74,8 @@ const HeaderActions = ({ openDrawer }: Props) => {
                 <PiBellRingingBold className="text-2xl text-orange-900 group-hover:scale-120 transition-all duration-200" />
                 <span className="absolute left-3 -top-1.5 flex h-3.5 w-3.5  rounded-full bg-sky-400 ring-2 ring-white group-hover:scale-120 transition-all duration-200"></span>
               </div>
-            </button>
+            </button> */}
+            <NotificationBadgeButton unreadCount={unreadCount} />
             <Link to={FRONTEND_ROUTES.USER.PROFILE} className="ml-5">
               <div className="flex items-center gap-0.5  ">
                 <button className="relative  cursor-pointer py-2 px-4 text-center font-sans inline-flex justify-center   text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">

@@ -364,6 +364,8 @@ export class UserService implements IUserService {
       maxBudget,
       search,
       maxDuration,
+      sortBy = "createdAt",
+      sortOrder = "desc",
     } = query;
 
     const skip = page > 1 ? (Number(page) - 1) * Number(limit) : 0;
@@ -396,7 +398,13 @@ export class UserService implements IUserService {
     }
 
     const [packages, totalCount, uniqueCategoryCount] = await Promise.all([
-      this.packageRepository.getFilteredPackages(filter, skip, limit),
+      this.packageRepository.getFilteredPackages(
+        filter,
+        skip,
+        Number(limit),
+        String(sortBy),
+        String(sortOrder),
+      ),
       this.packageRepository.getFilteredPackagesCount(filter),
       this.packageRepository.getUniqueCategoryCount(filter),
     ]);

@@ -12,6 +12,8 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
     filter: any,
     skip: number,
     limit: number,
+    sortBy?: string,
+    sortOrder?: string,
   ): Promise<Ipackage[]>;
   getFilteredPackagesCount(filter: any): Promise<number>;
   getUsedCategoryIds(): Promise<Types.ObjectId[]>;

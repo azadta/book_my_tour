@@ -37,11 +37,87 @@ export class PackageRepository
     filter: any,
     skip: number,
     limit: number,
+    sortBy: string = "createdAt",
+    sortOrder: string = "desc",
   ): Promise<Ipackage[]> {
-    return Package.find(filter)
-      .skip(skip)
-      .limit(limit)
-      .populate("destinations category operatorId");
+    const order = sortOrder === "asc" ? 1 : -1;
+    const basePipeline: any[] = [];
+
+    let sortField = sortBy;
+    if (sortBy === "price") {
+      sortField = "finalPrice";
+    } else if (sortBy === "rating") {
+      sortField = "averageRating";
+    }
+
+    const sortStage = { $sort: { [sortField]: order, _id: 1 } };
+    const commonLookups = [];
+
+    return Package.aggregate([
+      { $match: filter },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "packageId",
+          as: "reviewDocs",
+        },
+      },
+      {
+        $addFields: {
+          reviewCount: { $size: "$reviewDocs" },
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviewDocs" }, 0] },
+              then: { $round: [{ $avg: "$reviewDocs.rating" }, 1] },
+              else: 0,
+            },
+          },
+          finalPrice: {
+            $cond: {
+              if: { $gt: [`$discount`, 0] },
+              then: {
+                $subtract: [
+                  "$amount",
+                  { $multiply: ["$amount", { $divide: ["$discount", 100] }] },
+                ],
+              },
+              else: "$amount",
+            },
+          },
+        },
+      },
+      { $sort: { [sortField]: order, _id: 1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "destinations",
+          localField: "destinations",
+          foreignField: "_id",
+          as: "destinations",
+        },
+      },
+      {
+        $lookup: {
+          from: "packagecategories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "operators",
+          localField: "operatorId",
+          foreignField: "_id",
+          as: "operatorId",
+        },
+      },
+      { $unwind: { path: "$operatorId", preserveNullAndEmptyArrays: true } },
+      { $project: { reviewDocs: 0, finalPrice: 0 } },
+    ]);
   }
 
   async getFilteredPackagesCount(filter: any) {

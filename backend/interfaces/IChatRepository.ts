@@ -18,4 +18,5 @@ export interface IChatRepository extends IBaseRepository<IChat> {
   resetUnreadCount(chatId: string, userId: string): Promise<void>;
   save(chat: IChat): Promise<IChat>;
   findByIdAndPopulate(chatId: string|Types.ObjectId): Promise<IChat | null>;
+  clearChatLastMessage(chatId: string): Promise<void>
 }

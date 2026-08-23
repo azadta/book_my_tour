@@ -52,10 +52,15 @@ export class SocketService implements ISocketService {
         };
         next();
       } catch (error: any) {
-        console.log(
+        console.error(
           "socketAuthentication middleware error:",
           error?.message || error,
         );
+        if (error?.name === "TokenExpiredError") {
+          return next(
+            new CustomError("TOKEN_EXPIRED", StatusCode.UNAUTHORIZED),
+          );
+        }
 
         next(
           new CustomError(
@@ -69,12 +74,39 @@ export class SocketService implements ISocketService {
     this.io.on("connection", (socket: AuthenticatedSocket) => {
       const userId = socket.user?.id;
       if (!userId) return;
-      if (!this.onlineUsers.has(userId)) {
-        this.onlineUsers.set(userId, new Set());
-      }
-      this.onlineUsers.get(userId)!.add(socket.id);
+
       socket.join(`user:${userId}`);
-      this.io.emit("user_status_change", { userId, isOnline: true });
+
+      const setUserOnline = () => {
+        if (!this.onlineUsers.has(userId)) {
+          this.onlineUsers.set(userId, new Set());
+        }
+        const isFirstSocket = this.onlineUsers.get(userId)!.size === 0;
+        this.onlineUsers.get(userId)!.add(socket.id);
+        if (isFirstSocket) {
+          this.io.emit("user_status_change", { userId, isOnline: true });
+        }
+        const activeOnlineUserIds = Array.from(this.onlineUsers.keys());
+        socket.emit("online_users_list", activeOnlineUserIds);
+      };
+
+      const setUserOffline = () => {
+        const userSockets = this.onlineUsers.get(userId);
+        if (userSockets) {
+          userSockets.delete(socket.id);
+          if (userSockets.size === 0) {
+            this.onlineUsers.delete(userId);
+            this.io.emit("user_status_change", { userId, isOnline: false });
+          }
+        }
+      };
+
+      socket.on("enter_chat_page", () => {
+        setUserOnline();
+      });
+      socket.on("leave_chat_page", () => {
+        setUserOffline();
+      });
 
       socket.on("join_chat", (chatId: string) => socket.join(`chat:${chatId}`));
       socket.on("leave_chat", (chatId: string) =>
@@ -144,17 +176,21 @@ export class SocketService implements ISocketService {
             .emit("message_read", { chatId, messageIds, readBy: userId });
         },
       );
+      socket.on("clear_chat", ({ chatId }: { chatId: string }) => {
+        this.io.to(`chat:${chatId}`).emit("chat_cleared", { chatId });
+      });
 
       socket.on("disconnect", () => {
-        const userSockets = this.onlineUsers.get(userId);
-        if (userSockets) {
-          userSockets.delete(socket.id);
-          if (userSockets.size === 0) {
-            this.onlineUsers.delete(userId);
-            this.io.emit("user_status_change", { userId, isOnline: false });
-          }
-        }
+        setUserOffline();
       });
     });
+  }
+
+  public emitNotificationToUser(recipientId: string, notificationData: any) {
+    if (this.io) {
+      this.io
+        .to(`user:${recipientId.toString()}`)
+        .emit("new_notification", notificationData);
+    }
   }
 }

@@ -58,11 +58,11 @@ const chatSlice = createSlice({
       if (action.payload.isOnline) {
         if (!state.onlineUsers.includes(action.payload.userId)) {
           state.onlineUsers.push(action.payload.userId);
-        } else {
-          state.onlineUsers = state.onlineUsers.filter(
-            (id) => id !== action.payload.userId,
-          );
         }
+      } else {
+        state.onlineUsers = state.onlineUsers.filter(
+          (id) => id !== action.payload.userId,
+        );
       }
     },
     setTypingStatus: (
@@ -110,6 +110,25 @@ const chatSlice = createSlice({
         });
       }
     },
+    clearChatMessages: (state, action: PayloadAction<string>) => {
+      if (state.activeChat?._id === action.payload) {
+        state.messages = [];
+      }
+      const chatIndex = state.chats.findIndex((c) => c._id === action.payload);
+      if (chatIndex !== -1) {
+        state.chats[chatIndex].lastMessage = undefined;
+      }
+    },
+    updateChatLastMessage: (
+      state,
+      action: PayloadAction<{ chatId: string; message: IMessage }>,
+    ) => {
+      const { chatId, message } = action.payload;
+      const chat = state.chats.find((c) => c._id === chatId);
+      if (chat) {
+        chat.lastMessage = message;
+      }
+    },
   },
 });
 
@@ -125,6 +144,8 @@ export const {
   resetUnreadBadge,
   incrementUnreadBadge,
   updateMessageStatus,
+  clearChatMessages,
+  updateChatLastMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

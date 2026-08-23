@@ -38,4 +38,9 @@ export class MessageRepository
   async markAllMessagesAsReadInChat(chatId:string,currentUserId:string){
     await Message.updateMany({chatId,senderId:{$ne:currentUserId},status:{$ne:'READ'}},{$set:{status:'READ'}})
   }
+
+  async deleteMessageByChatId(chatId:string):Promise<void>{
+    await Message.deleteMany({chatId})
+
+  }
 }

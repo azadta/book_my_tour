@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
 import { axiosInstance } from "@/api/axiosInstance";
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type {
   ICategory,
   IPackageItem,
   IWishlistGroup,
 } from "@/interfaces/interfaces";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export const usePackageList = () => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);

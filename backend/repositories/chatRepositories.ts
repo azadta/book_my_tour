@@ -90,4 +90,8 @@ export class ChatRepository
         },
       });
   }
+
+  async clearChatLastMessage(chatId:string):Promise<void>{
+    await Chat.findByIdAndUpdate(chatId,{$unset:{lastMessage:1},$set:{unreadCount:{}}})
+  }
 }

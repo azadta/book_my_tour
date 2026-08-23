@@ -17,6 +17,7 @@ import {
   Search,
   ShieldCheck,
   SlidersHorizontal,
+  Star,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -30,6 +31,9 @@ const PackagesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const { currentUser } = useSelector((state: RootState) => state.user);
+
+  const sortBy = searchParams.get("sortBy") || "createdAt";
+  const sortOrder = searchParams.get("sortOrder") || "desc";
 
   const {
     packages,
@@ -77,6 +81,16 @@ const PackagesList = () => {
     setSearchParams({});
   };
 
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [newSortBy, newSortOrder] = e.target.value.split(":");
+    setSearchParams((prev) =>
+      updateSearchParams(prev, {
+        sortBy: newSortBy,
+        sortOrder: newSortOrder,
+      }),
+    );
+  };
+
   const hasActiveFiters = [...searchParams.keys()].some(
     (key) => key !== "page",
   );
@@ -102,8 +116,6 @@ const PackagesList = () => {
       return updateSearchParams(prev, { search: value });
     });
   }, [debouncedSearch]);
-
- 
 
   return (
     <div className="min-h-screen  bg-gray-50  font-sans ">
@@ -274,30 +286,48 @@ const PackagesList = () => {
               )}
             </div>
 
-            <div className="flex flex-col xs:flex-row items-start  xs:items-center justify-start lg:justify-end divide-y xs:divide-y-0 xs:divide-x divide-gray-200  pt-4 lg:pt-0 gap-3 xs:gap-0 ">
-              <div className="text-center sm:text-left px-3">
-                <span className="block text-2xl font-extrabold text-blue-600 ">
-                  {totalPackagesCount}
-                </span>
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                  Packages Shown
-                </span>
+            <div className="flex flex-col sm:flex-row items-start  sm:items-center gap-4">
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-bold text-gray-500 uppercase traking-wider whitespace-nowrap ">
+                  Sort By
+                </label>
+                <select
+                  value={`${sortBy}:${sortOrder}`}
+                  onChange={handleSortChange}
+                  className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer "
+                >
+                  <option value="createdAt:desc">Newest First</option>
+                  <option value="price:asc">Price: Low to High</option>
+                  <option value="price:desc">Price: High to Low</option>
+                  <option value="rating:desc">Highest Rating</option>
+                </select>
               </div>
 
-              <div className="px-3 text-center sm:text-left">
-                <span className="block text-2xl font-extrabold text-indigo-600 ">
-                  {uniqueCategoryCount}
-                </span>
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                  Categories Shown
-                </span>
+              <div className="flex items-center divide-x divide-gray-200 border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-100 ">
+                <div className="text-center sm:text-left px-3">
+                  <span className="block text-2xl font-extrabold text-blue-600 ">
+                    {totalPackagesCount}
+                  </span>
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                    Packages Shown
+                  </span>
+                </div>
+
+                <div className="px-3 text-center sm:text-left">
+                  <span className="block text-2xl font-extrabold text-indigo-600 ">
+                    {uniqueCategoryCount}
+                  </span>
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                    Categories Shown
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
           {packages.length > 0 ? (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 px-1 relative  ">
-              {(loadingCategories || loadingPackages)&&<Loading/>}
+              {(loadingCategories || loadingPackages) && <Loading />}
               {packages.map((pkg) => {
                 const isSavedAnywhere = wishlistGroups.some((g) =>
                   g.packages.some((p: any) => {
@@ -356,6 +386,15 @@ const PackagesList = () => {
                           <h3 className="text-lg font-bold text-gray-900 leading-snug group-hover:text-blue-600  transition-colors">
                             {pkg.name}
                           </h3>
+                          {pkg.averageRating &&
+                          pkg.reviewCount &&
+                          pkg.reviewCount > 0 ? (
+                            <div className="flex items-center gap-1 bg-amber-50 border border-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0">
+                              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 " />
+                              <span> {pkg.averageRating.toFixed(1)}</span>(
+                              {pkg.reviewCount})
+                            </div>
+                          ) : null}
                         </div>
                         <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-4">
                           <Clock className="w-3.5 h-3.5 " />

@@ -11,6 +11,7 @@ import webhookRouter from "./routes/webhookRoutes";
 import operatorRouter from "./routes/operatorRoutes";
 import userRouter from "./routes/userRoutes";
 import chatRouter from "./routes/chatRoutes";
+import notificationRouter from "./routes/notificationRoutes";
 import { socketService } from "./config/container";
 import { createServer } from "node:http";
 
@@ -30,13 +31,13 @@ app.use(cookieParser());
 app.use(morganMiddleware);
 connectDb();
 
-
 app.use("/api/user", userRouter);
 app.use("/api/operator", operatorRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/auth", commonAuthRouter);
 app.use("/api/v1", webhookRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/notification", notificationRouter);
 app.use(errorHandler);
 
 const httpServer = createServer(app);

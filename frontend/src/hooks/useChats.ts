@@ -4,11 +4,15 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IChat, IMessage, IMessageResponse } from "@/interfaces/IChat";
 import {
   addMessage,
+  clearChatMessages,
   incrementUnreadBadge,
+  resetUnreadBadge,
   setActiveChat,
   setChats,
   setMessages,
+  setOnlineUsers,
   setTypingStatus,
+  updateChatLastMessage,
   updateMessageStatus,
   updateUserStatus,
 } from "@/redux/chatSlice";
@@ -25,7 +29,6 @@ export const useChat = () => {
   const { activeChat, chats, messages, onlineUsers, typingUsers } = useSelector(
     (state: RootState) => state.chat,
   );
-
 
   const activeChatRef = useRef(activeChat);
   useEffect(() => {
@@ -44,7 +47,7 @@ export const useChat = () => {
         );
         const chat = response.data;
         dispatch(setChats([...chats.filter((c) => c._id !== chat._id), chat]));
-        console.log('chatFromAccessChat',chat)
+
         dispatch(setActiveChat(chat));
         const socket = getSocket();
         socket.emit("join_chat", chat._id);
@@ -67,12 +70,33 @@ export const useChat = () => {
     [dispatch, chats],
   );
 
+  const clearChat = useCallback(
+    async (chatId: string) => {
+      try {
+        await axiosInstance.delete(APP_ROUTES.CHATS.CLEAR_MESSAGES(chatId));
+        dispatch(clearChatMessages(chatId));
+        const socket = getSocket();
+        socket.emit("clear_chat", { chatId });
+      } catch (error: any) {
+        const message =
+          error.response?.data?.message ||
+          FEEDBACK_MESSAGES.CHATS.ERROR.CLEAR_CHAT;
+        toast.error(message);
+        console.error(message, error);
+      }
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
+    const socket=getSocket()
+    socket.emit('enter_chat_page')
     return () => {
       if (activeChatRef.current?._id) {
         const socket = getSocket();
         socket.emit("leave_chat", activeChatRef.current._id);
       }
+      socket.emit('leave_chat_page')
       dispatch(setActiveChat(null));
       dispatch(setMessages([]));
     };
@@ -90,6 +114,11 @@ export const useChat = () => {
         socket.emit("join_chat", activeChat._id);
       }
     };
+    const handleOnlineUsersList = (onlineUserIds: string[]) => {
+      dispatch(setOnlineUsers(onlineUserIds));
+    };
+    socket.on("online_users_list", handleOnlineUsersList);
+
     socket.on("connect", handleConnect);
     socket.on(
       "message_read",
@@ -121,7 +150,14 @@ export const useChat = () => {
           }),
         );
       }
+
+      dispatch(updateChatLastMessage({ chatId: message.chatId, message }));
     });
+
+    const handleChatCleared = ({ chatId }: { chatId: string }) => {
+      dispatch(clearChatMessages(chatId));
+    };
+    socket.on("chat_cleared", handleChatCleared);
 
     socket.on(
       "user_status_change",
@@ -143,6 +179,8 @@ export const useChat = () => {
       socket.off("user_typing");
       socket.off("user_stop_typing");
       socket.off("message_read");
+      socket.off("chat_cleared", handleChatCleared);
+      socket.off("online_users_list", handleOnlineUsersList);
     };
   }, [currentUser, activeChat, dispatch]);
 
@@ -176,6 +214,11 @@ export const useChat = () => {
         socket.emit("leave_chat", activeChat._id);
       }
       dispatch(setActiveChat(chat));
+      if (currentUser?.id) {
+        dispatch(
+          resetUnreadBadge({ chatId: chat._id, userId: currentUser.id }),
+        );
+      }
 
       socket.emit("join_chat", chat._id);
 
@@ -256,6 +299,7 @@ export const useChat = () => {
     selectChat,
     sendMessage,
     accessChat,
-    accessChatOnly
+    accessChatOnly,
+    clearChat,
   };
 };

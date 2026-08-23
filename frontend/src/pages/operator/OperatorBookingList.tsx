@@ -1,23 +1,29 @@
-import { useOperatorBookings } from "@/hooks/useOperatorBookings";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ReUsableTable, {
-  type Column,
-  type ActionButton,
-} from "@/components/ReUsableTable";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import SendNotificationModal from "@/components/notification/SendNotificationModal";
 import OperatorDashboardSideBar from "@/components/OperatorDashboardSidebar";
 import Pagination from "@/components/Pagination";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { RiCloseLargeFill } from "react-icons/ri";
+import ReUsableTable, {
+  type ActionButton,
+  type Column,
+} from "@/components/ReUsableTable";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { useChat } from "@/hooks/useChats";
+import { useNotifications } from "@/hooks/useNotifications";
+import { useOperatorBookings } from "@/hooks/useOperatorBookings";
 import type { IPopulatedBooking } from "@/interfaces/interfaces";
 import { AlertCircle } from "lucide-react";
-import { useChat } from "@/hooks/useChats";
+import { useState } from "react";
+import { RiCloseLargeFill } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 
 const OperatorBookingList = () => {
   const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] =
+    useState<IPopulatedBooking | null>(null);
+  const { sendNotification } = useNotifications();
   const resultPerPage = 5;
   const navigate = useNavigate();
   const { bookings, loading, totalCount, pendingCancelCount } =
@@ -32,6 +38,25 @@ const OperatorBookingList = () => {
       setStatusFilter("CANCEL_REQUESTED");
     }
     setCurrentPage(1);
+  };
+  const handleOpenNotificationModal = (booking: IPopulatedBooking) => {
+    setSelectedBooking(booking);
+    setIsModalOpen(true);
+  };
+
+  const handleSendNotification = async (
+    title: string,
+    message: string,
+  ): Promise<boolean> => {
+    const recipientId = selectedBooking?.userId._id;
+    if (!recipientId) return false;
+    const result = await sendNotification({
+      recipientId,
+      title,
+      message,
+      bookingId: selectedBooking?._id,
+    });
+    return !!result;
   };
 
   const columns: Column<IPopulatedBooking>[] = [
@@ -110,7 +135,7 @@ const OperatorBookingList = () => {
     {
       label: () => "Notify 🔔",
       onClick: (booking) => {
-        handleNotification(booking);
+        handleOpenNotificationModal(booking);
       },
       className: `bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700 transition cursor-pointer`,
       disabled: () => false,
@@ -196,6 +221,12 @@ const OperatorBookingList = () => {
             />
           </div>
         </div>
+        <SendNotificationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSend={handleSendNotification}
+          selectedBooking={selectedBooking}
+        />
       </div>
       {!open && (
         <RxHamburgerMenu

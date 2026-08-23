@@ -25,4 +25,5 @@ export interface IChatService {
     text: string;
     status: "SENT" | "DELIVERED";
   }): Promise<IMessage>;
+  clearChatService(chatId: string, userId: string): Promise<void>;
 }

@@ -22,7 +22,7 @@ export class SecurityService implements ISecurityService {
     return refreshSecret;
   }
   generateAccessToken(payload: ISecurityPayload): string {
-    return jwt.sign(payload, this.accessSecret, { expiresIn: "55m" });
+    return jwt.sign(payload, this.accessSecret, { expiresIn: "5m" });
   }
   verifyAccessToken(token: string): ISecurityPayload {
     const decoded = jwt.verify(token, this.accessSecret) as JwtPayload &

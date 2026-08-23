@@ -4,6 +4,7 @@ import operatorReducer from "./operator/operatorSlice";
 import adminReducer from "./admin/adminSlice";
 import packageReducer from "./package/packageSlice";
 import chatReducer from "./chatSlice";
+import notificationReducer from "./notificationSlice";
 
 import storageImport from "redux-persist/lib/storage";
 const storage = (storageImport as any).default || storageImport;
@@ -22,6 +23,7 @@ const persistConfig = {
   key: "root",
   storage,
   version: 1,
+  blacklist: ["chat", "notifications"],
 };
 
 const rootReducer = combineReducers({
@@ -29,7 +31,8 @@ const rootReducer = combineReducers({
   operator: operatorReducer,
   admin: adminReducer,
   package: packageReducer,
-  chat:chatReducer,
+  chat: chatReducer,
+  notification: notificationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

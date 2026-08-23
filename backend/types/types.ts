@@ -32,4 +32,7 @@ export const Types = {
   ChatService: Symbol.for("ChatService"),
   ChatController: Symbol.for("ChatController"),
   SocketService: Symbol.for("SocketService"),
+  NotificationRepository: Symbol.for("NotificationRepository"),
+  NotificationService: Symbol.for("NotificationService"),
+  NotificationController: Symbol.for("NotificationController"),
 };

@@ -545,7 +545,7 @@ export class OperatorController implements IOperatorController {
       const { bookingId } = req.params;
       const { attendance } = req.body;
       const operatorId = req.user?.id as string;
-      console.log("attendance from controller", attendance);
+  
       const updatedBooking = await this.operatorService.updateAttendanceService(
         bookingId as string,
         operatorId,

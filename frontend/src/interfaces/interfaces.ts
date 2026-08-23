@@ -71,6 +71,8 @@ export interface IPackageItem {
   category: ICategory;
   operatorId?: Operator;
   itinerary: IItineraryDay[];
+  averageRating?: number;
+  reviewCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }

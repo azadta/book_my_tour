@@ -27,7 +27,7 @@ export const RESPONSE_MESSAGES = {
       EXPIRED_TOKEN: "Token expired",
       ACCOUNT_BLOCKED: "Your account has been blocked, Please contact support",
       SERVER_ERROR: "Internal server error",
-      FAILED:'Authentication failed'
+      FAILED: "Authentication failed",
     },
   },
   ADMIN: {
@@ -192,9 +192,28 @@ export const RESPONSE_MESSAGES = {
       TRANSACTION_FAILED: "Failed to process wallet transaction",
     },
   },
-  CHAT:{
-    ERROR:{
-      RETRIEVE_AFTER_CREATION:'Failed to retrieve chat after creation'
-    }
-  }
+  CHAT: {
+    SUCCESS:{
+      CLEARED:'Chat cleared successfully'
+    },
+    ERROR: {
+      RETRIEVE_AFTER_CREATION: "Failed to retrieve chat after creation",
+    },
+  },
+  COMMON: {
+    ERROR: {
+      MISSING_REQUIRED_FIELDS: "Missing required fields",
+    },
+  },
+  NOTIFICATION: {
+    SUCCESS: {
+      SEND: "Notification send successfully",
+      MARKED_AS_READ: "Notification marked as read ",
+      MARKED_ALL_AS_READ: "All notifications marked as read ",
+      CLEARED_ALL: "All notifications cleared",
+    },
+    ERROR: {
+      SEND: "Socket send_notification error",
+    },
+  },
 } as const;

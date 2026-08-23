@@ -1,20 +1,19 @@
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { useEffect, useState } from "react";
 import { GrNotes } from "react-icons/gr";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import { MdLogin } from "react-icons/md";
 import { PiBellRingingBold, PiCardsBold } from "react-icons/pi";
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { TbFileLike } from "react-icons/tb";
 import { useSelector } from "react-redux";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import type { RootState } from "../../redux/store";
-import NavItem from "../NavItem";
-import { Navigation } from "../Navbar";
-import "./header.css";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
-import Logo from "./Logo";
+import type { RootState } from "../../redux/store";
+import { Navigation } from "../Navbar";
 import HeaderActions from "./HeaderActions";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import Logo from "./Logo";
+import "./header.css";
 
 const HomeHeader = () => {
   const [search, setSearch] = useState("");

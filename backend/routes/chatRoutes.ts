@@ -19,5 +19,9 @@ router.get(
   authMiddleware.verifyRole("user", "operator", "admin"),
   chatController.getChatMessages,
 );
-
+router.delete(
+  ROUTES.CHAT.CLEAR_MESSAGES,
+  authMiddleware.verifyRole("user", "operator", "admin"),
+  chatController.clearChat,
+);
 export default router;

@@ -4,6 +4,7 @@ import { Types } from "../types/types";
 import type { IChatService } from "../interfaces/IChatService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -13,8 +14,6 @@ export class ChatController implements IChatController {
       const currentUserId = req.user?.id;
       const rawUserRole = req.user?.role as "User" | "Admin" | "Operator";
       const { targetId, targetModel } = req.body;
-      console.log('targetId',targetId)
-      console.log('targetModal',targetModel)
 
       const toTitleCase = (str: string) =>
         (str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()) as
@@ -56,6 +55,19 @@ export class ChatController implements IChatController {
         limit,
       );
       res.status(StatusCode.OK).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  clearChat = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { chatId } = req.params;
+      const userId = req.user?.id as string;
+      await this.chatService.clearChatService(chatId as string, userId);
+      res
+        .status(StatusCode.OK)
+        .json({ message: RESPONSE_MESSAGES.CHAT.SUCCESS.CLEARED });
     } catch (error) {
       next(error);
     }

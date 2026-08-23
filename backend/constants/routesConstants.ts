@@ -126,5 +126,13 @@ export const ROUTES = {
     MY_CHATS: "/my_chats",
     ACCESS_CHAT: "/access_chat",
     CHAT_MESSAGES: "/chat_messages/:chatId",
+    CLEAR_MESSAGES:'/clear-messages/:chatId'
+  },
+  NOTIFICATION: {
+    CREATE: "/create",
+    USER_NOTIFICATIONS: "/user-notifications",
+    MARK_AS_READ: "/mark-as-read/:notificationId",
+    MARK_ALL_AS_READ: "/mark-all-as-read",
+    CLEAR_ALL: "/clear-all",
   },
 } as const;

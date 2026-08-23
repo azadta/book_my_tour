@@ -76,4 +76,8 @@ export class ChatService implements IChatService {
     const message = await this.messageRepository.create(data);
     return message;
   }
+ async clearChatService(chatId:string,userId:string):Promise<void>{
+    await this.messageRepository.deleteMessageByChatId(chatId)
+    await this.chatRepository.clearChatLastMessage(chatId)
+  }
 }

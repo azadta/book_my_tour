@@ -12,4 +12,5 @@ export interface IMessageRepository extends BaseRepository<IMessage> {
     chatId: string,
     currentUserId: string,
   ): Promise<void>;
+  deleteMessageByChatId(chatId: string): Promise<void>;
 }

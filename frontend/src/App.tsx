@@ -53,6 +53,8 @@ import Wallet from "./pages/user/Wallet";
 import OperatorBookingList from "./pages/operator/OperatorBookingList";
 import OperatorBookingDetails from "./pages/operator/OperatorBookingDetails";
 import ChatPage from "./pages/chat/ChatPage";
+import SendNotificationModal from "./components/notification/SendNotificationModal";
+import NotificationList from "./pages/user/NotificationList";
 
 const App = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -132,6 +134,10 @@ const App = () => {
             <Route
               path={FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}
               element={<ChatPage />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.USER.NOTIFICATIONS}
+              element={<NotificationList />}
             />
           </Route>
         </Route>

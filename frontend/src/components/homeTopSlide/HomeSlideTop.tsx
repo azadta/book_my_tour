@@ -6,15 +6,17 @@ import "swiper/css";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import HomeTopSlideCard from "./homeTopSlideCard/HomeTopSlideCard";
+import Loading from "../Loading";
 
 const HomeSlideTop = () => {
   const swiperRef = useRef<swiperType | null>(null);
-  const { fetchDestinationsByCategory, packages } = useHome();
+  const { fetchDestinationsByCategory, packages,loadingPackages,loadingDestinationsByCategory } = useHome();
   useEffect(() => {
     fetchDestinationsByCategory("Family Vacation Packages");
   }, []);
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      {(loadingDestinationsByCategory||loadingPackages)&&<Loading/> }
       <div className="border border-amber-500 rounded-xl shadow-xl pt-10   sm:p-5 flex flex-col">
         <div className="flex justify-between items-center ">
           <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold text-gray-900 font-caveat text-orange-500">

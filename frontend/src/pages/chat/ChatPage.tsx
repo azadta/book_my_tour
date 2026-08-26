@@ -50,7 +50,7 @@ const ChatPage = () => {
             onClick={handleBackToList}
             className="flex items-center text-sky-200 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <ArrowLeft className="w-3 h-3 mr-2" />
             <span className="text-sm font-medium">Back to Chats</span>
           </button>
         ) : (
@@ -58,7 +58,7 @@ const ChatPage = () => {
             onClick={() => navigate(-1)}
             className="flex items-center text-sky-200 hover:text-white transition-colors "
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <ArrowLeft className="w-3 h-3 mr-2" />
             <span className="text-sm font-medium">Back</span>
           </button>
         )}

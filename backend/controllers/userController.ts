@@ -5,19 +5,39 @@ import { CustomError } from "../utils/customError";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import type { IAdminService } from "../interfaces/IAdminService";
+import type { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
+import type { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
+import type { IPackageService } from "../interfaces/IPackageService";
 import { IUserController } from "../interfaces/IUserController";
 import type { IUserService } from "../interfaces/IUserService";
 import type { IWalletService } from "../interfaces/IWalletService";
 import { Types } from "../types/types";
 import { logger } from "../utils/logger";
 
+import type { IBookingService } from "../interfaces/IBookingService";
+import type { ICouponService } from "../interfaces/ICouponService";
+import type { IPackageReviewService } from "../interfaces/IPackageReviewService";
+import type { IWishlistService } from "../interfaces/IWishlistService";
+import { WishlistResponseMapper } from "../dto-mapper/mapper/wishlist/WishlistResponseMapper";
+import { WishlistRequestMapper } from "../dto-mapper/mapper/wishlist/WishlistRequestMapper";
+
 @injectable()
 export class UserController implements IUserController {
   constructor(
     @inject(Types.UserService) private userService: IUserService,
-    @inject(Types.AdminService) private adminService: IAdminService,
+
+    @inject(Types.PackageCategoryService)
+    private packageCategoryService: IPackageCategoryService,
+    @inject(Types.PackageDestinationService)
+    private packageDestinationService: IPackageDestinationService,
+    @inject(Types.PackageService) private packageService: IPackageService,
+
+    @inject(Types.BookingService) private bookingService: IBookingService,
     @inject(Types.WalletService) private walletService: IWalletService,
+    @inject(Types.WishlistService) private wishlistService: IWishlistService,
+    @inject(Types.PackageReviewService)
+    private packageReviewService: IPackageReviewService,
+    @inject(Types.CouponService) private couponService: ICouponService,
   ) {}
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -210,7 +230,7 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const categories = await this.userService.getAllCategories();
+      const categories = await this.packageCategoryService.getAllCategories();
       res.json(categories);
     } catch (error) {
       next(error);
@@ -245,8 +265,8 @@ export class UserController implements IUserController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [packages, totalCount] = await Promise.all([
-        this.userService.getPaginatedPackagesService(skip, limit),
-        this.userService.getTotalPackagesCount(),
+        this.packageService.getPaginatedPackagesService(skip, limit),
+        this.packageService.getTotalPackagesCount(),
       ]);
 
       res.json({ packages, totalCount });
@@ -257,7 +277,7 @@ export class UserController implements IUserController {
 
   getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const packages = await this.userService.getAllPackagesService();
+      const packages = await this.packageService.getAllPackagesService();
       res.json({ packages });
     } catch (error) {
       next(error);
@@ -270,7 +290,8 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const destinations = await this.adminService.getAllDestinationsService();
+      const destinations =
+        await this.packageDestinationService.getAllDestinationsService();
       res.json(destinations);
     } catch (error) {
       next(error);
@@ -285,7 +306,7 @@ export class UserController implements IUserController {
     try {
       const query = req.query;
       const { packages, totalCount, uniqueCategoryCount } =
-        await this.userService.getFilteredPackagesService(query);
+        await this.packageService.getFilteredPackagesService(query);
       res.status(200).json({ packages, totalCount, uniqueCategoryCount });
     } catch (error) {
       next(error);
@@ -298,7 +319,8 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const categories = await this.userService.getActiveCategoryService();
+      const categories =
+        await this.packageCategoryService.getActiveCategoryService();
       res.status(200).json({ categories });
     } catch (error) {
       next(error);
@@ -308,7 +330,7 @@ export class UserController implements IUserController {
   getPackageById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const pkg = await this.userService.getPackageByIdService(id as string);
+      const pkg = await this.packageService.getPackageByIdService(id as string);
       res.status(200).json({ pkg });
     } catch (error) {
       next(error);
@@ -323,7 +345,7 @@ export class UserController implements IUserController {
     try {
       const { category } = req.params;
       const destinations =
-        await this.userService.getDestinationsByPackageCategoryService(
+        await this.packageDestinationService.getDestinationsByPackageCategoryService(
           category as string,
         );
       res.status(200).json(destinations);
@@ -340,7 +362,7 @@ export class UserController implements IUserController {
     try {
       const { category } = req.params;
 
-      const packages = await this.userService.getPackagesByCategoryService(
+      const packages = await this.packageService.getPackagesByCategoryService(
         category as string,
       );
       res.status(200).json(packages);
@@ -364,8 +386,13 @@ export class UserController implements IUserController {
         return;
       }
 
-      const wishlistGroups = await this.userService.getUserWishlists(userId);
-      res.status(200).json({ success: true, wishlistGroups });
+      const wishlistGroups =
+        await this.wishlistService.getUserWishlists(userId);
+      res.status(200).json({
+        success: true,
+        wishlistGroups:
+          WishlistResponseMapper.toGroupResponseListDTO(wishlistGroups),
+      });
     } catch (error: any) {
       next(error);
     }
@@ -385,12 +412,16 @@ export class UserController implements IUserController {
         });
         return;
       }
-      const { title, description } = req.body;
-      const wishlistGroup = await this.userService.createGroup(userId, {
-        title,
-        description,
+      const dto = WishlistRequestMapper.toCreateGroupReqDTO(req.body);
+
+      const wishlistGroup = await this.wishlistService.createWishlistGroup(
+        userId,
+        dto,
+      );
+      res.status(201).json({
+        success: true,
+        wishlistGroup: WishlistResponseMapper.toGroupResponseDTO(wishlistGroup),
       });
-      res.status(201).json({ success: true, wishlistGroup });
     } catch (error: any) {
       next(error);
     }
@@ -411,13 +442,13 @@ export class UserController implements IUserController {
         return;
       }
 
-      const { groupId, packageId } = req.body;
-      const data = await this.userService.togglePackageInGroup(
-        userId,
-        groupId,
-        packageId,
-      );
-      res.status(200).json({ success: true, data });
+      const dto = WishlistRequestMapper.toTogglePackageReqDTO(req.body);
+      const updatedGroup =
+        await this.wishlistService.togglePackageInWishlistGroup(userId, dto);
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
+      });
     } catch (error) {
       next(error);
     }
@@ -435,13 +466,16 @@ export class UserController implements IUserController {
       }
 
       const { groupId } = req.params;
-      const { text } = req.body;
-      const data = await this.userService.addNoteToGroup(
+      const dto = WishlistRequestMapper.toAddNoteReqDTO(req.body);
+      const updatedGroup = await this.wishlistService.addNoteToWishlistGroup(
         userId,
         groupId as string,
-        text,
+        dto
       );
-      res.status(200).json({ success: true, data });
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
+      });
     } catch (error) {
       next(error);
     }
@@ -463,11 +497,14 @@ export class UserController implements IUserController {
       }
 
       const { groupId } = req.params;
-      const data = await this.userService.generateShareableLink(
+      const shareData = await this.wishlistService.generateShareableLink(
         userId,
         groupId as string,
       );
-      res.status(200).json({ success: true, data });
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toShareLinkDTO(shareData),
+      });
     } catch (error) {
       next(error);
     }
@@ -480,8 +517,13 @@ export class UserController implements IUserController {
   ) => {
     try {
       const { shareToken } = req.params;
-      const data = await this.userService.getSharedGroup(shareToken as string);
-      res.status(200).json({ success: true, data });
+      const sharedGroup = await this.wishlistService.getSharedGroup(
+        shareToken as string,
+      );
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toGroupResponseDTO(sharedGroup),
+      });
     } catch (error) {
       next(error);
     }
@@ -502,12 +544,16 @@ export class UserController implements IUserController {
         return;
       }
       const { groupId } = req.params;
-      const { title, description } = req.body;
-      const data = await this.userService.editGroup(userId, groupId as string, {
-        title,
-        description,
+      const dto = WishlistRequestMapper.toEditGroupReqDTO(req.body);
+      const updatedGroup = await this.wishlistService.editGroup(
+        userId,
+        groupId as string,
+        dto,
+      );
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
       });
-      res.status(200).json({ success: true, data });
     } catch (error) {
       next(error);
     }
@@ -529,7 +575,7 @@ export class UserController implements IUserController {
       }
       const { groupId } = req.params;
 
-      await this.userService.deleteGroup(userId, groupId as string);
+      await this.wishlistService.deleteGroup(userId, groupId as string);
       res.status(200).json({
         success: true,
         message: RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
@@ -553,15 +599,18 @@ export class UserController implements IUserController {
         return;
       }
       const { groupId, noteId } = req.params;
-      const { text } = req.body;
+      const dto = WishlistRequestMapper.toEditNoteReqDTO(req.body);
 
-      const data = await this.userService.editNote(
+      const updatedGroup = await this.wishlistService.editNote(
         userId,
         groupId as string,
         noteId as string,
-        text,
+        dto,
       );
-      res.status(200).json({ success: true, data });
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
+      });
     } catch (error) {
       next(error);
     }
@@ -582,12 +631,15 @@ export class UserController implements IUserController {
       }
       const { groupId, noteId } = req.params;
 
-      const data = await this.userService.deleteNote(
+      const updatedGroup = await this.wishlistService.deleteNote(
         userId,
         groupId as string,
         noteId as string,
       );
-      res.status(200).json({ success: true, data });
+      res.status(200).json({
+        success: true,
+        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
+      });
     } catch (error) {
       next(error);
     }
@@ -601,7 +653,7 @@ export class UserController implements IUserController {
       const { packageId } = req.params;
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 5;
-      const data = await this.userService.getPackageReviewService(
+      const data = await this.packageReviewService.getPackageReviewService(
         packageId as string,
         page,
         limit,
@@ -621,7 +673,7 @@ export class UserController implements IUserController {
       const { packageId } = req.params;
 
       const userId = req.user?.id;
-      const data = await this.userService.createPackageReviewService({
+      const data = await this.packageReviewService.createPackageReviewService({
         packageId,
         userId,
         ...req.body,
@@ -647,7 +699,7 @@ export class UserController implements IUserController {
         );
       }
 
-      const data = await this.userService.updatePackageReviewService(
+      const data = await this.packageReviewService.updatePackageReviewService(
         userId!,
         reviewId as string,
         packageId as string,
@@ -671,7 +723,7 @@ export class UserController implements IUserController {
     try {
       const { reviewId, packageId } = req.params;
       const userId = req.user?.id;
-      const data = await this.userService.deletePackageReviewService(
+      const data = await this.packageReviewService.deletePackageReviewService(
         userId!,
         reviewId as string,
         packageId as string,
@@ -701,7 +753,7 @@ export class UserController implements IUserController {
         useWallet = false,
       } = req.body;
       const userId = req.user?.id;
-      const result = await this.userService.createBookingOrder(
+      const result = await this.bookingService.createBookingOrder(
         userId as string,
         {
           packageId,
@@ -732,7 +784,7 @@ export class UserController implements IUserController {
         orderId,
       } = req.body;
       const userId = req.user?.id;
-      const result = await this.userService.verifyAndConfirmBooking({
+      const result = await this.bookingService.verifyAndConfirmBooking({
         razorpayOrderId,
         packageId,
         razorpayPaymentId,
@@ -754,7 +806,7 @@ export class UserController implements IUserController {
   ) => {
     try {
       const { orderId } = req.params;
-      const booking = await this.userService.findBookingByOrderId(
+      const booking = await this.bookingService.findBookingByOrderId(
         orderId as string,
       );
       res.status(200).json(booking);
@@ -765,7 +817,9 @@ export class UserController implements IUserController {
   getUserBookings = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?.id;
-      const bookings = await this.userService.getUserBookings(userId as string);
+      const bookings = await this.bookingService.getUserBookings(
+        userId as string,
+      );
       res.status(200).json(bookings);
     } catch (error) {
       next(error);
@@ -774,7 +828,7 @@ export class UserController implements IUserController {
 
   getCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.userService.getAllAvailableCoupons();
+      const data = await this.couponService.getAllAvailableCoupons();
       res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
@@ -788,11 +842,12 @@ export class UserController implements IUserController {
           .status(StatusCode.BAD_REQUEST)
           .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
       }
-      const result = await this.userService.validateAndCalculateDiscount(
-        code,
-        bookingAmount,
-        cardBin,
-      );
+      const result =
+        await this.couponService.validateAndCalculateCouponDiscount(
+          code,
+          bookingAmount,
+          cardBin,
+        );
       res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
@@ -850,7 +905,7 @@ export class UserController implements IUserController {
       const userId = req.user?.id as string;
       const { bookingId } = req.params;
       const { reason } = req.body;
-      const result = await this.userService.cancelBooking(
+      const result = await this.bookingService.cancelBooking(
         userId,
         bookingId as string,
         reason,

@@ -44,6 +44,12 @@ const ReUsableForm = ({
   const [imagePreviews, setImagePreviews] = useState<{
     [key: string]: string[];
   }>({});
+  const formatDateForInput = (val: any) => {
+    if (!val) return "";
+    const date = new Date(val);
+    if (isNaN(date.getTime())) return "";
+    return date.toISOString().split("T")[0];
+  };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -368,6 +374,10 @@ const ReUsableForm = ({
               </>
             );
           }
+          const inputValue =
+            field.type === "date"
+              ? formatDateForInput(formData[field.id])
+              : formData[field.id] || "";
 
           return (
             <div key={field.id} className="flex flex-col ">
@@ -430,7 +440,7 @@ const ReUsableForm = ({
                     onChange={handleChange}
                     className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 ${field.readOnly ? "bg-gray-100 cursor-not-allowed" : ""}`}
                     multiple={field.multiple}
-                    value={formData[field.id] || ""}
+                    value={inputValue}
                     disabled={field.disabled}
                   />
                   {fieldError[field.id] && (

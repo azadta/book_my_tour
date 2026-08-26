@@ -14,11 +14,21 @@ export class WishlistRepository
   }
 
   async findByUserId(userId: string): Promise<IWishlistGroup[]> {
-    return WishlistGroup.find({ userId }).populate("packages");
+    return WishlistGroup.find({ userId }).populate({
+      path: "packages",
+      populate: {
+        path: "destinations",
+      },
+    });
   }
 
   async findWishlistGroupById(groupId: string): Promise<IWishlistGroup | null> {
-    return WishlistGroup.findById(groupId).populate("packages");
+    return WishlistGroup.findById(groupId).populate({
+      path: "packages",
+      populate: {
+        path: "destinations",
+      },
+    });
   }
 
   async findByShareToken(shareToken: string): Promise<IWishlistGroup | null> {

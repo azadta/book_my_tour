@@ -41,7 +41,6 @@ export class PackageRepository
     sortOrder: string = "desc",
   ): Promise<Ipackage[]> {
     const order = sortOrder === "asc" ? 1 : -1;
-    const basePipeline: any[] = [];
 
     let sortField = sortBy;
     if (sortBy === "price") {
@@ -49,12 +48,17 @@ export class PackageRepository
     } else if (sortBy === "rating") {
       sortField = "averageRating";
     }
-
-    const sortStage = { $sort: { [sortField]: order, _id: 1 } };
-    const commonLookups = [];
+    const matchFilter = { ...filter };
+    if (
+      matchFilter.operatorId &&
+      typeof matchFilter.operatorId === "string" &&
+      Types.ObjectId.isValid(matchFilter.operatorId)
+    ) {
+      matchFilter.operatorId = new Types.ObjectId(matchFilter.operatorId);
+    }
 
     return Package.aggregate([
-      { $match: filter },
+      { $match: matchFilter },
       {
         $lookup: {
           from: "reviews",
@@ -119,6 +123,7 @@ export class PackageRepository
       { $project: { reviewDocs: 0, finalPrice: 0 } },
     ]);
   }
+
 
   async getFilteredPackagesCount(filter: any) {
     return Package.countDocuments(filter);

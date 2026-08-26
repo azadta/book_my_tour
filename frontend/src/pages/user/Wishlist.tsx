@@ -218,10 +218,14 @@ const Wishlist = () => {
                         <h4 className="font-bold text-gray-900 text-sm line-clamp-1">
                           {pkg.name}
                         </h4>
-                        <div className="flex items-center text-xs text-gray-500 gap-1 mt-1 ">
-                          <MapPin className="w-3 h-3 text-blue-500" />
-                          {pkg.destinations?.[0]?.name}
-                        </div>
+                            {pkg.destinations && (
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
+                          <MapPin className="w-3.5 h-3.5" />
+                          {pkg.destinations
+                            .map((dest: any) => dest.name)
+                            .join(", ")}
+                        </span>
+                      )}
                       </div>
 
                       <div className="text-sm font-black text-gray-900">

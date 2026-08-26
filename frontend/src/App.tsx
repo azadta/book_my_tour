@@ -118,10 +118,7 @@ const App = () => {
               path={FRONTEND_ROUTES.USER.WISHLIST}
               element={<Wishlist />}
             />
-            <Route
-              path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
-              element={<SharedWishlist />}
-            />
+
             <Route
               path={FRONTEND_ROUTES.USER.BOOKING_SUCCESS_PATTERN}
               element={<BookingSuccessPage />}
@@ -168,6 +165,10 @@ const App = () => {
           <Route
             path={FRONTEND_ROUTES.OPERATOR.FORGOT_PASSWORD}
             element={<OperatorForgotPassword />}
+          />
+          <Route
+            path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
+            element={<SharedWishlist />}
           />
         </Route>
 

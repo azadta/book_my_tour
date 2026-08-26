@@ -122,11 +122,7 @@ router.get(
 
   userController.getWishlistShareLink,
 );
-router.get(
-  ROUTES.USER.WISHLIST_SHARED,
-
-  userController.getSharedWishlist,
-);
+router.get(ROUTES.USER.WISHLIST_SHARED, userController.getSharedWishlist);
 router.get(
   ROUTES.USER.REVIEWS,
 

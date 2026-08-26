@@ -9,16 +9,18 @@ import { Swiper as swiperType } from "swiper";
 import { useHome } from "@/hooks/useHome";
 import { useNavigate } from "react-router-dom";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import Loading from "../Loading";
 
 const HomeSlideTwo = () => {
   const navigate = useNavigate();
   const swiperRef = useRef<swiperType | null>(null);
-  const { destinationsByCategory, fetchDestinationsByCategory } = useHome();
+  const { destinationsByCategory, fetchDestinationsByCategory,loadingDestinationsByCategory } = useHome();
   useEffect(() => {
     fetchDestinationsByCategory("Family Vacation Packages");
   }, []);
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      {loadingDestinationsByCategory&&<Loading/>}
       <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-4 sm:p-5 flex flex-col">
         <div className="flex justify-between items-center ">
           <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold font-caveat text-orange-500">

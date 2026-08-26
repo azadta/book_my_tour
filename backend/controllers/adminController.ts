@@ -11,6 +11,13 @@ import { IAdminController } from "../interfaces/IAdminController";
 import type { IOperatorService } from "../interfaces/IOperatorService";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import type { IUserService } from "../interfaces/IUserService";
+import type { IAdminOperatorService } from "../interfaces/IAdminOperatorService";
+import type { IAdminUserService } from "../interfaces/IAdminUserService";
+import type { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
+import type { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
+import type { IPackageService } from "../interfaces/IPackageService";
+import type { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
+import type { IBookingService } from "../interfaces/IBookingService";
 
 @injectable()
 export class AdminController implements IAdminController {
@@ -18,6 +25,17 @@ export class AdminController implements IAdminController {
     @inject(Types.AdminService) private adminService: IAdminService,
     @inject(Types.OperatorService) private operatorService: IOperatorService,
     @inject(Types.UserService) private userService: IUserService,
+    @inject(Types.AdminOperatorService)
+    private adminOperatorService: IAdminOperatorService,
+    @inject(Types.AdminUserService) private adminUserService: IAdminUserService,
+    @inject(Types.PackageCategoryService)
+    private packageCategoryService: IPackageCategoryService,
+    @inject(Types.PackageDestinationService)
+    private packageDestinationService: IPackageDestinationService,
+    @inject(Types.PackageService) private packageService: IPackageService,
+    @inject(Types.AdminDashboardService)
+    private adminDashboardService: IAdminDashboardService,
+    @inject(Types.BookingService) private bookingService: IBookingService,
   ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
@@ -113,7 +131,7 @@ export class AdminController implements IAdminController {
   ) => {
     try {
       const data =
-        await this.adminService.getOperatorVerificationRequestsService();
+        await this.adminOperatorService.getOperatorVerificationRequestsService();
       res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
@@ -124,7 +142,7 @@ export class AdminController implements IAdminController {
     try {
       const { id } = req.params;
       const { isVerified } = req.body;
-      const data = await this.adminService.verifyOperatorService(
+      const data = await this.adminOperatorService.verifyOperatorService(
         id as string,
         isVerified,
       );
@@ -144,8 +162,8 @@ export class AdminController implements IAdminController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [operators, totalCount] = await Promise.all([
-        this.adminService.getPaginatedOperatorsService(skip, limit),
-        this.adminService.getTotalOperatorsCount(),
+        this.adminOperatorService.getPaginatedOperatorsService(skip, limit),
+        this.operatorService.getTotalOperatorsCount(),
       ]);
       res.status(StatusCode.OK).json({ operators, totalCount });
     } catch (error) {
@@ -159,7 +177,7 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const operator = await this.adminService.getSingleOperatorService(
+      const operator = await this.adminOperatorService.getSingleOperatorService(
         req.params.id as string,
       );
 
@@ -171,7 +189,7 @@ export class AdminController implements IAdminController {
 
   updateOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await this.adminService.updateOperatorService(
+      const updated = await this.operatorService.updateOperatorService(
         req.params.id as string,
         req.body,
       );
@@ -184,7 +202,7 @@ export class AdminController implements IAdminController {
 
   blockOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const blocked = await this.adminService.blockOperatorService(
+      const blocked = await this.adminOperatorService.blockOperatorService(
         req.params.id as string,
         req.body.isBlocked,
       );
@@ -201,7 +219,9 @@ export class AdminController implements IAdminController {
 
   deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.adminService.deleteOperatorService(req.params.id as string);
+      await this.adminOperatorService.deleteOperatorService(
+        req.params.id as string,
+      );
       res
         .status(StatusCode.OK)
         .json({ message: RESPONSE_MESSAGES.OPERATOR.SUCCESS.DELETED });
@@ -220,8 +240,8 @@ export class AdminController implements IAdminController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [users, totalCount] = await Promise.all([
-        this.adminService.getPaginatedUsersService(skip, limit),
-        this.adminService.getTotalUsersCount(),
+        this.adminUserService.getPaginatedUsersService(skip, limit),
+        this.userService.getTotalUsersCount(),
       ]);
       res.status(StatusCode.OK).json({ users, totalCount });
     } catch (error) {
@@ -231,7 +251,7 @@ export class AdminController implements IAdminController {
 
   getSingleUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await this.adminService.getSingleUserService(
+      const user = await this.adminUserService.getSingleUserService(
         req.params.id as string,
       );
 
@@ -243,7 +263,7 @@ export class AdminController implements IAdminController {
 
   updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await this.adminService.updateUserService(
+      const updated = await this.adminUserService.updateUserService(
         req.params.id as string,
         req.body,
       );
@@ -262,7 +282,7 @@ export class AdminController implements IAdminController {
         targetUserId: req.params.id,
         adminId: req.user?.id,
       });
-      const blocked = await this.adminService.blockUserService(
+      const blocked = await this.adminUserService.blockUserService(
         req.params.id as string,
         req.body.isBlocked,
       );
@@ -279,7 +299,7 @@ export class AdminController implements IAdminController {
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.adminService.deleteUserService(req.params.id as string);
+      await this.adminUserService.deleteUserService(req.params.id as string);
       res
         .status(StatusCode.OK)
         .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
@@ -294,7 +314,9 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const category = await this.adminService.createCategoryService(req.body);
+      const category = await this.packageCategoryService.createCategoryService(
+        req.body,
+      );
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED,
         category,
@@ -310,7 +332,7 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const categories = await this.adminService.getAllCategories();
+      const categories = await this.packageCategoryService.getAllCategories();
       res.json(categories);
     } catch (error) {
       next(error);
@@ -323,9 +345,8 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destination = await this.adminService.createDestinationService(
-        req.body,
-      );
+      const destination =
+        await this.packageDestinationService.createDestinationService(req.body);
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED,
         destination,
@@ -341,7 +362,8 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destinations = await this.adminService.getAllDestinationsService();
+      const destinations =
+        await this.packageDestinationService.getAllDestinationsService();
       res.json(destinations);
     } catch (error) {
       next(error);
@@ -354,9 +376,10 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destination = await this.adminService.getDestinationByIdService(
-        req.params.id as string,
-      );
+      const destination =
+        await this.packageDestinationService.getDestinationByIdService(
+          req.params.id as string,
+        );
       res.json({ success: true, destination });
     } catch (error) {
       next(error);
@@ -369,7 +392,7 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      await this.adminService.deleteDestinationByIdService(
+      await this.packageDestinationService.deleteDestinationByIdService(
         req.params.id as string,
       );
       res.json({ success: true, message: "Destination deleted" });
@@ -384,8 +407,8 @@ export class AdminController implements IAdminController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [packages, totalCount] = await Promise.all([
-        this.adminService.getPaginatedPackagesService(skip, limit),
-        this.adminService.getTotalPackagesCount(),
+        this.packageService.getPaginatedPackagesService(skip, limit),
+        this.packageService.getTotalPackagesCount(),
       ]);
       res.json({ packages, totalCount });
     } catch (error) {
@@ -417,7 +440,7 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const usersCount = await this.adminService.getTotalUsersCount();
+      const usersCount = await this.userService.getTotalUsersCount();
       res.status(StatusCode.OK).json({ success: true, usersCount });
     } catch (error) {
       next(error);
@@ -429,7 +452,8 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const operatorsCount = await this.adminService.getTotalOperatorsCount();
+      const operatorsCount =
+        await this.operatorService.getTotalOperatorsCount();
       res.status(StatusCode.OK).json({ success: true, operatorsCount });
     } catch (error) {
       next(error);
@@ -443,7 +467,7 @@ export class AdminController implements IAdminController {
   ) => {
     try {
       const todaySignupCount =
-        await this.adminService.getSignupCountTodayService();
+        await this.adminDashboardService.getSignupCountTodayService();
       res.status(StatusCode.OK).json({ success: true, todaySignupCount });
     } catch (error) {
       next(error);
@@ -456,7 +480,8 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const count = await this.adminService.getPendingOperatorsCountService();
+      const count =
+        await this.adminDashboardService.getPendingOperatorsCountService();
       res.status(StatusCode.OK).json({ success: true, count });
     } catch (error) {
       next(error);
@@ -467,7 +492,7 @@ export class AdminController implements IAdminController {
     try {
       const packageId = req.params.id;
 
-      const pkg = await this.adminService.getSinglePackageService(
+      const pkg = await this.packageService.getSinglePackageService(
         packageId as string,
       );
 
@@ -480,7 +505,7 @@ export class AdminController implements IAdminController {
   updatePackage = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const packageId = req.params.id;
-      const updatedPackage = await this.adminService.updatePackageService(
+      const updatedPackage = await this.packageService.updatePackageService(
         packageId as string,
 
         req.body,
@@ -502,7 +527,7 @@ export class AdminController implements IAdminController {
   deletePackage = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: packageId } = req.params;
-      const deletePackage = await this.adminService.deletePackageService(
+      const deletePackage = await this.packageService.deletePackageService(
         packageId as string,
       );
       if (!deletePackage) {
@@ -525,7 +550,8 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const requests = await this.adminService.getPendingCancelationRequests();
+      const requests =
+        await this.bookingService.getPendingCancelationRequests();
       res.status(StatusCode.OK).json(requests);
     } catch (error) {
       next(error);
@@ -540,7 +566,7 @@ export class AdminController implements IAdminController {
     try {
       const { bookingId } = req.params;
       const { approve, adminNotes } = req.body;
-      const updatedBooking = await this.adminService.processAdminCancellation(
+      const updatedBooking = await this.bookingService.processAdminCancellation(
         bookingId as string,
         approve,
         adminNotes,

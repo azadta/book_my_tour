@@ -6,7 +6,7 @@ export interface INote {
   createdAt: Date;
 }
 
-export interface IWishlistGroup extends Document {
+export interface IWishlistGroup  {
   userId: Types.ObjectId;
   title: string;
   description: string;
@@ -18,10 +18,7 @@ export interface IWishlistGroup extends Document {
   updatedAt: Date;
 }
 
-export interface ICreateWishlistDTO {
-  title: string;
-  description?: string;
-}
+
 
 export interface ITogglePackageDTO {
   groupId: string;

@@ -116,6 +116,7 @@ const PackagesList = () => {
       return updateSearchParams(prev, { search: value });
     });
   }, [debouncedSearch]);
+  if (loadingPackages || loadingCategories) return <Loading />;
 
   return (
     <div className="min-h-screen  bg-gray-50  font-sans ">

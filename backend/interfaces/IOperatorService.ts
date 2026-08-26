@@ -1,16 +1,4 @@
-import { QueryFilter } from "mongoose";
-import { IDestination } from "../models/Destination";
-
-import { Ipackage } from "../models/Package";
-import { IPackageCategory } from "../models/PackageCategory";
 import { IOperator, IOperatorResponse } from "./IOperator";
-import { ICouponDocument } from "../models/Coupon";
-import {
-  AttendanceStatus,
-  IBookingDocument,
-  IPopulatedBooking,
-} from "../models/Booking";
-import { IOperatorBookingDetails } from "./IBooking";
 
 export interface IOperatorService {
   operatorRegisterService(data: Partial<IOperator>): Promise<{
@@ -49,23 +37,7 @@ export interface IOperatorService {
   operatorLogoutService(): {
     message: string;
   };
-  createPackageService(data: Partial<Ipackage>): Promise<Ipackage>;
-  getSinglePackageService(id: string): Promise<Ipackage | null>;
-  updatePackageService(
-    packageId: string,
-    operatorId: string,
-    data: Partial<Ipackage>,
-  ): Promise<Ipackage | null>;
-  deletePackageService(
-    operatorId: string,
-    packageId: string,
-  ): Promise<Ipackage | null>;
-  getPaginatedPackagesService(
-    id: QueryFilter<Ipackage>,
-    skip: number,
-    limit: number,
-  ): Promise<Ipackage[]>;
-  getTotalPackagesCount(): Promise<number>;
+
   resetPasswordAuthenticatedService(
     operatorId: string,
     oldPassword: string,
@@ -74,83 +46,5 @@ export interface IOperatorService {
   ): Promise<{
     message: string;
   }>;
-  getAllCategories(): Promise<IPackageCategory[]>;
-  getAllDestinationsServise(): Promise<IDestination[]>;
-  getMyPackagesCountService(operatorId: string): Promise<number>;
-  getPackageByIdAndOperatorService(
-    packageId: string,
-    operatorId: string,
-  ): Promise<Ipackage>;
-  getAllCoupons(
-    page: number,
-    limit: number,
-  ): Promise<{
-    coupons: ICouponDocument[];
-    totalCount: number;
-  }>;
-  getCouponById(id: string): Promise<ICouponDocument>;
-  createCoupon(couponData: Partial<ICouponDocument>): Promise<ICouponDocument>;
-  updateCoupon(
-    id: string,
-    couponData: Partial<ICouponDocument>,
-  ): Promise<ICouponDocument | null>;
-  toggleCouponStatus(
-    id: string,
-    isActive: boolean,
-  ): Promise<ICouponDocument | null>;
-  getAllAvailableCoupons(): Promise<{
-    bankOffers: ICouponDocument[];
-    generalCoupons: ICouponDocument[];
-  }>;
-  validateAndCalculateDiscount(
-    code: string,
-    bookingAmount: number,
-    cardBin?: string | undefined,
-  ): Promise<{
-    discountAmount: number;
-    finalPrice: number;
-    coupon: ICouponDocument;
-  }>;
-  getOperatorDashboardStatsService(operatorId: string): Promise<{
-    packagesCount: number;
-    totalBookings: number;
-    confirmedBookings: number;
-    cancelRequestedBookings: number;
-    totalRevenue: number;
-  }>;
-  getOperatorBookingsService(
-    operatorId: string,
-    status: string | undefined,
-    skip: number,
-    limit: number,
-  ): Promise<{
-    bookings: IPopulatedBooking[];
-    totalCount: number;
-  }>;
-  getOperatorBookingDetailsService(
-    bookingId: string,
-    operatorId: string,
-  ): Promise<IOperatorBookingDetails>;
-  operatorCancelBookingService(
-    bookingId: string,
-    operatorId: string,
-    reason: string,
-  ): Promise<IBookingDocument | null>;
-  operatorRescheduleBookingService(
-    bookingId: string,
-    operatorId: string,
-    newStartDate: string,
-  ): Promise<Ipackage | null>;
-
-  updateAttendanceService(
-    bookingId: string,
-    operatorId: string,
-    attendance: AttendanceStatus,
-  ): Promise<IBookingDocument | null>;
-  verifyCancellationService(
-    bookingId: string,
-    operatorId: string,
-    action: "APPROVE" | "REJECT",
-    operatorNotes?: string | undefined,
-  ): Promise<IBookingDocument | null>;
+  getTotalOperatorsCount(): Promise<number>;
 }

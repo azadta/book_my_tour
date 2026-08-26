@@ -73,6 +73,30 @@ import { INotificationService } from "../interfaces/INotificationService";
 import { NotificationService } from "../services/notificationService";
 import { INotificationController } from "../interfaces/INotificationController";
 import { NotificationController } from "../controllers/notificationController";
+import { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
+import { AdminDashboardService } from "../services/adminDashboardService";
+import { IAdminOperatorService } from "../interfaces/IAdminOperatorService";
+import { AdminOperatorService } from "../services/adminOperatorService";
+import { IAdminUserService } from "../interfaces/IAdminUserService";
+import { AdminUserService } from "../services/adminUserService";
+import { IBookingService } from "../interfaces/IBookingService";
+import { BookingService } from "../services/bookingService";
+import { ICouponService } from "../interfaces/ICouponService";
+import { CouponService } from "../services/couponService";
+import { IOperatorDashboardService } from "../interfaces/IOperatorDashboard";
+import { OperatorDashboardService } from "../services/operatorDashboardService";
+import { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
+import { PackageCategoryService } from "../services/packageCategoryService";
+import { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
+import { PackageDestinationService } from "../services/packageDestinationService";
+import { IPackageReviewService } from "../interfaces/IPackageReviewService";
+import { PackageReviewService } from "../services/packageReviewService";
+
+import { IPackageService } from "../interfaces/IPackageService";
+import { PackageService } from "../services/packageService";
+
+import { WishlistService } from "../services/wishlistService";
+import { IWishlistService } from "../interfaces/IWishlistService";
 
 const container = new Container();
 
@@ -223,6 +247,50 @@ container
 container
   .bind<INotificationController>(Types.NotificationController)
   .to(NotificationController)
+  .inSingletonScope();
+container
+  .bind<IAdminDashboardService>(Types.AdminDashboardService)
+  .to(AdminDashboardService)
+  .inSingletonScope();
+container
+  .bind<IAdminOperatorService>(Types.AdminOperatorService)
+  .to(AdminOperatorService)
+  .inSingletonScope();
+container
+  .bind<IAdminUserService>(Types.AdminUserService)
+  .to(AdminUserService)
+  .inSingletonScope();
+container
+  .bind<IBookingService>(Types.BookingService)
+  .to(BookingService)
+  .inSingletonScope();
+container
+  .bind<ICouponService>(Types.CouponService)
+  .to(CouponService)
+  .inSingletonScope();
+container
+  .bind<IOperatorDashboardService>(Types.OperatorDashboardService)
+  .to(OperatorDashboardService)
+  .inSingletonScope();
+container
+  .bind<IPackageCategoryService>(Types.PackageCategoryService)
+  .to(PackageCategoryService)
+  .inSingletonScope();
+container
+  .bind<IPackageDestinationService>(Types.PackageDestinationService)
+  .to(PackageDestinationService)
+  .inSingletonScope();
+container
+  .bind<IPackageReviewService>(Types.PackageReviewService)
+  .to(PackageReviewService)
+  .inSingletonScope();
+container
+  .bind<IWishlistService>(Types.WishlistService)
+  .to(WishlistService)
+  .inSingletonScope();
+container
+  .bind<IPackageService>(Types.PackageService)
+  .to(PackageService)
   .inSingletonScope();
 
 export const userController = container.get<IUserController>(

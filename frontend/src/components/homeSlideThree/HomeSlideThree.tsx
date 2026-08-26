@@ -8,16 +8,18 @@ import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useNavigate } from "react-router-dom";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import Loading from "../Loading";
 
 const HomeSlideThree = () => {
   const navigate = useNavigate();
   const swiperRef = useRef<swiperType | null>(null);
-  const { packagesByCategory, fetchPackagesByCategory } = useHome();
+  const { packagesByCategory, fetchPackagesByCategory,loadingPackagesByCategory } = useHome();
   useEffect(() => {
     fetchPackagesByCategory("Adventure Packages");
   }, []);
   return (
-    <div>
+    <div className="w-full relative">
+      {loadingPackagesByCategory&&<Loading/>}
       <div className="border border-amber-500 rounded-xl shadow-xl gap-5  p-5 flex flex-col">
         <div className="flex justify-between items-center ">
           <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold font-caveat text-orange-500">

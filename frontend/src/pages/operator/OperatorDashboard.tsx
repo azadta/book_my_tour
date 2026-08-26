@@ -19,7 +19,7 @@ const OperatorDashboard = () => {
   return (
     <>
       <div className="min-h-screen flex flex-col">
-        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 left-0 right-0">
+        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
           <h2 className="text-2xl font-bold text-center text-gray-800">
             Operator Dashboard
           </h2>
@@ -31,7 +31,7 @@ const OperatorDashboard = () => {
             <OperatorDashboardSideBar />
           </div>
           <main className="flex-1 p-8 bg-gray-100 pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6  justify-items-center max-sm:w-60 mx-auto space-y-10  ">
+            <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-x-6  justify-items-center max-sm:w-60 mx-auto gap-y-10  ">
               <div className={style.card}>
                 <div
                   className={`${style.image} flex items-center justify-center`}

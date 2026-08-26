@@ -561,7 +561,7 @@ const PackageDetails = () => {
             </div>
           </main>
 
-          <aside className="col-span-1 lg:col-span-3 lg:sticky self-start min-w-[320px]  lg:top-24 order-3 space-y-4 hidden lg:block">
+          <aside className="col-span-1 lg:col-span-3 lg:sticky self-start min-w-[250px]  lg:top-24 order-3 space-y-4 hidden lg:block">
             <div className=" space-y-4">
               <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-5 shadow-gray-100/50 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
@@ -869,7 +869,16 @@ const PackageDetails = () => {
         reviews={reviews}
         openCreateModal={openCreateModal}
       />
-      <div className="lg:hidden sticky  bottom-0 z-20  left-0 right-0  bg-white border-t border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)] px-4 py-3 pb-safe flex items-center justify-between gap-4 ">
+      <div className="lg:hidden sticky  bottom-0 z-20  left-0 right-0  bg-white border-t border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)] px-3 py-3 pb-safe flex items-center justify-between gap-4 sm:-mx-6  ">
+        <button
+          onClick={handleStartChat}
+          type="button"
+          className="inline-flex items-center justify-center gap-2 px-2 py-1 rounded-xl text-xs font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transtion-all duration-200 cursor-pointer border border-emerald-500/20 "
+        >
+          <MessageSquare className="w-4 h-4 transition-transform group-hover:scale-110" />
+          <span>Chat with Host</span>
+        </button>
+
         <div>
           <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">
             Total Payable

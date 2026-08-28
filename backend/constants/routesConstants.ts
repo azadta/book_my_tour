@@ -115,6 +115,8 @@ export const ROUTES = {
     RESET_PASSWORD_AUTH: "/reset-password-authenticated",
     CANCELLATION_REQUESTS: "/booking/cancellation-requests",
     PROCESS_CANCELLATION: "/booking/process-cancellation/:bookingId",
+    PACKAGE_CATEGORIES: "/package-categories",
+    DESTINATIONS: "/destinations",
   },
   COMMON: {
     REFRESH: "/refresh",
@@ -126,7 +128,7 @@ export const ROUTES = {
     MY_CHATS: "/my_chats",
     ACCESS_CHAT: "/access_chat",
     CHAT_MESSAGES: "/chat_messages/:chatId",
-    CLEAR_MESSAGES:'/clear-messages/:chatId'
+    CLEAR_MESSAGES: "/clear-messages/:chatId",
   },
   NOTIFICATION: {
     CREATE: "/create",

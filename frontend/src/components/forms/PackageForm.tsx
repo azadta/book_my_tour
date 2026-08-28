@@ -8,12 +8,13 @@ import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import BackToDashboard from "../../components/BackToDashboard";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createPackageFields, type Option } from "../../formConfig/fields";
-import { useCreatePackage } from "../../hooks/useCreatePackage";
+
 import type {
   FormField,
   IPackageItem
 } from "../../interfaces/interfaces";
 import type { ItineraryDay } from "../itinerary/types";
+import { useCreatePackage } from "@/hooks/useCreatePackage";
 
 interface IOptions {
   category: Option[];

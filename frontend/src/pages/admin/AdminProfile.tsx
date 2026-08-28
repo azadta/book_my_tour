@@ -169,8 +169,8 @@ const AdminProfile = () => {
   }, [currentAdmin]);
 
   return (
-    <div className="flex   justify-center gap-5 ">
-      <div className="sm:max-w-[220px] bg-gray-300 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
+    <div className="flex   justify-center gap-5 min-h-dvh ">
+      <div className="sm:max-w-[220px] bg-sky-100 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
         <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
           <button
             onClick={() => navigate(FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH)}

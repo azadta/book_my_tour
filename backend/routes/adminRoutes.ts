@@ -99,6 +99,16 @@ router.post(
   validatePackageCategory,
   adminController.createPackageCategory,
 );
+router.get(
+  ROUTES.ADMIN.PACKAGE_CATEGORIES,
+  authMiddleware.verifyRole("admin"),
+  adminController.getAllPackageCategory,
+);
+router.get(
+  ROUTES.ADMIN.DESTINATIONS,
+  authMiddleware.verifyRole("admin"),
+  adminController.getAllDestinations,
+);
 router.post(
   ROUTES.ADMIN.CREATE_DESTINATION,
   authMiddleware.verifyRole("admin"),

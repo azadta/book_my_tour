@@ -131,6 +131,8 @@ export const APP_ROUTES = {
     PACKAGES_UPDATE: (id: string) => `/admin/packages/update/${id}`,
     DELETE_PACKAGE: (id: string) => `/admin/package/delete/${id}`,
     RESET_PASSWORD_AUTH: "/admin/reset-password-authenticated",
+    PACKAGE_CATEGORIES: "/admin/package-categories",
+    DESTINATIONS: "/admin/destinations",
   },
 
   EXTERNAL: {

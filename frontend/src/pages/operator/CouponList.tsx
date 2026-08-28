@@ -72,7 +72,7 @@ const CouponList = () => {
       label: "Status",
       render: (c: ICouponItem) => (
         <span
-          className={`px-2 py-1 rounded text-xs text-white ${c.isActive ? "bg-green-500" : "bg-gray-500"}`}
+          className={`px-2 py-1  rounded text-xs text-white ${c.isActive ? "bg-green-500" : "bg-gray-500"}`}
         >
           {c.isActive ? "Active" : "Inactive"}
         </span>

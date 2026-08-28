@@ -39,10 +39,9 @@ export const useNotifications = () => {
           unreadCount: response.data.unreadCount || 0,
         }),
       );
-  
     } catch (error: any) {
       const message =
-        error.response?.data?.messsage ||
+        error.response?.data?.message ||
         FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.FETCH;
       toast.error(message);
       console.error(message, error);
@@ -53,7 +52,7 @@ export const useNotifications = () => {
 
   const markAsRead = useCallback(async (notificationId: string) => {
     try {
-      const response = await axiosInstance.patch<{
+      await axiosInstance.patch<{
         message: string;
         data: { unreadCount: number };
       }>(APP_ROUTES.NOTIFICATIONS.MARK_AS_READ(notificationId));
@@ -84,7 +83,7 @@ export const useNotifications = () => {
         return response.data.data;
       } catch (error: any) {
         const message =
-          error.response?.data?.messsage ||
+          error.response?.data?.message ||
           FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.SEND;
         toast.error(message);
         console.error(message, error);
@@ -112,7 +111,7 @@ export const useNotifications = () => {
       dispatch(clearNotifications());
     } catch (error: any) {
       const message =
-        error.response?.data?.messsage ||
+        error.response?.data?.message ||
         FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.CLEAR_ALL;
       toast.error(message);
       console.error(message, error);
@@ -121,10 +120,9 @@ export const useNotifications = () => {
 
   useEffect(() => {
     if (!currentUser) return;
-    connectSocket()
+    connectSocket();
     const socket = getSocket();
     const handleNewNotification = (notification: INotification) => {
-
       dispatch(addNotification(notification));
     };
     socket.on("new_notification", handleNewNotification);

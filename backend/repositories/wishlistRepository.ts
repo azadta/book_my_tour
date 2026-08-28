@@ -1,8 +1,9 @@
 import { injectable } from "inversify";
 import { IWishlistRepository } from "../interfaces/IWishlistRepository";
-import { ICreateWishlistDTO, IWishlistGroup } from "../interfaces/IWishList";
+import { IWishlistGroup } from "../interfaces/IWishList";
 import { BaseRepository } from "./baseRepository";
 import WishlistGroup from "../models/WishlistGroup";
+import { CreateWishlistGroupRequestDTO } from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
 
 @injectable()
 export class WishlistRepository
@@ -42,7 +43,7 @@ export class WishlistRepository
 
   async createGroup(
     userId: string,
-    dto: ICreateWishlistDTO,
+    dto: CreateWishlistGroupRequestDTO,
   ): Promise<IWishlistGroup> {
     return WishlistGroup.create({
       userId,

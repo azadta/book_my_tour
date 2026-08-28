@@ -135,7 +135,7 @@ const ReUsableTable = <T,>({
                         <button
                           key={actionIdx}
                           className={
-                            `w-[90px] ${action.className}` ||
+                            `w-[90px] inline-flex items-center justify-center  ${action.className}` ||
                             "px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 "
                           }
                           onClick={() => action.onClick(item)}

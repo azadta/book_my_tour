@@ -22,10 +22,8 @@ const AdminPackageDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 6;
   const navigate = useNavigate();
-  const { loading, packages, totalCount,deletePackage } = useAdminPackageManagement(
-    currentPage,
-    resultPerPage,
-  );
+  const { loading, packages, totalCount, deletePackage } =
+    useAdminPackageManagement(currentPage, resultPerPage);
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -66,14 +64,6 @@ const AdminPackageDetails = () => {
   ];
 
   const actions: ActionButton<IPackageItem>[] = [
-    {
-      label: () => "Edit",
-      onClick: (pkg) => navigate( FRONTEND_ROUTES.ADMIN.EDIT_PACKAGE(pkg._id)),
-      className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
-      disabled: () => false,
-      loadingText: "Editing...",
-    },
-
     {
       label: () => "Delete",
       onClick: (pkg) => {
@@ -125,7 +115,9 @@ const AdminPackageDetails = () => {
             />
             <div className="mt-6 flex gap-1.5 sm:gap-5">
               <button
-                onClick={() => navigate( FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY)}
+                onClick={() =>
+                  navigate(FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY)
+                }
                 className="bg-blue-600 text-white  py-2 px-1 sm:px-4 rounded hover:bg-blue-700"
               >
                 Create Package Category

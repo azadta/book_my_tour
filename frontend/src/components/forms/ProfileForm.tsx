@@ -144,9 +144,9 @@ export const ProfileForm = ({
   }, [formData, fields]);
 
   return (
-    <div className="max-w-4xl mx-auto   bg-sky-200 p-8 rounded-xl border-2 border-orange-900 shadow-[6px _6px_0px_0px_#c2410c]  ">
+    <div className="max-w-4xl mx-auto bg-linear-to-r   from-sky-200 to-sky-50 p-8 rounded-xl border-2 border-orange-900 shadow-[6px _6px_0px_0px_#c2410c]  ">
       <div className="relative mb-8 ">
-        <h1 className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-black text-2xl text-white tracking-wider">
+        <h1 className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-black text-2xl text-gray-700 tracking-wider">
           Profile
         </h1>
 
@@ -185,7 +185,7 @@ export const ProfileForm = ({
               <div key={field.id} className="flex flex-col ">
                 <label
                   htmlFor={field.id}
-                  className="mb-2  font-bold text-white tracking-wide"
+                  className="mb-2  font-bold text-gray-700 tracking-wide"
                 >
                   {field.label || field.placeholder}
                   {field.required && (
@@ -197,7 +197,7 @@ export const ProfileForm = ({
                     id={field.id}
                     onChange={handleChangeCountry}
                     value={countryCode}
-                    className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-800 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-200" : ""}  `}
+                    className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-700 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-200" : ""}  `}
                     disabled={field.disabled}
                   >
                     {!getNestedValue(formData, field.id) && (
@@ -218,7 +218,7 @@ export const ProfileForm = ({
                         ? getNestedValue(formData, field.id)
                         : formData[field.id]
                     }
-                    className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-800 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-200" : ""}  `}
+                    className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-700 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-200" : ""}  `}
                     disabled={!countryCode}
                   >
                     {countryCode && <option>Choose State</option>}
@@ -232,7 +232,7 @@ export const ProfileForm = ({
                   <select
                     id={field.id}
                     onChange={changeHandler}
-                    className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-white font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-200" : ""}  `}
+                    className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-700 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-200" : ""}  `}
                     value={
                       field.id.includes(".")
                         ? getNestedValue(formData, field.id)
@@ -260,11 +260,11 @@ export const ProfileForm = ({
             <div key={field.id} className="flex flex-col">
               <label
                 htmlFor={field.id}
-                className="mb-2  font-bold text-white tracking-wide "
+                className="mb-2  font-bold text-gray-700 tracking-wide "
               >
                 {field.label || field.placeholder}
                 {field.required && (
-                  <span className="text-orange-900 font-bold">*</span>
+                  <span className="text-red-500 font-bold">*</span>
                 )}
               </label>
               <input
@@ -274,7 +274,7 @@ export const ProfileForm = ({
                 onChange={changeHandler}
                 readOnly={field.readOnly}
                 multiple={field.multiple}
-                className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-800 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-100" : ""}  `}
+                className={`w-full rounded-xl border-2 border-orange-900 bg-white px-4 py-3 text-gray-700 font-semibold shadow-[4px_4px_0px_0px_#c2410c] placeholder:text-slate-400 focus:outline-none focus:border-orange-900 ${field.readOnly ? "bg-gray-100" : ""}  `}
                 value={
                   field.id.includes(".")
                     ? getNestedValue(formData, field.id)
@@ -282,7 +282,7 @@ export const ProfileForm = ({
                 }
               />
               {fieldError[field.id] && (
-                <p className="text-orange-900 text-sm mt-2 font-semibold">
+                <p className="text-red-500 text-sm mt-2 font-semibold">
                   {fieldError[field.id]}
                 </p>
               )}
@@ -294,7 +294,7 @@ export const ProfileForm = ({
         form="profileForm"
         type="submit"
         disabled={loading}
-        className="mt-5 px-8 py-3 bg-rose-300 text-white font-bold rounded-xl border-2 border-orange-900 shadow-[4px_4px_0px_0px_#c2410c] transition duration-1000 active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50 cursor-pointer"
+        className="mt-5 px-8 py-3 bg-rose-300 text-gray-700 font-bold rounded-xl border-2 border-orange-900 shadow-[4px_4px_0px_0px_#c2410c] transition duration-1000 active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50 cursor-pointer"
       >
         {loading ? "Loading..." : "Update"}
       </button>

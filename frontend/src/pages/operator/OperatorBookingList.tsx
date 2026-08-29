@@ -6,7 +6,6 @@ import ReUsableTable, {
   type Column,
 } from "@/components/ReUsableTable";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
-import { useChat } from "@/hooks/useChats";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useOperatorBookings } from "@/hooks/useOperatorBookings";
 import type { IPopulatedBooking } from "@/interfaces/interfaces";
@@ -28,7 +27,6 @@ const OperatorBookingList = () => {
   const navigate = useNavigate();
   const { bookings, loading, totalCount, pendingCancelCount } =
     useOperatorBookings(currentPage, resultPerPage, statusFilter);
-  const { accessChat } = useChat();
 
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const handleCancellationFilterToggle = () => {
@@ -115,13 +113,6 @@ const OperatorBookingList = () => {
     },
   ];
 
-  const handleNotification = async (booking: IPopulatedBooking) => {
-    if (!booking.userId._id) return;
-    await accessChat(booking.userId._id, "User");
-    navigate(
-      `${FRONTEND_ROUTES.CHAT.OPERATOR_CHAT_PAGE}?userId=${booking.userId._id}`,
-    );
-  };
   const actions: ActionButton<IPopulatedBooking>[] = [
     {
       label: () => "Manage",

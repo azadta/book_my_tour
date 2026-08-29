@@ -1,3 +1,4 @@
+import { CreateReviewRequestDTO } from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
 import { IBaseRepository } from "./IBaseRepository";
 import { CreateReviewDto, IReview } from "./IReview";
 
@@ -8,10 +9,13 @@ export interface IReviewRepository extends IBaseRepository<IReview> {
     limit?: number,
   ): Promise<IReview[]>;
   getReviewStatsByPackageId(packageId: string): Promise<any>;
-  createReview(review: CreateReviewDto): Promise<IReview>;
+  createReview(review: CreateReviewRequestDTO): Promise<IReview>;
   findUserReviewForPackage(
     userId: string,
     packageId: string,
   ): Promise<IReview | null>;
-  updateReview(reviewId: string, updatedData: Partial<IReview>): Promise<IReview | null>
+  updateReview(
+    reviewId: string,
+    updatedData: Partial<IReview>,
+  ): Promise<IReview | null>;
 }

@@ -20,6 +20,10 @@ import type { IPackageReviewService } from "../interfaces/IPackageReviewService"
 import type { IWishlistService } from "../interfaces/IWishlistService";
 import { WishlistResponseMapper } from "../dto-mapper/mapper/wishlist/WishlistResponseMapper";
 import { WishlistRequestMapper } from "../dto-mapper/mapper/wishlist/WishlistRequestMapper";
+import { WalletResponseMapper } from "../dto-mapper/mapper/wallet/WalletResponseMapper";
+import { WalletRequestMapper } from "../dto-mapper/mapper/wallet/WalletRequestMapper";
+import { ReviewResponseMapper } from "../dto-mapper/mapper/packageReview/ReviewResponseMapper";
+import { ReviewRequestMapper } from "../dto-mapper/mapper/packageReview/ReviewRequestMapper";
 
 @injectable()
 export class UserController implements IUserController {
@@ -470,7 +474,7 @@ export class UserController implements IUserController {
       const updatedGroup = await this.wishlistService.addNoteToWishlistGroup(
         userId,
         groupId as string,
-        dto
+        dto,
       );
       res.status(200).json({
         success: true,
@@ -584,6 +588,7 @@ export class UserController implements IUserController {
       next(error);
     }
   };
+
   editWishlistNote = async (
     req: Request,
     res: Response,
@@ -644,6 +649,7 @@ export class UserController implements IUserController {
       next(error);
     }
   };
+
   getPackageReviews = async (
     req: Request,
     res: Response,
@@ -658,7 +664,14 @@ export class UserController implements IUserController {
         page,
         limit,
       );
-      res.status(200).json(data);
+      res
+        .status(200)
+        .json(
+          ReviewResponseMapper.toPackageReviewsResponseDTO(
+            data.reviews,
+            data.stats,
+          ),
+        );
     } catch (error) {
       next(error);
     }
@@ -672,13 +685,17 @@ export class UserController implements IUserController {
     try {
       const { packageId } = req.params;
 
-      const userId = req.user?.id;
-      const data = await this.packageReviewService.createPackageReviewService({
-        packageId,
+      const userId = req.user?.id as string;
+      const payload = ReviewRequestMapper.toCreateReviewReqDTO(
+        req.body,
+        packageId as string,
         userId,
-        ...req.body,
-      });
-      res.status(StatusCode.CREATED).json(data);
+      );
+      const data =
+        await this.packageReviewService.createPackageReviewService(payload);
+      res
+        .status(StatusCode.CREATED)
+        .json(ReviewResponseMapper.toReviewResponseDTO(data));
     } catch (error) {
       next(error);
     }
@@ -699,16 +716,22 @@ export class UserController implements IUserController {
         );
       }
 
-      const data = await this.packageReviewService.updatePackageReviewService(
-        userId!,
-        reviewId as string,
-        packageId as string,
-        req.body,
-      );
+      const dto = ReviewRequestMapper.toUpdateReviewReqDTO(req.body);
+
+      const updatedData =
+        await this.packageReviewService.updatePackageReviewService(
+          userId!,
+          reviewId as string,
+          packageId as string,
+          dto,
+        );
       res.status(200).json({
         success: true,
         message: RESPONSE_MESSAGES.REVIEW.SUCCESS.UPDATE,
-        data,
+        data: ReviewResponseMapper.toUpdateReviewResponseDTO(
+          updatedData.review,
+          updatedData.stats,
+        ),
       });
     } catch (error) {
       next(error);
@@ -723,7 +746,7 @@ export class UserController implements IUserController {
     try {
       const { reviewId, packageId } = req.params;
       const userId = req.user?.id;
-      const data = await this.packageReviewService.deletePackageReviewService(
+      const result = await this.packageReviewService.deletePackageReviewService(
         userId!,
         reviewId as string,
         packageId as string,
@@ -731,7 +754,7 @@ export class UserController implements IUserController {
       res.status(200).json({
         success: true,
         message: RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
-        data,
+        data: ReviewResponseMapper.toReviewStatsDTO(result.stats),
       });
     } catch (error) {
       next(error);
@@ -857,7 +880,9 @@ export class UserController implements IUserController {
     try {
       const userId = req?.user?.id as string;
       const wallet = await this.walletService.getWallet(userId);
-      res.status(StatusCode.OK).json(wallet);
+      res
+        .status(StatusCode.OK)
+        .json(WalletResponseMapper.toWalletResponseDTO(wallet));
     } catch (error) {
       next(error);
     }
@@ -869,9 +894,12 @@ export class UserController implements IUserController {
   ) => {
     try {
       const userId = req.user?.id as string;
-      const { amount } = req.body;
-      const result = await this.walletService.createTopupOrder(userId, amount);
-      res.status(StatusCode.OK).json(result);
+      const dto = WalletRequestMapper.toCreateTopupOrderReqDTO(req.body);
+
+      const result = await this.walletService.createTopupOrder(userId, dto);
+      res
+        .status(StatusCode.OK)
+        .json(WalletResponseMapper.toTopupOrderResponseDTO(result));
     } catch (error) {
       next(error);
     }
@@ -883,14 +911,12 @@ export class UserController implements IUserController {
   ) => {
     try {
       const userId = req.user?.id as string;
-      const { razorpayOrderId, razorpayPaymentId, razorpaySignature } =
-        req.body;
-      const wallet = await this.walletService.verifyTopupPayment(userId, {
-        razorpayOrderId,
-        razorpayPaymentId,
-        razorpaySignature,
-      });
-      res.status(StatusCode.OK).json(wallet);
+      const dto = WalletRequestMapper.toVerifyTopupPaymentReqDTO(req.body);
+
+      const wallet = await this.walletService.verifyTopupPayment(userId, dto);
+      res
+        .status(StatusCode.OK)
+        .json(WalletResponseMapper.toWalletResponseDTO(wallet));
     } catch (error) {
       next(error);
     }

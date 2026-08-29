@@ -18,6 +18,7 @@ export const useWallet = () => {
   const fetchWallet = async () => {
     try {
       const { data } = await axiosInstance.get(APP_ROUTES.USER.WALLET);
+      console.log('data from fetchWallet:',data)
       setBalance(data.balance);
       setTransactions(data.transactions.reverse());
     } catch (error: any) {

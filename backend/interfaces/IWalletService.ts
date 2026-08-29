@@ -1,10 +1,14 @@
+import {
+  CreateTopupOrderRequestDTO,
+  verifyTopupPaymentRequestDTO,
+} from "../dto-mapper/dto/wallet/walletRequestDTO";
 import { IWalletDocument } from "../models/Wallet";
 
 export interface IWalletService {
   getWallet(userId: string): Promise<IWalletDocument>;
   createTopupOrder(
     userId: string,
-    amount: number,
+    dto: CreateTopupOrderRequestDTO,
   ): Promise<{
     orderId: string;
     amount: number;
@@ -13,10 +17,6 @@ export interface IWalletService {
   }>;
   verifyTopupPayment(
     userId: string,
-    dto: {
-      razorpayOrderId: string;
-      razorpayPaymentId: string;
-      razorpaySignature: string;
-    },
+    dto: verifyTopupPaymentRequestDTO,
   ): Promise<IWalletDocument | null>;
 }

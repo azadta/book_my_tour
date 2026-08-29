@@ -1,5 +1,11 @@
-import { AddWishlistNoteRequestDTO, CreateWishlistGroupRequestDTO, EditWishlistGroupRequestDTO, EditWishlistNoteRequestDTO, ToggleWishlistPackageRequestDTO } from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
-import {  IWishlistGroup } from "./IWishList";
+import {
+  AddWishlistNoteRequestDTO,
+  CreateWishlistGroupRequestDTO,
+  EditWishlistGroupRequestDTO,
+  EditWishlistNoteRequestDTO,
+  ToggleWishlistPackageRequestDTO,
+} from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
+import { IWishlistGroup } from "./IWishList";
 
 export interface IWishlistService {
   getUserWishlists(userId: string): Promise<IWishlistGroup[]>;
@@ -9,12 +15,12 @@ export interface IWishlistService {
   ): Promise<IWishlistGroup>;
   togglePackageInWishlistGroup(
     userId: string,
-  dto:ToggleWishlistPackageRequestDTO
+    dto: ToggleWishlistPackageRequestDTO,
   ): Promise<IWishlistGroup>;
   addNoteToWishlistGroup(
     userId: string,
     groupId: string,
-    dto:AddWishlistNoteRequestDTO,
+    dto: AddWishlistNoteRequestDTO,
   ): Promise<IWishlistGroup>;
   generateShareableLink(
     userId: string,

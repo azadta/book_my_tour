@@ -12,6 +12,7 @@ import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { unFlattenObject } from "../../../backend/utils/unFlattenObject";
 
 export const usePackageDetails = (packageId: string) => {
   const [pkg, setPkg] = useState<IPackageItem | null>(null);
@@ -78,7 +79,8 @@ export const usePackageDetails = (packageId: string) => {
     try {
       const imageFiles = data.images ?? [];
       const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
-      const updatedData = { ...data, images: uploadedImageUrls };
+      
+      const updatedData = { ...unFlattenObject(data), images: uploadedImageUrls };
       await axiosInstance.post(
         APP_ROUTES.USER.CREATE_REVIEW(packageId),
         updatedData,
@@ -205,9 +207,7 @@ export const usePackageDetails = (packageId: string) => {
       if (isFullyPaidByWallet) {
         toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.BOOKING);
         setIsBookingLoading(false);
-        navigate(
-          FRONTEND_ROUTES.USER.BOOKING_SUCCESS(orderId),
-        );
+        navigate(FRONTEND_ROUTES.USER.BOOKING_SUCCESS(orderId));
         return;
       }
       const isLoaded = await loadRazorpayScript();

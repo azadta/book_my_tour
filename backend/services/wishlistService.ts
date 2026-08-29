@@ -2,13 +2,19 @@ import { randomBytes } from "crypto";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import {  IWishlistGroup } from "../interfaces/IWishList";
+import { IWishlistGroup } from "../interfaces/IWishList";
 import type { IWishlistRepository } from "../interfaces/IWishlistRepository";
 
 import { IWishlistService } from "../interfaces/IWishlistService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { AddWishlistNoteRequestDTO, CreateWishlistGroupRequestDTO, EditWishlistGroupRequestDTO, EditWishlistNoteRequestDTO, ToggleWishlistPackageRequestDTO } from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
+import {
+  AddWishlistNoteRequestDTO,
+  CreateWishlistGroupRequestDTO,
+  EditWishlistGroupRequestDTO,
+  EditWishlistNoteRequestDTO,
+  ToggleWishlistPackageRequestDTO,
+} from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
 
 @injectable()
 export class WishlistService implements IWishlistService {
@@ -22,15 +28,15 @@ export class WishlistService implements IWishlistService {
   }
   async createWishlistGroup(
     userId: string,
-    dto:CreateWishlistGroupRequestDTO,
+    dto: CreateWishlistGroupRequestDTO,
   ): Promise<IWishlistGroup> {
     return this.wishlistRepository.createGroup(userId, dto);
   }
   async togglePackageInWishlistGroup(
     userId: string,
-     dto:ToggleWishlistPackageRequestDTO
+    dto: ToggleWishlistPackageRequestDTO,
   ): Promise<IWishlistGroup> {
-    const {groupId,packageId}=dto
+    const { groupId, packageId } = dto;
     const group = await this.wishlistRepository.findWishlistGroupById(groupId);
     if (!group) {
       throw new CustomError(
@@ -57,12 +63,12 @@ export class WishlistService implements IWishlistService {
   async addNoteToWishlistGroup(
     userId: string,
     groupId: string,
-    dto:AddWishlistNoteRequestDTO,
+    dto: AddWishlistNoteRequestDTO,
   ): Promise<IWishlistGroup> {
-    const {text}=dto
+    const { text } = dto;
     const group = await this.wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
-     throw new CustomError(
+      throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
         StatusCode.UNAUTHORIZED,
       );
@@ -80,7 +86,7 @@ export class WishlistService implements IWishlistService {
   ): Promise<{ shareToken: string }> {
     const group = await this.wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
-     throw new CustomError(
+      throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
         StatusCode.UNAUTHORIZED,
       );
@@ -161,7 +167,7 @@ export class WishlistService implements IWishlistService {
     noteId: string,
     dto: EditWishlistNoteRequestDTO,
   ): Promise<IWishlistGroup> {
-    const {text}=dto
+    const { text } = dto;
     const group = await this.wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(

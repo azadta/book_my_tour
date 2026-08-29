@@ -4,6 +4,7 @@ import { Review } from "../models/Review";
 import { BaseRepository } from "./baseRepository";
 import { CreateReviewDto, IReview } from "../interfaces/IReview";
 import mongoose from "mongoose";
+import { CreateReviewRequestDTO } from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
 
 @injectable()
 export class ReviewRepository
@@ -64,8 +65,10 @@ export class ReviewRepository
     );
   }
 
-  async createReview(review: CreateReviewDto): Promise<IReview> {
-    return (await Review.create(review)).populate("userId", "name image");
+  async createReview(review: CreateReviewRequestDTO): Promise<IReview> {
+    const createdReview = await Review.create(review);
+    await createdReview.populate("userId", "name image");
+    return createdReview;
   }
 
   async findUserReviewForPackage(

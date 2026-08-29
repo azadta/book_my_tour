@@ -6,6 +6,10 @@ import { CustomError } from "../utils/customError";
 import { CreateReviewDto } from "../interfaces/IReview";
 import type { IReviewRepository } from "../interfaces/IReviewRepository";
 import { Types } from "../types/types";
+import {
+  CreateReviewRequestDTO,
+  UpdateReviewRequestDTO,
+} from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
 
 @injectable()
 export class PackageReviewService implements IPackageReviewService {
@@ -14,7 +18,7 @@ export class PackageReviewService implements IPackageReviewService {
     private reviewRepository: IReviewRepository,
   ) {}
 
-  async getPackageReviewService(packageId: string, page = 1, limit = 1) {
+  async getPackageReviewService(packageId: string, page = 1, limit = 5) {
     const skip = (page - 1) * limit;
     const [reviews, stats] = await Promise.all([
       this.reviewRepository.getReviewsByPackageId(packageId, skip, limit),
@@ -23,7 +27,7 @@ export class PackageReviewService implements IPackageReviewService {
 
     return { reviews, stats };
   }
-  async createPackageReviewService(reviewData: CreateReviewDto) {
+  async createPackageReviewService(reviewData: CreateReviewRequestDTO) {
     const existingReview = await this.reviewRepository.findUserReviewForPackage(
       reviewData.userId,
       reviewData.packageId,
@@ -42,7 +46,7 @@ export class PackageReviewService implements IPackageReviewService {
     userId: string,
     reviewId: string,
     packageId: string,
-    updatePayload: any,
+    dto: UpdateReviewRequestDTO,
   ) {
     const review = await this.reviewRepository.findById(reviewId);
     if (!review) {
@@ -59,7 +63,7 @@ export class PackageReviewService implements IPackageReviewService {
     }
     const updatedReview = await this.reviewRepository.updateReview(
       reviewId,
-      updatePayload,
+      dto,
     );
     const stats =
       await this.reviewRepository.getReviewStatsByPackageId(packageId);

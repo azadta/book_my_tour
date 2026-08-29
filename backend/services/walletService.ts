@@ -1,13 +1,17 @@
+import crypto from "crypto";
 import { inject, injectable } from "inversify";
-import { IWalletService } from "../interfaces/IWalletService";
-import { Types } from "../types/types";
-import type { IWalletRepository } from "../interfaces/IWalletRepository";
-import type { IPaymentService } from "../interfaces/IPaymentService";
 import mongoose from "mongoose";
-import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import crypto from "crypto";
+import {
+  CreateTopupOrderRequestDTO,
+  verifyTopupPaymentRequestDTO,
+} from "../dto-mapper/dto/wallet/walletRequestDTO";
+import type { IPaymentService } from "../interfaces/IPaymentService";
+import type { IWalletRepository } from "../interfaces/IWalletRepository";
+import { IWalletService } from "../interfaces/IWalletService";
+import { Types } from "../types/types";
+import { CustomError } from "../utils/customError";
 
 @injectable()
 export class WalletService implements IWalletService {
@@ -28,15 +32,15 @@ export class WalletService implements IWalletService {
     return wallet;
   }
 
-  async createTopupOrder(userId: string, amount: number) {
-    if (amount <= 0) {
+  async createTopupOrder(userId: string, dto: CreateTopupOrderRequestDTO) {
+    if (dto.amount <= 0) {
       throw new CustomError(
         RESPONSE_MESSAGES.WALLET.ERROR.NON_POSITIVE_AMOUNT,
         StatusCode.BAD_REQUEST,
       );
     }
     const order = await this.paymentService.createOrder({
-      amount,
+      amount: dto.amount,
       receipt: `receipt_wallet_${Date.now()}`,
       notes: { userId, purpose: "WALLET_TOPUP" },
     });
@@ -52,7 +56,7 @@ export class WalletService implements IWalletService {
       razorpayOrderId: order.id,
       type: "CREDIT" as const,
       purpose: "WALLET_TOPUP" as const,
-      amount,
+      amount: dto.amount,
       status: "PENDING" as const,
       description: "Wallet Top-up via Razorpay",
     };
@@ -65,14 +69,7 @@ export class WalletService implements IWalletService {
     };
   }
 
-  async verifyTopupPayment(
-    userId: string,
-    dto: {
-      razorpayOrderId: string;
-      razorpayPaymentId: string;
-      razorpaySignature: string;
-    },
-  ) {
+  async verifyTopupPayment(userId: string, dto: verifyTopupPaymentRequestDTO) {
     const isValid = this.paymentService.verifySignature(dto);
     const status = isValid ? "SUCCESS" : "FAILED";
     const updatedWallet =
@@ -82,9 +79,12 @@ export class WalletService implements IWalletService {
         dto.razorpayPaymentId,
         status,
       );
-      if(!isValid){
-        throw new CustomError(RESPONSE_MESSAGES.PAYMENT.ERROR.PAYMETNT_SIGNATURE,StatusCode.BAD_REQUEST)
-      }
-      return updatedWallet
+    if (!isValid) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.PAYMENT.ERROR.PAYMETNT_SIGNATURE,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    return updatedWallet;
   }
 }

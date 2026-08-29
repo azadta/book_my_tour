@@ -1,4 +1,8 @@
-import { CreateReviewDto, IReview } from "./IReview";
+import {
+  CreateReviewRequestDTO,
+  UpdateReviewRequestDTO,
+} from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
+import { IReview } from "./IReview";
 
 export interface IPackageReviewService {
   getPackageReviewService(
@@ -9,12 +13,14 @@ export interface IPackageReviewService {
     reviews: IReview[];
     stats: any;
   }>;
-  createPackageReviewService(reviewData: CreateReviewDto): Promise<IReview>;
+  createPackageReviewService(
+    reviewData: CreateReviewRequestDTO,
+  ): Promise<IReview>;
   updatePackageReviewService(
     userId: string,
     reviewId: string,
     packageId: string,
-    updatePayload: any,
+    dto: UpdateReviewRequestDTO,
   ): Promise<{
     review: IReview | null;
     stats: any;

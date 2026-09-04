@@ -136,6 +136,7 @@ export const RESPONSE_MESSAGES = {
       CANCEL_BY_OPERATOR:
         "Booking cancelled successfully and full refund issued to guest wallet",
       DATE_RESCHEDULED_BY_OPERATOR: "Tour date rescheduled successfully",
+      ATTENDANCE_UPDATE:(status:string)=>`Guest attendance updated to ${status}`
     },
     ERROR: {
       INVALID_SIGNATURE:

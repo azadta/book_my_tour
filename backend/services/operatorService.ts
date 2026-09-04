@@ -11,13 +11,20 @@ import type { IDestinationRepository } from "../interfaces/IDestinationRepositor
 import type { IHashGenerator } from "../interfaces/IHashGenerator";
 import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
-import { IOperator, IOperatorResponse } from "../interfaces/IOperator";
+import { IOperatorResponse } from "../interfaces/IOperator";
 import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
 import { Types } from "../types/types";
 
+import {
+  IOperatorLoginRequestDTO,
+  IOperatorRegisterRequestDTO,
+  IResetOperatorPasswordAuthenticatedRequestDTO,
+  IUpdateOperatorProfileRequestDTO,
+  IVerifyOperatorOtpRequestDTO,
+} from "../dto-mapping/dto/operator/operatorRequestDTO";
 import type { IBookingRepository } from "../interfaces/IBookingRepository";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
 
@@ -44,9 +51,10 @@ export class OperatorService implements IOperatorService {
     @inject(Types.WalletRepository)
     private walletRepository: IWalletRepository,
   ) {}
-  async operatorRegisterService(data: Partial<IOperator>) {
+  async operatorRegisterService(dto: IOperatorRegisterRequestDTO) {
+    console.log('operator register dto:',dto)
     const existing = await this.operatorRepository.findByEmail(
-      data.email as string,
+      dto.email as string,
     );
     if (existing) {
       throw new CustomError(
@@ -54,18 +62,18 @@ export class OperatorService implements IOperatorService {
         StatusCode.BAD_REQUEST,
       );
     }
-    const hashedPassword = this.hashService.hash(data.password as string);
+    const hashedPassword = this.hashService.hash(dto.password as string);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
     const newOperator = await this.operatorRepository.create({
-      ...data,
+      ...dto,
       password: hashedPassword,
       otp,
       otpExpire,
     });
 
     await this.mailService.sendEmail(
-      data.email as string,
+      dto.email as string,
       "Verify your email",
       `Your otp is ${otp} .It expires in 10 minutes`,
     );
@@ -76,7 +84,8 @@ export class OperatorService implements IOperatorService {
     };
   }
 
-  async operatorVerifyOtpService(operatorId: string, otp: string) {
+  async operatorVerifyOtpService(dto: IVerifyOperatorOtpRequestDTO) {
+    const { operatorId, otp } = dto;
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
       throw new CustomError(
@@ -122,14 +131,12 @@ export class OperatorService implements IOperatorService {
     return { otpExpire };
   }
 
-  async operatorLoginService(
-    email: string,
-    password: string,
-  ): Promise<{
+  async operatorLoginService(dto: IOperatorLoginRequestDTO): Promise<{
     accessToken: string;
     refreshToken: string;
     operatorData: IOperatorResponse;
   }> {
+    const { email, password } = dto;
     const operator = await this.operatorRepository.findByEmail(email);
     if (!operator)
       throw new CustomError(
@@ -174,6 +181,7 @@ export class OperatorService implements IOperatorService {
       );
     const { resetToken, expireTime, hashedToken } =
       this.tokenService.getPasswordResetToken();
+      console.log('hashedToken1',hashedToken)
     operator.resetPasswordToken = hashedToken;
     operator.resetPasswordExpire = expireTime;
     await this.operatorRepository.save(operator);
@@ -189,6 +197,7 @@ export class OperatorService implements IOperatorService {
 
   async operatorResetPasswordService(token: string, newPassword: string) {
     const hashedToken = this.resetTokenHasher.hash(token);
+    console.log("hashed token2:", hashedToken);
     const operator =
       await this.operatorRepository.findByResetToken(hashedToken);
     if (!operator)
@@ -196,6 +205,7 @@ export class OperatorService implements IOperatorService {
         RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN,
         StatusCode.BAD_REQUEST,
       );
+
     operator.password = this.hashService.hash(newPassword);
     operator.resetPasswordToken = undefined;
     operator.resetPasswordExpire = undefined;
@@ -203,12 +213,11 @@ export class OperatorService implements IOperatorService {
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
-  async updateOperatorService(id: string, data: Partial<IOperator>) {
-    if (data.password) {
-      data.password = this.hashService.hash(data.password);
-    }
-
-    return await this.operatorRepository.updateById(id, data);
+  async updateOperatorService(
+    id: string,
+    dto: IUpdateOperatorProfileRequestDTO,
+  ) {
+    return await this.operatorRepository.updateById(id, dto);
   }
 
   async updateOperatorProfileImageService(id: string, image: string) {
@@ -221,10 +230,9 @@ export class OperatorService implements IOperatorService {
 
   async resetPasswordAuthenticatedService(
     operatorId: string,
-    oldPassword: string,
-    newPassword: string,
-    confirmPassword: string,
+    dto: IResetOperatorPasswordAuthenticatedRequestDTO,
   ) {
+    const { confirmPassword, newPassword, oldPassword } = dto;
     const operator = await this.operatorRepository.findById(operatorId);
     if (!operator)
       throw new CustomError(

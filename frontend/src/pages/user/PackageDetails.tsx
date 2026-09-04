@@ -201,7 +201,7 @@ const PackageDetails = () => {
 
   const handleStartChat = () => {
     navigate(
-      `${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${data?.operatorId}`,
+      `${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${data?.operatorId?._id}`,
     );
   };
 
@@ -330,7 +330,7 @@ const PackageDetails = () => {
           <main className=" lg:col-span-5 space-y-8">
             <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
               <div className="flex justify-between items-start gap-4 mb-2 ">
-                <div>
+                <div className="w-full">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md mb -2 inline-block">
                       {data.category.name} Experience
@@ -365,9 +365,15 @@ const PackageDetails = () => {
                       </button>
                     )}
                   </div>
-                  <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
-                    {data.name}
-                  </h1>
+                  <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
+                      {data.name}
+                    </h1>
+                    <span className="flex items-center gap-1.5 ">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                      {data.duration.day} Days / {data.duration.night} Nights
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -377,23 +383,19 @@ const PackageDetails = () => {
                   <MapPin className="w-4 h-4 text-blue-600" />
                   {data.destinations.map((dest) => dest.name).join(", ")}
                 </span>
-                <span className="flex items-center gap-1.5 ">
-                  <Clock className="w-4 h-4 text-gray-400" />
-                  {data.duration.day} Days / {data.duration.night} Nights
-                </span>
               </div>
 
               <div>
                 <span className="block text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">
-                  Destinations Covered
+                  Specifications
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {data.destinations.map((dest, idx) => (
+                  {data.specifications?.split(',').map((specification, idx) => (
                     <span
                       key={idx}
                       className="bg-gray-50 border border-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-medium"
                     >
-                      {dest.name}
+                      {specification}
                     </span>
                   ))}
                 </div>

@@ -1,7 +1,7 @@
 import {
   CreateReviewRequestDTO,
   UpdateReviewRequestDTO,
-} from "../../dto/packageReview/packageReviewRequestDTO";
+} from "../../dto/package-review/packageReviewRequestDTO";
 
 export class ReviewRequestMapper {
   static toCreateReviewReqDTO(
@@ -12,7 +12,7 @@ export class ReviewRequestMapper {
     return {
       packageId,
       userId,
-      rating: Number(body.rating)||0,
+      rating: Number(body.rating) || 0,
       ...(body.categoryRatings && {
         categoryRatings: {
           guide: Number(body.categoryRatings.guide ?? 5),
@@ -31,7 +31,7 @@ export class ReviewRequestMapper {
   static toUpdateReviewReqDTO(body: any): UpdateReviewRequestDTO {
     const payload: UpdateReviewRequestDTO = {};
     if (body.rating !== undefined) {
-      payload.rating = Number(body.rating)||0
+      payload.rating = Number(body.rating) || 0;
     }
     if (body.comment !== undefined) {
       payload.comment = body.comment;

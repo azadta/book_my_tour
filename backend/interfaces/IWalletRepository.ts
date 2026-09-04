@@ -17,4 +17,5 @@ export interface IWalletRepository extends IBaseRepository<IWalletDocument> {
     amount: number,
     transaction: IWalletTransaction,
   ): Promise<IWalletDocument | null>;
+ 
 }

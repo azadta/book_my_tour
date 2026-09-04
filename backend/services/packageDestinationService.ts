@@ -8,7 +8,6 @@ import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import { IDestination } from "../models/Destination";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { ICreateDestinationRequestDTO } from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
 
 @injectable()
 export class PackageDestinationService implements IPackageDestinationService {
@@ -22,10 +21,10 @@ export class PackageDestinationService implements IPackageDestinationService {
   ) {}
 
   async createDestinationService(
-    dto: ICreateDestinationRequestDTO,
+    data: Partial<IDestination> & { latitude?: number; longitude?: number },
   ): Promise<IDestination> {
     const existing = await this.destinationRepository.findDestinationByName(
-      dto.name as string,
+      data.name as string,
     );
     if (existing)
       throw new CustomError(
@@ -34,13 +33,10 @@ export class PackageDestinationService implements IPackageDestinationService {
       );
 
     return this.destinationRepository.create({
-      name: (dto.name as string).trim(),
-      location: {
-        latitude: dto.location.latitude,
-        longitude: dto.location.longitude,
-      },
-      images: Array.isArray(dto.images) ? dto.images : [],
-    });
+      name: (data.name as string).trim(),
+      location: { latitude: data.latitude, longitude: data.longitude },
+      images: Array.isArray(data.images) ? data.images : [],
+    } as Partial<IDestination>);
   }
   getAllDestinationsService(): Promise<IDestination[]> {
     return this.destinationRepository.findAll();

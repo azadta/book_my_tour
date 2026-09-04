@@ -159,7 +159,13 @@ router.delete(
   authMiddleware.verifyRole("admin"),
   adminController.deletePackage,
 );
+router.put(
+  ROUTES.ADMIN.PACKAGES_UPDATE,
+  authMiddleware.verifyRole("admin"),
+  validatePackage,
 
+  adminController.updatePackage,
+);
 router.get(
   ROUTES.ADMIN.CANCELLATION_REQUESTS,
   authMiddleware.verifyRole("admin"),

@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { HydratedDocument, Types } from "mongoose";
+import { Types } from "mongoose";
 import { IPackageRepository } from "../interfaces/IPackageRepository";
 import Package, { Ipackage } from "../models/Package";
 import { BaseRepository } from "./baseRepository";
@@ -13,7 +13,7 @@ export class PackageRepository
     super(Package);
   }
 
-  async save(item: HydratedDocument<Ipackage>): Promise<Ipackage> {
+  async save(item: Ipackage): Promise<Ipackage> {
     return item.save();
   }
 
@@ -124,6 +124,7 @@ export class PackageRepository
     ]);
   }
 
+
   async getFilteredPackagesCount(filter: any) {
     return Package.countDocuments(filter);
   }
@@ -157,7 +158,7 @@ export class PackageRepository
   }
   async updatePackageById(
     packageId: string,
-    data: Ipackage,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null> {
     return Package.findByIdAndUpdate(packageId, data, { new: true });
   }

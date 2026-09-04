@@ -1,7 +1,7 @@
 import {
   CreateTopupOrderRequestDTO,
   verifyTopupPaymentRequestDTO,
-} from "../dto-mapping/dto/wallet/walletRequestDTO";
+} from "../dto-mapper/dto/wallet/walletRequestDTO";
 import { IWalletDocument } from "../models/Wallet";
 
 export interface IWalletService {

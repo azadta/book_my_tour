@@ -246,7 +246,7 @@ export const operatorRegisterFields: FormField[] = [
     label: "LIcense No",
   },
   {
-    id: "verificationDetails.businessAddress.buildingNo",
+    id: "verificationDetails.businessAddress.BuildingNo",
     type: "text",
     placeholder: "Building No",
     required: true,

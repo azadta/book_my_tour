@@ -348,7 +348,7 @@ const PackagesList = () => {
                         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute top-4 right-4 z-10 flex gap-2 items-center justify-center">
-                        {pkg.discount!==undefined&&pkg.discount>0 && (
+                        {pkg.discount && (
                           <div className=" bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-pulse ">
                             Save {pkg.discount}%
                           </div>

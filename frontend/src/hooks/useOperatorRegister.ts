@@ -2,7 +2,6 @@ import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
-import { unFlattenObject } from "../../../backend/utils/unFlattenObject";
 
 export const useOperatorRegister = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
@@ -15,10 +14,7 @@ export const useOperatorRegister = () => {
     try {
       setLoading(true);
       setError("");
-      const nestedOperatorData=unFlattenObject(operatorData)
-
-      const res = await axiosInstance.post( APP_ROUTES.OPERATOR.REGISTER, nestedOperatorData);
-      console.log('resData:',res.data)
+      const res = await axiosInstance.post( APP_ROUTES.OPERATOR.REGISTER, operatorData);
       const { operatorId, otpExpire } = res.data;
       onSuccess(operatorId, otpExpire);
     } catch (error: any) {

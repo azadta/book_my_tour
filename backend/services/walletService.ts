@@ -6,7 +6,7 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import {
   CreateTopupOrderRequestDTO,
   verifyTopupPaymentRequestDTO,
-} from "../dto-mapping/dto/wallet/walletRequestDTO";
+} from "../dto-mapper/dto/wallet/walletRequestDTO";
 import type { IPaymentService } from "../interfaces/IPaymentService";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
 import { IWalletService } from "../interfaces/IWalletService";
@@ -87,11 +87,4 @@ export class WalletService implements IWalletService {
     }
     return updatedWallet;
   }
-
-  // async getWalletWithPagination(userId:string,limit:number,skip:number){
-
-  //     const wallet= await this.walletRepository.findOne({userId})
-  //     const walletTransactions=wallet?.transactions
-  //     const updatedWallet={transactions}
-  // }
 }

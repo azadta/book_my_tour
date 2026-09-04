@@ -13,7 +13,7 @@
 
     "strict": true,
 
-    "isolatedModules": true,
+    "isolatedModules":true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,

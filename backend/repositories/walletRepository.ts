@@ -62,6 +62,4 @@ export class WalletRepository
       { new: true },
     );
   }
-
-
 }

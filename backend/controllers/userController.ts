@@ -14,23 +14,16 @@ import type { IWalletService } from "../interfaces/IWalletService";
 import { Types } from "../types/types";
 import { logger } from "../utils/logger";
 
-import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
-import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
-import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/PackageCategoryResponseMapper";
-import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
-import { ReviewRequestMapper } from "../dto-mapping/mapper/package-review/ReviewRequestMapper";
-import { ReviewResponseMapper } from "../dto-mapping/mapper/package-review/ReviewResponseMapper";
-import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
-import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestMapper";
-import { WalletResponseMapper } from "../dto-mapping/mapper/wallet/WalletResponseMapper";
-import { WishlistRequestMapper } from "../dto-mapping/mapper/wishlist/WishlistRequestMapper";
-import { WishlistResponseMapper } from "../dto-mapping/mapper/wishlist/WishlistResponseMapper";
 import type { IBookingService } from "../interfaces/IBookingService";
 import type { ICouponService } from "../interfaces/ICouponService";
 import type { IPackageReviewService } from "../interfaces/IPackageReviewService";
 import type { IWishlistService } from "../interfaces/IWishlistService";
-import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestMapper";
-import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
+import { WishlistResponseMapper } from "../dto-mapper/mapper/wishlist/WishlistResponseMapper";
+import { WishlistRequestMapper } from "../dto-mapper/mapper/wishlist/WishlistRequestMapper";
+import { WalletResponseMapper } from "../dto-mapper/mapper/wallet/WalletResponseMapper";
+import { WalletRequestMapper } from "../dto-mapper/mapper/wallet/WalletRequestMapper";
+import { ReviewResponseMapper } from "../dto-mapper/mapper/packageReview/ReviewResponseMapper";
+import { ReviewRequestMapper } from "../dto-mapper/mapper/packageReview/ReviewRequestMapper";
 
 @injectable()
 export class UserController implements IUserController {
@@ -234,6 +227,20 @@ export class UserController implements IUserController {
       next(error);
     }
   };
+
+  getAllPackageCategories = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const categories = await this.packageCategoryService.getAllCategories();
+      res.json(categories);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   resetPasswordAuthenticated = async (
     req: Request,
     res: Response,
@@ -252,19 +259,6 @@ export class UserController implements IUserController {
     }
   };
 
-  getAllPackageCategories = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const categories = await this.packageCategoryService.getAllCategories();
-      res.json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
-    } catch (error) {
-      next(error);
-    }
-  };
-
   getPaginatedPackages = async (
     req: Request,
     res: Response,
@@ -274,15 +268,12 @@ export class UserController implements IUserController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawPackages, totalCount] = await Promise.all([
+      const [packages, totalCount] = await Promise.all([
         this.packageService.getPaginatedPackagesService(skip, limit),
         this.packageService.getTotalPackagesCount(),
       ]);
 
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-      });
+      res.json({ packages, totalCount });
     } catch (error) {
       next(error);
     }
@@ -290,10 +281,8 @@ export class UserController implements IUserController {
 
   getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rawPackages = await this.packageService.getAllPackagesService();
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-      });
+      const packages = await this.packageService.getAllPackagesService();
+      res.json({ packages });
     } catch (error) {
       next(error);
     }
@@ -307,11 +296,7 @@ export class UserController implements IUserController {
     try {
       const destinations =
         await this.packageDestinationService.getAllDestinationsService();
-      res.json(
-        PackageDestinationResponseMapper.toDestinationListResponseDTO(
-          destinations,
-        ),
-      );
+      res.json(destinations);
     } catch (error) {
       next(error);
     }
@@ -324,16 +309,9 @@ export class UserController implements IUserController {
   ) => {
     try {
       const query = req.query;
-      const {
-        packages: rawPackages,
-        totalCount,
-        uniqueCategoryCount,
-      } = await this.packageService.getFilteredPackagesService(query);
-      res.status(200).json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-        uniqueCategoryCount,
-      });
+      const { packages, totalCount, uniqueCategoryCount } =
+        await this.packageService.getFilteredPackagesService(query);
+      res.status(200).json({ packages, totalCount, uniqueCategoryCount });
     } catch (error) {
       next(error);
     }
@@ -345,12 +323,9 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const rawCategories =
+      const categories =
         await this.packageCategoryService.getActiveCategoryService();
-      res.status(200).json({
-        categories:
-          CategoryResponseMapper.toCategoryListResponseDTO(rawCategories),
-      });
+      res.status(200).json({ categories });
     } catch (error) {
       next(error);
     }
@@ -359,12 +334,8 @@ export class UserController implements IUserController {
   getPackageById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const rawPackage = await this.packageService.getPackageByIdService(
-        id as string,
-      );
-      res
-        .status(200)
-        .json({ pkg: PackageResponseMapper.toPackageResponseDTO(rawPackage) });
+      const pkg = await this.packageService.getPackageByIdService(id as string);
+      res.status(200).json({ pkg });
     } catch (error) {
       next(error);
     }
@@ -377,17 +348,11 @@ export class UserController implements IUserController {
   ) => {
     try {
       const { category } = req.params;
-      const rawDestinations =
+      const destinations =
         await this.packageDestinationService.getDestinationsByPackageCategoryService(
           category as string,
         );
-      res
-        .status(200)
-        .json(
-          PackageDestinationResponseMapper.toDestinationListResponseDTO(
-            rawDestinations,
-          ),
-        );
+      res.status(200).json(destinations);
     } catch (error) {
       next(error);
     }
@@ -404,9 +369,7 @@ export class UserController implements IUserController {
       const packages = await this.packageService.getPackagesByCategoryService(
         category as string,
       );
-      res
-        .status(200)
-        .json(PackageResponseMapper.toPackageListResponseDTO(packages));
+      res.status(200).json(packages);
     } catch (error) {
       next(error);
     }
@@ -730,7 +693,6 @@ export class UserController implements IUserController {
       );
       const data =
         await this.packageReviewService.createPackageReviewService(payload);
-
       res
         .status(StatusCode.CREATED)
         .json(ReviewResponseMapper.toReviewResponseDTO(data));
@@ -805,15 +767,28 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id as string;
-      const dto = BookingRequestMapper.toCreateBookingDTO(userId, req.body);
+      const {
+        packageId,
+        addedActivityIds,
+        removedActivityIds,
+        generalCouponCode,
+        bankCouponCode,
+        useWallet = false,
+      } = req.body;
+      const userId = req.user?.id;
+      const result = await this.bookingService.createBookingOrder(
+        userId as string,
+        {
+          packageId,
+          addedActivityIds,
+          removedActivityIds,
+          generalCouponCode,
+          bankCouponCode,
+          useWallet,
+        },
+      );
 
-      const result = await this.bookingService.createBookingOrder(dto);
-
-      const response =
-        BookingResponseMapper.toCreateBookingOrderResposeDTO(result);
-
-      res.status(StatusCode.OK).json({ success: true, data: response });
+      res.status(StatusCode.OK).json({ success: true, data: result });
     } catch (error) {
       next(error);
     }
@@ -824,15 +799,24 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id as string;
-      const dto = BookingRequestMapper.toVerifyPaymentDTO(userId, req.body);
-
-      const result = await this.bookingService.verifyAndConfirmBooking(dto);
-      const response =
-        BookingResponseMapper.toVerifyPayementResponseDTO(result);
+      const {
+        razorpayOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
+        packageId,
+        orderId,
+      } = req.body;
+      const userId = req.user?.id;
+      const result = await this.bookingService.verifyAndConfirmBooking({
+        razorpayOrderId,
+        packageId,
+        razorpayPaymentId,
+        razorpaySignature,
+        userId: userId as string,
+      });
       res
         .status(StatusCode.OK)
-        .json({ success: true, message: response.message });
+        .json({ success: true, message: result.message });
     } catch (error) {
       next(error);
     }
@@ -845,12 +829,9 @@ export class UserController implements IUserController {
   ) => {
     try {
       const { orderId } = req.params;
-      const rawBooking = await this.bookingService.findBookingByOrderId(
+      const booking = await this.bookingService.findBookingByOrderId(
         orderId as string,
       );
-
-      const booking = BookingResponseMapper.toBookingDTO(rawBooking);
-
       res.status(200).json(booking);
     } catch (error) {
       next(error);
@@ -859,41 +840,10 @@ export class UserController implements IUserController {
   getUserBookings = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?.id;
-      const rawBookings = await this.bookingService.getUserBookings(
+      const bookings = await this.bookingService.getUserBookings(
         userId as string,
       );
-      const bookings = BookingResponseMapper.toBookingListDTO(rawBookings);
       res.status(200).json(bookings);
-    } catch (error) {
-      next(error);
-    }
-  };
-  cancelBooking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const userId = req.user?.id as string;
-      const { bookingId } = req.params;
-      const dto = BookingRequestMapper.toCancelBookingDTO(
-        userId,
-        bookingId,
-        req.body,
-      );
-
-      const { reason } = req.body;
-      const result = await this.bookingService.cancelBooking(dto);
-      const response = BookingResponseMapper.toCancelBookingResponseDTO(result);
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: result.message,
-        data: {
-          requiresAdminApproval: response.requiresAdminApproval,
-          refundAmount: response.refundAmount,
-          booking: response.booking,
-        },
-      });
     } catch (error) {
       next(error);
     }
@@ -902,14 +852,13 @@ export class UserController implements IUserController {
   getCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await this.couponService.getAllAvailableCoupons();
-      res.status(StatusCode.OK).json(CouponResponseMapper.toAvailableCouponsDTO(data));
+      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }
   };
   validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto=CouponRequestMapper.toValidateCouponDTO(req.body)
       const { code, bookingAmount, cardBin } = req.body;
       if (!code || !bookingAmount) {
         return res
@@ -918,9 +867,11 @@ export class UserController implements IUserController {
       }
       const result =
         await this.couponService.validateAndCalculateCouponDiscount(
-         dto
+          code,
+          bookingAmount,
+          cardBin,
         );
-      res.status(StatusCode.OK).json(CouponResponseMapper.toValidateCouponResponseDTO(result));
+      res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
     }
@@ -966,6 +917,34 @@ export class UserController implements IUserController {
       res
         .status(StatusCode.OK)
         .json(WalletResponseMapper.toWalletResponseDTO(wallet));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  cancelBooking = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id as string;
+      const { bookingId } = req.params;
+      const { reason } = req.body;
+      const result = await this.bookingService.cancelBooking(
+        userId,
+        bookingId as string,
+        reason,
+      );
+      res.status(StatusCode.OK).json({
+        success: true,
+        message: result.message,
+        data: {
+          requiresAdminApproval: result.requiresAdminApproval,
+          refundAmount: result.refundAmount ?? result.estimatedRefund,
+          booking: result.booking,
+        },
+      });
     } catch (error) {
       next(error);
     }

@@ -1,23 +1,18 @@
-import {
-  IOperatorLoginRequestDTO,
-  IOperatorRegisterRequestDTO,
-
-  IResetOperatorPasswordAuthenticatedRequestDTO,
-  IUpdateOperatorProfileRequestDTO,
-  IVerifyOperatorOtpRequestDTO
-} from "../dto-mapping/dto/operator/operatorRequestDTO";
 import { IOperator, IOperatorResponse } from "./IOperator";
 
 export interface IOperatorService {
-  operatorRegisterService(dto: IOperatorRegisterRequestDTO): Promise<{
+  operatorRegisterService(data: Partial<IOperator>): Promise<{
     operatorId: string;
     otpExpire: number | undefined;
   }>;
-  operatorVerifyOtpService(dto: IVerifyOperatorOtpRequestDTO): Promise<void>;
+  operatorVerifyOtpService(operatorId: string, otp: string): Promise<void>;
   operatorResendOtpService(operatorId: string): Promise<{
     otpExpire: number;
   }>;
-  operatorLoginService(dto: IOperatorLoginRequestDTO): Promise<{
+  operatorLoginService(
+    email: string,
+    password: string,
+  ): Promise<{
     accessToken: string;
     refreshToken: string;
     operatorData: IOperatorResponse;
@@ -33,7 +28,7 @@ export interface IOperatorService {
   }>;
   updateOperatorService(
     id: string,
-    dto: IUpdateOperatorProfileRequestDTO,
+    data: Partial<IOperator>,
   ): Promise<IOperator | null>;
   updateOperatorProfileImageService(
     id: string,
@@ -45,7 +40,9 @@ export interface IOperatorService {
 
   resetPasswordAuthenticatedService(
     operatorId: string,
-    dto: IResetOperatorPasswordAuthenticatedRequestDTO,
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string,
   ): Promise<{
     message: string;
   }>;

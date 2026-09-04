@@ -6,7 +6,6 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import { Types } from "../types/types";
 import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import type { IMailService } from "../interfaces/IMailService";
-import { IAdminUpdateOperatorRequestDTO, IBlockOperatorRequestDTO, IVerifyOperatorRequestDTO } from "../dto-mapping/dto/admin/adminRequestDTO";
 
 @injectable()
 export class AdminOperatorService implements IAdminOperatorService {
@@ -20,8 +19,7 @@ export class AdminOperatorService implements IAdminOperatorService {
   async getOperatorVerificationRequestsService() {
     return await this.operatorRepository.getPendingOperator();
   }
-  async verifyOperatorService(id: string, dto:IVerifyOperatorRequestDTO) {
-    const {isVerified}=dto
+  async verifyOperatorService(id: string, isVerified: boolean) {
     const updated = await this.operatorRepository.updateOperatorStatus(
       id,
       isVerified,
@@ -54,19 +52,11 @@ export class AdminOperatorService implements IAdminOperatorService {
     return this.operatorRepository.findById(id);
   }
 
-  async blockOperatorService(id: string, dto:IBlockOperatorRequestDTO) {
-    const {isBlocked}=dto
+  async blockOperatorService(id: string, isBlocked: boolean) {
     return this.operatorRepository.updateOperatorBlockStatus(id, isBlocked);
   }
 
   async deleteOperatorService(id: string) {
     return this.operatorRepository.deleteById(id);
   }
-    async adminUpdateOperatorService(
-      id: string,
-      dto: IAdminUpdateOperatorRequestDTO,
-    ) {
-      console.log('dto from adminOperatorUpdate:',dto)
-      return await this.operatorRepository.updateById(id, dto);
-    }
 }

@@ -1,4 +1,4 @@
-import { CreateReviewRequestDTO } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
+import { CreateReviewRequestDTO } from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
 import { IBaseRepository } from "./IBaseRepository";
 import { CreateReviewDto, IReview } from "./IReview";
 

@@ -4,7 +4,7 @@ import {
   ReviewStatsDTO,
   UpdateReviewResponseDTO,
   UserPopulatedDTO,
-} from "../../dto/package-review/packageReviewResponseDTO";
+} from "../../dto/packageReview/packageReviewResponseDTO";
 
 export class ReviewResponseMapper {
   private static mapUser(userId: any): string | UserPopulatedDTO {
@@ -75,8 +75,8 @@ export class ReviewResponseMapper {
     stats: any,
   ): UpdateReviewResponseDTO {
     return {
-      review: review ? this.toReviewResponseDTO(review) : null,
-      stats: this.toReviewStatsDTO(stats),
+      review:review?this.toReviewResponseDTO(review):null,
+      stats:this.toReviewStatsDTO(stats)
     };
   }
 }

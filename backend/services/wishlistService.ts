@@ -14,7 +14,7 @@ import {
   EditWishlistGroupRequestDTO,
   EditWishlistNoteRequestDTO,
   ToggleWishlistPackageRequestDTO,
-} from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
+} from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
 
 @injectable()
 export class WishlistService implements IWishlistService {

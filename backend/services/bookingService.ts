@@ -20,16 +20,6 @@ import { CouponType, ICouponDocument } from "../models/Coupon";
 import { Types } from "../types/types";
 import { bookingConfirmationMessage } from "../utils/bookingConfirmationMessage";
 import { CustomError } from "../utils/customError";
-import {
-  CancelBookingRequestDTO,
-  CreateBookingRequestDTO,
-  OperatorCancelBookingRequestDTO,
-  OperatorRescheduleBookingRequestDTO,
-  ProcessAdminCancellationRequestDTO,
-  UpdateAttendanceRequestDTO,
-  VerifyCancellationRequestDTO,
-  VerifyPaymentRequestDTO,
-} from "../dto-mapping/dto/booking/bookingRequestDTO";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -51,8 +41,11 @@ export class BookingService implements IBookingService {
     @inject(Types.PaymentService) private paymentService: IPaymentService,
   ) {}
 
-  async processAdminCancellation(dto: ProcessAdminCancellationRequestDTO) {
-    const { approve, bookingId, adminNotes } = dto;
+  async processAdminCancellation(
+    bookingId: string,
+    approve: boolean,
+    adminNotes?: string,
+  ) {
     const booking = await this.bookingRepository.findByBookingId(bookingId);
     if (!booking || booking.status !== "CANCEL_REQUESTED") {
       throw new CustomError(
@@ -119,8 +112,11 @@ export class BookingService implements IBookingService {
     return booking;
   }
 
-  async operatorCancelBookingService(dto: OperatorCancelBookingRequestDTO) {
-    const { bookingId, operatorId, reason } = dto;
+  async operatorCancelBookingService(
+    bookingId: string,
+    operatorId: string,
+    reason: string,
+  ) {
     const booking = await this.bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -152,9 +148,10 @@ export class BookingService implements IBookingService {
   }
 
   async operatorRescheduleBookingService(
-    dto: OperatorRescheduleBookingRequestDTO,
+    bookingId: string,
+    operatorId: string,
+    newStartDate: string,
   ) {
-    const { bookingId, operatorId, startDate } = dto;
     const booking = await this.bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -169,13 +166,16 @@ export class BookingService implements IBookingService {
     return await this.packageRepository.updatePackageById(
       booking.packageId._id.toString(),
       {
-        startDate: new Date(startDate),
+        startDate: new Date(newStartDate),
       },
     );
   }
 
-  async updateAttendanceService(dto: UpdateAttendanceRequestDTO) {
-    const { attendance, bookingId, operatorId } = dto;
+  async updateAttendanceService(
+    bookingId: string,
+    operatorId: string,
+    attendance: AttendanceStatus,
+  ) {
     const booking = await this.bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -198,8 +198,12 @@ export class BookingService implements IBookingService {
     }
     return await this.bookingRepository.updateById(bookingId, updateData);
   }
-  async verifyCancellationService(dto: VerifyCancellationRequestDTO) {
-    const { action, bookingId, operatorId, operatorNotes } = dto;
+  async verifyCancellationService(
+    bookingId: string,
+    operatorId: string,
+    action: "APPROVE" | "REJECT",
+    operatorNotes?: string,
+  ) {
     const booking = await this.bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -247,7 +251,17 @@ export class BookingService implements IBookingService {
       } as UpdateQuery<IBookingDocument>);
     }
   }
-  async createBookingOrder(dto: CreateBookingRequestDTO) {
+  async createBookingOrder(
+    userId: string,
+    dto: {
+      packageId: string;
+      addedActivityIds: string[];
+      removedActivityIds: string[];
+      generalCouponCode?: string;
+      bankCouponCode?: string;
+      useWallet: boolean;
+    },
+  ) {
     const {
       addedActivityIds = [],
       packageId,
@@ -255,7 +269,6 @@ export class BookingService implements IBookingService {
       generalCouponCode,
       bankCouponCode,
       useWallet,
-      userId,
     } = dto;
 
     const pkg = await this.packageRepository.getPackageById(packageId);
@@ -269,7 +282,7 @@ export class BookingService implements IBookingService {
     let addedActivitiesAmount = 0;
     for (const day of pkg.itinerary) {
       for (const activity of day.optionalActivities) {
-        if (addedActivityIds.includes(activity.id)) {
+        if (dto.addedActivityIds.includes(activity.id)) {
           addedActivitiesAmount += activity.cost;
         }
       }
@@ -523,7 +536,13 @@ export class BookingService implements IBookingService {
     };
   }
 
-  async verifyAndConfirmBooking(dto: VerifyPaymentRequestDTO) {
+  async verifyAndConfirmBooking(dto: {
+    razorpayOrderId: string;
+    razorpayPaymentId: string;
+    razorpaySignature: string;
+    packageId: string;
+    userId: string;
+  }) {
     const isValid = this.paymentService.verifySignature({
       razorpayOrderId: dto.razorpayOrderId,
       razorpayPaymentId: dto.razorpayPaymentId,
@@ -628,8 +647,7 @@ export class BookingService implements IBookingService {
 
     return bookings;
   }
-  async cancelBooking(dto: CancelBookingRequestDTO) {
-    const { bookingId, reason, userId } = dto;
+  async cancelBooking(userId: string, bookingId: string, reason?: string) {
     const booking = await this.bookingRepository.findByBookingId(bookingId);
     if (!booking) {
       throw new CustomError(

@@ -9,7 +9,7 @@ import { Types } from "../types/types";
 import {
   CreateReviewRequestDTO,
   UpdateReviewRequestDTO,
-} from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
+} from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
 
 @injectable()
 export class PackageReviewService implements IPackageReviewService {

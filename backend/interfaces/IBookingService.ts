@@ -7,20 +7,12 @@ import {
 import { Ipackage } from "../models/Package";
 import { IOperatorBookingDetails } from "./IBooking";
 import { IBooking } from "./IBookingRepository";
-import {
-  CancelBookingRequestDTO,
-  CreateBookingRequestDTO,
-  OperatorCancelBookingRequestDTO,
-  OperatorRescheduleBookingRequestDTO,
-  ProcessAdminCancellationRequestDTO,
-  UpdateAttendanceRequestDTO,
-  VerifyCancellationRequestDTO,
-  VerifyPaymentRequestDTO,
-} from "../dto-mapping/dto/booking/bookingRequestDTO";
 
 export interface IBookingService {
   processAdminCancellation(
-    dto: ProcessAdminCancellationRequestDTO,
+    bookingId: string,
+    approve: boolean,
+    adminNotes?: string | undefined,
   ): Promise<IBookingDocument | null>;
   getPendingCancelationRequests(): Promise<IBooking[]>;
   getOperatorBookingsService(
@@ -37,18 +29,37 @@ export interface IBookingService {
     operatorId: string,
   ): Promise<IOperatorBookingDetails>;
   operatorCancelBookingService(
-    dto: OperatorCancelBookingRequestDTO,
+    bookingId: string,
+    operatorId: string,
+    reason: string,
   ): Promise<IBookingDocument | null>;
   operatorRescheduleBookingService(
-    dto: OperatorRescheduleBookingRequestDTO,
+    bookingId: string,
+    operatorId: string,
+    newStartDate: string,
   ): Promise<Ipackage | null>;
   updateAttendanceService(
-    dto: UpdateAttendanceRequestDTO,
+    bookingId: string,
+    operatorId: string,
+    attendance: AttendanceStatus,
   ): Promise<IBookingDocument | null>;
   verifyCancellationService(
-    dto: VerifyCancellationRequestDTO,
+    bookingId: string,
+    operatorId: string,
+    action: "APPROVE" | "REJECT",
+    operatorNotes?: string | undefined,
   ): Promise<IBookingDocument | null>;
-  createBookingOrder(dto: CreateBookingRequestDTO): Promise<
+  createBookingOrder(
+    userId: string,
+    dto: {
+      packageId: string;
+      addedActivityIds: string[];
+      removedActivityIds: string[];
+      generalCouponCode?: string;
+      bankCouponCode?: string;
+      useWallet: boolean;
+    },
+  ): Promise<
     | {
         isFullyPaidByWallet: boolean;
         bookingId: string | Types.ObjectId;
@@ -72,13 +83,23 @@ export interface IBookingService {
         bookingId?: never;
       }
   >;
-  verifyAndConfirmBooking(dto: VerifyPaymentRequestDTO): Promise<{
+  verifyAndConfirmBooking(dto: {
+    razorpayOrderId: string;
+    razorpayPaymentId: string;
+    razorpaySignature: string;
+    packageId: string;
+    userId: string;
+  }): Promise<{
     message: "Booking confirmed successfully";
     booking: IBooking | null;
   }>;
   findBookingByOrderId(razorpayOrderId: string): Promise<IBooking>;
   getUserBookings(userId: string): Promise<IBooking[]>;
-  cancelBooking(dto: CancelBookingRequestDTO): Promise<
+  cancelBooking(
+    userId: string,
+    bookingId: string,
+    reason?: string | undefined,
+  ): Promise<
     | {
         requiresAdminApproval: boolean;
         message: "Booking cancelled successfully. 100% refund added to your wallet";

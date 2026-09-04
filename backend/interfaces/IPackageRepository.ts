@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import { Ipackage } from "../models/Package";
 import { IBaseRepository } from "./IBaseRepository";
-import { IUpdatePackageRequestDTO } from "../dto-mapping/dto/package/packageRequestDTO";
 
 export interface IPackageRepository extends IBaseRepository<Ipackage> {
   countPackagesByOperatorId(operatorId: string): Promise<number>;
@@ -30,6 +29,6 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
   findPackageByCategory(categoryId: string): Promise<Ipackage[]>;
   updatePackageById(
     packageId: string,
-    data: IUpdatePackageRequestDTO,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null>;
 }

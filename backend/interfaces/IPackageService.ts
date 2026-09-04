@@ -1,6 +1,5 @@
 import { QueryFilter } from "mongoose";
 import { Ipackage } from "../models/Package";
-import { IUpdatePackageRequestDTO } from "../dto-mapping/dto/package/packageRequestDTO";
 
 export interface IPackageService {
   getTotalPackagesCount(): Promise<number>;
@@ -9,12 +8,12 @@ export interface IPackageService {
   getSinglePackageService(id: string): Promise<Ipackage | null>;
   updatePackageService(
     packageId: string,
-    dto: IUpdatePackageRequestDTO,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null>;
   updateOperatorPackageService(
     packageId: string,
     operatorId: string,
-    dto: IUpdatePackageRequestDTO,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null>;
   deleteOperatorPackageService(
     packageId: string,

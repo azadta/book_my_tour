@@ -1,9 +1,11 @@
-import { ICreateDestinationRequestDTO } from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
 import { IDestination } from "../models/Destination";
 
 export interface IPackageDestinationService {
   createDestinationService(
-    dto: ICreateDestinationRequestDTO,
+    data: Partial<IDestination> & {
+      latitude?: number;
+      longitude?: number;
+    },
   ): Promise<IDestination>;
   getAllDestinationsService(): Promise<IDestination[]>;
   getDestinationByIdService(id: string): Promise<IDestination>;

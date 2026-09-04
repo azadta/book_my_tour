@@ -14,16 +14,6 @@ import type { IPackageService } from "../interfaces/IPackageService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
-import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
-import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
-import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
-import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
-import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
-import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/PackageCategoryResponseMapper";
-import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
-import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestMapper";
-import { OperatorRequestMapper } from "../dto-mapping/mapper/operator/OperatorRequestMapper";
-import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorResponseMapper";
 @injectable()
 export class OperatorController implements IOperatorController {
   constructor(
@@ -51,12 +41,13 @@ export class OperatorController implements IOperatorController {
         module: "OPERATOR",
         action: "REGISTER",
       });
-      const dto = OperatorRequestMapper.toOperatorRegisterRequestDTO(req.body);
-      const result = await this.operatorService.operatorRegisterService(dto);
+      const result = await this.operatorService.operatorRegisterService(
+        req.body,
+      );
       res.status(StatusCode.CREATED).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
-        ...OperatorResponseMapper.toOperatorRegisterRespsonseDTO(result),
+        ...result,
       });
     } catch (error) {
       next(error);
@@ -68,9 +59,9 @@ export class OperatorController implements IOperatorController {
     res: Response,
     next: NextFunction,
   ) => {
+    const { operatorId, otp } = req.body;
     try {
-      const dto = OperatorRequestMapper.toVerityOperatorOtpDTO(req.body);
-      await this.operatorService.operatorVerifyOtpService(dto);
+      await this.operatorService.operatorVerifyOtpService(operatorId, otp);
       res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
@@ -100,8 +91,7 @@ export class OperatorController implements IOperatorController {
   };
 
   loginOperator = async (req: Request, res: Response, next: NextFunction) => {
-    const dto = OperatorRequestMapper.toOperatorLoginRequestDTO(req.body);
-
+    const { email, password } = req.body;
     try {
       logger.info(`Operator login attempt`, {
         layer: "CONTROLLER",
@@ -110,7 +100,7 @@ export class OperatorController implements IOperatorController {
         email: req.body.email,
       });
       const { accessToken, refreshToken, operatorData } =
-        await this.operatorService.operatorLoginService(dto);
+        await this.operatorService.operatorLoginService(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -119,9 +109,7 @@ export class OperatorController implements IOperatorController {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
       });
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(operatorData));
+      res.status(StatusCode.OK).json(operatorData);
     } catch (error) {
       next(error);
     }
@@ -181,20 +169,18 @@ export class OperatorController implements IOperatorController {
       );
     }
     try {
-      const dto = OperatorRequestMapper.toUpdateOperatorProfileDTO(req.body);
-      const updatedOperator = await this.operatorService.updateOperatorService(
+      const updatedUser = await this.operatorService.updateOperatorService(
         req.params.id as string,
-        dto,
+        req.body,
       );
-      if (!updatedOperator) {
+      if (!updatedUser) {
         return next(
           new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404),
         );
       }
-
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(updatedOperator));
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...rest } = updatedUser.toObject();
+      res.status(StatusCode.OK).json(rest);
     } catch (error) {
       next(error);
     }
@@ -207,33 +193,11 @@ export class OperatorController implements IOperatorController {
   ) => {
     try {
       const { image } = req.body;
-      const operator =
-        await this.operatorService.updateOperatorProfileImageService(
-          req.user!.id,
-          image,
-        );
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(operator));
-    } catch (error) {
-      next(error);
-    }
-  };
-  resetPasswordAuthenticated = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const dto =
-        OperatorRequestMapper.toOperatorResetPasswordAuthenticatedRequestDTO(
-          req.body,
-        );
-      const data = await this.operatorService.resetPasswordAuthenticatedService(
+      const user = await this.operatorService.updateOperatorProfileImageService(
         req.user!.id,
-        dto,
+        image,
       );
-      res.status(StatusCode.OK).json(data);
+      res.status(StatusCode.OK).json(user);
     } catch (error) {
       next(error);
     }
@@ -248,10 +212,6 @@ export class OperatorController implements IOperatorController {
         action: "CREATE_PACKAGE",
       });
       const operatorId = req?.user?.id;
-      const dto = PackageRequestMapper.toCreatePackageEntity(
-        req.body,
-        operatorId as string,
-      );
 
       const packageData = {
         ...req.body,
@@ -259,10 +219,7 @@ export class OperatorController implements IOperatorController {
       };
       const created =
         await this.packageService.createPackageService(packageData);
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        data: PackageResponseMapper.toPackageResponseDTO(created),
-      });
+      res.status(StatusCode.CREATED).json({ success: true, data: created });
     } catch (error) {
       next(error);
     }
@@ -276,13 +233,7 @@ export class OperatorController implements IOperatorController {
     try {
       const destinations =
         await this.packageDestinationService.getAllDestinationsService();
-      res
-        .status(StatusCode.OK)
-        .json(
-          PackageDestinationResponseMapper.toDestinationListResponseDTO(
-            destinations,
-          ),
-        );
+      res.status(StatusCode.OK).json(destinations);
     } catch (error) {
       next(error);
     }
@@ -295,9 +246,7 @@ export class OperatorController implements IOperatorController {
   ) => {
     try {
       const categories = await this.packageCategoryService.getAllCategories();
-      res
-        .status(StatusCode.OK)
-        .json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
+      res.status(StatusCode.OK).json(categories);
     } catch (error) {
       next(error);
     }
@@ -308,7 +257,7 @@ export class OperatorController implements IOperatorController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawPackages, totalCount] = await Promise.all([
+      const [packages, totalCount] = await Promise.all([
         this.packageService.getFilteredPaginatedPackagesService(
           {},
           skip,
@@ -316,10 +265,25 @@ export class OperatorController implements IOperatorController {
         ),
         this.packageService.getTotalPackagesCount(),
       ]);
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-      });
+      res.json({ packages, totalCount });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  resetPasswordAuthenticated = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const data = await this.operatorService.resetPasswordAuthenticatedService(
+        req.user!.id,
+        req.body.oldPassword,
+        req.body.newPassword,
+        req.body.confirmPassword,
+      );
+      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }
@@ -384,9 +348,7 @@ export class OperatorController implements IOperatorController {
         operatorId,
       );
 
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(pkg));
+      res.status(StatusCode.OK).json(pkg);
     } catch (error) {
       next(error);
     }
@@ -425,12 +387,11 @@ export class OperatorController implements IOperatorController {
   updatePackage = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const packageId = req.params.id;
-      const dto = PackageRequestMapper.toUpdatePackageEntity(req.body);
       const updatedPackage =
         await this.packageService.updateOperatorPackageService(
           packageId as string,
           req.user!.id,
-          dto,
+          req.body,
         );
       if (!updatedPackage) {
         return next(
@@ -440,9 +401,7 @@ export class OperatorController implements IOperatorController {
           ),
         );
       }
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(updatedPackage));
+      res.status(StatusCode.OK).json(updatedPackage);
     } catch (error) {
       next(error);
     }
@@ -451,9 +410,7 @@ export class OperatorController implements IOperatorController {
   getCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await this.couponService.getAllAvailableCoupons();
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toAvailableCouponsDTO(data));
+      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }
@@ -461,18 +418,19 @@ export class OperatorController implements IOperatorController {
 
   validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { code, bookingAmount } = req.body;
+      const { code, bookingAmount, cardBin } = req.body;
       if (!code || !bookingAmount) {
         res
           .status(StatusCode.BAD_REQUEST)
           .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
       }
-      const dto = CouponRequestMapper.toValidateCouponDTO(req.body);
       const result =
-        await this.couponService.validateAndCalculateCouponDiscount(dto);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toValidateCouponResponseDTO(result));
+        await this.couponService.validateAndCalculateCouponDiscount(
+          code,
+          bookingAmount,
+          cardBin,
+        );
+      res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
     }
@@ -483,10 +441,7 @@ export class OperatorController implements IOperatorController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
       const result = await this.couponService.getAllCoupons(page, limit);
-      res.status(StatusCode.OK).json({
-        coupons: CouponResponseMapper.toCouponResponseDTOList(result.coupons),
-        totalCount: result.totalCount,
-      });
+      res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
     }
@@ -496,9 +451,7 @@ export class OperatorController implements IOperatorController {
     try {
       const { id } = req.params;
       const coupon = await this.couponService.getCouponById(id as string);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toCouponResponseDTO(coupon));
+      res.status(StatusCode.OK).json(coupon);
     } catch (error) {
       next(error);
     }
@@ -506,12 +459,10 @@ export class OperatorController implements IOperatorController {
 
   createCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto = CouponRequestMapper.toCreateCouponDTO(req.body);
-      const rawCoupon = await this.couponService.createCoupon(dto);
-      res.status(StatusCode.CREATED).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED,
-        coupon: CouponResponseMapper.toCouponResponseDTO(rawCoupon),
-      });
+      const coupon = await this.couponService.createCoupon(req.body);
+      res
+        .status(StatusCode.CREATED)
+        .json({ message: RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED, coupon });
     } catch (error) {
       next(error);
     }
@@ -520,16 +471,14 @@ export class OperatorController implements IOperatorController {
   updateCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const dto = CouponRequestMapper.toUpdateCouponDTO(req.body);
 
-      const rawUpdatedCoupon = await this.couponService.updateCoupon(
+      const updatedCoupon = await this.couponService.updateCoupon(
         id as string,
-        dto,
+        req.body,
       );
       res.status(StatusCode.OK).json({
         message: RESPONSE_MESSAGES.COUPON.SUCCESS.UPDATE,
-        updatedCoupon:
-          CouponResponseMapper.toCouponResponseDTO(rawUpdatedCoupon),
+        updatedCoupon,
       });
     } catch (error) {
       next(error);
@@ -550,7 +499,7 @@ export class OperatorController implements IOperatorController {
       );
       res.status(StatusCode.OK).json({
         message: RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
-        coupon: CouponResponseMapper.toCouponResponseDTO(updatedCoupon),
+        coupon: updatedCoupon,
       });
     } catch (error) {
       next(error);
@@ -581,24 +530,14 @@ export class OperatorController implements IOperatorController {
   ) => {
     try {
       const operatorId = req.user?.id as string;
-      const queryDTO = BookingRequestMapper.toGetOperatorBookingsQueryDTO(
+      const { page = 1, limit = 5, status } = req.query;
+      const skip = (Number(page) - 1) * Number(limit);
+      const data = await this.bookingService.getOperatorBookingsService(
         operatorId,
-        req.query,
+        status as string,
+        skip,
+        Number(limit),
       );
-
-      const rawData = await this.bookingService.getOperatorBookingsService(
-        queryDTO.operatorId,
-        queryDTO.status,
-        queryDTO.skip,
-        queryDTO.limit,
-      );
-      const currentPage = Math.floor(queryDTO.skip / queryDTO.limit) + 1;
-      const data = BookingResponseMapper.toOperatorBookingListResponseDTO(
-        rawData,
-        currentPage,
-        queryDTO.limit,
-      );
-
       res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
@@ -613,12 +552,11 @@ export class OperatorController implements IOperatorController {
     try {
       const { bookingId } = req.params;
       const operatorId = req.user?.id as string;
-      const rawBooking =
+      const booking =
         await this.bookingService.getOperatorBookingDetailsService(
           bookingId as string,
           operatorId,
         );
-      const booking = BookingResponseMapper.toBookingDTO(rawBooking);
       res.status(StatusCode.OK).json(booking);
     } catch (error) {
       next(error);
@@ -631,21 +569,17 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
+      const { bookingId } = req.params;
+      const { attendance } = req.body;
       const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toUpdateAttendanceDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
 
-      const rawUpdatedBooking =
-        await this.bookingService.updateAttendanceService(dto);
-      const updatedBooking =
-        BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
+      const updatedBooking = await this.bookingService.updateAttendanceService(
+        bookingId as string,
+        operatorId,
+        attendance,
+      );
       res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.ATTENDANCE_UPDATE(
-          dto.attendance,
-        ),
+        message: `Guest attendance updated to ${attendance}`,
         booking: updatedBooking,
       });
     } catch (error) {
@@ -658,22 +592,20 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
+      const { bookingId } = req.params;
+      const { reason } = req.body;
       const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toOperatorCancelBookingDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-
-      if (!dto.reason || dto.reason.trim() === "") {
+      if (!reason || reason.trim() === "") {
         throw new CustomError(
           RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_REASON_MISSING,
         );
       }
-      const rawUpdatedBooking =
-        await this.bookingService.operatorCancelBookingService(dto);
       const updatedBooking =
-        BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
+        await this.bookingService.operatorCancelBookingService(
+          bookingId as string,
+          operatorId,
+          reason,
+        );
       res.status(StatusCode.OK).json({
         message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_BY_OPERATOR,
         booking: updatedBooking,
@@ -689,20 +621,21 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
+      const { bookingId } = req.params;
+      const { startDate } = req.body;
       const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toOperatorReschuduleBookingDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-      if (!dto.startDate) {
+      if (!startDate) {
         throw new CustomError(
           RESPONSE_MESSAGES.BOOKING.ERROR.START_DATE_MISSING,
           StatusCode.BAD_REQUEST,
         );
       }
       const updatedPackage =
-        await this.bookingService.operatorRescheduleBookingService(dto);
+        await this.bookingService.operatorRescheduleBookingService(
+          bookingId as string,
+          operatorId,
+          startDate,
+        );
       res.status(StatusCode.OK).json({
         message: RESPONSE_MESSAGES.BOOKING.SUCCESS.DATE_RESCHEDULED_BY_OPERATOR,
         package: updatedPackage,
@@ -717,26 +650,25 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
+      const { bookingId } = req.params;
+      const { action, operatorNotes } = req.body;
       const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toVerifyCancellationDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-
-      if (!["APPROVE", "REJECT"].includes(dto.action)) {
+      if (!["APPROVE", "REJECT"].includes(action)) {
         throw new CustomError(
           RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_ACTION,
           StatusCode.BAD_REQUEST,
         );
       }
-      const rawUpdatedBooking =
-        await this.bookingService.verifyCancellationService(dto);
       const updatedBooking =
-        BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
+        await this.bookingService.verifyCancellationService(
+          bookingId as string,
+          operatorId,
+          action,
+          operatorNotes,
+        );
       res.status(StatusCode.OK).json({
         message:
-          dto.action === "APPROVE"
+          action === "APPROVE"
             ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
             : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED,
         booking: updatedBooking,

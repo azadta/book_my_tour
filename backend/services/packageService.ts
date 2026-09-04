@@ -10,10 +10,6 @@ import { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
 import { Types as mongooseTypes } from "mongoose";
-import {
-  ICreatePackageRequestDTO,
-  IUpdatePackageRequestDTO,
-} from "../dto-mapping/dto/package/packageRequestDTO";
 
 @injectable()
 export class PackageService implements IPackageService {
@@ -34,9 +30,9 @@ export class PackageService implements IPackageService {
     return this.packageRepository.deleteById(packageId);
   }
 
-  async createPackageService(dto: ICreatePackageRequestDTO): Promise<Ipackage> {
+  async createPackageService(data: Partial<Ipackage>): Promise<Ipackage> {
     const existingPackage = await this.packageRepository.getPackageByName(
-      dto.name as string,
+      data.name as string,
     );
     if (existingPackage) {
       throw new CustomError(
@@ -45,7 +41,7 @@ export class PackageService implements IPackageService {
       );
     }
 
-    return await this.packageRepository.create(dto);
+    return await this.packageRepository.create(data);
   }
   async getSinglePackageService(id: string): Promise<Ipackage | null> {
     return await this.packageRepository.getPackageById(id);
@@ -53,14 +49,14 @@ export class PackageService implements IPackageService {
   async updatePackageService(
     packageId: string,
 
-    dto: IUpdatePackageRequestDTO,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null> {
-    return await this.packageRepository.updatePackageById(packageId, dto);
+    return await this.packageRepository.updateById(packageId, data);
   }
   async updateOperatorPackageService(
     packageId: string,
     operatorId: string,
-    dto: IUpdatePackageRequestDTO,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null> {
     const existingPackage = await this.packageRepository.getByIdAndOperator(
       packageId,
@@ -72,7 +68,7 @@ export class PackageService implements IPackageService {
         StatusCode.NOT_FOUND,
       );
     }
-    return await this.packageRepository.updatePackageById(packageId, dto);
+    return await this.packageRepository.updateById(packageId, data);
   }
   async deleteOperatorPackageService(
     packageId: string,

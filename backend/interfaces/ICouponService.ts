@@ -1,8 +1,3 @@
-import {
-  createCouponRequestDTO,
-  updateCouponRequestDTO,
-  ValidateCouponRequestDTO,
-} from "../dto-mapping/dto/coupon/couponRequestDTO";
 import { ICouponDocument } from "../models/Coupon";
 
 export interface ICouponService {
@@ -14,10 +9,10 @@ export interface ICouponService {
     totalCount: number;
   }>;
   getCouponById(id: string): Promise<ICouponDocument>;
-  createCoupon(dto: createCouponRequestDTO): Promise<ICouponDocument>;
+  createCoupon(couponData: Partial<ICouponDocument>): Promise<ICouponDocument>;
   updateCoupon(
     id: string,
-    dto: updateCouponRequestDTO,
+    couponData: Partial<ICouponDocument>,
   ): Promise<ICouponDocument | null>;
   toggleCouponStatus(
     id: string,
@@ -27,7 +22,11 @@ export interface ICouponService {
     bankOffers: ICouponDocument[];
     generalCoupons: ICouponDocument[];
   }>;
-  validateAndCalculateCouponDiscount(dto: ValidateCouponRequestDTO): Promise<{
+  validateAndCalculateCouponDiscount(
+    code: string,
+    bookingAmount: number,
+    cardBin?: string | undefined,
+  ): Promise<{
     discountAmount: number;
     finalPrice: number;
     coupon: ICouponDocument;

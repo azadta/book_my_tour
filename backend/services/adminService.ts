@@ -18,13 +18,9 @@ import { Types } from "../types/types";
 
 import { HydratedDocument } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import {
-  LoginAdminRequestDTO,
-  ResetAdminPasswordAuthenticatedRequestDTO,
-  UpdateAdminProfileImageRequestDTO,
-  UpdateAdminRequestDTO
-} from "../dto-mapping/dto/admin/adminRequestDTO";
-import type { IBookingRepository } from "../interfaces/IBookingRepository";
+import type {
+  IBookingRepository
+} from "../interfaces/IBookingRepository";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
 
 @injectable()
@@ -50,79 +46,80 @@ export class AdminService implements IAdminService {
     @inject(Types.SecurityService) private securityService: ISecurityService,
   ) {}
 
-  async loginAdminService(dto: LoginAdminRequestDTO): Promise<{
-    accessToken: string;
-    refreshToken: string;
-    adminData: IAdminResponse;
-  }> {
-    const { email, password } = dto;
-    const admin = await this.adminRepository.findByEmail(email);
-    if (!admin)
-      throw new CustomError(
-        RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
-        StatusCode.NOT_FOUND,
-      );
-    const isPasswordValid = this.hashService.compare(password, admin.password);
-    if (!isPasswordValid)
-      throw new CustomError(
-        RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
-        StatusCode.UNAUTHORIZED,
-      );
-    const accessToken = this.securityService.generateAccessToken({
-      id: admin._id.toString(),
-      role: admin.role,
-    });
-    const refreshToken = this.securityService.generateRefreshToken({
-      id: admin._id.toString(),
-      role: admin.role,
-    });
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: pass, ...adminData } = admin.toObject();
-    return { accessToken, refreshToken, adminData };
-  }
-  async resetPasswordAuthenticatedService(
-    adminId: string,
-
-    dto: ResetAdminPasswordAuthenticatedRequestDTO,
-  ) {
-    const { confirmPassword, newPassword, oldPassword } = dto;
-    const admin = await this.adminRepository.findById(adminId);
-    if (!admin)
-      throw new CustomError(
-        RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
-        StatusCode.NOT_FOUND,
-      );
-    const isMatch = this.hashService.compare(oldPassword, admin.password);
-    if (!isMatch)
-      throw new CustomError(
-        RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
-        StatusCode.BAD_REQUEST,
-      );
-    if (confirmPassword !== newPassword)
-      throw new CustomError(
-        RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
-        StatusCode.BAD_REQUEST,
-      );
-    admin.password = this.hashService.hash(newPassword);
-    await this.adminRepository.save(admin);
-    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
-  }
+     async loginAdminService(
+      email: string,
+      password: string,
+    ): Promise<{
+      accessToken: string;
+      refreshToken: string;
+      adminData: IAdminResponse;
+    }> {
+      const admin = await this.adminRepository.findByEmail(email);
+      if (!admin)
+        throw new CustomError(
+          RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+          StatusCode.NOT_FOUND,
+        );
+      const isPasswordValid = this.hashService.compare(password, admin.password);
+      if (!isPasswordValid)
+        throw new CustomError(
+          RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
+          StatusCode.UNAUTHORIZED,
+        );
+      const accessToken = this.securityService.generateAccessToken({
+        id: admin._id.toString(),
+        role: admin.role,
+      });
+      const refreshToken = this.securityService.generateRefreshToken({
+        id: admin._id.toString(),
+        role: admin.role,
+      });
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: pass, ...adminData } = admin.toObject();
+      return { accessToken, refreshToken, adminData };
+    }
+    async resetPasswordAuthenticatedService(
+        adminId: string,
+        oldPassword: string,
+        newPassword: string,
+        confirmPassword: string,
+      ) {
+        const admin = await this.adminRepository.findById(adminId);
+        if (!admin)
+          throw new CustomError(
+            RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+            StatusCode.NOT_FOUND,
+          );
+        const isMatch = this.hashService.compare(oldPassword, admin.password);
+        if (!isMatch)
+          throw new CustomError(
+            RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
+            StatusCode.BAD_REQUEST,
+          );
+        if (confirmPassword !== newPassword)
+          throw new CustomError(
+            RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
+            StatusCode.BAD_REQUEST,
+          );
+        admin.password = this.hashService.hash(newPassword);
+        await this.adminRepository.save(admin);
+        return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
+      }
 
   async updateAdminService(
     id: string,
-    dto:UpdateAdminRequestDTO,
+    data: Partial<IAdmin>,
   ): Promise<HydratedDocument<IAdmin> | null> {
-    if (dto.password) {
-      dto.password = this.hashService.hash(dto.password);
+    if (data.password) {
+      data.password = this.hashService.hash(data.password);
     }
-    return await this.adminRepository.updateById(id, dto);
+    return await this.adminRepository.updateById(id, data);
   }
 
   async updateProfieImageService(
     id: string,
-    dto:UpdateAdminProfileImageRequestDTO
+    image: string,
   ): Promise<HydratedDocument<IAdmin> | null> {
-    const {image}=dto
     return this.adminRepository.updateProfieImage(id, image);
   }
 }

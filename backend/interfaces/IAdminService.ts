@@ -1,12 +1,18 @@
 import { HydratedDocument } from "mongoose";
+import { IDestination } from "../models/Destination";
 
+import { Ipackage } from "../models/Package";
+import { IPackageCategory } from "../models/PackageCategory";
 
-import { LoginAdminRequestDTO,  ResetAdminPasswordAuthenticatedRequestDTO,  UpdateAdminProfileImageRequestDTO, UpdateAdminRequestDTO } from "../dto-mapping/dto/admin/adminRequestDTO";
 import { IAdmin, IAdminResponse } from "./IAdmin";
+import { IOperator } from "./IOperator";
+import { IUser } from "./IUser";
+import { IBooking } from "./IBookingRepository";
 
 export interface IAdminService {
   loginAdminService(
-   dto:LoginAdminRequestDTO
+    email: string,
+    password: string,
   ): Promise<{
     accessToken: string;
     refreshToken: string;
@@ -14,13 +20,15 @@ export interface IAdminService {
   }>;
   updateAdminService(
     id: string,
-   dto:UpdateAdminRequestDTO
+    data: Partial<IAdmin>,
   ): Promise<HydratedDocument<IAdmin> | null>;
   resetPasswordAuthenticatedService(
     adminId: string,
-  dto:ResetAdminPasswordAuthenticatedRequestDTO
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string,
   ): Promise<{
     message: "Password updated successfully";
   }>;
-  updateProfieImageService(id: string, dto:UpdateAdminProfileImageRequestDTO): Promise<HydratedDocument<IAdmin> | null>;
+  updateProfieImageService(id: string, image: string): Promise<HydratedDocument<IAdmin> | null>;
 }

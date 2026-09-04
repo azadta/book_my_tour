@@ -22,7 +22,7 @@ export interface IItineraryDay {
   optionalActivities: IOptionalActivity[];
 }
 
-export interface Ipackage {
+export interface Ipackage extends Document {
   name: string;
   amount: number;
   destinations: Types.ObjectId[];

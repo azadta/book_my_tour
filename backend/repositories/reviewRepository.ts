@@ -4,7 +4,7 @@ import { Review } from "../models/Review";
 import { BaseRepository } from "./baseRepository";
 import { CreateReviewDto, IReview } from "../interfaces/IReview";
 import mongoose from "mongoose";
-import { CreateReviewRequestDTO } from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
+import { CreateReviewRequestDTO } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
 
 @injectable()
 export class ReviewRepository

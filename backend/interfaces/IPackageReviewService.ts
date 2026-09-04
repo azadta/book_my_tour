@@ -1,7 +1,7 @@
 import {
   CreateReviewRequestDTO,
   UpdateReviewRequestDTO,
-} from "../dto-mapper/dto/packageReview/packageReviewRequestDTO";
+} from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
 import { IReview } from "./IReview";
 
 export interface IPackageReviewService {

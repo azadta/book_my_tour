@@ -143,11 +143,6 @@ export interface IAdminController {
     next: NextFunction,
   ) => Promise<void>;
 
-  updatePackage: (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => Promise<void>;
   getPackageById: (
     req: Request,
     res: Response,

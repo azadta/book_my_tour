@@ -3,7 +3,7 @@ import { IWishlistRepository } from "../interfaces/IWishlistRepository";
 import { IWishlistGroup } from "../interfaces/IWishList";
 import { BaseRepository } from "./baseRepository";
 import WishlistGroup from "../models/WishlistGroup";
-import { CreateWishlistGroupRequestDTO } from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
+import { CreateWishlistGroupRequestDTO } from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
 
 @injectable()
 export class WishlistRepository

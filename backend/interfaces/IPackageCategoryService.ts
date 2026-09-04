@@ -1,8 +1,9 @@
+import { ICreateCategoryRequestDTO } from "../dto-mapping/dto/package-category/packageCategoryRequestDTO";
 import { IPackageCategory } from "../models/PackageCategory";
 
 export interface IPackageCategoryService {
   createCategoryService(
-    data: Partial<IPackageCategory>,
+    dto: ICreateCategoryRequestDTO,
   ): Promise<IPackageCategory>;
   getAllCategories(): Promise<IPackageCategory[]>;
   getActiveCategoryService(): Promise<IPackageCategory[]>;

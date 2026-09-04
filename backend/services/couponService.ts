@@ -6,6 +6,7 @@ import { CouponType, ICouponDocument } from "../models/Coupon";
 import { StatusCode } from "../constants/statusCodeConstants";
 import type { ICouponRepository } from "../interfaces/ICouponRepository";
 import { Types } from "../types/types";
+import { createCouponRequestDTO, updateCouponRequestDTO, ValidateCouponRequestDTO } from "../dto-mapping/dto/coupon/couponRequestDTO";
 
 @injectable()
 export class CouponService implements ICouponService {
@@ -29,15 +30,15 @@ export class CouponService implements ICouponService {
     return coupon;
   }
 
-  async createCoupon(couponData: Partial<ICouponDocument>) {
-    if (!couponData.code) {
+  async createCoupon(dto:createCouponRequestDTO) {
+    if (!dto.code) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.COUPON_CODE_MISSING,
         StatusCode.BAD_REQUEST,
       );
     }
     const existingCoupon = await this.couponRepository.findOne({
-      code: couponData.code.toUpperCase(),
+      code: dto.code.toUpperCase(),
     });
     if (existingCoupon) {
       throw new CustomError(
@@ -47,14 +48,14 @@ export class CouponService implements ICouponService {
     }
 
     return await this.couponRepository.create({
-      ...couponData,
-      code: couponData.code.toUpperCase(),
+      ...dto,
+      code: dto.code.toUpperCase(),
     });
   }
 
   async updateCoupon(
     id: string,
-    couponData: Partial<ICouponDocument>,
+    dto:updateCouponRequestDTO,
   ): Promise<ICouponDocument | null> {
     const existingCoupon = await this.couponRepository.findById(id);
     if (!existingCoupon) {
@@ -65,11 +66,11 @@ export class CouponService implements ICouponService {
     }
 
     if (
-      couponData.code &&
-      couponData.code.toUpperCase() !== existingCoupon.code
+      dto.code &&
+      dto.code.toUpperCase() !== existingCoupon.code
     ) {
       const codeTaken = await this.couponRepository.findOne({
-        code: couponData.code.toUpperCase(),
+        code: dto.code.toUpperCase(),
         _id: { $ne: id },
       });
 
@@ -80,16 +81,16 @@ export class CouponService implements ICouponService {
         );
       }
     }
-    if (couponData.code) couponData.code = couponData.code.toUpperCase();
+    if (dto.code) dto.code = dto.code.toUpperCase();
     const updatedPayload: {
       $set: Partial<ICouponDocument>;
       $unset: Record<string, string>;
     } = {
-      $set: { ...couponData },
+      $set: { ...dto },
       $unset: {},
     };
 
-    if (couponData.type === CouponType.GENERAL) {
+    if (dto.type === CouponType.GENERAL) {
       ((updatedPayload.$unset.bankName = ""),
         (updatedPayload.$unset.allowedBins = ""),
         delete updatedPayload.$set.bankName);
@@ -118,14 +119,13 @@ export class CouponService implements ICouponService {
   }
 
   async validateAndCalculateCouponDiscount(
-    code: string,
-    bookingAmount: number,
-    cardBin?: string,
+ dto:ValidateCouponRequestDTO
   ): Promise<{
     discountAmount: number;
     finalPrice: number;
     coupon: ICouponDocument;
   }> {
+    const {bookingAmount,code,cardBin}=dto
     const coupon = await this.couponRepository.findByCode(code);
     if (!coupon) {
       throw new CustomError(

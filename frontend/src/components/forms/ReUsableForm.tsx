@@ -38,7 +38,7 @@ const ReUsableForm = ({
   setFieldError,
   renderAfterFields,
 }: ReUsableFormProps) => {
-  console.log('initialData',initialData)
+
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
 

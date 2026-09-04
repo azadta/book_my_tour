@@ -4,7 +4,7 @@ import {
   EditWishlistGroupRequestDTO,
   EditWishlistNoteRequestDTO,
   ToggleWishlistPackageRequestDTO,
-} from "../dto-mapper/dto/wishlist/wishlistRequestDTO";
+} from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
 import { IWishlistGroup } from "./IWishList";
 
 export interface IWishlistService {

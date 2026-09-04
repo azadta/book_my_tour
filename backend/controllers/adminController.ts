@@ -18,6 +18,17 @@ import type { IPackageDestinationService } from "../interfaces/IPackageDestinati
 import type { IPackageService } from "../interfaces/IPackageService";
 import type { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
 import type { IBookingService } from "../interfaces/IBookingService";
+import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
+import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
+import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
+import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
+import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
+import { PackageDestinationRequestMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationRequestMapper";
+import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/PackageCategoryResponseMapper";
+import { PackageCategoryRequestMapper } from "../dto-mapping/mapper/package-category/PackageCategoryRequestMapper";
+import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
+import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
+import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorResponseMapper";
 
 @injectable()
 export class AdminController implements IAdminController {
@@ -39,7 +50,7 @@ export class AdminController implements IAdminController {
   ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const dto = AdminRequestMapper.toLoginRequestDTO(req.body);
 
     try {
       logger.info(`Admin login attempt`, {
@@ -49,7 +60,7 @@ export class AdminController implements IAdminController {
         email: req.body.email,
       });
       const { accessToken, refreshToken, adminData } =
-        await this.adminService.loginAdminService(email, password);
+        await this.adminService.loginAdminService(dto);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -58,7 +69,9 @@ export class AdminController implements IAdminController {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
       });
-      res.status(StatusCode.OK).json(adminData);
+      res
+        .status(StatusCode.OK)
+        .json(AdminResponseMapper.toAdminResponseDTO(adminData));
     } catch (error) {
       next(error);
     }
@@ -86,9 +99,10 @@ export class AdminController implements IAdminController {
     }
 
     try {
+      const dto = AdminRequestMapper.toUpdateAdminRequestDTO(req.body);
       const updatedAdmin = await this.adminService.updateAdminService(
         req.params.id as string,
-        req.body,
+        dto,
       );
       if (!updatedAdmin)
         return next(
@@ -98,8 +112,10 @@ export class AdminController implements IAdminController {
           ),
         );
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...rest } = updatedAdmin.toObject();
-      res.status(StatusCode.OK).json(rest);
+
+      res
+        .status(StatusCode.OK)
+        .json(AdminResponseMapper.toAdminResponseDTO(updatedAdmin));
     } catch (error) {
       next(error);
     }
@@ -111,14 +127,35 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const { image } = req.body;
+      const dto = AdminRequestMapper.toUpdateProfileImageRequestDTO(req.body);
+
       const admin = await this.adminService.updateProfieImageService(
         req.user!.id,
-        image,
+        dto,
       );
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...rest } = admin!.toObject();
-      res.status(StatusCode.OK).json(rest);
+
+      res
+        .status(StatusCode.OK)
+        .json(AdminResponseMapper.toAdminResponseDTO(admin));
+    } catch (error) {
+      next(error);
+    }
+  };
+  resetPasswordAuthenticated = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const dto = AdminRequestMapper.toResetPasswordAuthenticatedRequestDTO(
+        req.body,
+      );
+      const data = await this.adminService.resetPasswordAuthenticatedService(
+        req.user!.id,
+        dto,
+      );
+      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }
@@ -132,7 +169,9 @@ export class AdminController implements IAdminController {
     try {
       const data =
         await this.adminOperatorService.getOperatorVerificationRequestsService();
-      res.status(StatusCode.OK).json(data);
+      res
+        .status(StatusCode.OK)
+        .json(AdminResponseMapper.toAdminOperatorListResponseDTO(data));
     } catch (error) {
       next(error);
     }
@@ -141,10 +180,11 @@ export class AdminController implements IAdminController {
   verifyOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const { isVerified } = req.body;
+      const dto = AdminRequestMapper.toVerifyOperatorPayload(req.body);
+
       const data = await this.adminOperatorService.verifyOperatorService(
         id as string,
-        isVerified,
+        dto,
       );
       res.status(StatusCode.OK).json(data);
     } catch (error) {
@@ -161,11 +201,17 @@ export class AdminController implements IAdminController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [operators, totalCount] = await Promise.all([
+      const [rawOperators, totalCount] = await Promise.all([
         this.adminOperatorService.getPaginatedOperatorsService(skip, limit),
         this.operatorService.getTotalOperatorsCount(),
       ]);
-      res.status(StatusCode.OK).json({ operators, totalCount });
+      res
+        .status(StatusCode.OK)
+        .json({
+          operators:
+            AdminResponseMapper.toAdminOperatorListResponseDTO(rawOperators),
+          totalCount,
+        });
     } catch (error) {
       next(error);
     }
@@ -181,7 +227,9 @@ export class AdminController implements IAdminController {
         req.params.id as string,
       );
 
-      res.status(StatusCode.OK).json(operator);
+      res
+        .status(StatusCode.OK)
+        .json(AdminResponseMapper.toAdminOperatorResponseDTO(operator));
     } catch (error) {
       next(error);
     }
@@ -189,12 +237,15 @@ export class AdminController implements IAdminController {
 
   updateOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await this.operatorService.updateOperatorService(
+      const dto = AdminRequestMapper.toAdminUpdateOperatorRequestDTO(req.body);
+      const updated = await this.adminOperatorService.adminUpdateOperatorService(
         req.params.id as string,
-        req.body,
+        dto,
       );
 
-      res.status(StatusCode.OK).json(updated);
+      res
+        .status(StatusCode.OK)
+        .json(OperatorResponseMapper.toOperatorResponseDTO(updated));
     } catch (error) {
       next(error);
     }
@@ -202,15 +253,16 @@ export class AdminController implements IAdminController {
 
   blockOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const dto = AdminRequestMapper.toBlockOperatorPayload(req.body);
       const blocked = await this.adminOperatorService.blockOperatorService(
         req.params.id as string,
-        req.body.isBlocked,
+        dto,
       );
       res.status(StatusCode.OK).json({
         message: req.body.isBlocked
           ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED
           : RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED,
-        operator: blocked,
+        operator: AdminResponseMapper.toAdminOperatorResponseDTO(blocked),
       });
     } catch (error) {
       next(error);
@@ -314,12 +366,14 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const category = await this.packageCategoryService.createCategoryService(
+      const dto = PackageCategoryRequestMapper.toCreatePackageCategory(
         req.body,
       );
+      const rawCategory =
+        await this.packageCategoryService.createCategoryService(dto);
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED,
-        category,
+        category: CategoryResponseMapper.toCategoryResponseDTO(rawCategory),
       });
     } catch (error) {
       next(error);
@@ -333,7 +387,7 @@ export class AdminController implements IAdminController {
   ) => {
     try {
       const categories = await this.packageCategoryService.getAllCategories();
-      res.json(categories);
+      res.json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
     } catch (error) {
       next(error);
     }
@@ -345,11 +399,15 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destination =
-        await this.packageDestinationService.createDestinationService(req.body);
+      const dto = PackageDestinationRequestMapper.toDestinationEntity(req.body);
+      const rawDestination =
+        await this.packageDestinationService.createDestinationService(dto);
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED,
-        destination,
+        destination:
+          PackageDestinationResponseMapper.toDestinationResponseDTO(
+            rawDestination,
+          ),
       });
     } catch (error) {
       next(error);
@@ -362,9 +420,13 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destinations =
+      const rawDestinations =
         await this.packageDestinationService.getAllDestinationsService();
-      res.json(destinations);
+      res.json(
+        PackageDestinationResponseMapper.toDestinationListResponseDTO(
+          rawDestinations,
+        ),
+      );
     } catch (error) {
       next(error);
     }
@@ -376,11 +438,17 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const destination =
+      const rawDestination =
         await this.packageDestinationService.getDestinationByIdService(
           req.params.id as string,
         );
-      res.json({ success: true, destination });
+      res.json({
+        success: true,
+        destination:
+          PackageDestinationResponseMapper.toDestinationResponseDTO(
+            rawDestination,
+          ),
+      });
     } catch (error) {
       next(error);
     }
@@ -411,24 +479,6 @@ export class AdminController implements IAdminController {
         this.packageService.getTotalPackagesCount(),
       ]);
       res.json({ packages, totalCount });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  resetPasswordAuthenticated = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const data = await this.adminService.resetPasswordAuthenticatedService(
-        req.user!.id,
-        req.body.oldPassword,
-        req.body.newPassword,
-        req.body.confirmPassword,
-      );
-      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }
@@ -496,29 +546,9 @@ export class AdminController implements IAdminController {
         packageId as string,
       );
 
-      res.status(StatusCode.OK).json(pkg);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updatePackage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const packageId = req.params.id;
-      const updatedPackage = await this.packageService.updatePackageService(
-        packageId as string,
-
-        req.body,
-      );
-      if (!updatedPackage) {
-        return next(
-          new CustomError(
-            RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
-            StatusCode.NOT_FOUND,
-          ),
-        );
-      }
-      res.status(StatusCode.OK).json(updatedPackage);
+      res
+        .status(StatusCode.OK)
+        .json(PackageResponseMapper.toPackageResponseDTO(pkg));
     } catch (error) {
       next(error);
     }
@@ -550,8 +580,10 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const requests =
+      const rawRequests =
         await this.bookingService.getPendingCancelationRequests();
+      const requests =
+        BookingResponseMapper.toPendingCancellationListDTO(rawRequests);
       res.status(StatusCode.OK).json(requests);
     } catch (error) {
       next(error);
@@ -564,20 +596,24 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const { bookingId } = req.params;
-      const { approve, adminNotes } = req.body;
-      const updatedBooking = await this.bookingService.processAdminCancellation(
-        bookingId as string,
-        approve,
-        adminNotes,
+      const dto = BookingRequestMapper.toProcessAdminCancellationDTO(
+        req.params,
+        req.body,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: approve
-          ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
-          : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED,
-        data: updatedBooking,
-      });
+
+      const rawUpdatedBooking =
+        await this.bookingService.processAdminCancellation(dto);
+      const successMessage = dto.approve
+        ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
+        : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED;
+      const response =
+        BookingResponseMapper.toProcessAdminCancellationResponseDTO(
+          rawUpdatedBooking,
+          dto.approve,
+          successMessage,
+        );
+
+      res.status(StatusCode.OK).json(response);
     } catch (error) {
       next(error);
     }

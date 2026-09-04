@@ -7,6 +7,7 @@ import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import { IPackageCategory } from "../models/PackageCategory";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
+import { ICreateCategoryRequestDTO } from "../dto-mapping/dto/package-category/packageCategoryRequestDTO";
 
 @injectable()
 export class PackageCategoryService implements IPackageCategoryService {
@@ -18,18 +19,18 @@ export class PackageCategoryService implements IPackageCategoryService {
   ) {}
 
   async createCategoryService(
-    data: Partial<IPackageCategory>,
+    dto: ICreateCategoryRequestDTO,
   ): Promise<IPackageCategory> {
     const existing =
       await this.packageCategoryRepository.findPackageCategoryByName(
-        data?.name as string,
+        dto?.name as string,
       );
     if (existing)
       throw new CustomError(
         RESPONSE_MESSAGES.CATEGORY.ERROR.ALREADY_EXIST,
         StatusCode.BAD_REQUEST,
       );
-    return this.packageCategoryRepository.create(data);
+    return this.packageCategoryRepository.create(dto);
   }
   getAllCategories() {
     return this.packageCategoryRepository.findAll();

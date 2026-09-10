@@ -542,7 +542,7 @@ export class AdminController implements IAdminController {
     try {
       const packageId = req.params.id;
 
-      const pkg = await this.packageService.getSinglePackageService(
+      const pkg = await this.packageService.getPackageByIdService(
         packageId as string,
       );
 

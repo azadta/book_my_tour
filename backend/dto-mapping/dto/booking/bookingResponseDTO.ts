@@ -29,7 +29,7 @@ export interface BookingCancellationDTO {
 
 export interface BookingResponseDTO {
   _id: string;
-  userId: string;
+  userId: { _id: string; name: string; email: string };
   packageId: {
     _id: string;
     name: string;

@@ -79,8 +79,11 @@ export const usePackageDetails = (packageId: string) => {
     try {
       const imageFiles = data.images ?? [];
       const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
-      
-      const updatedData = { ...unFlattenObject(data), images: uploadedImageUrls };
+
+      const updatedData = {
+        ...unFlattenObject(data),
+        images: uploadedImageUrls,
+      };
       await axiosInstance.post(
         APP_ROUTES.USER.CREATE_REVIEW(packageId),
         updatedData,
@@ -210,6 +213,7 @@ export const usePackageDetails = (packageId: string) => {
         navigate(FRONTEND_ROUTES.USER.BOOKING_SUCCESS(orderId));
         return;
       }
+
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {
         toast.error(FEEDBACK_MESSAGES.PAYMENT.ERROR.RAZORPAY_LOAD);

@@ -28,6 +28,7 @@ const OperatorBookingList = () => {
   const { bookings, loading, totalCount, pendingCancelCount } =
     useOperatorBookings(currentPage, resultPerPage, statusFilter);
 
+
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const handleCancellationFilterToggle = () => {
     if (statusFilter === "CANCEL_REQUESTED") {
@@ -70,10 +71,7 @@ const OperatorBookingList = () => {
         </div>
       ),
     },
-    {
-      label: "Booking ID",
-      render: (booking) => booking._id || "N/A",
-    },
+
     {
       label: "Package",
       render: (booking) => booking.packageId?.name || "N/A",

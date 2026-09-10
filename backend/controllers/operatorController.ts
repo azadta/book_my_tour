@@ -592,6 +592,7 @@ export class OperatorController implements IOperatorController {
         queryDTO.skip,
         queryDTO.limit,
       );
+   
       const currentPage = Math.floor(queryDTO.skip / queryDTO.limit) + 1;
       const data = BookingResponseMapper.toOperatorBookingListResponseDTO(
         rawData,

@@ -1,3 +1,4 @@
+import Pagination from "@/components/Pagination";
 import { useWallet } from "@/hooks/useWallet";
 import {
   ArrowDownRight,
@@ -16,6 +17,9 @@ const Wallet = () => {
     topupAmount,
     transactions,
     setTopupAmount,
+    currentPage,
+    totalPages,
+    setCurrentPage,
   } = useWallet();
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6 mt-10">
@@ -25,7 +29,9 @@ const Wallet = () => {
             <p className="text-blue-100 text-sm font-medium tracking-wide">
               Available balance
             </p>
-            <h1 className="text-2xl font-semibold">Rs {balance.toLocaleString("en-IN")}</h1>
+            <h1 className="text-2xl font-semibold">
+              Rs {balance.toLocaleString("en-IN")}
+            </h1>
           </div>
           <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md">
             <Wallet2 className="w-8 h-8 text-white" />
@@ -125,6 +131,11 @@ const Wallet = () => {
             ))
           )}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

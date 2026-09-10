@@ -1,22 +1,22 @@
 import { Types as mongooseType } from "mongoose";
-import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import type { IOperatorService } from "../interfaces/IOperatorService";
-import { CustomError } from "../utils/customError";
+import type { IOperatorRepository } from "../../interfaces/IOperatorRepository";
+import type { IOperatorService } from "../../interfaces/IOperatorService";
+import { CustomError } from "../../utils/customError";
 
 import { inject, injectable } from "inversify";
-import { RESPONSE_MESSAGES } from "../constants/messages";
-import { StatusCode } from "../constants/statusCodeConstants";
-import type { ICouponRepository } from "../interfaces/ICouponRepository";
-import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
-import type { IHashGenerator } from "../interfaces/IHashGenerator";
-import type { IHashService } from "../interfaces/IHashService";
-import type { IMailService } from "../interfaces/IMailService";
-import { IOperatorResponse } from "../interfaces/IOperator";
-import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
-import type { IPackageRepository } from "../interfaces/IPackageRepository";
-import type { ISecurityService } from "../interfaces/ISecurityService";
-import type { ITokenService } from "../interfaces/ITokenService";
-import { Types } from "../types/types";
+import { RESPONSE_MESSAGES } from "../../constants/messages";
+import { StatusCode } from "../../constants/statusCodeConstants";
+import type { ICouponRepository } from "../../interfaces/ICouponRepository";
+import type { IDestinationRepository } from "../../interfaces/IDestinationRepository";
+import type { IHashGenerator } from "../../interfaces/IHashGenerator";
+import type { IHashService } from "../../interfaces/IHashService";
+import type { IMailService } from "../../interfaces/IMailService";
+import { IOperatorResponse } from "../../interfaces/IOperator";
+import type { IPackageCategoryRepository } from "../../interfaces/IPackageCategoryRepository";
+import type { IPackageRepository } from "../../interfaces/IPackageRepository";
+import type { ISecurityService } from "../../interfaces/ISecurityService";
+import type { ITokenService } from "../../interfaces/ITokenService";
+import { Types } from "../../types/types";
 
 import {
   IOperatorLoginRequestDTO,
@@ -24,9 +24,9 @@ import {
   IResetOperatorPasswordAuthenticatedRequestDTO,
   IUpdateOperatorProfileRequestDTO,
   IVerifyOperatorOtpRequestDTO,
-} from "../dto-mapping/dto/operator/operatorRequestDTO";
-import type { IBookingRepository } from "../interfaces/IBookingRepository";
-import type { IWalletRepository } from "../interfaces/IWalletRepository";
+} from "../../dto-mapping/dto/operator/operatorRequestDTO";
+import type { IBookingRepository } from "../../interfaces/IBookingRepository";
+import type { IWalletRepository } from "../../interfaces/IWalletRepository";
 
 @injectable()
 export class OperatorService implements IOperatorService {
@@ -52,7 +52,7 @@ export class OperatorService implements IOperatorService {
     private walletRepository: IWalletRepository,
   ) {}
   async operatorRegisterService(dto: IOperatorRegisterRequestDTO) {
-    console.log('operator register dto:',dto)
+
     const existing = await this.operatorRepository.findByEmail(
       dto.email as string,
     );
@@ -181,7 +181,7 @@ export class OperatorService implements IOperatorService {
       );
     const { resetToken, expireTime, hashedToken } =
       this.tokenService.getPasswordResetToken();
-      console.log('hashedToken1',hashedToken)
+
     operator.resetPasswordToken = hashedToken;
     operator.resetPasswordExpire = expireTime;
     await this.operatorRepository.save(operator);
@@ -197,7 +197,7 @@ export class OperatorService implements IOperatorService {
 
   async operatorResetPasswordService(token: string, newPassword: string) {
     const hashedToken = this.resetTokenHasher.hash(token);
-    console.log("hashed token2:", hashedToken);
+
     const operator =
       await this.operatorRepository.findByResetToken(hashedToken);
     if (!operator)

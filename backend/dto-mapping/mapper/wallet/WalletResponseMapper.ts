@@ -1,4 +1,6 @@
+import { IWalletDocument, IWalletTransaction } from "../../../models/Wallet";
 import {
+  PaginatedWalletResponseDTO,
   TopupOrderResponseDTO,
   WalletResponseDTO,
   WalletTransactionResponseDTO,
@@ -26,10 +28,28 @@ export class WalletResponseMapper {
       userId: wallet.userId.toString(),
       balance: wallet.balance,
       transactions: wallet.transactions
-        ? wallet.transactions.map((txn:any)=>this.toTransactionResponseDTO(txn))
+        ? wallet.transactions.map((txn: any) =>
+            this.toTransactionResponseDTO(txn),
+          )
         : [],
       createdAt: new Date(wallet.createdAt).toISOString(),
       updatedAt: new Date(wallet.updatedAt).toISOString(),
+    };
+  }
+
+  static toPaginatedWalletResponseDTO(data: {
+    balance: number;
+    totalCount: number;
+    totalPages: number;
+    transactions: IWalletTransaction[];
+  }): PaginatedWalletResponseDTO {
+    return {
+      balance: data.balance,
+      totalCount: data.totalCount,
+      totalPages: data.totalPages,
+      transactions: data.transactions.map((transaction) =>
+        this.toTransactionResponseDTO(transaction),
+      ),
     };
   }
 

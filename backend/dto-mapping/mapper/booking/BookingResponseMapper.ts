@@ -57,6 +57,7 @@ export class BookingResponseMapper {
           ? {
               _id: entity?.userId?._id.toString() ?? "",
               name: entity.userId?.name ?? "",
+              email:entity.userId?.email??''
             }
           : (entity?.userId.toString() ?? ""),
       packageId:

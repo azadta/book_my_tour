@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
-import { IOperatorDashboardService } from "../interfaces/IOperatorDashboard";
-import type { IPackageRepository } from "../interfaces/IPackageRepository";
-import type { IBookingRepository } from "../interfaces/IBookingRepository";
-import { Types } from "../types/types";
+import { IOperatorDashboardService } from "../../interfaces/IOperatorDashboard";
+import type { IPackageRepository } from "../../interfaces/IPackageRepository";
+import type { IBookingRepository } from "../../interfaces/IBookingRepository";
+import { Types } from "../../types/types";
 
 @injectable()
 export class OperatorDashboardService implements IOperatorDashboardService {

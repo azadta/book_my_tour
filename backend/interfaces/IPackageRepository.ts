@@ -30,6 +30,6 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
   findPackageByCategory(categoryId: string): Promise<Ipackage[]>;
   updatePackageById(
     packageId: string,
-    data: IUpdatePackageRequestDTO,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null>;
 }

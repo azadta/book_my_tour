@@ -17,7 +17,7 @@ import {
   IOperatorBookingFilter,
   IOperatorBookingStats,
 } from "../interfaces/IBooking";
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 import { IUser } from "../interfaces/IUser";
 
 @injectable()
@@ -172,12 +172,15 @@ export class BookingRepository
     operatorId: string,
   ): Promise<IOperatorBookingDetails | null> {
     const booking = await Booking.findById(bookingId)
-      .populate<{ packageId: Ipackage }>({
+      .populate<{ packageId: HydratedDocument<Ipackage> }>({
         path: "packageId",
         populate: { path: "destinations", select: "name" },
       })
-      .populate<{ userId: IUser }>("userId", "name email phone")
-      .lean();
+      .populate<{ userId: HydratedDocument<IUser> }>(
+        "userId",
+        "name email phone",
+      );
+
     if (!booking || String(booking.packageId.operatorId) !== operatorId) {
       return null;
     }

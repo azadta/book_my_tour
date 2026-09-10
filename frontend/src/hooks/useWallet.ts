@@ -8,20 +8,24 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export const useWallet = () => {
+export const useWallet = (limit: number = 5) => {
   const [balance, setBalance] = useState<number>(0);
   const [transactions, setTransactions] = useState<IWalletTransaction[]>([]);
   const [topupAmount, setTopupAmount] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { currentUser } = useSelector((state: RootState) => state.user);
 
-  const fetchWallet = async () => {
+  const fetchWallet = async (page: number = currentPage) => {
     try {
-       
-      const { data } = await axiosInstance.get(APP_ROUTES.USER.WALLET);
-      // setTotalCount(data.totalCount)
+      const { data } = await axiosInstance.get(
+        `${APP_ROUTES.USER.WALLET}?page=${page}&limit=${limit}`,
+      );
+
       setBalance(data.balance);
-      setTransactions(data.transactions.reverse());
+      setTransactions(data.transactions);
+      setTotalPages(data.totalPages);
     } catch (error: any) {
       const message =
         error.response?.data?.message || FEEDBACK_MESSAGES.WALLET.ERROR.FETCH;
@@ -62,7 +66,9 @@ export const useWallet = () => {
               razorpaySignature: response.razorpay_signature,
             });
             toast.success(FEEDBACK_MESSAGES.WALLET.SUCCESS.RECHARGE);
-            (setTopupAmount(""), fetchWallet());
+            setTopupAmount("");
+            setCurrentPage(1);
+            fetchWallet(1);
           } catch (error: any) {
             const message =
               error.response?.data?.message ||
@@ -92,9 +98,9 @@ export const useWallet = () => {
   };
   useEffect(() => {
     if (currentUser) {
-      fetchWallet();
+      fetchWallet(currentPage);
     }
-  }, [currentUser]);
+  }, [currentUser,currentPage]);
 
   return {
     handleTopup,
@@ -103,5 +109,8 @@ export const useWallet = () => {
     transactions,
     topupAmount,
     setTopupAmount,
+    currentPage,
+    setCurrentPage,
+    totalPages,
   };
 };

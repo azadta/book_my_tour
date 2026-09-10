@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
-import { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
-import { Types } from "../types/types";
-import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import type { IUserRepository } from "../interfaces/IUserRepository";
+import { IAdminDashboardService } from "../../interfaces/IAdminDashboardService";
+import { Types } from "../../types/types";
+import type { IOperatorRepository } from "../../interfaces/IOperatorRepository";
+import type { IUserRepository } from "../../interfaces/IUserRepository";
 
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {

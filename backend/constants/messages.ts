@@ -113,8 +113,8 @@ export const RESPONSE_MESSAGES = {
   },
   REVIEW: {
     SUCCESS: {
-      UPDATE: "review updated successfully",
-      DELETE: "review deleted successfully",
+      UPDATE: "Review updated successfully",
+      DELETE: "Review deleted successfully",
     },
     ERROR: {
       ALREADY_EXIST: "You have already submitted a review for this package",

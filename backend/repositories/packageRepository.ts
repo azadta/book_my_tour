@@ -157,7 +157,7 @@ export class PackageRepository
   }
   async updatePackageById(
     packageId: string,
-    data: Ipackage,
+    data: Partial<Ipackage>,
   ): Promise<Ipackage | null> {
     return Package.findByIdAndUpdate(packageId, data, { new: true });
   }

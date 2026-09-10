@@ -20,6 +20,13 @@ export interface WalletResponseDTO {
   updatedAt: string;
 }
 
+export interface PaginatedWalletResponseDTO {
+  balance: number;
+  totalCount: number;
+  totalPages: number;
+  transactions: WalletTransactionResponseDTO[];
+}
+
 export interface TopupOrderResponseDTO {
   orderId: string;
   amount: number;

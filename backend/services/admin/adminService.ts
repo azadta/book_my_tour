@@ -1,31 +1,31 @@
-import type { IAdminRepository } from "../interfaces/IAdminRepository";
-import { CustomError } from "../utils/customError";
+import type { IAdminRepository } from "../../interfaces/IAdminRepository";
+import { CustomError } from "../../utils/customError";
 
 import { inject, injectable } from "inversify";
-import { StatusCode } from "../constants/statusCodeConstants";
-import type { IAdminService } from "../interfaces/IAdminService";
-import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
-import type { IHashService } from "../interfaces/IHashService";
-import type { IMailService } from "../interfaces/IMailService";
-import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
-import type { IPackageRepository } from "../interfaces/IPackageRepository";
-import type { ISecurityService } from "../interfaces/ISecurityService";
-import type { IUserRepository } from "../interfaces/IUserRepository";
+import { StatusCode } from "../../constants/statusCodeConstants";
+import type { IAdminService } from "../../interfaces/IAdminService";
+import type { IDestinationRepository } from "../../interfaces/IDestinationRepository";
+import type { IHashService } from "../../interfaces/IHashService";
+import type { IMailService } from "../../interfaces/IMailService";
+import type { IOperatorRepository } from "../../interfaces/IOperatorRepository";
+import type { IPackageCategoryRepository } from "../../interfaces/IPackageCategoryRepository";
+import type { IPackageRepository } from "../../interfaces/IPackageRepository";
+import type { ISecurityService } from "../../interfaces/ISecurityService";
+import type { IUserRepository } from "../../interfaces/IUserRepository";
 
-import { IAdmin, IAdminResponse } from "../interfaces/IAdmin";
-import { Types } from "../types/types";
+import { IAdmin, IAdminResponse } from "../../interfaces/IAdmin";
+import { Types } from "../../types/types";
 
 import { HydratedDocument } from "mongoose";
-import { RESPONSE_MESSAGES } from "../constants/messages";
+import { RESPONSE_MESSAGES } from "../../constants/messages";
 import {
   LoginAdminRequestDTO,
   ResetAdminPasswordAuthenticatedRequestDTO,
   UpdateAdminProfileImageRequestDTO,
-  UpdateAdminRequestDTO
-} from "../dto-mapping/dto/admin/adminRequestDTO";
-import type { IBookingRepository } from "../interfaces/IBookingRepository";
-import type { IWalletRepository } from "../interfaces/IWalletRepository";
+  UpdateAdminRequestDTO,
+} from "../../dto-mapping/dto/admin/adminRequestDTO";
+import type { IBookingRepository } from "../../interfaces/IBookingRepository";
+import type { IWalletRepository } from "../../interfaces/IWalletRepository";
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -110,7 +110,7 @@ export class AdminService implements IAdminService {
 
   async updateAdminService(
     id: string,
-    dto:UpdateAdminRequestDTO,
+    dto: UpdateAdminRequestDTO,
   ): Promise<HydratedDocument<IAdmin> | null> {
     if (dto.password) {
       dto.password = this.hashService.hash(dto.password);
@@ -120,9 +120,9 @@ export class AdminService implements IAdminService {
 
   async updateProfieImageService(
     id: string,
-    dto:UpdateAdminProfileImageRequestDTO
+    dto: UpdateAdminProfileImageRequestDTO,
   ): Promise<HydratedDocument<IAdmin> | null> {
-    const {image}=dto
+    const { image } = dto;
     return this.adminRepository.updateProfieImage(id, image);
   }
 }

@@ -1,28 +1,28 @@
 import { Types as mongooseType } from "mongoose";
 
 import { inject, injectable } from "inversify";
-import { RESPONSE_MESSAGES } from "../constants/messages";
-import { StatusCode } from "../constants/statusCodeConstants";
-import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
-import type { IHashGenerator } from "../interfaces/IHashGenerator";
-import type { IHashService } from "../interfaces/IHashService";
-import type { IMailService } from "../interfaces/IMailService";
-import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
-import type { IPackageRepository } from "../interfaces/IPackageRepository";
-import type { IReviewRepository } from "../interfaces/IReviewRepository";
-import type { ISecurityService } from "../interfaces/ISecurityService";
-import type { ITokenService } from "../interfaces/ITokenService";
-import { IUser, IUserResponse } from "../interfaces/IUser";
-import type { IUserRepository } from "../interfaces/IUserRepository";
-import type { IUserService } from "../interfaces/IUserService";
-import type { IWishlistRepository } from "../interfaces/IWishlistRepository";
-import { Types } from "../types/types";
-import { CustomError } from "../utils/customError";
+import { RESPONSE_MESSAGES } from "../../constants/messages";
+import { StatusCode } from "../../constants/statusCodeConstants";
+import type { IDestinationRepository } from "../../interfaces/IDestinationRepository";
+import type { IHashGenerator } from "../../interfaces/IHashGenerator";
+import type { IHashService } from "../../interfaces/IHashService";
+import type { IMailService } from "../../interfaces/IMailService";
+import type { IPackageCategoryRepository } from "../../interfaces/IPackageCategoryRepository";
+import type { IPackageRepository } from "../../interfaces/IPackageRepository";
+import type { IReviewRepository } from "../../interfaces/IReviewRepository";
+import type { ISecurityService } from "../../interfaces/ISecurityService";
+import type { ITokenService } from "../../interfaces/ITokenService";
+import { IUser, IUserResponse } from "../../interfaces/IUser";
+import type { IUserRepository } from "../../interfaces/IUserRepository";
+import type { IUserService } from "../../interfaces/IUserService";
+import type { IWishlistRepository } from "../../interfaces/IWishlistRepository";
+import { Types } from "../../types/types";
+import { CustomError } from "../../utils/customError";
 
-import type { IBookingRepository } from "../interfaces/IBookingRepository";
-import type { ICouponRepository } from "../interfaces/ICouponRepository";
-import type { IPaymentService } from "../interfaces/IPaymentService";
-import type { IWalletRepository } from "../interfaces/IWalletRepository";
+import type { IBookingRepository } from "../../interfaces/IBookingRepository";
+import type { ICouponRepository } from "../../interfaces/ICouponRepository";
+import type { IPaymentService } from "../../interfaces/IPaymentService";
+import type { IWalletRepository } from "../../interfaces/IWalletRepository";
 
 @injectable()
 export class UserService implements IUserService {

@@ -6,7 +6,6 @@ export interface IPackageService {
   getTotalPackagesCount(): Promise<number>;
   deletePackageService(packageId: string): Promise<Ipackage | null>;
   createPackageService(data: Partial<Ipackage>): Promise<Ipackage>;
-  getSinglePackageService(id: string): Promise<Ipackage | null>;
   updatePackageService(
     packageId: string,
     dto: IUpdatePackageRequestDTO,

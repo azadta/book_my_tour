@@ -42,16 +42,16 @@ import { PackageRepository } from "../repositories/packageRepository";
 import { ReviewRepository } from "../repositories/reviewRepository";
 import { UserRepository } from "../repositories/userRepository";
 import { WishlistRepository } from "../repositories/wishlistRepository";
-import { AdminService } from "../services/adminService";
+import { AdminService } from "../services/admin/adminService";
 import { BcryptHashService } from "../services/bcryptHashService";
 import { CommonAuthService } from "../services/commonAuthService";
 import { CryptoHashService } from "../services/cryptoHashService";
 import { MailService } from "../services/mailService";
-import { OperatorService } from "../services/operatorService";
+
 import { RazorpayPaymentService } from "../services/RazorpayPaymentService";
 import { SecurityService } from "../services/securityService";
 import { TokenService } from "../services/tokenService";
-import { UserService } from "../services/userService";
+
 import { Types } from "../types/types";
 import { WalletRepository } from "../repositories/walletRepository";
 import { IWalletRepository } from "../interfaces/IWalletRepository";
@@ -74,17 +74,17 @@ import { NotificationService } from "../services/notificationService";
 import { INotificationController } from "../interfaces/INotificationController";
 import { NotificationController } from "../controllers/notificationController";
 import { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
-import { AdminDashboardService } from "../services/adminDashboardService";
+
 import { IAdminOperatorService } from "../interfaces/IAdminOperatorService";
-import { AdminOperatorService } from "../services/adminOperatorService";
+
 import { IAdminUserService } from "../interfaces/IAdminUserService";
-import { AdminUserService } from "../services/adminUserService";
+
 import { IBookingService } from "../interfaces/IBookingService";
 import { BookingService } from "../services/bookingService";
 import { ICouponService } from "../interfaces/ICouponService";
 import { CouponService } from "../services/couponService";
 import { IOperatorDashboardService } from "../interfaces/IOperatorDashboard";
-import { OperatorDashboardService } from "../services/operatorDashboardService";
+
 import { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
 import { PackageCategoryService } from "../services/packageCategoryService";
 import { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
@@ -97,6 +97,12 @@ import { PackageService } from "../services/packageService";
 
 import { WishlistService } from "../services/wishlistService";
 import { IWishlistService } from "../interfaces/IWishlistService";
+import { OperatorService } from "../services/operator/operatorService";
+import { UserService } from "../services/user/userService";
+import { AdminDashboardService } from "../services/admin/adminDashboardService";
+import { AdminOperatorService } from "../services/admin/adminOperatorService";
+import { AdminUserService } from "../services/admin/adminUserService";
+import { OperatorDashboardService } from "../services/operator/operatorDashboardService";
 
 const container = new Container();
 

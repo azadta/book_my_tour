@@ -1,12 +1,12 @@
 import { inject, injectable } from "inversify";
-import { IAdminOperatorService } from "../interfaces/IAdminOperatorService";
-import { CustomError } from "../utils/customError";
-import { RESPONSE_MESSAGES } from "../constants/messages";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { Types } from "../types/types";
-import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import type { IMailService } from "../interfaces/IMailService";
-import { IAdminUpdateOperatorRequestDTO, IBlockOperatorRequestDTO, IVerifyOperatorRequestDTO } from "../dto-mapping/dto/admin/adminRequestDTO";
+import { IAdminOperatorService } from "../../interfaces/IAdminOperatorService";
+import { CustomError } from "../../utils/customError";
+import { RESPONSE_MESSAGES } from "../../constants/messages";
+import { StatusCode } from "../../constants/statusCodeConstants";
+import { Types } from "../../types/types";
+import type { IOperatorRepository } from "../../interfaces/IOperatorRepository";
+import type { IMailService } from "../../interfaces/IMailService";
+import { IAdminUpdateOperatorRequestDTO, IBlockOperatorRequestDTO, IVerifyOperatorRequestDTO } from "../../dto-mapping/dto/admin/adminRequestDTO";
 
 @injectable()
 export class AdminOperatorService implements IAdminOperatorService {
@@ -66,7 +66,7 @@ export class AdminOperatorService implements IAdminOperatorService {
       id: string,
       dto: IAdminUpdateOperatorRequestDTO,
     ) {
-      console.log('dto from adminOperatorUpdate:',dto)
+
       return await this.operatorRepository.updateById(id, dto);
     }
 }

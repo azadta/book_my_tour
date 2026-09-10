@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
-import { IAdminUserService } from "../interfaces/IAdminUserService";
-import { Types } from "../types/types";
-import { IUser } from "../interfaces/IUser";
-import type { IUserRepository } from "../interfaces/IUserRepository";
-import type { IHashService } from "../interfaces/IHashService";
+import { IAdminUserService } from "../../interfaces/IAdminUserService";
+import { Types } from "../../types/types";
+import { IUser } from "../../interfaces/IUser";
+import type { IUserRepository } from "../../interfaces/IUserRepository";
+import type { IHashService } from "../../interfaces/IHashService";
 
 @injectable()
 export class AdminUserService implements IAdminUserService {

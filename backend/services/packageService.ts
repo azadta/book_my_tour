@@ -47,9 +47,7 @@ export class PackageService implements IPackageService {
 
     return await this.packageRepository.create(dto);
   }
-  async getSinglePackageService(id: string): Promise<Ipackage | null> {
-    return await this.packageRepository.getPackageById(id);
-  }
+
   async updatePackageService(
     packageId: string,
 
@@ -180,8 +178,8 @@ export class PackageService implements IPackageService {
   }
   async getPackageByIdService(id: string) {
     const pkg = await this.packageRepository.getPackageById(id);
-    if (pkg) {
-      new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, 404);
+    if (!pkg) {
+      throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, 404);
     }
     return pkg;
   }

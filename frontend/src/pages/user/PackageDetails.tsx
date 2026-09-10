@@ -210,7 +210,7 @@ const PackageDetails = () => {
       if (isAutoScrolling.current) {
         return;
       }
-      const scrollPosition = window.scrollY + 200;
+      const scrollPosition = window.scrollY + 180;
       if (!data) return;
       for (let dayPlan of data.itinerary) {
         const el = dayRefs.current[dayPlan.day];
@@ -565,7 +565,7 @@ const PackageDetails = () => {
 
           <aside className="col-span-1 lg:col-span-3 lg:sticky self-start min-w-[250px]  lg:top-24 order-3 space-y-4 hidden lg:block">
             <div className=" space-y-4">
-              <div className="bg-white border max-h-[350px] border-gray-100 rounded-3xl p-5 shadow-gray-100/50 flex flex-col">
+              <div className="bg-white border  border-gray-100 rounded-3xl p-5 shadow-gray-100/50 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-bold text-gray-900 ">
                     Booking Summary
@@ -583,7 +583,7 @@ const PackageDetails = () => {
                       Rs {data.amount.toFixed(2)}
                     </span>
                   </div>
-                  <div className="overflow-y-auto max-h-[120px] space-y-1">
+                  <div className="overflow-y-auto  space-y-1">
                     {data.itinerary.map((day) =>
                       day.activities.map((act) => {
                         if (
@@ -806,7 +806,7 @@ const PackageDetails = () => {
                 </button>
               </div>
 
-              <div className="  hidden lg:flex flex-col bg-white p-4 rounded-2xl border border-gray-100 shadow-sm h-[350px] ">
+              <div className="  hidden lg:flex flex-col bg-white p-4 rounded-2xl border border-gray-100 shadow-sm  ">
                 <h3 className="text-xs font-bold uppercase text-gray-400 tracking-wider p-4 pb-3 border-b border-gray-100">
                   Itinerary Schedule
                 </h3>

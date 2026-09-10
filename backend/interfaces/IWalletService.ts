@@ -2,7 +2,7 @@ import {
   CreateTopupOrderRequestDTO,
   verifyTopupPaymentRequestDTO,
 } from "../dto-mapping/dto/wallet/walletRequestDTO";
-import { IWalletDocument } from "../models/Wallet";
+import { IWalletDocument, IWalletTransaction } from "../models/Wallet";
 
 export interface IWalletService {
   getWallet(userId: string): Promise<IWalletDocument>;
@@ -19,4 +19,14 @@ export interface IWalletService {
     userId: string,
     dto: verifyTopupPaymentRequestDTO,
   ): Promise<IWalletDocument | null>;
+  getWalletWithPagination(
+    userId: string,
+    page?: number,
+    limit?: number,
+  ): Promise<{
+    balance: number;
+    transactions: IWalletTransaction[];
+    totalCount: number;
+    totalPages: number;
+  }>;
 }

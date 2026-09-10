@@ -18,7 +18,7 @@ export const useOperatorRegister = () => {
       const nestedOperatorData=unFlattenObject(operatorData)
 
       const res = await axiosInstance.post( APP_ROUTES.OPERATOR.REGISTER, nestedOperatorData);
-      console.log('resData:',res.data)
+
       const { operatorId, otpExpire } = res.data;
       onSuccess(operatorId, otpExpire);
     } catch (error: any) {

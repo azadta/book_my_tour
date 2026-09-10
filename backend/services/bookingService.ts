@@ -2,6 +2,16 @@ import { inject, injectable } from "inversify";
 import { UpdateQuery } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import {
+  CancelBookingRequestDTO,
+  CreateBookingRequestDTO,
+  OperatorCancelBookingRequestDTO,
+  OperatorRescheduleBookingRequestDTO,
+  ProcessAdminCancellationRequestDTO,
+  UpdateAttendanceRequestDTO,
+  VerifyCancellationRequestDTO,
+  VerifyPaymentRequestDTO,
+} from "../dto-mapping/dto/booking/bookingRequestDTO";
 import { IOperatorBookingFilter } from "../interfaces/IBooking";
 import { IBookingPricing } from "../interfaces/IBookingPricing";
 import type {
@@ -15,21 +25,11 @@ import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { IPaymentService } from "../interfaces/IPaymentService";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
-import { AttendanceStatus, IBookingDocument } from "../models/Booking";
+import { IBookingDocument } from "../models/Booking";
 import { CouponType, ICouponDocument } from "../models/Coupon";
 import { Types } from "../types/types";
 import { bookingConfirmationMessage } from "../utils/bookingConfirmationMessage";
 import { CustomError } from "../utils/customError";
-import {
-  CancelBookingRequestDTO,
-  CreateBookingRequestDTO,
-  OperatorCancelBookingRequestDTO,
-  OperatorRescheduleBookingRequestDTO,
-  ProcessAdminCancellationRequestDTO,
-  UpdateAttendanceRequestDTO,
-  VerifyCancellationRequestDTO,
-  VerifyPaymentRequestDTO,
-} from "../dto-mapping/dto/booking/bookingRequestDTO";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -63,14 +63,17 @@ export class BookingService implements IBookingService {
     const now = new Date();
     if (approve) {
       const refundAmound = booking.cancellation?.refundAmount || 0;
-      await this.walletRepository.addTransaction(booking.userId.toString(), {
-        transactionId: `REFUND_${Date.now()}`,
-        type: "CREDIT",
-        purpose: "REFUND",
-        amount: refundAmound,
-        status: "SUCCESS",
-        description: `50% refund approved for cancelled tour: ${booking.packageId.name}`,
-      });
+      await this.walletRepository.addCreditTransaction(
+        booking.userId.toString(),
+        {
+          transactionId: `REFUND_${Date.now()}`,
+          type: "CREDIT",
+          purpose: "REFUND",
+          amount: refundAmound,
+          status: "SUCCESS",
+          description: `50% refund approved for cancelled tour: ${booking.packageId.name}`,
+        },
+      );
       return await this.bookingRepository.updateById(bookingId, {
         status: "CANCELLED",
         "cancellation.processedAt": now,
@@ -133,14 +136,17 @@ export class BookingService implements IBookingService {
     }
     const totalPaid =
       (booking.pricing.walletApplied ?? 0) + (booking.pricing.finalAmount ?? 0);
-    await this.walletRepository.addTransaction(booking.userId._id.toString(), {
-      transactionId: `REFUND_OPERATOR_${Date.now()}`,
-      type: "CREDIT",
-      purpose: "REFUND",
-      amount: totalPaid,
-      status: "SUCCESS",
-      description: `Full refund (Operator cancelled tour): ${reason}`,
-    });
+    await this.walletRepository.addCreditTransaction(
+      booking.userId._id.toString(),
+      {
+        transactionId: `REFUND_OPERATOR_${Date.now()}`,
+        type: "CREDIT",
+        purpose: "REFUND",
+        amount: totalPaid,
+        status: "SUCCESS",
+        description: `Full refund (Operator cancelled tour): ${reason}`,
+      },
+    );
 
     return await this.bookingRepository.updateById(bookingId, {
       status: "CANCELLED",
@@ -221,7 +227,7 @@ export class BookingService implements IBookingService {
         (booking.pricing.walletApplied ?? 0) +
         (booking.pricing.finalAmount ?? 0);
       const refundAmount = Math.round(totalPaid * 0.5);
-      await this.walletRepository.addTransaction(
+      await this.walletRepository.addCreditTransaction(
         booking.userId._id.toString(),
         {
           transactionId: `REFUND_50_OPERATOR_${Date.now()}`,
@@ -663,7 +669,7 @@ export class BookingService implements IBookingService {
       (booking.pricing.walletApplied ?? 0) + (booking.pricing.finalAmount ?? 0);
     if (diffInDays > 7) {
       const refundAmount = totalPaid;
-      await this.walletRepository.addTransaction(userId, {
+      await this.walletRepository.addCreditTransaction(userId, {
         transactionId: `REFUND_${Date.now()}`,
         type: "CREDIT",
         purpose: "REFUND",

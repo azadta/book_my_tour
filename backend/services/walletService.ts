@@ -60,7 +60,7 @@ export class WalletService implements IWalletService {
       status: "PENDING" as const,
       description: "Wallet Top-up via Razorpay",
     };
-    await this.walletRepository.addTransaction(userId, transaction);
+    await this.walletRepository.addPendingTransaction(userId, transaction);
     return {
       orderId: order.id,
       amount: order.amount,
@@ -73,7 +73,7 @@ export class WalletService implements IWalletService {
     const isValid = this.paymentService.verifySignature(dto);
     const status = isValid ? "SUCCESS" : "FAILED";
     const updatedWallet =
-      await this.walletRepository.updateTransactionAndBalance(
+      await this.walletRepository.updatePendingTransactionAndBalance(
         userId,
         dto.razorpayOrderId,
         dto.razorpayPaymentId,
@@ -88,10 +88,26 @@ export class WalletService implements IWalletService {
     return updatedWallet;
   }
 
-  // async getWalletWithPagination(userId:string,limit:number,skip:number){
-
-  //     const wallet= await this.walletRepository.findOne({userId})
-  //     const walletTransactions=wallet?.transactions
-  //     const updatedWallet={transactions}
-  // }
+  async getWalletWithPagination(
+    userId: string,
+    page: number = 1,
+    limit: number = 5,
+  ) {
+    let { wallet, totalCount, transactions } =
+      await this.walletRepository.getPaginatedWallet(userId, page, limit);
+    if (!wallet) {
+      const newWallet = await this.walletRepository.create({
+        userId: new mongoose.Types.ObjectId(userId),
+        balance: 0,
+        transactions: [],
+      });
+      return { balance: 0, transactions: [], totalCount: 0, totalPages: 1 };
+    }
+    return {
+      balance: wallet.balance,
+      transactions,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit) || 1,
+    };
+  }
 }

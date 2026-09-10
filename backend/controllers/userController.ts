@@ -363,7 +363,7 @@ export class UserController implements IUserController {
         id as string,
       );
       res
-        .status(200)
+        .status(StatusCode.OK)
         .json({ pkg: PackageResponseMapper.toPackageResponseDTO(rawPackage) });
     } catch (error) {
       next(error);
@@ -382,7 +382,7 @@ export class UserController implements IUserController {
           category as string,
         );
       res
-        .status(200)
+        .status(StatusCode.OK)
         .json(
           PackageDestinationResponseMapper.toDestinationListResponseDTO(
             rawDestinations,
@@ -405,7 +405,7 @@ export class UserController implements IUserController {
         category as string,
       );
       res
-        .status(200)
+        .status(StatusCode.OK)
         .json(PackageResponseMapper.toPackageListResponseDTO(packages));
     } catch (error) {
       next(error);
@@ -429,7 +429,7 @@ export class UserController implements IUserController {
 
       const wishlistGroups =
         await this.wishlistService.getUserWishlists(userId);
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         wishlistGroups:
           WishlistResponseMapper.toGroupResponseListDTO(wishlistGroups),
@@ -459,7 +459,7 @@ export class UserController implements IUserController {
         userId,
         dto,
       );
-      res.status(201).json({
+      res.status(StatusCode.CREATED).json({
         success: true,
         wishlistGroup: WishlistResponseMapper.toGroupResponseDTO(wishlistGroup),
       });
@@ -486,7 +486,7 @@ export class UserController implements IUserController {
       const dto = WishlistRequestMapper.toTogglePackageReqDTO(req.body);
       const updatedGroup =
         await this.wishlistService.togglePackageInWishlistGroup(userId, dto);
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
       });
@@ -499,7 +499,7 @@ export class UserController implements IUserController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        res.status(401).json({
+        res.status(StatusCode.UNAUTHORIZED).json({
           success: false,
           message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
         });
@@ -513,7 +513,7 @@ export class UserController implements IUserController {
         groupId as string,
         dto,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
       });
@@ -530,7 +530,7 @@ export class UserController implements IUserController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        res.status(401).json({
+        res.status(StatusCode.UNAUTHORIZED).json({
           success: false,
           message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
         });
@@ -542,7 +542,7 @@ export class UserController implements IUserController {
         userId,
         groupId as string,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toShareLinkDTO(shareData),
       });
@@ -561,7 +561,7 @@ export class UserController implements IUserController {
       const sharedGroup = await this.wishlistService.getSharedGroup(
         shareToken as string,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(sharedGroup),
       });
@@ -578,7 +578,7 @@ export class UserController implements IUserController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        res.status(401).json({
+        res.status(StatusCode.UNAUTHORIZED).json({
           success: false,
           message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
         });
@@ -591,7 +591,7 @@ export class UserController implements IUserController {
         groupId as string,
         dto,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
       });
@@ -608,7 +608,7 @@ export class UserController implements IUserController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        res.status(401).json({
+        res.status(StatusCode.UNAUTHORIZED).json({
           success: false,
           message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
         });
@@ -617,7 +617,7 @@ export class UserController implements IUserController {
       const { groupId } = req.params;
 
       await this.wishlistService.deleteGroup(userId, groupId as string);
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
       });
@@ -634,7 +634,7 @@ export class UserController implements IUserController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        res.status(401).json({
+        res.status(StatusCode.UNAUTHORIZED).json({
           success: false,
           message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
         });
@@ -649,7 +649,7 @@ export class UserController implements IUserController {
         noteId as string,
         dto,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
       });
@@ -665,7 +665,7 @@ export class UserController implements IUserController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        res.status(401).json({
+        res.status(StatusCode.UNAUTHORIZED).json({
           success: false,
           message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
         });
@@ -678,7 +678,7 @@ export class UserController implements IUserController {
         groupId as string,
         noteId as string,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
       });
@@ -702,7 +702,7 @@ export class UserController implements IUserController {
         limit,
       );
       res
-        .status(200)
+        .status(StatusCode.OK)
         .json(
           ReviewResponseMapper.toPackageReviewsResponseDTO(
             data.reviews,
@@ -748,9 +748,12 @@ export class UserController implements IUserController {
       const { reviewId, packageId } = req.params;
 
       const userId = req.user?.id;
-      if (!userId || userId === "") {
+      if (!userId) {
         return next(
-          new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
+          new CustomError(
+            RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
+            StatusCode.UNAUTHORIZED,
+          ),
         );
       }
 
@@ -763,7 +766,7 @@ export class UserController implements IUserController {
           packageId as string,
           dto,
         );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.REVIEW.SUCCESS.UPDATE,
         data: ReviewResponseMapper.toUpdateReviewResponseDTO(
@@ -789,7 +792,7 @@ export class UserController implements IUserController {
         reviewId as string,
         packageId as string,
       );
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
         data: ReviewResponseMapper.toReviewStatsDTO(result.stats),
@@ -851,7 +854,7 @@ export class UserController implements IUserController {
 
       const booking = BookingResponseMapper.toBookingDTO(rawBooking);
 
-      res.status(200).json(booking);
+      res.status(StatusCode.OK).json(booking);
     } catch (error) {
       next(error);
     }
@@ -863,7 +866,7 @@ export class UserController implements IUserController {
         userId as string,
       );
       const bookings = BookingResponseMapper.toBookingListDTO(rawBookings);
-      res.status(200).json(bookings);
+      res.status(StatusCode.OK).json(bookings);
     } catch (error) {
       next(error);
     }
@@ -882,7 +885,6 @@ export class UserController implements IUserController {
         req.body,
       );
 
-      const { reason } = req.body;
       const result = await this.bookingService.cancelBooking(dto);
       const response = BookingResponseMapper.toCancelBookingResponseDTO(result);
       res.status(StatusCode.OK).json({
@@ -902,14 +904,16 @@ export class UserController implements IUserController {
   getCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await this.couponService.getAllAvailableCoupons();
-      res.status(StatusCode.OK).json(CouponResponseMapper.toAvailableCouponsDTO(data));
+      res
+        .status(StatusCode.OK)
+        .json(CouponResponseMapper.toAvailableCouponsDTO(data));
     } catch (error) {
       next(error);
     }
   };
   validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto=CouponRequestMapper.toValidateCouponDTO(req.body)
+      const dto = CouponRequestMapper.toValidateCouponDTO(req.body);
       const { code, bookingAmount, cardBin } = req.body;
       if (!code || !bookingAmount) {
         return res
@@ -917,23 +921,31 @@ export class UserController implements IUserController {
           .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
       }
       const result =
-        await this.couponService.validateAndCalculateCouponDiscount(
-         dto
-        );
-      res.status(StatusCode.OK).json(CouponResponseMapper.toValidateCouponResponseDTO(result));
+        await this.couponService.validateAndCalculateCouponDiscount(dto);
+      res
+        .status(StatusCode.OK)
+        .json(CouponResponseMapper.toValidateCouponResponseDTO(result));
     } catch (error) {
       next(error);
     }
   };
+
+
   getWallet = async (req: Request, res: Response, next: NextFunction) => {
+
     try {
-      const userId = req?.user?.id as string;
-      const wallet = await this.walletService.getWallet(userId);
-      res
-        .status(StatusCode.OK)
-        .json(WalletResponseMapper.toWalletResponseDTO(wallet));
+      const userId = req.user?.id as string;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const data = await this.walletService.getWalletWithPagination(
+        userId,
+        page,
+        limit,
+      );
+
+      res.status(StatusCode.OK).json(WalletResponseMapper.toPaginatedWalletResponseDTO(data));
     } catch (error) {
-      next(error);
+      next(error)
     }
   };
   createWalletTopupOrder = async (

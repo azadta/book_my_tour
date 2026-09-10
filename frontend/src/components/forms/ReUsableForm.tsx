@@ -7,6 +7,7 @@ import type {
   IOptionalActivity,
 } from "../../interfaces/interfaces";
 import type { ItineraryDay } from "../itinerary/types";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 interface ReUsableFormProps {
   heading: string;
@@ -38,13 +39,17 @@ const ReUsableForm = ({
   setFieldError,
   renderAfterFields,
 }: ReUsableFormProps) => {
-
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
-
+  const [showPasswordMap, setShowPasswordMap] = useState<
+    Record<string, boolean>
+  >({});
   const [imagePreviews, setImagePreviews] = useState<{
     [key: string]: string[];
   }>({});
+  const togglePasswordVisibility = (fieldId: string) => {
+    setShowPasswordMap((prev) => ({ ...prev, [fieldId]: !prev[fieldId] }));
+  };
   const formatDateForInput = (val: any) => {
     if (!val) return "";
     const date = new Date(val);
@@ -375,6 +380,13 @@ const ReUsableForm = ({
               </>
             );
           }
+          const isPasswordField = field.type === "password";
+          const isPasswordVisible = showPasswordMap[field.id] || false;
+          const inputType = isPasswordField
+            ? isPasswordVisible
+              ? "text"
+              : "password"
+            : field.type;
           const inputValue =
             field.type === "date"
               ? formatDateForInput(formData[field.id])
@@ -433,17 +445,35 @@ const ReUsableForm = ({
                 </>
               ) : (
                 <>
-                  <input
-                    key={field.id}
-                    type={field.type}
-                    id={field.id}
-                    placeholder={field.placeholder || field.label}
-                    onChange={handleChange}
-                    className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 ${field.readOnly ? "bg-gray-100 cursor-not-allowed" : ""}`}
-                    multiple={field.multiple}
-                    value={inputValue}
-                    disabled={field.disabled}
-                  />
+                  <div className="relative w-full">
+                    <input
+                      key={field.id}
+                      type={inputType}
+                      id={field.id}
+                      placeholder={field.placeholder || field.label}
+                      onChange={handleChange}
+                      className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 ${field.readOnly ? "bg-gray-100 cursor-not-allowed" : ""}`}
+                      multiple={field.multiple}
+                      value={inputValue}
+                      disabled={field.disabled}
+                    />
+                    {isPasswordField && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.currentTarget.blur();
+                          togglePasswordVisibility(field.id);
+                        }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-sky-600 focus:outline-none cursor-pointer"
+                      >
+                        {isPasswordVisible ? (
+                          <EyeOffIcon className="size-5" />
+                        ) : (
+                          <EyeIcon className="size-5" />
+                        )}
+                      </button>
+                    )}
+                  </div>
                   {fieldError[field.id] && (
                     <p className="text-red-500 text-sm mt-1">
                       {fieldError[field.id]}

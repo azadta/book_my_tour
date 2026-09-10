@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { BaseRepository } from "./baseRepository";
 import { IWalletDocument, IWalletTransaction, Wallet } from "../models/Wallet";
 import { IWalletRepository } from "../interfaces/IWalletRepository";
+import mongoose from "mongoose";
 
 @injectable()
 export class WalletRepository
@@ -11,24 +12,33 @@ export class WalletRepository
   constructor() {
     super(Wallet);
   }
-
-  async addTransaction(
+  async addCreditTransaction(
     userId: string,
     transaction: IWalletTransaction,
   ): Promise<IWalletDocument | null> {
-    const balanceAdjustment =
-      transaction.type === "CREDIT" ? transaction.amount : -transaction.amount;
+    const updatedQuery: any = { $push: { transactions: transaction } };
+    if (transaction.type === "CREDIT" && transaction.status === "SUCCESS") {
+      updatedQuery.$inc = { balance: transaction.amount };
+    }
     return await Wallet.findOneAndUpdate(
-      { userId },
-      {
-        $inc: { balance: balanceAdjustment },
-        $push: { transactions: transaction },
-      },
-      { new: true, upsert: true },
+      { userId: new mongoose.Types.ObjectId(userId) },
+      updatedQuery,
+      { new: true },
     );
   }
 
-  async updateTransactionAndBalance(
+  async addPendingTransaction(
+    userId: string,
+    transaction: IWalletTransaction,
+  ): Promise<IWalletDocument | null> {
+    return await Wallet.findOneAndUpdate(
+      { userId },
+      { $push: { transactions: transaction } },
+      { new: true },
+    );
+  }
+
+  async updatePendingTransactionAndBalance(
     userId: string,
     razorpayOrderId: string,
     razorpayPaymentId: string,
@@ -62,6 +72,37 @@ export class WalletRepository
       { new: true },
     );
   }
+  async getPaginatedWallet(
+    userId: string,
+    page: number = 1,
+    limit: number = 5,
+  ): Promise<{
+    wallet: IWalletDocument | null;
+    totalCount: number;
+    transactions: IWalletTransaction[];
+  }> {
+    const skip = (page - 1) * limit;
+    const result = await Wallet.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $project: {
+          balance: 1,
+          userId: 1,
+          totalCount: { $size: "$transactions" },
+          transactions: {
+            $slice: [{ $reverseArray: "$transactions" }, skip, limit],
+          },
+        },
+      },
+    ]);
+    if (!result || result.length === 0) {
+      return { wallet: null, totalCount: 0, transactions: [] };
+    }
 
-
+    return {
+      wallet: result[0],
+      totalCount: result[0].totalCount,
+      transactions: result[0].transactions,
+    };
+  }
 }

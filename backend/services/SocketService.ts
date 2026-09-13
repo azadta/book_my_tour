@@ -118,6 +118,7 @@ export class SocketService implements ISocketService {
           chatId: string;
           text: string;
           recipientId: string;
+          recipientModel: "User" | "Operator" | "Admin";
           senderModel: "User" | "Operator" | "Admin";
         }) => {
           const isReciepentOnline = this.onlineUsers.has(data.recipientId);
@@ -176,7 +177,16 @@ export class SocketService implements ISocketService {
             .emit("message_read", { chatId, messageIds, readBy: userId });
         },
       );
-      socket.on("clear_chat", ({ chatId }: { chatId: string }) => {
+      socket.on("clear_chat", async({ chatId }: { chatId: string }) => {
+        const chat=await this.chatRepository.findById(chatId)
+        if(chat&&chat.participants){
+          chat.participants.forEach((p:any)=>{
+            const participantId=p.participantId?._id?.toString()||p.participantId?.toString()
+            if(participantId){
+              this.io.to(`user:${participantId}`).emit('chat_cleared',{chatId})
+            }
+          })
+        }
         this.io.to(`chat:${chatId}`).emit("chat_cleared", { chatId });
       });
 

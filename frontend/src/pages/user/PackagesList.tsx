@@ -64,7 +64,7 @@ const PackagesList = () => {
   const [debouncedMaxBudget] = useDebounce(maxBudget, 500);
   const [debouncedMaxDuration] = useDebounce(maxDuration, 500);
 
-  const selectedDate = searchParams.get("selectedDate") || "";
+  const startDate = searchParams.get("startDate") || "";
   const category = searchParams.get("category") || "All";
 
   const resultPerPage = 6;
@@ -208,11 +208,11 @@ const PackagesList = () => {
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 <input
                   type="date"
-                  value={selectedDate}
+                  value={startDate}
                   onChange={(e) =>
                     setSearchParams((prev) =>
                       updateSearchParams(prev, {
-                        selectedDate: e.target.value,
+                        startDate: e.target.value,
                       }),
                     )
                   }

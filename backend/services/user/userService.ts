@@ -3,53 +3,27 @@ import { Types as mongooseType } from "mongoose";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../../constants/messages";
 import { StatusCode } from "../../constants/statusCodeConstants";
-import type { IDestinationRepository } from "../../interfaces/IDestinationRepository";
 import type { IHashGenerator } from "../../interfaces/IHashGenerator";
 import type { IHashService } from "../../interfaces/IHashService";
 import type { IMailService } from "../../interfaces/IMailService";
-import type { IPackageCategoryRepository } from "../../interfaces/IPackageCategoryRepository";
-import type { IPackageRepository } from "../../interfaces/IPackageRepository";
-import type { IReviewRepository } from "../../interfaces/IReviewRepository";
 import type { ISecurityService } from "../../interfaces/ISecurityService";
 import type { ITokenService } from "../../interfaces/ITokenService";
 import { IUser, IUserResponse } from "../../interfaces/IUser";
 import type { IUserRepository } from "../../interfaces/IUserRepository";
 import type { IUserService } from "../../interfaces/IUserService";
-import type { IWishlistRepository } from "../../interfaces/IWishlistRepository";
 import { Types } from "../../types/types";
 import { CustomError } from "../../utils/customError";
 
-import type { IBookingRepository } from "../../interfaces/IBookingRepository";
-import type { ICouponRepository } from "../../interfaces/ICouponRepository";
-import type { IPaymentService } from "../../interfaces/IPaymentService";
-import type { IWalletRepository } from "../../interfaces/IWalletRepository";
 
 @injectable()
 export class UserService implements IUserService {
   constructor(
     @inject(Types.UserRepository) private userRepository: IUserRepository,
-    @inject(Types.PackageCategoryRepository)
-    private packageCategoryRepository: IPackageCategoryRepository,
-    @inject(Types.PackageRepository)
-    private packageRepository: IPackageRepository,
-    @inject(Types.DestinationRepository)
-    private destinationRepository: IDestinationRepository,
     @inject(Types.MailService) private mailService: IMailService,
     @inject(Types.BcryptHashService) private hashService: IHashService,
     @inject(Types.SecurityService) private securityService: ISecurityService,
     @inject(Types.TokenService) private tokenService: ITokenService,
     @inject(Types.CryptoHashService) private resetTokenHasher: IHashGenerator,
-    @inject(Types.WishlistRepository)
-    private wishlistRepository: IWishlistRepository,
-    @inject(Types.ReviewRepository)
-    private reviewRepository: IReviewRepository,
-    @inject(Types.PaymentService)
-    private paymentService: IPaymentService,
-    @inject(Types.BookingRepository)
-    private bookingRepository: IBookingRepository,
-    @inject(Types.CouponRepository)
-    private couponRepository: ICouponRepository,
-    @inject(Types.WalletRepository) private walletRepository: IWalletRepository,
   ) {}
 
   async registerUser(userData: {

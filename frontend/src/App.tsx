@@ -84,6 +84,10 @@ const App = () => {
             element={<PackageDetails />}
           />
           <Route
+            path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
+            element={<SharedWishlist />}
+          />
+          <Route
             element={
               <PublicRoute
                 isAuthenticated={!!currentUser}
@@ -166,10 +170,6 @@ const App = () => {
           <Route
             path={FRONTEND_ROUTES.OPERATOR.FORGOT_PASSWORD}
             element={<OperatorForgotPassword />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
-            element={<SharedWishlist />}
           />
         </Route>
 

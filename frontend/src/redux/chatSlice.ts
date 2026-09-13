@@ -111,12 +111,15 @@ const chatSlice = createSlice({
       }
     },
     clearChatMessages: (state, action: PayloadAction<string>) => {
-      if (state.activeChat?._id === action.payload) {
+      const chatId = action.payload;
+
+      if (state.activeChat?._id === chatId) {
         state.messages = [];
       }
-      const chatIndex = state.chats.findIndex((c) => c._id === action.payload);
+      const chatIndex = state.chats.findIndex((c) => c._id === chatId);
       if (chatIndex !== -1) {
         state.chats[chatIndex].lastMessage = undefined;
+        state.chats[chatIndex].unreadCount = {};
       }
     },
     updateChatLastMessage: (
@@ -124,9 +127,11 @@ const chatSlice = createSlice({
       action: PayloadAction<{ chatId: string; message: IMessage }>,
     ) => {
       const { chatId, message } = action.payload;
-      const chat = state.chats.find((c) => c._id === chatId);
-      if (chat) {
-        chat.lastMessage = message;
+      const chatIndex = state.chats.findIndex((c) => c._id === chatId);
+      if (chatIndex !== -1) {
+        const updatedChat = { ...state.chats[chatIndex], lastMessage: message };
+        state.chats.splice(chatIndex, 1);
+        state.chats.unshift(updatedChat);
       }
     },
   },

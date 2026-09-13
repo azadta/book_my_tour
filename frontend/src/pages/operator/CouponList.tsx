@@ -38,6 +38,7 @@ const CouponList = () => {
           <span className="text-xs text-gray-600 block">{c.title}</span>
         </div>
       ),
+      filterValue: (c: ICouponItem) => `${c.code} ${c.title}`,
     },
     {
       label: "Type",
@@ -48,6 +49,7 @@ const CouponList = () => {
           {c.type === "BANK" ? `${c.bankName || "Bank Offer"}` : "General"}
         </span>
       ),
+      filterValue: (c: ICouponItem) => `${c.type} ${c.bankName || ""}`,
     },
     {
       label: "Discount",
@@ -58,14 +60,18 @@ const CouponList = () => {
             : `Rs ${c.discountValue} OFF`}
         </span>
       ),
+      filterValue: (c: ICouponItem) => `${c.discountType} ${c.discountValue}`,
     },
     {
       label: "Min Spend",
       render: (c: ICouponItem) => `Rs ${c.minBookingAmount ?? 0}`,
+      filterValue: (c: ICouponItem) => `${c.minBookingAmount ?? 0}`,
     },
     {
       label: "Valid Till",
       render: (c: ICouponItem) =>
+        c.validTill ? new Date(c.validTill).toLocaleDateString() : "N/A",
+      filterValue: (c: ICouponItem) =>
         c.validTill ? new Date(c.validTill).toLocaleDateString() : "N/A",
     },
     {
@@ -77,6 +83,7 @@ const CouponList = () => {
           {c.isActive ? "Active" : "Inactive"}
         </span>
       ),
+      filterValue: (c: ICouponItem) => (c.isActive ? "Active" : "Inactive"),
     },
   ];
 

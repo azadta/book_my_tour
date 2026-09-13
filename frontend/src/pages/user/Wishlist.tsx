@@ -79,7 +79,7 @@ const Wishlist = () => {
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 px-2">
               Your Folders
             </h3>
-            {groups.map((group) => {
+            {groups?.map((group) => {
               const isActive = activeGroup._id === group?._id;
               const isEditing = editingGroupId === group._id;
               return (
@@ -93,7 +93,7 @@ const Wishlist = () => {
                         type="text"
                         value={groupTitleInput}
                         onChange={(e) => setGroupTitleInput(e.target.value)}
-                        className="w-full text-sm p-1 rounded border border-gray-300 text-white focus:outline-none "
+                        className="w-full text-sm p-1 rounded border border-gray-300 text-black bg-white focus:outline-none "
                         autoFocus
                       />
                       <button
@@ -218,14 +218,14 @@ const Wishlist = () => {
                         <h4 className="font-bold text-gray-900 text-sm line-clamp-1">
                           {pkg.name}
                         </h4>
-                            {pkg.destinations && (
-                        <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
-                          <MapPin className="w-3.5 h-3.5" />
-                          {pkg.destinations
-                            .map((dest: any) => dest.name)
-                            .join(", ")}
-                        </span>
-                      )}
+                        {pkg.destinations && (
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
+                            <MapPin className="w-3.5 h-3.5" />
+                            {pkg.destinations
+                              .map((dest: any) => dest.name)
+                              .join(", ")}
+                          </span>
+                        )}
                       </div>
 
                       <div className="text-sm font-black text-gray-900">
@@ -302,7 +302,7 @@ const Wishlist = () => {
                             <span className="flex-1 ">{note.text}</span>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ">
                               <button
-                                onClick={() => {
+                                onClick={(e) => {
                                   setEditingNoteId(note._id);
                                   setNoteTextInput(note.text);
                                 }}

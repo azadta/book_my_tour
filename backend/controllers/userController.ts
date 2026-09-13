@@ -881,7 +881,7 @@ export class UserController implements IUserController {
       const { bookingId } = req.params;
       const dto = BookingRequestMapper.toCancelBookingDTO(
         userId,
-        bookingId,
+        bookingId as string,
         req.body,
       );
 

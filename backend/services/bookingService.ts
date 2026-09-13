@@ -489,7 +489,7 @@ export class BookingService implements IBookingService {
       amount: remainingPayable,
       receipt: `receipt_pkg_${Date.now()}`,
       ...(bankCoupon && {
-        offerId: bankCoupon.razorpayOfferId,
+        offerId: bankCoupon?.razorpayOfferId,
       }),
       notes: {
         userId,

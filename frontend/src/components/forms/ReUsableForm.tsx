@@ -269,6 +269,7 @@ const ReUsableForm = ({
                     className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] border-none focus:outline-none `}
                     disabled={!countryCode}
                   >
+                    {countryCode && <option value="">Choose State</option>}
                     {states.map((state) => (
                       <option key={state.isoCode} value={state.name}>
                         {state.name}

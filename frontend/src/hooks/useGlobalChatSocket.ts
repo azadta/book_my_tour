@@ -4,12 +4,13 @@ import type { RootState } from "@/redux/store";
 import { useEffect, useRef } from "react";
 import { connectSocket, getSocket } from "@/socket/socket";
 import {
+  clearChatMessages,
   incrementUnreadBadge,
   setChats,
   updateChatLastMessage,
 } from "@/redux/chatSlice";
 import { axiosInstance } from "@/api/axiosInstance";
-import type { IChat } from "@/interfaces/IChat";
+import type { IChat, IMessage } from "@/interfaces/IChat";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
@@ -36,9 +37,13 @@ export const useGlobalChatSocket = () => {
     fetchInitialChats();
     connectSocket();
     const socket = getSocket();
-    const handleReceiveMessage = (message: any) => {
+    const handleReceiveMessage = (data: {
+      chatId: string;
+      message: IMessage;
+    }) => {
+      const { chatId, message } = data;
       const currentActiveChat = activeChatRef.current;
-      if (!currentActiveChat || currentActiveChat._id !== message.chatId) {
+      if (!currentActiveChat || currentActiveChat._id !== chatId) {
         dispatch(
           incrementUnreadBadge({
             chatId: message.chatId,
@@ -46,11 +51,16 @@ export const useGlobalChatSocket = () => {
           }),
         );
       }
-      dispatch(updateChatLastMessage({ chatId: message.chatId, message }));
+      dispatch(updateChatLastMessage({ chatId: chatId, message }));
+    };
+    const handleChatCleared = ({ chatId }: { chatId: string }) => {
+      dispatch(clearChatMessages(chatId));
     };
     socket.on("new_message_notification", handleReceiveMessage);
+    socket.on("chat_cleared", handleChatCleared);
     return () => {
       socket.off("new_message_notification", handleReceiveMessage);
+      socket.off("chat_cleared", handleChatCleared);
     };
   }, [currentUser?.id, dispatch]);
 };

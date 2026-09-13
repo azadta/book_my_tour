@@ -34,9 +34,9 @@ const ChatList = ({
       </div>
 
       <div className="flex-1 overflow-y-auto divide-y divide-sky-900/60 ">
-        {chats.map((chat) => {
+        {chats?.map((chat) => {
           const recipient = chat.participants.find(
-            (p) => p.participantId._id !== currentUser?.id,
+            (p) => p.participantId?._id !== currentUser?.id,
           )?.participantId;
           const unreadCount = currentUser?.id
             ? chat.unreadCount?.[currentUser.id] || 0

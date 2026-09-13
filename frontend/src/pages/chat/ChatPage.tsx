@@ -9,7 +9,7 @@ const ChatPage = () => {
   const {
     activeChat,
     chats,
-    fetchChats,
+
     messages,
     onlineUsers,
     selectChat,
@@ -22,14 +22,12 @@ const ChatPage = () => {
   const [searchParams] = useSearchParams();
   const userIdParam = searchParams.get("userId");
 
-  useEffect(() => {
-    fetchChats();
-  }, [fetchChats]);
+
 
   useEffect(() => {
     if (!userIdParam) return;
     const targetChat = chats.find((c) =>
-      c.participants.some((p) => p.participantId._id === userIdParam),
+      c.participants.some((p) => p.participantId?._id === userIdParam),
     );
     if (targetChat) {
       selectChat(targetChat);

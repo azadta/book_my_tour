@@ -13,12 +13,12 @@ import {
 export class BookingRequestMapper {
   static toCancelBookingDTO(
     userId: string,
-    params: any,
+    bookingId: string,
     body: any,
   ): CancelBookingRequestDTO {
     return {
       userId,
-      bookingId: params.bookingId || "",
+      bookingId: bookingId ?? "",
       reason: body?.reason ?? "",
     };
   }

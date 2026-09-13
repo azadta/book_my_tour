@@ -54,8 +54,8 @@ export const useChat = () => {
         const msgResponse = await axiosInstance.get<IMessageResponse>(
           APP_ROUTES.CHATS.CHAT_MESSAGES(chat._id),
         );
-        if (activeChat) {
-          socket.emit("join_chat", activeChat._id);
+        if (activeChatRef.current) {
+          socket.emit("join_chat", activeChatRef.current._id);
         }
 
         dispatch(setMessages(msgResponse.data.messages || []));
@@ -89,14 +89,13 @@ export const useChat = () => {
   );
 
   useEffect(() => {
-    const socket=getSocket()
-    socket.emit('enter_chat_page')
+    const socket = getSocket();
+    socket.emit("enter_chat_page");
     return () => {
       if (activeChatRef.current?._id) {
-        const socket = getSocket();
         socket.emit("leave_chat", activeChatRef.current._id);
       }
-      socket.emit('leave_chat_page')
+      socket.emit("leave_chat_page");
       dispatch(setActiveChat(null));
       dispatch(setMessages([]));
     };
@@ -133,11 +132,14 @@ export const useChat = () => {
       },
     );
     socket.on("receive_message", (message: IMessage) => {
-      if (activeChat && message.chatId === activeChat._id) {
+      if (
+        activeChatRef.current &&
+        message.chatId === activeChatRef.current._id
+      ) {
         dispatch(addMessage(message));
         if (message.senderId !== currentUser.id) {
           socket.emit("mark_as_read", {
-            chatId: activeChat._id,
+            chatId: activeChatRef.current._id,
             messageIds: [message._id],
             readBy: currentUser.id,
           });
@@ -153,11 +155,6 @@ export const useChat = () => {
 
       dispatch(updateChatLastMessage({ chatId: message.chatId, message }));
     });
-
-    const handleChatCleared = ({ chatId }: { chatId: string }) => {
-      dispatch(clearChatMessages(chatId));
-    };
-    socket.on("chat_cleared", handleChatCleared);
 
     socket.on(
       "user_status_change",
@@ -175,14 +172,15 @@ export const useChat = () => {
     return () => {
       socket.off("connect", handleConnect);
       socket.off("receive_message");
+      // socket.off("new_message_notification");
       socket.off("user_status_change");
       socket.off("user_typing");
       socket.off("user_stop_typing");
       socket.off("message_read");
-      socket.off("chat_cleared", handleChatCleared);
+
       socket.off("online_users_list", handleOnlineUsersList);
     };
-  }, [currentUser, activeChat, dispatch]);
+  }, [currentUser, dispatch]);
 
   const fetchChats = useCallback(async () => {
     try {
@@ -203,15 +201,18 @@ export const useChat = () => {
     async (chat: IChat | null) => {
       const socket = getSocket();
       if (!chat) {
-        if (activeChat?._id) {
-          socket.emit("leave_chat", activeChat._id);
+        if (activeChatRef.current?._id) {
+          socket.emit("leave_chat", activeChatRef.current._id);
         }
         dispatch(setActiveChat(null));
         dispatch(setMessages([]));
         return;
       }
-      if (activeChat?._id && activeChat._id !== chat._id) {
-        socket.emit("leave_chat", activeChat._id);
+      if (
+        activeChatRef.current?._id &&
+        activeChatRef.current._id !== chat._id
+      ) {
+        socket.emit("leave_chat", activeChatRef.current._id);
       }
       dispatch(setActiveChat(chat));
       if (currentUser?.id) {
@@ -248,17 +249,22 @@ export const useChat = () => {
         console.error(message, error);
       }
     },
-    [dispatch],
+    [dispatch, currentUser],
   );
 
   const sendMessage = useCallback(
-    async (text: string, recipientId: string) => {
+    async (
+      text: string,
+      recipientId: string,
+      recipientIdModel: "User" | "Operator" | "Admin",
+    ) => {
       if (!activeChat || !text.trim() || !currentUser) return;
       const socket = getSocket();
       socket.emit("send_message", {
         chatId: activeChat._id,
         text,
         recipientId,
+        recipientModel: recipientIdModel,
 
         senderModel: currentUser?.role,
       });

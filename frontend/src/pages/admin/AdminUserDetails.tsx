@@ -18,7 +18,9 @@ const AdminUserDetails = () => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalAction, setModalAction] = useState<() => Promise<void>>(() => async() => {});
+  const [modalAction, setModalAction] = useState<() => Promise<void>>(
+    () => async () => {},
+  );
 
   const { users, loading, blockUser, deleteUser, totalCount } =
     useAdminUserManagement(currentPage, resultPerpage);
@@ -38,7 +40,7 @@ const AdminUserDetails = () => {
   const actions: ActionButton<IUser>[] = [
     {
       label: () => "Edit",
-      onClick: (user) => navigate( FRONTEND_ROUTES.ADMIN.EDIT_USER(user._id)),
+      onClick: (user) => navigate(FRONTEND_ROUTES.ADMIN.EDIT_USER(user._id)),
       className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
       disabled: () => false,
       loadingText: "Editing...",
@@ -56,6 +58,7 @@ const AdminUserDetails = () => {
       disabled: () => false,
       loadingText: "Processing...",
     },
+
     {
       label: () => "Delete",
       onClick: (user) => {

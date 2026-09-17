@@ -42,7 +42,7 @@ import { PackageRepository } from "../repositories/packageRepository";
 import { ReviewRepository } from "../repositories/reviewRepository";
 import { UserRepository } from "../repositories/userRepository";
 import { WishlistRepository } from "../repositories/wishlistRepository";
-import { AdminService } from "../services/admin/adminService";
+import { AdminService } from "../services/adminService";
 import { BcryptHashService } from "../services/bcryptHashService";
 import { CommonAuthService } from "../services/commonAuthService";
 import { CryptoHashService } from "../services/cryptoHashService";
@@ -52,57 +52,67 @@ import { RazorpayPaymentService } from "../services/RazorpayPaymentService";
 import { SecurityService } from "../services/securityService";
 import { TokenService } from "../services/tokenService";
 
-import { Types } from "../types/types";
-import { WalletRepository } from "../repositories/walletRepository";
+import { ChatController } from "../controllers/chatController";
+import { NotificationController } from "../controllers/notificationController";
+import { IChatController } from "../interfaces/IChatController";
+import { IChatRepository } from "../interfaces/IChatRepository";
+import { IChatService } from "../interfaces/IChatService";
+import { IMessageRepository } from "../interfaces/IMessageRepository";
+import { INotificationController } from "../interfaces/INotificationController";
+import { INotificationRepository } from "../interfaces/INotificationRepository";
+import { INotificationService } from "../interfaces/INotificationService";
+import { ISocketService } from "../interfaces/ISocketService";
 import { IWalletRepository } from "../interfaces/IWalletRepository";
 import { IWalletService } from "../interfaces/IWalletService";
-import { WalletService } from "../services/walletService";
-import { IChatRepository } from "../interfaces/IChatRepository";
 import { ChatRepository } from "../repositories/chatRepositories";
-import { IMessageRepository } from "../interfaces/IMessageRepository";
 import { MessageRepository } from "../repositories/messageRepository";
-import { IChatService } from "../interfaces/IChatService";
-import { ChatService } from "../services/chatService";
-import { ISocketService } from "../interfaces/ISocketService";
-import { SocketService } from "../services/SocketService";
-import { IChatController } from "../interfaces/IChatController";
-import { ChatController } from "../controllers/chatController";
-import { INotificationRepository } from "../interfaces/INotificationRepository";
 import { NotificationRepository } from "../repositories/notificationRepository";
-import { INotificationService } from "../interfaces/INotificationService";
+import { WalletRepository } from "../repositories/walletRepository";
+import { ChatService } from "../services/chatService";
 import { NotificationService } from "../services/notificationService";
-import { INotificationController } from "../interfaces/INotificationController";
-import { NotificationController } from "../controllers/notificationController";
-import { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
-
-import { IAdminOperatorService } from "../interfaces/IAdminOperatorService";
-
-import { IAdminUserService } from "../interfaces/IAdminUserService";
+import { SocketService } from "../services/SocketService";
+import { WalletService } from "../services/walletService";
+import { Types } from "../types/types";
 
 import { IBookingService } from "../interfaces/IBookingService";
-import { BookingService } from "../services/bookingService";
 import { ICouponService } from "../interfaces/ICouponService";
+import { BookingService } from "../services/bookingService";
 import { CouponService } from "../services/couponService";
-import { IOperatorDashboardService } from "../interfaces/IOperatorDashboard";
 
 import { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
-import { PackageCategoryService } from "../services/packageCategoryService";
 import { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
-import { PackageDestinationService } from "../services/packageDestinationService";
 import { IPackageReviewService } from "../interfaces/IPackageReviewService";
+import { PackageCategoryService } from "../services/packageCategoryService";
+import { PackageDestinationService } from "../services/packageDestinationService";
 import { PackageReviewService } from "../services/packageReviewService";
 
 import { IPackageService } from "../interfaces/IPackageService";
 import { PackageService } from "../services/packageService";
 
-import { WishlistService } from "../services/wishlistService";
+import { BookingController } from "../controllers/bookingController";
+import { CouponController } from "../controllers/couponController";
+import { DashboardController } from "../controllers/dashboardController";
+import { PackageCategoryController } from "../controllers/packageCategoryController";
+import { PackageController } from "../controllers/packageController";
+import { PackageDestinationController } from "../controllers/packageDestinationController";
+import { PackageReviewController } from "../controllers/packageReviewController";
+import { WalletController } from "../controllers/walletController";
+import { WishlistController } from "../controllers/wishlistController";
+import { IBookingController } from "../interfaces/IBookingController";
+import { ICouponController } from "../interfaces/ICouponController";
+import { IDashboardController } from "../interfaces/IDashboardController";
+import { IDashboardService } from "../interfaces/IDashboardService";
+import { IPackageCategoryController } from "../interfaces/IPackageCategoryController";
+import { IPackageController } from "../interfaces/IPackageController";
+import { IPackageDestinationController } from "../interfaces/IPackageDestinationController";
+import { IPackageReviewController } from "../interfaces/IPackageReviewController";
+import { IWalletController } from "../interfaces/IWalletController";
+import { IWishlistController } from "../interfaces/IWishlistController";
 import { IWishlistService } from "../interfaces/IWishlistService";
-import { OperatorService } from "../services/operator/operatorService";
-import { UserService } from "../services/user/userService";
-import { AdminDashboardService } from "../services/admin/adminDashboardService";
-import { AdminOperatorService } from "../services/admin/adminOperatorService";
-import { AdminUserService } from "../services/admin/adminUserService";
-import { OperatorDashboardService } from "../services/operator/operatorDashboardService";
+import { DashboardService } from "../services/dashboardService";
+import { OperatorService } from "../services/operatorService";
+import { UserService } from "../services/userService";
+import { WishlistService } from "../services/wishlistService";
 
 const container = new Container();
 
@@ -255,17 +265,10 @@ container
   .to(NotificationController)
   .inSingletonScope();
 container
-  .bind<IAdminDashboardService>(Types.AdminDashboardService)
-  .to(AdminDashboardService)
+  .bind<IDashboardService>(Types.DashboardService)
+  .to(DashboardService)
   .inSingletonScope();
-container
-  .bind<IAdminOperatorService>(Types.AdminOperatorService)
-  .to(AdminOperatorService)
-  .inSingletonScope();
-container
-  .bind<IAdminUserService>(Types.AdminUserService)
-  .to(AdminUserService)
-  .inSingletonScope();
+
 container
   .bind<IBookingService>(Types.BookingService)
   .to(BookingService)
@@ -274,10 +277,7 @@ container
   .bind<ICouponService>(Types.CouponService)
   .to(CouponService)
   .inSingletonScope();
-container
-  .bind<IOperatorDashboardService>(Types.OperatorDashboardService)
-  .to(OperatorDashboardService)
-  .inSingletonScope();
+
 container
   .bind<IPackageCategoryService>(Types.PackageCategoryService)
   .to(PackageCategoryService)
@@ -297,6 +297,43 @@ container
 container
   .bind<IPackageService>(Types.PackageService)
   .to(PackageService)
+  .inSingletonScope();
+
+container
+  .bind<IBookingController>(Types.BookingController)
+  .to(BookingController)
+  .inSingletonScope();
+container
+  .bind<ICouponController>(Types.CouponController)
+  .to(CouponController)
+  .inSingletonScope();
+container
+  .bind<IDashboardController>(Types.DashboardController)
+  .to(DashboardController)
+  .inSingletonScope();
+container
+  .bind<IPackageCategoryController>(Types.PackageCategoryController)
+  .to(PackageCategoryController)
+  .inSingletonScope();
+container
+  .bind<IPackageController>(Types.PackageController)
+  .to(PackageController)
+  .inSingletonScope();
+container
+  .bind<IPackageDestinationController>(Types.PackageDestinationController)
+  .to(PackageDestinationController)
+  .inSingletonScope();
+container
+  .bind<IPackageReviewController>(Types.PackageReviewController)
+  .to(PackageReviewController)
+  .inSingletonScope();
+container
+  .bind<IWalletController>(Types.WalletController)
+  .to(WalletController)
+  .inSingletonScope();
+container
+  .bind<IWishlistController>(Types.WishlistController)
+  .to(WishlistController)
   .inSingletonScope();
 
 export const userController = container.get<IUserController>(
@@ -327,3 +364,30 @@ export const notificationController = container.get<INotificationController>(
   Types.NotificationController,
 );
 export const socketService = container.get<ISocketService>(Types.SocketService);
+export const bookingController = container.get<IBookingController>(
+  Types.BookingController,
+);
+export const couponController = container.get<ICouponController>(
+  Types.CouponController,
+);
+export const dashboardController = container.get<IDashboardController>(
+  Types.DashboardController,
+);
+export const packageCategoryController =
+  container.get<IPackageCategoryController>(Types.PackageCategoryController);
+export const packageController = container.get<IPackageController>(
+  Types.PackageController,
+);
+export const packageDestinationController =
+  container.get<IPackageDestinationController>(
+    Types.PackageDestinationController,
+  );
+export const packageReviewController = container.get<IPackageReviewController>(
+  Types.PackageReviewController,
+);
+export const walletController = container.get<IWalletController>(
+  Types.WalletController,
+);
+export const wishlistController = container.get<IWishlistController>(
+  Types.WishlistController,
+);

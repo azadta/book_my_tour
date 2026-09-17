@@ -89,7 +89,7 @@ router.put(
 router.get(
   ROUTES.OPERATOR.PACKAGES,
   authMiddleware.verifyRole("operator"),
-  operatorController.getPaginatedPackages,
+  operatorController.getOperatorPaginatedPackages,
 );
 router.get(
   ROUTES.OPERATOR.COUPONS,

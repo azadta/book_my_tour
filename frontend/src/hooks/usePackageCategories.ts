@@ -17,7 +17,7 @@ export const usePackageCategories = () => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const res = await axiosInstance.get(APP_ROUTES.USER.PACKAGE_CATEGORIES);
+        const res = await axiosInstance.get(APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ALL);
         setCategories(res.data);
       } catch (error: any) {
         setError(

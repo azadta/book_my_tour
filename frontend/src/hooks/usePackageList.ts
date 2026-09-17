@@ -30,7 +30,7 @@ export const usePackageList = () => {
     setLoadingPackages(true);
     try {
       const { data } = await axiosInstance.get(
-        `${APP_ROUTES.USER.PACKAGE_FILTER}?${query}`,
+        `${APP_ROUTES.PACKAGES.USER.FILTER}?${query}`,
       );
 
       setPackages(data.packages || []);
@@ -47,7 +47,7 @@ export const usePackageList = () => {
     setLoadingCategories(true);
     try {
       const { data } = await axiosInstance.get(
-        APP_ROUTES.USER.ACTIVE_PACKAGE_CATEGORIES,
+        APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ACTIVE,
       );
 
       setActiveCategories(data.categories || []);
@@ -63,7 +63,7 @@ export const usePackageList = () => {
 
   const fetchWishlists = async () => {
     try {
-      const { data } = await axiosInstance.get(APP_ROUTES.USER.WISHLISTS);
+      const { data } = await axiosInstance.get(APP_ROUTES.WISHLISTS.USER.LIST);
 
       setWishlistGroups(data.wishlistGroups);
     } catch (error: any) {
@@ -79,7 +79,7 @@ export const usePackageList = () => {
   const handleToggleWishlistGroup = async (groupId: string) => {
     if (!selectedPackageForWishList) return;
     try {
-      await axiosInstance.post(APP_ROUTES.USER.WISHLIST_TOGGLE, {
+      await axiosInstance.post(APP_ROUTES.WISHLISTS.USER.TOGGLE, {
         groupId,
         packageId: selectedPackageForWishList,
       });
@@ -96,7 +96,7 @@ export const usePackageList = () => {
   const handleCreateWishlistGroup = async (title: string) => {
     try {
       const { data } = await axiosInstance.post(
-        APP_ROUTES.USER.WISHLIST_CREATE,
+        APP_ROUTES.WISHLISTS.USER.CREATE_GROUP,
         { title },
       );
 

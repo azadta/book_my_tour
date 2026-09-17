@@ -103,7 +103,7 @@ const Profile = () => {
         },
       );
       const imgData = await res.json();
-      await post(APP_ROUTES.USER.UPDATE_IMAGE, { image: imgData.secure_url });
+      await post(APP_ROUTES.USERS.USER.UPDATE_IMAGE, { image: imgData.secure_url });
       dispatch(
         updateUserSuccess({ ...currentUser!, image: imgData.secure_url }),
       );
@@ -125,7 +125,7 @@ const Profile = () => {
     try {
       dispatch(updateUserStart());
       const updatedUser = await post(
-        APP_ROUTES.USER.UPDATE(currentUser?._id as string),
+        APP_ROUTES.USERS.USER.UPDATE(currentUser?._id as string),
         formData,
       );
 
@@ -149,7 +149,7 @@ const Profile = () => {
   const deleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      await del(APP_ROUTES.USER.DELETE(currentUser?._id as string));
+      await del(APP_ROUTES.USERS.USER.DELETE(currentUser?._id as string));
       dispatch(deleteUserSuccess());
       toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.DELETE);
       navigate(FRONTEND_ROUTES.USER.HOME, { replace: true });
@@ -173,7 +173,7 @@ const Profile = () => {
   const handleLogOut = async () => {
     try {
       dispatch(logoutUserStart());
-      await del(APP_ROUTES.USER.LOGOUT);
+      await del(APP_ROUTES.USERS.USER.LOGOUT);
       disconnectSocket();
       dispatch(setActiveChat(null));
       dispatch(setMessages([]));

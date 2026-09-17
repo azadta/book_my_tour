@@ -63,7 +63,7 @@ router.put(
   ROUTES.ADMIN.OPS_UPDATE,
   authMiddleware.verifyRole("admin"),
   validateUpdateOperator,
-  adminController.updateOperator,
+  adminController.AdminUpdateOperator,
 );
 
 router.get(
@@ -79,7 +79,7 @@ router.put(
 router.delete(
   ROUTES.ADMIN.USERS_DELETE,
   authMiddleware.verifyRole("admin"),
-  adminController.deleteUser,
+  adminController.adminDeleteUser,
 );
 router.get(
   ROUTES.ADMIN.USERS_SINGLE,
@@ -90,7 +90,7 @@ router.put(
   ROUTES.ADMIN.USERS_UPDATE,
   authMiddleware.verifyRole("admin"),
   validateUpdateUser,
-  adminController.updateUser,
+  adminController.adminUpdateUser,
 );
 
 router.post(
@@ -119,7 +119,7 @@ router.post(
 router.get(
   ROUTES.ADMIN.PACKAGES_LIST,
   authMiddleware.verifyRole("admin"),
-  adminController.getAllPackages,
+  adminController.getAdminAllPackages,
 );
 router.post(
   ROUTES.ADMIN.RESET_PASSWORD_AUTH,
@@ -157,7 +157,7 @@ router.get(
 router.delete(
   ROUTES.ADMIN.DELETE_PACKAGE,
   authMiddleware.verifyRole("admin"),
-  adminController.deletePackage,
+  adminController.adminDeletePackage,
 );
 
 router.get(

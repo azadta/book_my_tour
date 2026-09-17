@@ -5,51 +5,15 @@ import { CustomError } from "../utils/customError";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import type { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
-import type { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
-import type { IPackageService } from "../interfaces/IPackageService";
 import { IUserController } from "../interfaces/IUserController";
 import type { IUserService } from "../interfaces/IUserService";
-import type { IWalletService } from "../interfaces/IWalletService";
 import { Types } from "../types/types";
 import { logger } from "../utils/logger";
 
-import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
-import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
-import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/PackageCategoryResponseMapper";
-import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
-import { ReviewRequestMapper } from "../dto-mapping/mapper/package-review/ReviewRequestMapper";
-import { ReviewResponseMapper } from "../dto-mapping/mapper/package-review/ReviewResponseMapper";
-import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
-import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestMapper";
-import { WalletResponseMapper } from "../dto-mapping/mapper/wallet/WalletResponseMapper";
-import { WishlistRequestMapper } from "../dto-mapping/mapper/wishlist/WishlistRequestMapper";
-import { WishlistResponseMapper } from "../dto-mapping/mapper/wishlist/WishlistResponseMapper";
-import type { IBookingService } from "../interfaces/IBookingService";
-import type { ICouponService } from "../interfaces/ICouponService";
-import type { IPackageReviewService } from "../interfaces/IPackageReviewService";
-import type { IWishlistService } from "../interfaces/IWishlistService";
-import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestMapper";
-import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
 
 @injectable()
 export class UserController implements IUserController {
-  constructor(
-    @inject(Types.UserService) private userService: IUserService,
-
-    @inject(Types.PackageCategoryService)
-    private packageCategoryService: IPackageCategoryService,
-    @inject(Types.PackageDestinationService)
-    private packageDestinationService: IPackageDestinationService,
-    @inject(Types.PackageService) private packageService: IPackageService,
-
-    @inject(Types.BookingService) private bookingService: IBookingService,
-    @inject(Types.WalletService) private walletService: IWalletService,
-    @inject(Types.WishlistService) private wishlistService: IWishlistService,
-    @inject(Types.PackageReviewService)
-    private packageReviewService: IPackageReviewService,
-    @inject(Types.CouponService) private couponService: ICouponService,
-  ) {}
+  constructor(@inject(Types.UserService) private userService: IUserService) {}
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       logger.info(`Attempting registration for email ${req.body.email}`, {
@@ -252,20 +216,8 @@ export class UserController implements IUserController {
     }
   };
 
-  getAllPackageCategories = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const categories = await this.packageCategoryService.getAllCategories();
-      res.json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPaginatedPackages = async (
+  //admin
+  getPaginatedUsers = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -274,710 +226,70 @@ export class UserController implements IUserController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawPackages, totalCount] = await Promise.all([
-        this.packageService.getPaginatedPackagesService(skip, limit),
-        this.packageService.getTotalPackagesCount(),
+      const [users, totalCount] = await Promise.all([
+        this.userService.getPaginatedUsersService(skip, limit),
+        this.userService.getTotalUsersCount(),
       ]);
-
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-      });
+      res.status(StatusCode.OK).json({ users, totalCount });
     } catch (error) {
       next(error);
     }
   };
 
-  getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
+  getUserDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rawPackages = await this.packageService.getAllPackagesService();
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getAllDestinations = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const destinations =
-        await this.packageDestinationService.getAllDestinationsService();
-      res.json(
-        PackageDestinationResponseMapper.toDestinationListResponseDTO(
-          destinations,
-        ),
-      );
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getFilteredPackages = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const query = req.query;
-      const {
-        packages: rawPackages,
-        totalCount,
-        uniqueCategoryCount,
-      } = await this.packageService.getFilteredPackagesService(query);
-      res.status(200).json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-        uniqueCategoryCount,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getActiveCategories = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const rawCategories =
-        await this.packageCategoryService.getActiveCategoryService();
-      res.status(200).json({
-        categories:
-          CategoryResponseMapper.toCategoryListResponseDTO(rawCategories),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPackageById = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const rawPackage = await this.packageService.getPackageByIdService(
-        id as string,
-      );
-      res
-        .status(StatusCode.OK)
-        .json({ pkg: PackageResponseMapper.toPackageResponseDTO(rawPackage) });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getDestinationsByPackageCategory = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { category } = req.params;
-      const rawDestinations =
-        await this.packageDestinationService.getDestinationsByPackageCategoryService(
-          category as string,
-        );
-      res
-        .status(StatusCode.OK)
-        .json(
-          PackageDestinationResponseMapper.toDestinationListResponseDTO(
-            rawDestinations,
-          ),
-        );
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPackagesByCategory = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { category } = req.params;
-
-      const packages = await this.packageService.getPackagesByCategoryService(
-        category as string,
-      );
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageListResponseDTO(packages));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getWishlists = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-
-      const wishlistGroups =
-        await this.wishlistService.getUserWishlists(userId);
-      res.status(StatusCode.OK).json({
-        success: true,
-        wishlistGroups:
-          WishlistResponseMapper.toGroupResponseListDTO(wishlistGroups),
-      });
-    } catch (error: any) {
-      next(error);
-    }
-  };
-
-  createWhishlistGroup = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-      const dto = WishlistRequestMapper.toCreateGroupReqDTO(req.body);
-
-      const wishlistGroup = await this.wishlistService.createWishlistGroup(
-        userId,
-        dto,
-      );
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        wishlistGroup: WishlistResponseMapper.toGroupResponseDTO(wishlistGroup),
-      });
-    } catch (error: any) {
-      next(error);
-    }
-  };
-
-  toggleWhishlistPackage = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-
-      const dto = WishlistRequestMapper.toTogglePackageReqDTO(req.body);
-      const updatedGroup =
-        await this.wishlistService.togglePackageInWishlistGroup(userId, dto);
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  addWishlistNote = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-
-      const { groupId } = req.params;
-      const dto = WishlistRequestMapper.toAddNoteReqDTO(req.body);
-      const updatedGroup = await this.wishlistService.addNoteToWishlistGroup(
-        userId,
-        groupId as string,
-        dto,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getWishlistShareLink = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-
-      const { groupId } = req.params;
-      const shareData = await this.wishlistService.generateShareableLink(
-        userId,
-        groupId as string,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toShareLinkDTO(shareData),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getSharedWishlist = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { shareToken } = req.params;
-      const sharedGroup = await this.wishlistService.getSharedGroup(
-        shareToken as string,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(sharedGroup),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  editWishlistGroup = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-      const { groupId } = req.params;
-      const dto = WishlistRequestMapper.toEditGroupReqDTO(req.body);
-      const updatedGroup = await this.wishlistService.editGroup(
-        userId,
-        groupId as string,
-        dto,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  deleteWishlistGroup = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-      const { groupId } = req.params;
-
-      await this.wishlistService.deleteGroup(userId, groupId as string);
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  editWishlistNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-      const { groupId, noteId } = req.params;
-      const dto = WishlistRequestMapper.toEditNoteReqDTO(req.body);
-
-      const updatedGroup = await this.wishlistService.editNote(
-        userId,
-        groupId as string,
-        noteId as string,
-        dto,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-  deleteWishlistNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-      const { groupId, noteId } = req.params;
-
-      const updatedGroup = await this.wishlistService.deleteNote(
-        userId,
-        groupId as string,
-        noteId as string,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPackageReviews = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { packageId } = req.params;
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 5;
-      const data = await this.packageReviewService.getPackageReviewService(
-        packageId as string,
-        page,
-        limit,
-      );
-      res
-        .status(StatusCode.OK)
-        .json(
-          ReviewResponseMapper.toPackageReviewsResponseDTO(
-            data.reviews,
-            data.stats,
-          ),
-        );
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  createPackageReview = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { packageId } = req.params;
-
-      const userId = req.user?.id as string;
-      const payload = ReviewRequestMapper.toCreateReviewReqDTO(
-        req.body,
-        packageId as string,
-        userId,
-      );
-      const data =
-        await this.packageReviewService.createPackageReviewService(payload);
-
-      res
-        .status(StatusCode.CREATED)
-        .json(ReviewResponseMapper.toReviewResponseDTO(data));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updatePackageReview = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { reviewId, packageId } = req.params;
-
-      const userId = req.user?.id;
-      if (!userId) {
-        return next(
-          new CustomError(
-            RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-            StatusCode.UNAUTHORIZED,
-          ),
-        );
-      }
-
-      const dto = ReviewRequestMapper.toUpdateReviewReqDTO(req.body);
-
-      const updatedData =
-        await this.packageReviewService.updatePackageReviewService(
-          userId!,
-          reviewId as string,
-          packageId as string,
-          dto,
-        );
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.REVIEW.SUCCESS.UPDATE,
-        data: ReviewResponseMapper.toUpdateReviewResponseDTO(
-          updatedData.review,
-          updatedData.stats,
-        ),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  deletePackageReview = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { reviewId, packageId } = req.params;
-      const userId = req.user?.id;
-      const result = await this.packageReviewService.deletePackageReviewService(
-        userId!,
-        reviewId as string,
-        packageId as string,
-      );
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
-        data: ReviewResponseMapper.toReviewStatsDTO(result.stats),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  createBookingOrder = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id as string;
-      const dto = BookingRequestMapper.toCreateBookingDTO(userId, req.body);
-
-      const result = await this.bookingService.createBookingOrder(dto);
-
-      const response =
-        BookingResponseMapper.toCreateBookingOrderResposeDTO(result);
-
-      res.status(StatusCode.OK).json({ success: true, data: response });
-    } catch (error) {
-      next(error);
-    }
-  };
-  verifyBookingPayment = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id as string;
-      const dto = BookingRequestMapper.toVerifyPaymentDTO(userId, req.body);
-
-      const result = await this.bookingService.verifyAndConfirmBooking(dto);
-      const response =
-        BookingResponseMapper.toVerifyPayementResponseDTO(result);
-      res
-        .status(StatusCode.OK)
-        .json({ success: true, message: response.message });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  findBookingByOrderId = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { orderId } = req.params;
-      const rawBooking = await this.bookingService.findBookingByOrderId(
-        orderId as string,
+      const user = await this.userService.getUserDetailsService(
+        req.params.id as string,
       );
 
-      const booking = BookingResponseMapper.toBookingDTO(rawBooking);
+      res.status(StatusCode.OK).json(user);
+    } catch (error) {
+      next(error);
+    }
+  };
 
-      res.status(StatusCode.OK).json(booking);
-    } catch (error) {
-      next(error);
-    }
-  };
-  getUserBookings = async (req: Request, res: Response, next: NextFunction) => {
+  adminUpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
-      const rawBookings = await this.bookingService.getUserBookings(
-        userId as string,
-      );
-      const bookings = BookingResponseMapper.toBookingListDTO(rawBookings);
-      res.status(StatusCode.OK).json(bookings);
-    } catch (error) {
-      next(error);
-    }
-  };
-  cancelBooking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const userId = req.user?.id as string;
-      const { bookingId } = req.params;
-      const dto = BookingRequestMapper.toCancelBookingDTO(
-        userId,
-        bookingId as string,
+      const updated = await this.userService.AdminUpdateUserService(
+        req.params.id as string,
         req.body,
       );
 
-      const result = await this.bookingService.cancelBooking(dto);
-      const response = BookingResponseMapper.toCancelBookingResponseDTO(result);
+      res.status(StatusCode.OK).json(updated);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  blockUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      logger.warn(`Admin is blocking a user`, {
+        layer: "CONTROLLER",
+        module: "ADMIN",
+        targetUserId: req.params.id,
+        adminId: req.user?.id,
+      });
+      const blocked = await this.userService.blockUserService(
+        req.params.id as string,
+        req.body.isBlocked,
+      );
       res.status(StatusCode.OK).json({
-        success: true,
-        message: result.message,
-        data: {
-          requiresAdminApproval: response.requiresAdminApproval,
-          refundAmount: response.refundAmount,
-          booking: response.booking,
-        },
+        message: req.body.isBlocked
+          ? RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED
+          : RESPONSE_MESSAGES.USER.SUCCESS.UNBLOCKED,
+        user: blocked,
       });
     } catch (error) {
       next(error);
     }
   };
 
-  getCoupons = async (req: Request, res: Response, next: NextFunction) => {
+  adminDeleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.couponService.getAllAvailableCoupons();
+      await this.userService.deleteUserService(req.params.id as string);
       res
         .status(StatusCode.OK)
-        .json(CouponResponseMapper.toAvailableCouponsDTO(data));
-    } catch (error) {
-      next(error);
-    }
-  };
-  validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const dto = CouponRequestMapper.toValidateCouponDTO(req.body);
-      const { code, bookingAmount, cardBin } = req.body;
-      if (!code || !bookingAmount) {
-        return res
-          .status(StatusCode.BAD_REQUEST)
-          .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
-      }
-      const result =
-        await this.couponService.validateAndCalculateCouponDiscount(dto);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toValidateCouponResponseDTO(result));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-
-  getWallet = async (req: Request, res: Response, next: NextFunction) => {
-
-    try {
-      const userId = req.user?.id as string;
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 5;
-      const data = await this.walletService.getWalletWithPagination(
-        userId,
-        page,
-        limit,
-      );
-
-      res.status(StatusCode.OK).json(WalletResponseMapper.toPaginatedWalletResponseDTO(data));
-    } catch (error) {
-      next(error)
-    }
-  };
-  createWalletTopupOrder = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id as string;
-      const dto = WalletRequestMapper.toCreateTopupOrderReqDTO(req.body);
-
-      const result = await this.walletService.createTopupOrder(userId, dto);
-      res
-        .status(StatusCode.OK)
-        .json(WalletResponseMapper.toTopupOrderResponseDTO(result));
-    } catch (error) {
-      next(error);
-    }
-  };
-  verifyWalletTopupPayment = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const userId = req.user?.id as string;
-      const dto = WalletRequestMapper.toVerifyTopupPaymentReqDTO(req.body);
-
-      const wallet = await this.walletService.verifyTopupPayment(userId, dto);
-      res
-        .status(StatusCode.OK)
-        .json(WalletResponseMapper.toWalletResponseDTO(wallet));
+        .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }

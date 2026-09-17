@@ -9,7 +9,7 @@ export const useOperatorForgotPassword = () => {
     try {
       setLoading(true);
       const res = await axiosInstance.post(
-        APP_ROUTES.OPERATOR.FORGOT_PASSWORD,
+        APP_ROUTES.OPERATORS.OPERATOR.FORGOT_PASSWORD,
         {
           email,
         },

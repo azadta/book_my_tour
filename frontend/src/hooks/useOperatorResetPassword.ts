@@ -8,7 +8,7 @@ export const useOperatorResetPassword = () => {
     try {
       setLoading(true);
       const res = await axiosInstance.post(
-        APP_ROUTES.OPERATOR.RESET_PASSWORD(token),
+        APP_ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD(token),
         { newPassword },
       );
       return res.data;

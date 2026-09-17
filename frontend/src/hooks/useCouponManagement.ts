@@ -11,7 +11,7 @@ export const useCouponManagement = () => {
     try {
       const payload = formatCouponPayload(data);
       const res = await axiosInstance.post(
-        APP_ROUTES.OPERATOR.CREATE_COUPON,
+        APP_ROUTES.COUPONS.OPERATOR.CREATE,
         payload,
       );
       return res.data;
@@ -24,7 +24,7 @@ export const useCouponManagement = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        APP_ROUTES.OPERATOR.FETCH_COUPON_BY_ID(id),
+        APP_ROUTES.COUPONS.OPERATOR.DETAIL(id),
       );
       return res.data;
     } finally {
@@ -37,7 +37,7 @@ export const useCouponManagement = () => {
     try {
       const payload = formatCouponPayload(data);
       const res = await axiosInstance.put(
-        APP_ROUTES.OPERATOR.UPDATE_COUPON(id),
+        APP_ROUTES.COUPONS.OPERATOR.UPDATE(id),
         payload,
       );
       return res.data;

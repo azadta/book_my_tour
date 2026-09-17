@@ -24,7 +24,7 @@ export const useOtp = ({
 
   const verifyOtp = async () => {
     try {
-      await axiosInstance.post( APP_ROUTES.USER.VERIFY_OTP, {
+      await axiosInstance.post( APP_ROUTES.USERS.USER.VERIFY_OTP, {
         userId,
         otp,
       });
@@ -37,7 +37,7 @@ export const useOtp = ({
   const resendOtp = async () => {
     setResendLoading(true);
     try {
-      const { data } = await axiosInstance.post( APP_ROUTES.USER.RESEND_OTP, {
+      const { data } = await axiosInstance.post( APP_ROUTES.USERS.USER.RESEND_OTP, {
         userId,
       });
       setOtp("");

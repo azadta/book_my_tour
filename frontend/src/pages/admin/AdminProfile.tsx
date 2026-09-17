@@ -89,7 +89,7 @@ const AdminProfile = () => {
         },
       );
       const imgData = await res.json();
-      await post(APP_ROUTES.ADMIN.UPDATE_IMAGE, { image: imgData.secure_url });
+      await post(APP_ROUTES.ADMINS.UPDATE_IMAGE, { image: imgData.secure_url });
       dispatch(
         updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url }),
       );
@@ -110,7 +110,7 @@ const AdminProfile = () => {
     try {
       dispatch(updateAdminStart());
       const updatedAdmin = await post(
-        APP_ROUTES.ADMIN.UPDATE(currentAdmin?._id as string),
+        APP_ROUTES.ADMINS.UPDATE(currentAdmin?._id as string),
         formData,
       );
 
@@ -134,7 +134,7 @@ const AdminProfile = () => {
   const handleLogOut = async () => {
     try {
       dispatch(adminLogoutStart());
-      await del(APP_ROUTES.ADMIN.LOGOUT);
+      await del(APP_ROUTES.ADMINS.LOGOUT);
       dispatch(adminLogoutSuccess());
       navigate(FRONTEND_ROUTES.ADMIN.LOGIN, { replace: true });
     } catch (error: any) {

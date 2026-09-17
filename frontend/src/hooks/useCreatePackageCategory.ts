@@ -14,7 +14,7 @@ export const useCreatePackageCategory = () => {
   const createPackageCategory = async (payload: CategoryPayload) => {
     try {
       const { data } = await axiosInstance.post(
-        APP_ROUTES.ADMIN.CREATE_CATEGORY,
+        APP_ROUTES.PACKAGE_CATEGORIES.ADMIN.CREATE,
         payload,
       );
       toast.success(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.SUCCESS.CREATE);

@@ -32,10 +32,10 @@ export const usePackageDetails = (packageId: string) => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(
-        APP_ROUTES.USER.PACKAGE(packageId),
+        APP_ROUTES.PACKAGES.USER.DETAIL(packageId),
       );
 
-      setPkg(data.pkg);
+      setPkg(data);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
@@ -47,7 +47,7 @@ export const usePackageDetails = (packageId: string) => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(
-        APP_ROUTES.USER.REVIEWS(packageId),
+        APP_ROUTES.PACKAGE_REVIEWS.PUBLIC.LIST_BY_PACKAGE_ID(packageId),
       );
 
       setReviews(data.reviews);
@@ -85,7 +85,7 @@ export const usePackageDetails = (packageId: string) => {
         images: uploadedImageUrls,
       };
       await axiosInstance.post(
-        APP_ROUTES.USER.CREATE_REVIEW(packageId),
+        APP_ROUTES.PACKAGE_REVIEWS.USER.CREATE(packageId),
         updatedData,
       );
       fetchReviews();
@@ -139,7 +139,7 @@ export const usePackageDetails = (packageId: string) => {
       };
 
       await axiosInstance.put(
-        APP_ROUTES.USER.UPDATE_REVIEW(reviewId, packageId),
+        APP_ROUTES.PACKAGE_REVIEWS.USER.UPDATE(reviewId, packageId),
         payload,
       );
       toast.success(FEEDBACK_MESSAGES.REVIEWS.SUCCESS.UPDATE);
@@ -164,7 +164,7 @@ export const usePackageDetails = (packageId: string) => {
   const deleteReview = async (reviewId: string) => {
     try {
       await axiosInstance.delete(
-        APP_ROUTES.USER.DELETE_REVIEW(reviewId, packageId),
+        APP_ROUTES.PACKAGE_REVIEWS.USER.DELETE(reviewId, packageId),
       );
       toast.success(FEEDBACK_MESSAGES.REVIEWS.SUCCESS.DELETE);
       fetchReviews();
@@ -187,7 +187,7 @@ export const usePackageDetails = (packageId: string) => {
     setIsBookingLoading(true);
     try {
       const { data: response } = await axiosInstance.post(
-        APP_ROUTES.USER.CREATE_BOOKING,
+        APP_ROUTES.BOOKINGS.USER.CREATE,
         {
           packageId,
           addedActivityIds,
@@ -234,7 +234,7 @@ export const usePackageDetails = (packageId: string) => {
           razorpay_signature: string;
         }) => {
           try {
-            await axiosInstance.post(APP_ROUTES.USER.VERIFY_BOOKING_PAYMENT, {
+            await axiosInstance.post(APP_ROUTES.BOOKINGS.USER.PAYMENT_VERIFY, {
               razorpayOrderId: response.razorpay_order_id,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,

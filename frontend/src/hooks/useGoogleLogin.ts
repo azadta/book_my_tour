@@ -22,7 +22,7 @@ export const useGoogleLogin = (
       provider.setCustomParameters({ prompt: "select_account" });
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const res = await axiosInstance.post(APP_ROUTES.USER.GOOGLE, {
+      const res = await axiosInstance.post(APP_ROUTES.USERS.USER.GOOGLE, {
         name: result.user.displayName,
         email: result.user.email,
       });

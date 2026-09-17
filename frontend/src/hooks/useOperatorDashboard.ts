@@ -22,7 +22,7 @@ export const useOperatorDashboard = () => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(
-        APP_ROUTES.OPERATOR.DASHBOARD_DATA,
+        APP_ROUTES.DASHBOARD.OPERATOR.STATS,
       );
 
       setDashboardData(data);

@@ -16,7 +16,7 @@ export const useLogin = (dispatch: AppDispatch, navigate: NavigateFunction) => {
   const login = async (formData: { email: string; password: string }) => {
     try {
       dispatch(logInStart());
-      const res = await axiosInstance.post(APP_ROUTES.USER.LOGIN, formData);
+      const res = await axiosInstance.post(APP_ROUTES.USERS.USER.LOGIN, formData);
       dispatch(logInSuccess(res.data));
       navigate("/", { replace: true });
     } catch (error: any) {

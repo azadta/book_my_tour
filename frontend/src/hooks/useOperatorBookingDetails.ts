@@ -16,7 +16,7 @@ export const useOperatorBookingDetails = () => {
   const fetchDetails = async (bookingId: string) => {
     try {
       const res = await axiosInstance.get(
-        APP_ROUTES.OPERATOR.BOOKING_DETAILS(bookingId),
+        APP_ROUTES.BOOKINGS.OPERATOR.DETAILS(bookingId),
       );
 
       setBooking(res.data);
@@ -37,7 +37,7 @@ export const useOperatorBookingDetails = () => {
       return;
     }
     try {
-      await axiosInstance.post(APP_ROUTES.OPERATOR.CANCEL_BOOKING(bookingId), {
+      await axiosInstance.post(APP_ROUTES.BOOKINGS.OPERATOR.CANCEL(bookingId), {
         reason: cancelReason,
       });
       toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.CANCEL);
@@ -58,7 +58,7 @@ export const useOperatorBookingDetails = () => {
     }
     try {
       await axiosInstance.patch(
-        APP_ROUTES.OPERATOR.RESCHEDULE_BOOKING(bookingId),
+        APP_ROUTES.BOOKINGS.OPERATOR.RESCHEDULE(bookingId),
         { startDate: newDate },
       );
       toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.RESCHEDULE);
@@ -78,7 +78,7 @@ export const useOperatorBookingDetails = () => {
     action: "APPROVE" | "REJECT",
   ) => {
     try {
-      await axiosInstance.post(APP_ROUTES.OPERATOR.VERIFY_BOOKING(bookingId), {
+      await axiosInstance.post(APP_ROUTES.BOOKINGS.OPERATOR.VERIFY_CANCELLATION(bookingId), {
         action,
       });
       toast.success(

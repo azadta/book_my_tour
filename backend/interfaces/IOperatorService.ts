@@ -1,10 +1,14 @@
 import {
+  IAdminUpdateOperatorRequestDTO,
+  IBlockOperatorRequestDTO,
+  IVerifyOperatorRequestDTO,
+} from "../dto-mapping/dto/admin/adminRequestDTO";
+import {
   IOperatorLoginRequestDTO,
   IOperatorRegisterRequestDTO,
-
   IResetOperatorPasswordAuthenticatedRequestDTO,
   IUpdateOperatorProfileRequestDTO,
-  IVerifyOperatorOtpRequestDTO
+  IVerifyOperatorOtpRequestDTO,
 } from "../dto-mapping/dto/operator/operatorRequestDTO";
 import { IOperator, IOperatorResponse } from "./IOperator";
 
@@ -50,4 +54,22 @@ export interface IOperatorService {
     message: string;
   }>;
   getTotalOperatorsCount(): Promise<number>;
+  getOperatorVerificationRequestsService(): Promise<IOperator[]>;
+  verifyOperatorService(
+    id: string,
+    dto: IVerifyOperatorRequestDTO,
+  ): Promise<{
+    message: string;
+  }>;
+  getPaginatedOperatorsService(
+    skip: number,
+    limit: number,
+  ): Promise<IOperator[]>;
+  getOperatorDetailsService(id: string): Promise<any>;
+  blockOperatorService(id: string, dto: IBlockOperatorRequestDTO): Promise<any>;
+  deleteOperatorService(id: string): Promise<any>;
+  adminUpdateOperatorService(
+    id: string,
+    dto: IAdminUpdateOperatorRequestDTO,
+  ): Promise<any>;
 }

@@ -42,7 +42,7 @@ export const useChat = () => {
     ) => {
       try {
         const response = await axiosInstance.post<IChat>(
-          APP_ROUTES.CHATS.ACCESS_CHAT,
+          APP_ROUTES.CHATS.ANY.ACCESS_CHAT,
           { targetId: participientId, targetModel: participientModel },
         );
         const chat = response.data;
@@ -52,7 +52,7 @@ export const useChat = () => {
         const socket = getSocket();
         socket.emit("join_chat", chat._id);
         const msgResponse = await axiosInstance.get<IMessageResponse>(
-          APP_ROUTES.CHATS.CHAT_MESSAGES(chat._id),
+          APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id),
         );
         if (activeChatRef.current) {
           socket.emit("join_chat", activeChatRef.current._id);
@@ -73,7 +73,7 @@ export const useChat = () => {
   const clearChat = useCallback(
     async (chatId: string) => {
       try {
-        await axiosInstance.delete(APP_ROUTES.CHATS.CLEAR_MESSAGES(chatId));
+        await axiosInstance.delete(APP_ROUTES.CHATS.ANY.CLEAR_MESSAGES(chatId));
         dispatch(clearChatMessages(chatId));
         const socket = getSocket();
         socket.emit("clear_chat", { chatId });
@@ -185,7 +185,7 @@ export const useChat = () => {
   const fetchChats = useCallback(async () => {
     try {
       const response = await axiosInstance.get<IChat[]>(
-        APP_ROUTES.CHATS.MY_CHATS,
+        APP_ROUTES.CHATS.ANY.MY_CHATS,
       );
       dispatch(setChats(response.data));
     } catch (error: any) {
@@ -225,7 +225,7 @@ export const useChat = () => {
 
       try {
         const response = await axiosInstance.get<IMessageResponse>(
-          APP_ROUTES.CHATS.CHAT_MESSAGES(chat._id),
+          APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id),
         );
         const fetchedMessages = response.data.messages || [];
         dispatch(setMessages(fetchedMessages));
@@ -279,7 +279,7 @@ export const useChat = () => {
     ) => {
       try {
         const response = await axiosInstance.post<IChat>(
-          APP_ROUTES.CHATS.ACCESS_CHAT,
+          APP_ROUTES.CHATS.ANY.ACCESS_CHAT,
           { targetId: participantId, targetModel: participantModel },
         );
         const chat = response.data;

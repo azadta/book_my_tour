@@ -16,7 +16,7 @@ export const useRegister = () => {
     //eslint-disable-next-line  @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = formData;
     try {
-      const res = await axiosInstance.post( APP_ROUTES.USER.REGISER, userData);
+      const res = await axiosInstance.post( APP_ROUTES.USERS.USER.REGISTER, userData);
       const data = res.data;
 
       onSuccess(data.userId, data.otpExpire);

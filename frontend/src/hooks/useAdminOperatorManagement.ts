@@ -13,7 +13,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
   const fetchOperators = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(APP_ROUTES.ADMIN.OPS_LIST, {
+      const res = await axiosInstance.get(APP_ROUTES.OPERATORS.ADMIN.LIST, {
         params: { page, limit },
       });
       setOperators(res.data.operators || []);
@@ -27,7 +27,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
 
   const blockOperator = async (id: string, isBlocked: boolean) => {
     try {
-      await axiosInstance.put(APP_ROUTES.ADMIN.OPS_BLOCK(id), { isBlocked });
+      await axiosInstance.put(APP_ROUTES.OPERATORS.ADMIN.BLOCK(id), { isBlocked });
       setOperators((prev) =>
         prev.map((operator) =>
           operator._id === id ? { ...operator, isBlocked } : operator,
@@ -45,7 +45,7 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
   const deleteOperator = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(APP_ROUTES.ADMIN.OPS_DELETE(id));
+      await axiosInstance.delete(APP_ROUTES.OPERATORS.ADMIN.DELETE(id));
       setOperators((prev) => prev.filter((operator) => operator._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

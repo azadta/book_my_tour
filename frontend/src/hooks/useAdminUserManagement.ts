@@ -12,7 +12,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(APP_ROUTES.ADMIN.USERS_LIST, {
+      const res = await axiosInstance.get(APP_ROUTES.USERS.ADMIN.LIST, {
         params: {
           page,
           limit,
@@ -29,7 +29,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
 
   const blockUser = async (id: string, isBlocked: boolean) => {
     try {
-      await axiosInstance.put(APP_ROUTES.ADMIN.USERS_BLOCK(id), { isBlocked });
+      await axiosInstance.put(APP_ROUTES.USERS.ADMIN.BLOCK(id), { isBlocked });
       setUsers((prev) =>
         prev.map((user) => (user._id === id ? { ...user, isBlocked } : user)),
       );
@@ -42,7 +42,7 @@ export const useAdminUserManagement = (page: number, limit: number) => {
   const deleteUser = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(APP_ROUTES.ADMIN.USERS_DELETE(id));
+      await axiosInstance.delete(APP_ROUTES.USERS.ADMIN.DELETE(id));
       setUsers((prev) => prev.filter((user) => user._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

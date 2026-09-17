@@ -12,7 +12,7 @@ export const useCouponList = (page: number, limit: number) => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(
-        `${APP_ROUTES.OPERATOR.COUPONS}?page=${page}&limit=${limit}`,
+        `${APP_ROUTES.COUPONS.OPERATOR.LIST}?page=${page}&limit=${limit}`,
       );
       setCoupons(res.data.coupons || []);
       setTotalCount(res.data.totalCount || 0);
@@ -26,7 +26,7 @@ export const useCouponList = (page: number, limit: number) => {
       setLoading(true);
       try {
         await axiosInstance.patch(
-          APP_ROUTES.OPERATOR.TOGGLE_COUPON_STATUS(id),
+          APP_ROUTES.COUPONS.OPERATOR.TOGGLE_STATUS(id),
           { isActive: !currentStatus },
         );
         await fetchCoupons();

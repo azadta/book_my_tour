@@ -3,41 +3,19 @@ import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import type { IBookingService } from "../interfaces/IBookingService";
-import type { ICouponService } from "../interfaces/ICouponService";
+import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
+import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
+import { OperatorRequestMapper } from "../dto-mapping/mapper/operator/OperatorRequestMapper";
+import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorResponseMapper";
 import { IOperatorController } from "../interfaces/IOperatorController";
-import type { IOperatorDashboardService } from "../interfaces/IOperatorDashboard";
 import type { IOperatorService } from "../interfaces/IOperatorService";
-import type { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
-import type { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
-import type { IPackageService } from "../interfaces/IPackageService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
-import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
-import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
-import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
-import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
-import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
-import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/PackageCategoryResponseMapper";
-import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
-import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestMapper";
-import { OperatorRequestMapper } from "../dto-mapping/mapper/operator/OperatorRequestMapper";
-import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorResponseMapper";
 @injectable()
 export class OperatorController implements IOperatorController {
   constructor(
     @inject(Types.OperatorService) private operatorService: IOperatorService,
-
-    @inject(Types.PackageCategoryService)
-    private packageCategoryService: IPackageCategoryService,
-    @inject(Types.PackageDestinationService)
-    private packageDestinationService: IPackageDestinationService,
-    @inject(Types.PackageService) private packageService: IPackageService,
-    @inject(Types.OperatorDashboardService)
-    private operatorDashboardService: IOperatorDashboardService,
-    @inject(Types.BookingService) private bookingService: IBookingService,
-    @inject(Types.CouponService) private couponService: ICouponService,
   ) {}
 
   operatorRegister = async (
@@ -239,85 +217,54 @@ export class OperatorController implements IOperatorController {
     }
   };
 
-  createPackage = async (req: Request, res: Response, next: NextFunction) => {
+  //admin
+  getOperatorVerificationRequests = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      logger.info("operator creating a new package", {
-        layer: "CONTROLLER",
-        module: "OPERATOR",
-        operatorId: req.user?.id,
-        action: "CREATE_PACKAGE",
-      });
-      const operatorId = req?.user?.id;
-      const dto = PackageRequestMapper.toCreatePackageEntity(
-        req.body,
-        operatorId as string,
+      const data =
+        await this.operatorService.getOperatorVerificationRequestsService();
+      res
+        .status(StatusCode.OK)
+        .json(AdminResponseMapper.toAdminOperatorListResponseDTO(data));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  verifyOperator = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const dto = AdminRequestMapper.toVerifyOperatorPayload(req.body);
+
+      const data = await this.operatorService.verifyOperatorService(
+        id as string,
+        dto,
       );
-
-      const packageData = {
-        ...req.body,
-        operatorId,
-      };
-      const created =
-        await this.packageService.createPackageService(packageData);
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        data: PackageResponseMapper.toPackageResponseDTO(created),
-      });
+      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }
   };
 
-  getAllDestinations = async (
+  getPaginatedOperators = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
-    try {
-      const destinations =
-        await this.packageDestinationService.getAllDestinationsService();
-      res
-        .status(StatusCode.OK)
-        .json(
-          PackageDestinationResponseMapper.toDestinationListResponseDTO(
-            destinations,
-          ),
-        );
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getAllPackageCategory = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const categories = await this.packageCategoryService.getAllCategories();
-      res
-        .status(StatusCode.OK)
-        .json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawPackages, totalCount] = await Promise.all([
-        this.packageService.getFilteredPaginatedPackagesService(
-          {},
-          skip,
-          limit,
-        ),
-        this.packageService.getTotalPackagesCount(),
+      const [rawOperators, totalCount] = await Promise.all([
+        this.operatorService.getPaginatedOperatorsService(skip, limit),
+        this.operatorService.getTotalOperatorsCount(),
       ]);
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
+      res.status(StatusCode.OK).json({
+        operators:
+          AdminResponseMapper.toAdminOperatorListResponseDTO(rawOperators),
         totalCount,
       });
     } catch (error) {
@@ -325,423 +272,68 @@ export class OperatorController implements IOperatorController {
     }
   };
 
-  getMyPackagesCount = async (
+  getOperatorDetails = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const operatorId = req.user?.id;
-      const totalPakagesCount =
-        await this.packageService.getOperatorPackagesCountService(
-          operatorId as string,
-        );
-      res.status(StatusCode.OK).json({ success: true, totalPakagesCount });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPaginatedPackages = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user!.id;
-      const { limit, page } = req.query;
-
-      const skip = (Number(page) - 1) * Number(limit);
-
-      const totalCount =
-        await this.packageService.getOperatorPackagesCountService(
-          operatorId as string,
-        );
-
-      const packages =
-        await this.packageService.getFilteredPaginatedPackagesService(
-          { operatorId },
-          skip,
-          Number(limit),
-        );
-      res.status(StatusCode.OK).json({ success: true, totalCount, packages });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getPackageByIdAndOperator = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const packageId = req.params.id;
-      const operatorId = req.user!.id;
-
-      const pkg = await this.packageService.getPackageByIdAndOperatorService(
-        packageId as string,
-        operatorId,
+      const operator = await this.operatorService.getOperatorDetailsService(
+        req.params.id as string,
       );
 
       res
         .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(pkg));
+        .json(AdminResponseMapper.toAdminOperatorResponseDTO(operator));
     } catch (error) {
       next(error);
     }
   };
 
-  deletePackage = async (req: Request, res: Response, next: NextFunction) => {
+  AdminUpdateOperator = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      const operatorId = req.user?.id;
-      if (!operatorId) {
-        throw new CustomError(
-          RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-          StatusCode.UNAUTHORIZED,
-        );
-      }
-      const { id: packageId } = req.params;
-      const deletePackage =
-        await this.packageService.deleteOperatorPackageService(
-          packageId as string,
-          operatorId,
-        );
-      if (!deletePackage) {
-        throw new CustomError(
-          RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
-          StatusCode.NOT_FOUND,
-        );
-      }
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+      const dto = AdminRequestMapper.toAdminUpdateOperatorRequestDTO(req.body);
+      const updated = await this.operatorService.adminUpdateOperatorService(
+        req.params.id as string,
+        dto,
+      );
 
-  updatePackage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const packageId = req.params.id;
-      const dto = PackageRequestMapper.toUpdatePackageEntity(req.body);
-      const updatedPackage =
-        await this.packageService.updateOperatorPackageService(
-          packageId as string,
-          req.user!.id,
-          dto,
-        );
-      if (!updatedPackage) {
-        return next(
-          new CustomError(
-            RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
-            StatusCode.NOT_FOUND,
-          ),
-        );
-      }
       res
         .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(updatedPackage));
+        .json(OperatorResponseMapper.toOperatorResponseDTO(updated));
     } catch (error) {
       next(error);
     }
   };
 
-  getCoupons = async (req: Request, res: Response, next: NextFunction) => {
+  blockOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.couponService.getAllAvailableCoupons();
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toAvailableCouponsDTO(data));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { code, bookingAmount } = req.body;
-      if (!code || !bookingAmount) {
-        res
-          .status(StatusCode.BAD_REQUEST)
-          .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
-      }
-      const dto = CouponRequestMapper.toValidateCouponDTO(req.body);
-      const result =
-        await this.couponService.validateAndCalculateCouponDiscount(dto);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toValidateCouponResponseDTO(result));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getAllCoupons = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 5;
-      const result = await this.couponService.getAllCoupons(page, limit);
-      res.status(StatusCode.OK).json({
-        coupons: CouponResponseMapper.toCouponResponseDTOList(result.coupons),
-        totalCount: result.totalCount,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getCouponById = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const coupon = await this.couponService.getCouponById(id as string);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toCouponResponseDTO(coupon));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  createCoupon = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const dto = CouponRequestMapper.toCreateCouponDTO(req.body);
-      const rawCoupon = await this.couponService.createCoupon(dto);
-      res.status(StatusCode.CREATED).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED,
-        coupon: CouponResponseMapper.toCouponResponseDTO(rawCoupon),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updateCoupon = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const dto = CouponRequestMapper.toUpdateCouponDTO(req.body);
-
-      const rawUpdatedCoupon = await this.couponService.updateCoupon(
-        id as string,
+      const dto = AdminRequestMapper.toBlockOperatorPayload(req.body);
+      const blocked = await this.operatorService.blockOperatorService(
+        req.params.id as string,
         dto,
       );
       res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.UPDATE,
-        updatedCoupon:
-          CouponResponseMapper.toCouponResponseDTO(rawUpdatedCoupon),
+        message: req.body.isBlocked
+          ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED
+          : RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED,
+        operator: AdminResponseMapper.toAdminOperatorResponseDTO(blocked),
       });
     } catch (error) {
       next(error);
     }
   };
 
-  toggleCouponStatus = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
-      const { isActive } = req.body;
-      const updatedCoupon = await this.couponService.toggleCouponStatus(
-        id as string,
-        isActive,
-      );
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
-        coupon: CouponResponseMapper.toCouponResponseDTO(updatedCoupon),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getOperatorDashboardData = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user?.id as string;
-      const stats =
-        await this.operatorDashboardService.getOperatorDashboardStatsService(
-          operatorId,
-        );
-      res.status(StatusCode.OK).json(stats);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getOperatorBookings = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user?.id as string;
-      const queryDTO = BookingRequestMapper.toGetOperatorBookingsQueryDTO(
-        operatorId,
-        req.query,
-      );
-
-      const rawData = await this.bookingService.getOperatorBookingsService(
-        queryDTO.operatorId,
-        queryDTO.status,
-        queryDTO.skip,
-        queryDTO.limit,
-      );
-   
-      const currentPage = Math.floor(queryDTO.skip / queryDTO.limit) + 1;
-      const data = BookingResponseMapper.toOperatorBookingListResponseDTO(
-        rawData,
-        currentPage,
-        queryDTO.limit,
-      );
-
-      res.status(StatusCode.OK).json(data);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getOperatorBookingDetails = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const { bookingId } = req.params;
-      const operatorId = req.user?.id as string;
-      const rawBooking =
-        await this.bookingService.getOperatorBookingDetailsService(
-          bookingId as string,
-          operatorId,
-        );
-      const booking = BookingResponseMapper.toBookingDTO(rawBooking);
-      res.status(StatusCode.OK).json(booking);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updateGuestAttendance = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toUpdateAttendanceDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-
-      const rawUpdatedBooking =
-        await this.bookingService.updateAttendanceService(dto);
-      const updatedBooking =
-        BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.ATTENDANCE_UPDATE(
-          dto.attendance,
-        ),
-        booking: updatedBooking,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-  operatorCancelBooking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toOperatorCancelBookingDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-
-      if (!dto.reason || dto.reason.trim() === "") {
-        throw new CustomError(
-          RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_REASON_MISSING,
-        );
-      }
-      const rawUpdatedBooking =
-        await this.bookingService.operatorCancelBookingService(dto);
-      const updatedBooking =
-        BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_BY_OPERATOR,
-        booking: updatedBooking,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  operatorRescheduleBooking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toOperatorReschuduleBookingDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-      if (!dto.startDate) {
-        throw new CustomError(
-          RESPONSE_MESSAGES.BOOKING.ERROR.START_DATE_MISSING,
-          StatusCode.BAD_REQUEST,
-        );
-      }
-      const updatedPackage =
-        await this.bookingService.operatorRescheduleBookingService(dto);
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.BOOKING.SUCCESS.DATE_RESCHEDULED_BY_OPERATOR,
-        package: updatedPackage,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-  verifyCancellationRequest = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const operatorId = req.user?.id as string;
-      const dto = BookingRequestMapper.toVerifyCancellationDTO(
-        operatorId,
-        req.params,
-        req.body,
-      );
-
-      if (!["APPROVE", "REJECT"].includes(dto.action)) {
-        throw new CustomError(
-          RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_ACTION,
-          StatusCode.BAD_REQUEST,
-        );
-      }
-      const rawUpdatedBooking =
-        await this.bookingService.verifyCancellationService(dto);
-      const updatedBooking =
-        BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
-      res.status(StatusCode.OK).json({
-        message:
-          dto.action === "APPROVE"
-            ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
-            : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED,
-        booking: updatedBooking,
-      });
+      await this.operatorService.deleteOperatorService(req.params.id as string);
+      res
+        .status(StatusCode.OK)
+        .json({ message: RESPONSE_MESSAGES.OPERATOR.SUCCESS.DELETED });
     } catch (error) {
       next(error);
     }

@@ -53,6 +53,7 @@ const PackageDetails = () => {
     handleBooking,
     isBookingLoading,
   } = usePackageDetails(id as string);
+  console.log('package:',data)
   const navigate = useNavigate();
   const { balance: walletBalance } = useWallet();
   const [appliedCoupons, setAppliedCoupons] = useState<AppliedCouponsState>({

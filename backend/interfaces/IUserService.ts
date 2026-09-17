@@ -1,4 +1,3 @@
-
 import { IUser, IUserResponse } from "./IUser";
 
 export interface IUserService {
@@ -41,4 +40,11 @@ export interface IUserService {
     confirmPassword: string,
   ): Promise<{ message: string }>;
   getTotalUsersCount(): Promise<number>;
+  getPaginatedUsersService(skip: number, limit: number): Promise<IUser[]>;
+  getUserDetailsService(id: string): Promise<IUser | null>;
+  blockUserService(id: string, isBlocked: boolean): Promise<IUser | null>;
+  AdminUpdateUserService(
+    id: string,
+    data: Partial<IUser>,
+  ): Promise<IUser | null>;
 }

@@ -19,10 +19,10 @@ export const useOperatorBookings = (
     setLoading(true);
     try {
       const [bookingRes, statsRes] = await Promise.all([
-        axiosInstance.get(APP_ROUTES.OPERATOR.BOOKINGS, {
+        axiosInstance.get(APP_ROUTES.BOOKINGS.OPERATOR.LIST, {
           params: { page, limit, status: statusFilter || undefined },
         }),
-        axiosInstance.get(APP_ROUTES.OPERATOR.DASHBOARD_DATA),
+        axiosInstance.get(APP_ROUTES.DASHBOARD.OPERATOR.STATS),
       ]);
       setBookings(bookingRes.data.bookings || []);
       setTotalCount(bookingRes.data.totalCount || 0);

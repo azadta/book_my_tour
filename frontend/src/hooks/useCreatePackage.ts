@@ -13,8 +13,8 @@ export const useCreatePackage = () => {
   const fetchDropDownOptions = async () => {
     try {
       const [catRes, destRes] = await Promise.all([
-        await axiosInstance.get(APP_ROUTES.OPERATOR.PACKAGE_CATEGORIES),
-        await axiosInstance.get(APP_ROUTES.OPERATOR.DESTINATIONS),
+        await axiosInstance.get(APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ALL),
+        await axiosInstance.get(APP_ROUTES.PACKAGE_DESTINATIONS.PUBLIC.ALL),
       ]);
       setCategories(
         catRes.data.map((cat: any) => ({
@@ -65,7 +65,7 @@ export const useCreatePackage = () => {
         itinerary: uploadedItinerary,
       };
 
-      await axiosInstance.post(APP_ROUTES.OPERATOR.CREATE_PACKAGE, payload);
+      await axiosInstance.post(APP_ROUTES.PACKAGES.OPERATOR.CREATE, payload);
     } finally {
       setLoading(false);
     }

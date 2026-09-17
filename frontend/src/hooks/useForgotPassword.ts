@@ -7,7 +7,7 @@ export const useForgotPassword = () => {
   const sendResetEmail = async (email: string) => {
     try {
       setLoading(true);
-      const res = await axiosInstance.post(APP_ROUTES.USER.FORGOT_PASSWORD, {
+      const res = await axiosInstance.post(APP_ROUTES.USERS.USER.FORGOT_PASSWORD, {
         email,
       });
       return res.data;

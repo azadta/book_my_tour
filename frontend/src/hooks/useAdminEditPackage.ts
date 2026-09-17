@@ -9,53 +9,53 @@ export const useAdminEditPackage = () => {
   const fetchPackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(APP_ROUTES.ADMIN.PACKAGE(id));
+      const res = await axiosInstance.get(APP_ROUTES.PACKAGES.ADMIN.DETAIL(id));
       return res.data;
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const updatePackage = useCallback(async (id: string, data: any) => {
-    setLoading(true);
-    try {
-      const imageFiles = (data.images ?? []).filter(
-        (img: any) => img instanceof File,
-      );
-      const existingImages = (data.images ?? []).filter(
-        (img: any) => typeof img === "string",
-      );
-      const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
+  // const updatePackage = useCallback(async (id: string, data: any) => {
+  //   setLoading(true);
+  //   try {
+  //     const imageFiles = (data.images ?? []).filter(
+  //       (img: any) => img instanceof File,
+  //     );
+  //     const existingImages = (data.images ?? []).filter(
+  //       (img: any) => typeof img === "string",
+  //     );
+  //     const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
 
-      const uploadedItinerary = await Promise.all(
-        data.itinerary.map(async (day: ItineraryDay) => {
-          const galleryFiles = day.gallery.filter(
-            (img: any) => img instanceof File,
-          );
-          const existingUrls = day.gallery.filter(
-            (img: any) => typeof img === "string",
-          );
+  //     const uploadedItinerary = await Promise.all(
+  //       data.itinerary.map(async (day: ItineraryDay) => {
+  //         const galleryFiles = day.gallery.filter(
+  //           (img: any) => img instanceof File,
+  //         );
+  //         const existingUrls = day.gallery.filter(
+  //           (img: any) => typeof img === "string",
+  //         );
 
-          const uploadedUrls = await uploadImagesToCloudinary(galleryFiles);
-          return { ...day, gallery: [...existingUrls, ...uploadedUrls!] };
-        }),
-      );
-      const payload = {
-        ...data,
-        images: [...existingImages, ...(uploadedImageUrls ?? [])],
-        itinerary: uploadedItinerary,
-      };
+  //         const uploadedUrls = await uploadImagesToCloudinary(galleryFiles);
+  //         return { ...day, gallery: [...existingUrls, ...uploadedUrls!] };
+  //       }),
+  //     );
+  //     const payload = {
+  //       ...data,
+  //       images: [...existingImages, ...(uploadedImageUrls ?? [])],
+  //       itinerary: uploadedItinerary,
+  //     };
 
-      await axiosInstance.put(APP_ROUTES.ADMIN.PACKAGES_UPDATE(id), payload);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  //     await axiosInstance.put(APP_ROUTES.PACKAGES., payload);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
 
   const deletePackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(APP_ROUTES.ADMIN.DELETE_PACKAGE(id));
+      await axiosInstance.delete(APP_ROUTES.PACKAGES.ADMIN.DELETE(id));
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export const useAdminEditPackage = () => {
   return {
     loading,
     fetchPackage,
-    updatePackage,
+
 
     deletePackage,
   };

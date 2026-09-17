@@ -106,7 +106,7 @@ const OperatorProfile = () => {
         },
       );
       const imgData = await res.json();
-      await post(APP_ROUTES.OPERATOR.UPDATE_IMAGE, {
+      await post(APP_ROUTES.OPERATORS.OPERATOR.UPDATE_IMAGE, {
         image: imgData.secure_url,
       });
       dispatch(
@@ -133,7 +133,7 @@ const OperatorProfile = () => {
     try {
       dispatch(updateOperatorStart());
       const updatedUser = await post(
-        APP_ROUTES.OPERATOR.UPDATE(currentOperator?._id as string),
+        APP_ROUTES.OPERATORS.OPERATOR.UPDATE(currentOperator?._id as string),
         formData,
       );
 
@@ -160,7 +160,7 @@ const OperatorProfile = () => {
   const handleLogOut = async () => {
     try {
       dispatch(logoutOperatorStart());
-      await del(APP_ROUTES.OPERATOR.LOGOUT);
+      await del(APP_ROUTES.OPERATORS.OPERATOR.LOGOUT);
       dispatch(logoutOperatorSuccess());
       navigate(FRONTEND_ROUTES.OPERATOR.LOGIN, { replace: true });
     } catch (error: any) {

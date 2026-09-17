@@ -13,7 +13,7 @@ export const useCoupon = () => {
   const fetchCoupons = async () => {
     setLoading(true);
     try {
-      const { data } = await axiosInstance(APP_ROUTES.USER.COUPONS);
+      const { data } = await axiosInstance(APP_ROUTES.COUPONS.USER.LIST);
       setBankOffers(data.bankOffers || []);
       setGeneralCoupons(data.generalCoupons || []);
     } catch (error: any) {

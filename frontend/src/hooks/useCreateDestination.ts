@@ -56,7 +56,7 @@ export const useCreateDestination = (onSuccess?: () => void) => {
         images: uploadedImages,
       };
 
-      await axiosInstance.post( APP_ROUTES.ADMIN.CREATE_DESTINATION, payload);
+      await axiosInstance.post( APP_ROUTES.PACKAGE_DESTINATIONS.ADMIN.CREATE, payload);
       toast.success(FEEDBACK_MESSAGES.DESTINATON.SUCCESS.CREATE);
       onSuccess?.();
     } catch (error: any) {

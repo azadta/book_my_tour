@@ -17,17 +17,21 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 export const useGlobalChatSocket = () => {
   const dispatch = useDispatch();
   const currentUser = useCurrentUser();
-  const { activeChat } = useSelector((state: RootState) => state.chat);
+  const { activeChat, chats } = useSelector((state: RootState) => state.chat);
   const activeChatRef = useRef(activeChat);
   useEffect(() => {
     activeChatRef.current = activeChat;
   }, [activeChat]);
+  const chatsRef = useRef(chats);
+  useEffect(() => {
+    chatsRef.current = chats;
+  }, [chats]);
   useEffect(() => {
     if (!currentUser) return;
     const fetchInitialChats = async () => {
       try {
         const response = await axiosInstance.get<IChat[]>(
-          APP_ROUTES.CHATS.MY_CHATS,
+          APP_ROUTES.CHATS.ANY.MY_CHATS,
         );
         dispatch(setChats(response.data));
       } catch (error) {
@@ -56,11 +60,19 @@ export const useGlobalChatSocket = () => {
     const handleChatCleared = ({ chatId }: { chatId: string }) => {
       dispatch(clearChatMessages(chatId));
     };
+    const handleNewChat = (newChat: IChat) => {
+      const currentChats = chatsRef.current;
+      if (!currentChats.some((c) => c._id === newChat._id)) {
+        dispatch(setChats([newChat, ...currentChats]));
+      }
+    };
+    socket.on("new_chat", handleNewChat);
     socket.on("new_message_notification", handleReceiveMessage);
     socket.on("chat_cleared", handleChatCleared);
     return () => {
       socket.off("new_message_notification", handleReceiveMessage);
       socket.off("chat_cleared", handleChatCleared);
+      socket.off("new_chat", handleNewChat);
     };
   }, [currentUser?.id, dispatch]);
 };

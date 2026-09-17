@@ -43,7 +43,7 @@ export const useMyBookings = () => {
   const fetchBookings = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get(APP_ROUTES.USER.MY_BOOKINGS);
+      const response = await axiosInstance.get(APP_ROUTES.BOOKINGS.USER.MY_BOOKINGS);
       setBookings(response.data);
     } catch (error: any) {
       const message =
@@ -69,7 +69,7 @@ export const useMyBookings = () => {
     setIsCancelling(true);
     try {
       const res = await axiosInstance.post(
-        APP_ROUTES.USER.CANCEL_BOOKING(selectedBookingId),{reason:cancelReason.trim()}
+        APP_ROUTES.BOOKINGS.USER.CANCEL(selectedBookingId),{reason:cancelReason.trim()}
       );
       toast.success(res.data?.message);
       handleCloseModal();

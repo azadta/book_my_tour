@@ -13,7 +13,7 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const endPoint: string =APP_ROUTES.OPERATOR.RESET_PASSWORD_AUTH;
+  const endPoint: string =APP_ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD_AUTH;
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 

@@ -203,4 +203,9 @@ export class SocketService implements ISocketService {
         .emit("new_notification", notificationData);
     }
   }
+  public emitToUser(userId:string,event:string,data:any){
+    if(this.io){
+      this.io.to(`user:${userId.toString()}`).emit(event,data)
+    }
+  }
 }

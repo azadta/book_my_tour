@@ -32,7 +32,7 @@ export const useNotifications = () => {
       const response = await axiosInstance.get<{
         notifications: INotification[];
         unreadCount: number;
-      }>(APP_ROUTES.NOTIFICATIONS.USER_NOTIFICATIONS);
+      }>(APP_ROUTES.NOTIFICATIONS.ANY.USER_NOTIFICATIONS);
       dispatch(
         setNotifications({
           notifications: response.data.notifications || [],
@@ -55,7 +55,7 @@ export const useNotifications = () => {
       await axiosInstance.patch<{
         message: string;
         data: { unreadCount: number };
-      }>(APP_ROUTES.NOTIFICATIONS.MARK_AS_READ(notificationId));
+      }>(APP_ROUTES.NOTIFICATIONS.USER.MARK_AS_READ(notificationId));
       dispatch(markAsReadAction(notificationId));
     } catch (error: any) {
       const message =
@@ -77,7 +77,7 @@ export const useNotifications = () => {
         const response = await axiosInstance.post<{
           message: string;
           data: INotification;
-        }>(APP_ROUTES.NOTIFICATIONS.CREATE, data);
+        }>(APP_ROUTES.NOTIFICATIONS.ANY.CREATE, data);
         toast.success(FEEDBACK_MESSAGES.NOTIFICATIONS.SUCCESS.SEND);
 
         return response.data.data;
@@ -94,7 +94,7 @@ export const useNotifications = () => {
 
   const markAllAsRead = useCallback(async () => {
     try {
-      await axiosInstance.patch(APP_ROUTES.NOTIFICATIONS.MARK_ALL_READ);
+      await axiosInstance.patch(APP_ROUTES.NOTIFICATIONS.USER.MARK_ALL_AS_READ);
       dispatch(markAllAsReadAction());
     } catch (error: any) {
       const message =
@@ -107,7 +107,7 @@ export const useNotifications = () => {
 
   const clearAllNotifications = useCallback(async () => {
     try {
-      await axiosInstance.delete(APP_ROUTES.NOTIFICATIONS.CLEAR_ALL);
+      await axiosInstance.delete(APP_ROUTES.NOTIFICATIONS.USER.CLEAR_ALL);
       dispatch(clearNotifications());
     } catch (error: any) {
       const message =

@@ -14,7 +14,7 @@ export const useWishlist = () => {
   const fetchWishlists = async () => {
     setLoading(true);
     try {
-      const { data } = await axiosInstance.get(APP_ROUTES.USER.WISHLISTS);
+      const { data } = await axiosInstance.get(APP_ROUTES.WISHLISTS.USER.LIST);
       const fetchedGroups = data.wishlistGroups || [];
 
       setGroups(fetchedGroups);
@@ -36,7 +36,7 @@ export const useWishlist = () => {
   const handleEditGroup = async (groupId: string, newTitle: string) => {
     if (!newTitle.trim()) return;
     try {
-      await axiosInstance.put(APP_ROUTES.USER.WISHLIST_UPDATE(groupId), {
+      await axiosInstance.put(APP_ROUTES.WISHLISTS.USER.UPDATE_GROUP(groupId), {
         title: newTitle,
       });
       fetchWishlists();
@@ -51,7 +51,7 @@ export const useWishlist = () => {
 
   const handleDeleteGroup = async (groupId: string) => {
     try {
-      await axiosInstance.delete(APP_ROUTES.USER.WISHLIST_DELETE(groupId));
+      await axiosInstance.delete(APP_ROUTES.WISHLISTS.USER.DELETE_GROUP(groupId));
       setActiveGroup(null);
       fetchWishlists();
     } catch (error: any) {
@@ -67,7 +67,7 @@ export const useWishlist = () => {
     try {
       if (!noteText.trim() || !activeGroup) return;
       await axiosInstance.post(
-        APP_ROUTES.USER.WISHLIST_ADD_NOTE(activeGroup._id),
+        APP_ROUTES.WISHLISTS.USER.ADD_NOTE(activeGroup._id),
         { text: noteText },
       );
       setNoteText("");
@@ -81,7 +81,7 @@ export const useWishlist = () => {
     try {
       if (!activeGroup || !newText.trim()) return;
       await axiosInstance.put(
-        APP_ROUTES.USER.WISHLIST_UPDATE_NOTE(activeGroup._id, noteId),
+        APP_ROUTES.WISHLISTS.USER.UPDATE_NOTE(activeGroup._id, noteId),
         { text: newText },
       );
 
@@ -99,7 +99,7 @@ export const useWishlist = () => {
     try {
       if (!activeGroup) return;
       await axiosInstance.delete(
-        APP_ROUTES.USER.WISHLIST_DELETE_NOTE(activeGroup._id, noteId),
+        APP_ROUTES.WISHLISTS.USER.DELETE_NOTE(activeGroup._id, noteId),
       );
 
       fetchWishlists();
@@ -116,7 +116,7 @@ export const useWishlist = () => {
     try {
       if (!activeGroup) return;
       const { data } = await axiosInstance.get(
-        APP_ROUTES.USER.WISHLIST_SHARE_LINK(activeGroup._id),
+        APP_ROUTES.WISHLISTS.USER.SHARE_LINK(activeGroup._id),
       );
   
       const shareURL = `${window.location.origin}/shared-wishlist/${data.data.shareToken}`;

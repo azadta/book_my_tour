@@ -18,7 +18,7 @@ export const useAdminLogin = (
   const adminLogin = async (formData: { email: string; password: string }) => {
     try {
       dispatch(adminLoginStart());
-      const res = await axiosInstance.post(APP_ROUTES.ADMIN.LOGIN, formData);
+      const res = await axiosInstance.post(APP_ROUTES.ADMINS.LOGIN, formData);
       dispatch(adminLoginSuccess(res.data));
       navigate(`/admin/dashboard`, { replace: true });
     } catch (error: any) {

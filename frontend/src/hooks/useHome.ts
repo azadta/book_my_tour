@@ -25,7 +25,7 @@ export const useHome = () => {
     setLoadingDestinationsByCategory(true);
     try {
       const { data } = await axiosInstance.get(
-        APP_ROUTES.USER.DESTINATIONS_BY_PACKAGE_CATEGORY(category),
+        APP_ROUTES.PACKAGE_DESTINATIONS.PUBLIC.BY_PACKAGE_CATEGORY(category),
       );
       setDestinationsByCategory((prev) => ({ ...prev, [category]: data }));
     } catch (error: any) {
@@ -41,7 +41,7 @@ export const useHome = () => {
   const fetchPackages = async () => {
     setLoadingPackages(true);
     try {
-      const { data } = await axiosInstance.get(APP_ROUTES.USER.PACKAGES);
+      const { data } = await axiosInstance.get(APP_ROUTES.PACKAGES.USER.LIST);
 
       setPackages(data.packages || []);
     } catch (error) {
@@ -55,7 +55,7 @@ export const useHome = () => {
     setLoadingPackagesByCategory(true);
     try {
       const { data } = await axiosInstance.get(
-        APP_ROUTES.USER.PACKAGES_BY_CATEGORY(category),
+        APP_ROUTES.PACKAGES.USER.BY_CATEGORY(category),
       );
       setPackagesByCategory((prev) => ({ ...prev, [category]: data }));
     } catch (error: any) {

@@ -6,6 +6,7 @@ import type { IMessageRepository } from "../interfaces/IMessageRepository";
 import { IChat, IMessage } from "../interfaces/IChat";
 import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import type{ ISocketService } from "../interfaces/ISocketService";
 
 @injectable()
 export class ChatService implements IChatService {
@@ -13,6 +14,8 @@ export class ChatService implements IChatService {
     @inject(Types.ChatRepository) private chatRepository: IChatRepository,
     @inject(Types.MessageRepository)
     private messageRepository: IMessageRepository,
+    @inject(Types.SocketService)
+    private socketService: ISocketService,
   ) {}
   async accessChatService(
     currentUserId: string,
@@ -26,7 +29,9 @@ export class ChatService implements IChatService {
       targetId,
       targetModel,
     );
+    let isNewChat=false
     if (!chat) {
+      isNewChat=true
       const createdChat = await this.chatRepository.create({
         participants: [
           { participantId: currentUserId, participantModel: currentUserRole },
@@ -40,6 +45,9 @@ export class ChatService implements IChatService {
           RESPONSE_MESSAGES.CHAT.ERROR.RETRIEVE_AFTER_CREATION,
         );
       }
+    }
+    if(isNewChat&&chat){
+      this.socketService.emitToUser(targetId,'new_chat',chat)
     }
     return chat;
   }

@@ -2,7 +2,7 @@ import ChatBox from "@/components/chat/ChatBox";
 import ChatList from "@/components/chat/ChatList";
 import { useChat } from "@/hooks/useChats";
 import { ArrowLeft } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const ChatPage = () => {
@@ -22,19 +22,22 @@ const ChatPage = () => {
   const [searchParams] = useSearchParams();
   const userIdParam = searchParams.get("userId");
 
-
+  const accessedUserRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!userIdParam) return;
+    if (accessedUserRef.current === userIdParam) return;
     const targetChat = chats.find((c) =>
       c.participants.some((p) => p.participantId?._id === userIdParam),
     );
     if (targetChat) {
       selectChat(targetChat);
+      accessedUserRef.current = userIdParam;
     } else {
+      accessedUserRef.current = userIdParam;
       accessChat(userIdParam, "Operator");
     }
-  }, [userIdParam, chats, accessChat]);
+  }, [userIdParam, chats, accessChat, selectChat]);
 
   const handleBackToList = () => {
     selectChat(null);

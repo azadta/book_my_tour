@@ -16,7 +16,7 @@ export const useAttendanceSelector = (
     setLoading(true);
     try {
       await axiosInstance.patch(
-        APP_ROUTES.OPERATOR.UPDATE_GUEST_ATTENDANCE(bookingId),
+        APP_ROUTES.BOOKINGS.OPERATOR.ATTENDANCE(bookingId),
         { attendance: newStatus },
       );
       setStatus(newStatus);

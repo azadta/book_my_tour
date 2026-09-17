@@ -15,7 +15,7 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
       setLoading(true);
       try {
         const { data } = await axiosInstance.get(
-          APP_ROUTES.ADMIN.PACKAGES_LIST,
+          APP_ROUTES.PACKAGES.ADMIN.LIST,
           {
             params: {
               page,
@@ -39,7 +39,7 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
   const deletePackage = async (id: string) => {
     try {
       setLoading(true);
-      await axiosInstance.delete(APP_ROUTES.ADMIN.DELETE_PACKAGE(id));
+      await axiosInstance.delete(APP_ROUTES.PACKAGES.ADMIN.DELETE(id));
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
       setTotalCount((prev) => prev - 1);
     } catch (error) {

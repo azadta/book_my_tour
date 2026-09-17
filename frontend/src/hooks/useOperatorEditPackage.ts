@@ -9,7 +9,7 @@ export const useOperatorEditPackage = () => {
   const fetchPackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(`/operator/package/${id}`);
+      const res = await axiosInstance.get(APP_ROUTES.PACKAGES.OPERATOR.DETAIL(id));
       return res.data;
     } finally {
       setLoading(false);
@@ -46,7 +46,7 @@ export const useOperatorEditPackage = () => {
         itinerary: uploadedItinerary,
       };
 
-      await axiosInstance.put(APP_ROUTES.OPERATOR.PACKAGES_UPDATE(id), payload);
+      await axiosInstance.put(APP_ROUTES.PACKAGES.OPERATOR.UPDATE(id), payload);
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export const useOperatorEditPackage = () => {
   const deletePackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(APP_ROUTES.OPERATOR.DELETE_PACKAGE(id));
+      await axiosInstance.delete(APP_ROUTES.PACKAGES.OPERATOR.DELETE(id));
     } finally {
       setLoading(false);
     }

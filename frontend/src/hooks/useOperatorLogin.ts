@@ -20,7 +20,7 @@ export const useOperatorLogin = (
   const login= async (formData: { email: string; password: string }) => {
     try {
       dispatch(operatorLoginStart());
-      const res = await axiosInstance.post(APP_ROUTES.OPERATOR.LOGIN, formData, {
+      const res = await axiosInstance.post(APP_ROUTES.OPERATORS.OPERATOR.LOGIN, formData, {
         withCredentials: true,
       });
 

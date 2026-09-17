@@ -13,7 +13,7 @@ const ResetPasswordAuthenticated = () => {
 
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
 
-  const endPoint = APP_ROUTES.USER.RESET_PASSWORD_AUTH;
+  const endPoint = APP_ROUTES.USERS.USER.RESET_PASSWORD_AUTH;
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 

@@ -7,7 +7,7 @@ export const useAdminUserActions = () => {
   const fetchUser = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(APP_ROUTES.ADMIN.USERS_SINGLE(id));
+      const res = await axiosInstance.get(APP_ROUTES.USERS.ADMIN.DETAIL(id));
       return res.data;
     } finally {
       setLoading(false);
@@ -17,7 +17,7 @@ export const useAdminUserActions = () => {
   const updateUser = useCallback(async (id: string, data: any) => {
     setLoading(true);
     try {
-      await axiosInstance.put(APP_ROUTES.ADMIN.USERS_UPDATE(id), data);
+      await axiosInstance.put(APP_ROUTES.USERS.ADMIN.UPDATE(id), data);
     } finally {
       setLoading(false);
     }
@@ -25,7 +25,7 @@ export const useAdminUserActions = () => {
   const blockUser = useCallback(async (id: string, isBlocked: boolean) => {
     setLoading(true);
     try {
-      await axiosInstance.put(APP_ROUTES.ADMIN.USERS_BLOCK(id), { isBlocked });
+      await axiosInstance.put(APP_ROUTES.USERS.ADMIN.BLOCK(id), { isBlocked });
     } finally {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ export const useAdminUserActions = () => {
   const deleteUser = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(APP_ROUTES.ADMIN.USERS_DELETE(id));
+      await axiosInstance.delete(APP_ROUTES.USERS.ADMIN.DELETE(id));
     } finally {
       setLoading(false);
     }

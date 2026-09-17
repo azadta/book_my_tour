@@ -20,7 +20,7 @@ export const useWallet = (limit: number = 5) => {
   const fetchWallet = async (page: number = currentPage) => {
     try {
       const { data } = await axiosInstance.get(
-        `${APP_ROUTES.USER.WALLET}?page=${page}&limit=${limit}`,
+        `${APP_ROUTES.WALLETS.USER.LIST}?page=${page}&limit=${limit}`,
       );
 
       setBalance(data.balance);
@@ -47,7 +47,7 @@ export const useWallet = (limit: number = 5) => {
         setIsLoading(false);
         return;
       }
-      const { data } = await axiosInstance.post(APP_ROUTES.USER.WALLET_TOPUP, {
+      const { data } = await axiosInstance.post(APP_ROUTES.WALLETS.USER.TOPUP, {
         amount: amountToTopup,
       });
       const { orderId, amount, currency, keyId } = data;
@@ -60,7 +60,7 @@ export const useWallet = (limit: number = 5) => {
         order_id: orderId,
         handler: async (response: any) => {
           try {
-            await axiosInstance.post(APP_ROUTES.USER.VERIFY_WALLET_TOPUP, {
+            await axiosInstance.post(APP_ROUTES.WALLETS.USER.VERIFY_TOPUP, {
               razorpayOrderId: response.razorpay_order_id,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,

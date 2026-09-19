@@ -41,7 +41,6 @@ const OperatorBookingDetails = () => {
 
   return (
     <div className="p-6 max-w-4xl mt-12 mb-10 mx-auto">
-      <BackToDashboard path={FRONTEND_ROUTES.OPERATOR.BOOKING_LIST} />
       <div className="bg-white rounded-lg p-6 shadow-md border border-gray-200 mt-4">
         <div className="flex flex-col sm:flex-row items-start justify-between sm:items-center border-b mb-4 pb-4 gap-3">
           <div>

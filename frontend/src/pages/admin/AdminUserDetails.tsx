@@ -74,20 +74,9 @@ const AdminUserDetails = () => {
   return (
     <>
       <div className="flex flex-col min-h-screen ">
-        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full">
-          <h2 className="text-2xl font-bold text-center  text-gray-800">
-            Admin Dashboard
-          </h2>
-        </header>
-
         <div className="flex-1 flex  bg-gray-100 ">
-          <div className="w-64 max-md:hidden"></div>
-          <div className="max-md:hidden fixed top-16.5 bottom-0">
-            <AdminDashboardSideBar />
-          </div>
-
           <div className="flex-1 p-5 min-w-0">
-            <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 mt-16.5  ">
+            <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2   ">
               User Management
             </h1>
             <input />

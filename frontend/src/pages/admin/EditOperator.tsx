@@ -97,7 +97,7 @@ const EditOperator = () => {
       setModalMessage("Are you sure want to delete this operator?");
       setModalAction(() => async () => {
         await deleteOperator(id);
-        navigate( FRONTEND_ROUTES.ADMIN.OPERATORS);
+        navigate(FRONTEND_ROUTES.ADMIN.OPERATORS);
       });
       setModalOpen(true);
     } catch (error: any) {
@@ -109,12 +109,7 @@ const EditOperator = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="mb-5">
-        {" "}
-        <BackToDashboard path="/admin/dashboard" />
-      </div>
-
+    <div className="py-6 max-w-2xl mx-auto">
       <ReusableForm
         heading="Edit Operator"
         formData={formData}

@@ -8,7 +8,7 @@ const OperatorDashboardSideBar = () => {
   const { currentOperator } = useSelector((state: RootState) => state.operator);
   return (
     <div className="  max-w-64 bg-gray-100 shadow-xl text-white flex flex-col p-6 justify-between h-full ">
-      <div className="flex flex-col justify-center px-1.5   gap-10">
+      <div className="flex flex-col justify-center px-1.5 mt-5   gap-10">
         <NavLink
           to={FRONTEND_ROUTES.OPERATOR.DASHBOARD}
           className={({ isActive }) =>
@@ -100,7 +100,7 @@ const OperatorDashboardSideBar = () => {
 
         <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-linear-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"></span>
 
-        <div className="  flex items-center justify-between py-3 px-6 text-lg text-white rounded-lg transform -translate-y-1 bg-linear-to-r from-[#f27121] via-[#e94057] to-[#8a2387] gap-1 transition duration-600 ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-250 group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
+        <div className="  flex items-center justify-between py-1 px-6 text-lg text-white rounded-lg transform -translate-y-1 bg-linear-to-r from-[#f27121] via-[#e94057] to-[#8a2387] gap-1 transition duration-600 ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-250 group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
           {" "}
           <img
             src={currentOperator?.image}

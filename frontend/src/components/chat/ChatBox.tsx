@@ -68,8 +68,8 @@ const ChatBox = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-sky-950">
-      <div className="flex items-center justify-between p-4 border-b border-sky-800/60 bg-sky-900/40">
+    <div className="flex-1 flex flex-col h-full ">
+      <div className="flex items-center justify-between p-4 border-b border-sky-800/60 bg-sky-700/90">
         <div className="flex gap-5 items-center justify-center">
         <div className="  flex items-center gap-3  ">
           <img
@@ -94,13 +94,13 @@ const ChatBox = ({
         </div>
         <button
           onClick={() => onClearChat(activeChat?._id as string)}
-          className="px-3 py-1.5 text-xs text-sky-200 hover:text-red-300 hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer border border-sky-800 hover:border-rose-900"
+          className="px-3 py-1.5 text-xs text-sky-100 hover:text-sky-300 hover:bg-sky-950/40 rounded-lg transition-colors cursor-pointer border border-sky-200 hover:border-white"
         >
           Clear Chat
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-sky-950/80">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white/900">
         {messages.map((msg) => {
           const isMe = msg.senderId === currentUser?.id;
           return (
@@ -109,7 +109,7 @@ const ChatBox = ({
               className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}
             >
               <div
-                className={`max-w-md px-4 py-2.5 rounded-2xl text-sm ${isMe ? "bg-emerald-600 text-white rounded-br-none shadow-md shadow-emerald-950/20" : "bg-sky-900/90 text-sky-100 border border-sky-800/50 rounded-bl-none"}`}
+                className={`max-w-md px-4 py-2.5 rounded-2xl text-sm ${isMe ? "bg-emerald-600 text-white rounded-br-none shadow-md shadow-emerald-950/20" : "bg-emerald-400/90 text-white border border-emerald-800 rounded-bl-none"}`}
               >
                 {msg.text}
               </div>
@@ -131,14 +131,14 @@ const ChatBox = ({
 
       <form
         onSubmit={handleSend}
-        className="p-4 border-t border-sky-800/60 bg-sky-900/50 flex gap-2"
+        className="p-4 border-t border-sky-800/60 bg-sky-900/90 flex gap-2"
       >
         <input
           type="text"
           value={text}
           onChange={handleInputChange}
           placeholder="Type a message"
-          className="flex-1 bg-sky-900/50 border border-sky-800 text-sky-50 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-200 transition-all"
+          className="flex-1 bg-sky-900/50 border border-sky-400 text-sky-50 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-200 transition-all"
         />
         <button
           type="submit"

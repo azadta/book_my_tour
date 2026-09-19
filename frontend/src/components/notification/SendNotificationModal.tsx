@@ -44,7 +44,7 @@ const SendNotificationModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60  animate-fade-in">
       <div className="bg-white/95 rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg  overflow-hidden transition-all transform scale-100">
         <div className="bg-linear-to-r from-sky-600 via-sky-500 to-indigo-600 px-6 py-5 text-white flex justify-between items-center">
           <div className="flex items-center gap-3">

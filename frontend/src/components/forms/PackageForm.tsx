@@ -5,16 +5,12 @@ import { useOperatorEditPackage } from "@/hooks/useOperatorEditPackage";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
-import BackToDashboard from "../../components/BackToDashboard";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createPackageFields, type Option } from "../../formConfig/fields";
 
-import type {
-  FormField,
-  IPackageItem
-} from "../../interfaces/interfaces";
-import type { ItineraryDay } from "../itinerary/types";
 import { useCreatePackage } from "@/hooks/useCreatePackage";
+import type { FormField, IPackageItem } from "../../interfaces/interfaces";
+import type { ItineraryDay } from "../itinerary/types";
 
 interface IOptions {
   category: Option[];
@@ -60,23 +56,16 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
   };
 
   const handleSubmit = async (formData: any) => {
-
-
- 
-
-
-
     try {
       if (mode === "create") {
         await createHook.createPackage(formData);
         toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.CREATE);
         setFormData({});
       } else {
-        await hook.updatePackage(packageData!._id, formData);
+        await operatorHook.updatePackage(packageData!._id, formData);
         toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.UPDATE);
       }
     } catch (error: any) {
-   
       if (error.response?.data?.errors) {
         setFieldError(error.response.data.errors);
         return;
@@ -101,16 +90,8 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
     }
   }, [packageData]);
 
-
-
   return (
-    <div className="p-6  max-w-4xl mt-10 mb-10 mx-auto">
-      <div className="mb-5">
-        <BackToDashboard
-          path={`/${role === "admin" ? "admin" : "operator"}/dashboard`}
-        />
-      </div>
-
+    <div className="p-6  max-w-4xl  mb-10 mx-auto">
       <ReUsableForm
         heading={mode === "create" ? "Create Package" : "Update Package"}
         formData={formData}

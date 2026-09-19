@@ -13,7 +13,7 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const endPoint: string =APP_ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD_AUTH;
+  const endPoint: string = APP_ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD_AUTH;
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
     try {
       await resetPassword(oldPassword, newPassword, confirmPassword);
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
-      setTimeout(() => navigate( FRONTEND_ROUTES.OPERATOR.PROFILE), 2000);
+      setTimeout(() => navigate(FRONTEND_ROUTES.OPERATOR.PROFILE), 2000);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);
@@ -36,8 +36,7 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen   px-4 w-full max-w-lg mx-auto pt-10 ">
-      <BackToDashboard path="/operator/dashboard" />
+    <div className="   px-4 w-full max-w-lg mx-auto pt-10 ">
       <div className="pt-10">
         <ReusableForm
           heading="Change Password"

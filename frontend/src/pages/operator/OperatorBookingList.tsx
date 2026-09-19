@@ -28,7 +28,6 @@ const OperatorBookingList = () => {
   const { bookings, loading, totalCount, pendingCancelCount } =
     useOperatorBookings(currentPage, resultPerPage, statusFilter);
 
-
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const handleCancellationFilterToggle = () => {
     if (statusFilter === "CANCEL_REQUESTED") {
@@ -135,18 +134,30 @@ const OperatorBookingList = () => {
   return (
     <>
       <div className="flex flex-col min-h-screen">
-        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 w-full z-10">
-          <h2 className="text-2xl font-bold text-center text-gray-800">
-            Operator Dashboard
-          </h2>
-        </header>
         <div className="flex-1 flex bg-gray-100">
-          <div className="w-64 max-md:hidden"></div>
-          <div className="max-md:hidden fixed top-16.5 bottom-0">
-            <OperatorDashboardSideBar />
-          </div>
           <div className="flex-1 p-5 min-w-0">
-            <div className="mt-16.5 mb-4 flex flex-col sm:flex-row justify-between items-center p-4 rounded-lg bg-white shadow border border-gray-200 gap-3 ">
+            <div className="flex flex-col md:flex-row items-center justify-between bg-sky-200 rounded p-3  mb-4">
+              <h1 className="text-md font-bold text-gray-800">
+                Tour Booking Management
+              </h1>
+              <select
+                value={statusFilter}
+                onChange={(e) => {
+                  setStatusFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="mt-2 md:mt-0 border rounded px-3 py-1 text-xs bg-white"
+              >
+                <option value="">All Statuses</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="CANCEL_REQUESTED">
+                  Cancellation Requested{" "}
+                </option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="PENDING">Pending</option>
+              </select>
+            </div>
+            <div className=" mb-4 flex flex-col sm:flex-row justify-between items-center p-4 rounded-lg bg-white shadow border border-gray-200 gap-3 ">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-orange-100 text-orange-600 rounded-full">
                   <AlertCircle size={22} />
@@ -173,28 +184,6 @@ const OperatorBookingList = () => {
                   ? "Show All Bookings"
                   : `View Cancel Requests (${pendingCancelCount})`}
               </button>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center justify-between bg-sky-200 rounded p-3 mt-16.5 mb-4">
-              <h1 className="text-md font-bold text-gray-800">
-                Tour Booking Management
-              </h1>
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="mt-2 md:mt-0 border rounded px-3 py-1 text-xs bg-white"
-              >
-                <option value="">All Statuses</option>
-                <option value="CONFIRMED">Confirmed</option>
-                <option value="CANCEL_REQUESTED">
-                  Cancellation Requested{" "}
-                </option>
-                <option value="CANCELLED">Cancelled</option>
-                <option value="PENDING">Pending</option>
-              </select>
             </div>
 
             <ReUsableTable

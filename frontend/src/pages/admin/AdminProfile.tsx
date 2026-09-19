@@ -169,9 +169,9 @@ const AdminProfile = () => {
   }, [currentAdmin]);
 
   return (
-    <div className="flex   justify-center gap-5 min-h-dvh ">
-      <div className="sm:max-w-[220px] bg-sky-100 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
-        <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
+    <div className="grid grid-cols-[1fr_auto_1fr] gap-2  items-end py-10 ">
+     
+        <div className=" flex flex-col gap-5  w-38 justify-self-end">
           <button
             onClick={() => navigate(FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH)}
             className="profile-sidebar-button"
@@ -183,12 +183,10 @@ const AdminProfile = () => {
             Log Out
           </button>
         </div>
-      </div>
+   
 
-      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full max-sm:order-1 ">
-        <div className="mb-5">
-          <BackToDashboard path="/admin/dashboard" />
-        </div>
+      <div className="max-w-lg sm:max-w-2xl ">
+   
 
         <ProfileForm
           currentUser={currentAdmin}

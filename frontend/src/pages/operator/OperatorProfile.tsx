@@ -214,30 +214,24 @@ const OperatorProfile = () => {
   }, [currentOperator]);
 
   return (
-    <div className="flex flex-col sm:flex-row  justify-center gap-5 min-h-dvh ">
-      <div className="sm:max-w-[220px] bg-sky-100 shadow-2xl shadow-white w-full  max-sm:order-2 max-sm:hidden  ">
-        <div className="sm:mt-15 flex flex-col gap-5  justify-center max-w-[150px] mx-auto max-sm:py-10">
-          <button
-            onClick={() =>
-              navigate(FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH)
-            }
-            className="profile-sidebar-button"
-          >
-            Reset Password
-          </button>
+    <div className="grid grid-cols-[1fr_auto_1fr] gap-2  items-end py-10">
+      <div className="  flex flex-col gap-5  w-38 justify-self-end    ">
+        <button
+          onClick={() => navigate(FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH)}
+          className="profile-sidebar-button w-full"
+        >
+          Reset Password
+        </button>
 
-          <button onClick={handleLogOut} className="profile-sidebar-button">
-            Log Out
-          </button>
-        </div>
+        <button
+          onClick={handleLogOut}
+          className="profile-sidebar-button w-full"
+        >
+          Log Out
+        </button>
       </div>
 
-      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto   w-full  ">
-        <div className="mb-5">
-          {" "}
-          <BackToDashboard path="/operator/dashboard" />
-        </div>
-
+      <div className="  max-w-lg sm:max-w-3xl  ">
         <ProfileForm
           currentUser={currentOperator}
           formData={formData}
@@ -252,21 +246,23 @@ const OperatorProfile = () => {
           fieldError={fieldError}
           setFieldError={setFieldError}
         />
-        <div className="sm:hidden pt-10 flex items-center justify-between">
-          <button
-            onClick={() => navigate( FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH)}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
-          >
-            Reset Password
-          </button>
+      </div>
+      <div />
 
-          <button
-            onClick={handleLogOut}
-            className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
-          >
-            Log Out
-          </button>
-        </div>
+      <div className="sm:hidden pt-10 flex items-center justify-between">
+        <button
+          onClick={() => navigate(FRONTEND_ROUTES.OPERATOR.RESET_PASSWORD_AUTH)}
+          className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+        >
+          Reset Password
+        </button>
+
+        <button
+          onClick={handleLogOut}
+          className=" cursor-pointer bg-yellow-200 px-1 py-1 rounded hover:bg-yellow-300"
+        >
+          Log Out
+        </button>
       </div>
     </div>
   );

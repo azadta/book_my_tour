@@ -19,8 +19,8 @@ const OperatorLogin = () => {
   const { loading } = useSelector((state: RootState) => state.operator);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-    <div className="w-full max-w-lg">
+    
+    <div className="w-full mx-auto max-w-lg">
        <ReusableForm
       heading="Operator Login"
           formData={formData}
@@ -49,7 +49,7 @@ const OperatorLogin = () => {
       </div>
     </div>
      
-    </div>
+  
   );
 };
 export default OperatorLogin;

@@ -76,12 +76,8 @@ const CouponForm = ({ mode, couponData, role }: CouponFormProps) => {
     }
   }, [couponData]);
   return (
-    <div className="p-6 max-w-4xl  mt-10 mb-10 mx-auto">
-      <div className="mb-5">
-        <BackToDashboard
-          path={`/${role === "admin" ? "admin" : "operator"}/dashboard`}
-        />
-      </div>
+    <div className="p-6 max-w-3xl  mt-10 mb-10 mx-auto">
+
 
       <ReUsableForm
         heading={mode === "create" ? "Create Coupon" : "Update Coupon"}

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { useOperatorVerification } from "../../hooks/useOperatorVerification";
-import BackToDashboard from "../../components/BackToDashboard";
 import ReUsableTable from "../../components/ReUsableTable";
+import { useOperatorVerification } from "../../hooks/useOperatorVerification";
 
 const AdminOperatorVerification = () => {
   const {
@@ -28,7 +27,7 @@ const AdminOperatorVerification = () => {
 
   const actions = [
     {
-      label:()=> "Verify",
+      label: () => "Verify",
       onClick: (op: any) => verifyOperator(op._id, true),
       className: `bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700`,
       disabled: (op: any) =>
@@ -38,7 +37,7 @@ const AdminOperatorVerification = () => {
       loadingText: "verifying...",
     },
     {
-      label:()=> "Reject",
+      label: () => "Reject",
       onClick: (op: any) => verifyOperator(op._id, false),
       className: `bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700`,
       disabled: (op: any) =>
@@ -54,12 +53,20 @@ const AdminOperatorVerification = () => {
   }, [getVerificationRequests]);
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <BackToDashboard path="/admin/dashboard" />
+    <div className="max-w-6xl mx-auto p-6  ">
       <h1 className="text-3xl font-bold  mb-4 text-center">
         Operator Verification Requests
       </h1>
-      <ReUsableTable data={operators} columns={columns} loading={loading} actions={actions} />
+      {!operators || operators.length === 0 ? (
+        <p className="text-center">No pending verification requests</p>
+      ) : (
+        <ReUsableTable
+          data={operators}
+          columns={columns}
+          loading={loading}
+          actions={actions}
+        />
+      )}
     </div>
   );
 };

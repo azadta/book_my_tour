@@ -95,10 +95,6 @@ const EditUser = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <div className="mb-5">
-        <BackToDashboard path="/admin/dashboard" />
-      </div>
-
       <ReUsableForm
         heading="Edit User"
         formData={formData}

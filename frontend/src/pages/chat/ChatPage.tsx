@@ -44,7 +44,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-sky-950 overflow-hidden  mt-5  border-t border-sky-800/40">
+    <div className="flex flex-col h-full bg-sky-100 overflow-hidden min-h-[calc(100vh-4.5rem)]    border-t border-sky-800/40">
       <div className="flex items-center px-4 py-2 border-b border-sky-800/60 bg-sky-900/60 md:hidden">
         {activeChat ? (
           <button
@@ -67,7 +67,7 @@ const ChatPage = () => {
 
       <div className="flex flex-1 overflow-hidden">
         <div
-          className={`w-full md:w-80  shrink-0 ${activeChat ? "hidden md:block" : "block"}`}
+          className={`w-full md:w-60  shrink-0 ${activeChat ? "hidden md:block" : "block"}`}
         >
           <ChatList
             chats={chats}
@@ -95,7 +95,7 @@ const ChatPage = () => {
           )}
           {chats.length > 0 && !activeChat && (
             <div className="hidden md:flex flex-col items-center justify-center text-sky-400/80">
-              <p>Select a chat for conversation</p>
+              <p className="font-semibold animate-pulse text-white">Select a chat for conversation</p>
             </div>
           )}
         </div>

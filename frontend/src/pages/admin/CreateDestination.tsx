@@ -18,22 +18,20 @@ const CreateDestination = () => {
     }
   };
   return (
-    <div className="max-w-xl mx-auto p-4 space-y-6 mt-10">
-      <div className="">
-        <BackToDashboard path="/admin/dashboard" />
+    <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] ">
+      <div className="max-w-xl   w-full ">
+        <ReUsableForm
+          heading="Create Destination"
+          formData={formData}
+          setFormData={setFormData}
+          fields={createDestinationFields}
+          onSubmit={handleSubmit}
+          loading={loading}
+          buttonText="Create Destination"
+          fieldError={fieldError}
+          setFieldError={setFieldError}
+        />
       </div>
-    
-      <ReUsableForm
-      heading="Create Destination"
-        formData={formData}
-        setFormData={setFormData}
-        fields={createDestinationFields}
-        onSubmit={handleSubmit}
-        loading={loading}
-        buttonText="Create Destination"
-        fieldError={fieldError}
-        setFieldError={setFieldError}
-      />
     </div>
   );
 };

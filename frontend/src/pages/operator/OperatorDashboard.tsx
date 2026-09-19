@@ -9,6 +9,9 @@ import OperatorDashboardSideBar from "../../components/OperatorDashboardSidebar"
 import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
 import style from "../../css/operatorDashboard.module.css";
 
+import { Package } from "lucide-react";
+import DashboardHeader from "@/components/DashboardHeader";
+
 const OperatorDashboard = () => {
   const [open, setOpen] = useState(false);
 
@@ -19,17 +22,9 @@ const OperatorDashboard = () => {
   return (
     <>
       <div className="min-h-screen flex flex-col">
-        <header className="bg-white shadow p-4 border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
-          <h2 className="text-2xl font-bold text-center text-gray-800">
-            Operator Dashboard
-          </h2>
-        </header>
-        <div className="h-16.5"></div>
         <div className="flex flex-1 ">
-          <div className="w-57 max-md:hidden"></div>
-          <div className="max-md:hidden  fixed left-0 top-16.5 bottom-0">
-            <OperatorDashboardSideBar />
-          </div>
+        
+    
           <main className="flex-1 p-8 bg-gray-100 pt-10">
             <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-x-6  justify-items-center max-sm:w-60 mx-auto gap-y-10  ">
               <div className={style.card}>

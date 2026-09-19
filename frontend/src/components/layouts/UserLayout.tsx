@@ -1,9 +1,9 @@
 import { Outlet, useLocation } from "react-router-dom";
-import Footer from "./Footer";
-import AppHeader from "./header/AppHeader";
-import HomeHeader from "./header/HomeHeader";
+import Footer from "../Footer";
+import AppHeader from "../header/AppHeader";
+import HomeHeader from "../header/HomeHeader";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
-import ChatNotificationBadgeButton from "./chat/ChatNotificationBadgeButton";
+import ChatNotificationBadgeButton from "../chat/ChatNotificationBadgeButton";
 
 const UserLayout = () => {
   const location = useLocation();
@@ -21,10 +21,12 @@ const UserLayout = () => {
         <AppHeader showNavigation={showNavigation} />
       )}
 
-      <main className={`grow ${isHomePage ? " mt-33" : "mt-18"} `}>
+      <main
+        className={` grow ${isHomePage ? " pt-33" : isChatPage ? "pt-24" : "pt-18"} `}
+      >
         <Outlet />
       </main>
-      {!isChatPage&&<ChatNotificationBadgeButton/>}
+      {!isChatPage && <ChatNotificationBadgeButton />}
       <Footer />
     </div>
   );

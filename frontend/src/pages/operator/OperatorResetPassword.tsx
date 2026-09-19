@@ -5,6 +5,7 @@ import { OperatorResetPasswordFields } from "../../formConfig/fields";
 import { useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { X } from "lucide-react";
 
 const OperatorResetPassword: React.FC = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -39,8 +40,15 @@ const OperatorResetPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4">
-      <div className="w-full max-w-xl">
+
+      <div className="w-full max-w-xl mx-auto relative">
+          <button
+        onClick={() => navigate(FRONTEND_ROUTES.OPERATOR.LOGIN)}
+        className="absolute -top-2 right-5 text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-2 rounded-full transition cursor-pointer "
+        title="Back to login"
+      >
+        <X size={18} />
+      </button>
      
         <ReusableForm
         heading="Change Password"
@@ -64,7 +72,7 @@ const OperatorResetPassword: React.FC = () => {
           </p>
         )}
       </div>
-    </div>
+
   );
 };
 

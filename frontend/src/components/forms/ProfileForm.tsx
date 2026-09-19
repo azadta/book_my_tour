@@ -144,7 +144,7 @@ export const ProfileForm = ({
   }, [formData, fields]);
 
   return (
-    <div className="max-w-4xl mx-auto bg-linear-to-r   from-sky-200 to-sky-50 p-8 rounded-xl border-2 border-orange-900 shadow-[6px _6px_0px_0px_#c2410c]  ">
+    <div className=" bg-linear-to-r   from-sky-200 to-sky-50 p-5 rounded-xl border-2 border-orange-700 shadow-[6px _6px_0px_0px_#c2410c]  ">
       <div className="relative mb-8 ">
         <h1 className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 font-black text-2xl text-gray-700 tracking-wider">
           Profile

@@ -18,7 +18,7 @@ const CreateDestination = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] ">
+    <div className="flex items-center justify-center min-h-[calc(100vh-5.125rem)] ">
       <div className="max-w-xl   w-full ">
         <ReUsableForm
           heading="Create Destination"

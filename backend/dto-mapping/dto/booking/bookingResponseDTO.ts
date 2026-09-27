@@ -9,6 +9,12 @@ export interface BookingCouponDTO {
 }
 export interface BookingPricingDTO {
   baseAmount: number;
+  adultCount: number;
+  childCount: number;
+  adultUnitPrice: number;
+  childUnitPrice: number;
+  adultAmount: number;
+  childAmount: number;
   addedActivitiesAmount: number;
   removedActivitiesAmount: number;
   subtotal: number;

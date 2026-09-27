@@ -1,11 +1,15 @@
 import AddUserReviewModal from "@/components/AddUserReviewModal";
+import { ItineraryDayCard } from "@/components/itinerary/ItineraryDayCard";
 import Loading from "@/components/Loading";
 import PackageReviews from "@/components/PackageReviews";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { usePackageDetails } from "@/hooks/usePackageDetails";
+import { useWallet } from "@/hooks/useWallet";
+import type { ICouponItem } from "@/interfaces/interfaces";
 import type { RootState } from "@/redux/store";
 import {
-  Camera,
-  CheckCircle2,
+  ArrowRight,
+  ArrowRightCircle,
   ChevronRight,
   Clock,
   Loader2,
@@ -16,7 +20,7 @@ import {
   Star,
   Tag,
   Ticket,
-  Trash2,
+  Users,
   Wallet,
   X,
 } from "lucide-react";
@@ -24,9 +28,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Coupon from "./Coupon";
-import type { ICouponItem } from "@/interfaces/interfaces";
-import { useWallet } from "@/hooks/useWallet";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import MemberSelectionModal from "@/components/MemberSelectionModal";
 
 interface AppliedCouponsState {
   general?: ICouponItem | null;
@@ -46,14 +48,11 @@ const PackageDetails = () => {
     openCreateModal,
     openEditModal,
     saveReview,
-
     submittingReview,
     deleteReview,
-
-    handleBooking,
     isBookingLoading,
   } = usePackageDetails(id as string);
-  console.log('package:',data)
+
   const navigate = useNavigate();
   const { balance: walletBalance } = useWallet();
   const [appliedCoupons, setAppliedCoupons] = useState<AppliedCouponsState>({
@@ -67,9 +66,10 @@ const PackageDetails = () => {
   const [activeDay, setActiveDay] = useState(1);
 
   const [isWalletApplied, setIsWalletApplied] = useState(false);
+  const [isMemberModalOPen, setIsMemberModalOpen] = useState(false);
+  const [adultCount, setAdultCount] = useState(1);
+  const [childCount, setChildCount] = useState(0);
   const dayRefs = useRef<Record<number, HTMLDivElement | null>>({});
-
-  const { currentUser } = useSelector((state: RootState) => state.user);
 
   const isAutoScrolling = useRef(false);
 
@@ -114,21 +114,52 @@ const PackageDetails = () => {
       );
     }, 0) ?? 0;
 
-  const subTotalPrice = (data?.amount ?? 0) + addedCost - removedCost;
-  const generalDiscount = useMemo(() => {
-    return calculateCouponDiscount(appliedCoupons.general, subTotalPrice);
-  }, [appliedCoupons.general, subTotalPrice]);
+  const singleAdultSubTotal = (data?.amount ?? 0) + addedCost - removedCost;
+  const singleAdultGeneralDiscount = useMemo(() => {
+    return calculateCouponDiscount(appliedCoupons.general, singleAdultSubTotal);
+  }, [appliedCoupons.general, singleAdultSubTotal]);
 
-  const priceAfterGeneral = Math.max(0, subTotalPrice - generalDiscount);
-  const bankDiscount = useMemo(() => {
-    return calculateCouponDiscount(appliedCoupons.bank, priceAfterGeneral);
-  }, [appliedCoupons.bank, priceAfterGeneral]);
-  const totalDiscount = generalDiscount + bankDiscount;
-  const payablePrice = Math.max(0, subTotalPrice - totalDiscount);
+  const singleAdultPriceAfterGeneral = Math.max(
+    0,
+    singleAdultSubTotal - singleAdultGeneralDiscount,
+  );
+  const singleAdultBankDiscount = useMemo(() => {
+    return calculateCouponDiscount(
+      appliedCoupons.bank,
+      singleAdultPriceAfterGeneral,
+    );
+  }, [appliedCoupons.bank, singleAdultPriceAfterGeneral]);
+  const singleAdultTotalDiscount =
+    singleAdultGeneralDiscount + singleAdultBankDiscount;
+  const singleAdultPayable = Math.max(
+    0,
+    singleAdultSubTotal - singleAdultTotalDiscount,
+  );
+  let totalChildAmount = 0;
+
+  let totalDiscountApplied = singleAdultTotalDiscount * adultCount;
+  let childUnitPrice = 0;
+
+  if (childCount > 0 && data?.childPricing?.enabled) {
+    const childPercentage = (data.childPricing.percentage ?? 0) / 100;
+    childUnitPrice = data?.childPricing?.enabled
+      ? Math.round(
+          singleAdultPayable *
+            ((data?.childPricing?.percentage as number) / 100),
+        )
+      : singleAdultPayable;
+    const singleChildTotalDiscount = singleAdultTotalDiscount * childPercentage;
+    totalChildAmount = childUnitPrice * childCount;
+    totalDiscountApplied += singleChildTotalDiscount * childCount;
+  }
+
+  const totalAdultAmount = singleAdultPayable * adultCount;
+
+  const grandSubTotal = totalAdultAmount + totalChildAmount;
   const walletDeduction = isWalletApplied
-    ? Math.min(walletBalance, payablePrice)
+    ? Math.min(walletBalance, grandSubTotal)
     : 0;
-  const finalPayablePrice = Math.max(0, payablePrice - walletDeduction);
+  const finalPayablePrice = Math.max(0, grandSubTotal - walletDeduction);
 
   const handleApplyCoupon = (coupon: ICouponItem) => {
     if (coupon.type === "GENERAL") {
@@ -184,26 +215,23 @@ const PackageDetails = () => {
       ?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const onProceedToBooking = () => {
-    if (!id) return;
-    handleBooking(
-      addedActivityIds,
-      removedActivityIds,
-      appliedCoupons.general?.code as string,
-      appliedCoupons.bank?.code as string,
-      isWalletApplied,
-      {
-        name: currentUser?.name as string,
-        email: currentUser?.email as string,
-        phone: currentUser?.mobile,
-      },
-    );
-  };
-
   const handleStartChat = () => {
     navigate(
       `${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${data?.operatorId?._id}`,
     );
+  };
+
+  const formatDateForDay = (startDateStr?: string, dayNumber: number = 1) => {
+    if (!startDateStr) {
+      return `Day ${dayNumber}`;
+    }
+    const date = new Date(startDateStr);
+    date.setDate(date.getDate() + (dayNumber - 1));
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      weekday: "short",
+    }).format(date);
   };
 
   useEffect(() => {
@@ -233,6 +261,20 @@ const PackageDetails = () => {
   const activeDayData =
     data?.itinerary.find((day) => day.day === activeDay) ?? data?.itinerary[0];
   const galleryImages = activeDayData?.gallery;
+  const onProceedToTravelerDetails = () => {
+    if (!id) return;
+    const bookingPayload = {
+      packageId: id,
+      addedActivityIds,
+      removedActivityIds,
+      generalCouponCode: appliedCoupons.general?.code || null,
+      bankCouponCode: appliedCoupons.bank?.code || null,
+      isWalletApplied,
+      adultCount,
+      childCount,
+    };
+    navigate(`/booking/traveler-details`, { state: bookingPayload });
+  };
 
   if (loading) return <Loading />;
 
@@ -241,7 +283,7 @@ const PackageDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans pb-5 sm:px-6 lg:px-8 pt-10">
+    <div className="min-h-[calc(100vh-6rem)] bg-gray-50 font-sans pb-5 sm:px-6 lg:px-8 pt-3">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[200px] sm:h-[300px] md:h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm bg-gray-200">
           <div className="md:col-span-2 h-full relative group overflow-hidden ">
@@ -284,105 +326,135 @@ const PackageDetails = () => {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 self-start">
           <div className="lg:col-span-4">
-            <div className=" hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] ">
-              <h3 className="font-bold text-lg mb-4">Day Gallery</h3>
-              <div className="flex flex-col items-center justify-between gap-10">
-                <div className="grid grid-cols-2 gap-4 animate-fade-in">
-                  {galleryImages?.map((image, index) => (
-                    <div
-                      key={index}
-                      className="
-                        aspect-square
-                        rounded-3xl
-                        overflow-hidden
-                        shadow-lg
-                        border
-                        border-gray-100
-                        group
-                        "
-                    >
-                      <img
-                        src={image}
-                        className="
-                            w-full
-                            h-full
-                            object-cover
-                            transition
-                            duration-500
-                            group-hover:scale-110
-                            "
-                      />
-                    </div>
-                  ))}
+            <div className="hidden lg:flex flex-col gap-4 lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)]">
+              <h3 className="font-bold text-lg ">Itinerary & Gallery</h3>
+              <div className="grid grid-cols-12 gap-4 items-start">
+                <div className="col-span-5 flex flex-col bg-white p-3 rounded-2xl border border-gray-100 shadow-sm max-h-[calc(100vh-14rem)]">
+                  <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider p-2 pb-2 border-b border-gray-100">
+                    Schedule
+                  </h4>
+                  <div className="flex-1 overflow-auto p-1 space-y-1">
+                    {data.itinerary.map((item) => (
+                      <button
+                        key={item.day}
+                        onClick={(e) => {
+                          scrollToDay(item.day);
+                          e.currentTarget.blur();
+                        }}
+                        className={`w-full flex items-center justify-between p-2 rounded-xl text-left font-semibold transition-all text-xs  duration-200 ${activeDay === item.day ? "bg-blue-600 text-white shadow-md shadow-blue-100" : "  hover:bg-gray-50"} `}
+                      >
+                        <div className="flex items-center  gap-2 truncate w-full">
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded-md font-bold shrink-0 transition-all duration-200 ${activeDay === item.day ? "bg-blue-500  " : "bg-gray-100 text-gray-700"}`}
+                          >
+                            Day {item.day}
+                          </span>
+                          <span
+                            className={`truncate transition-all duration-200 ${activeDay === item.day ? "" : "bg-gray-100 text-gray-700"}`}
+                          >
+                            {formatDateForDay(data.startDate, item.day)}
+                          </span>
+                        </div>
+                        <ChevronRight
+                          className={`w-4 h-4 shrink-0 ml-1 opacity-80 ${activeDay === item.day ? "block" : "hidden"}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                <button
-                  onClick={handleStartChat}
-                  type="button"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transtion-all duration-200 cursor-pointer border border-emerald-500/20 "
-                >
-                  <MessageSquare className="w-4 h-4 transition-transform group-hover:scale-110" />
-                  <span>Chat with Host</span>
-                </button>
+                <div className="col-span-7 flex flex-col gap-3">
+                  <div className="flex flex-col gap-2.5">
+                    {galleryImages?.slice(0, 3).map((image, index) => (
+                      <div
+                        key={index}
+                        className="w-full h-[165px] rounded-2xl overflow-hidden shadow-sm border border-gray-100 group shrink-0 "
+                      >
+                        <img
+                          src={image}
+                          alt={`Gallery Item ${index + 1}`}
+                          className="w-full h-full object-cover transition duration-500 group-hover:scale-110"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-start pt-1">
+                    <button
+                      onClick={handleStartChat}
+                      type="button"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transition-all duration-200 cursor-pointer border border-emerald-500/20 shrink-0 min-w-40 "
+                    >
+                      <MessageSquare
+                        className={`w-4 h-4 transition-transform group-hover:scale-110`}
+                      />
+                      <span>Chat with Host</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <main className=" lg:col-span-5 space-y-8">
             <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-              <div className="flex justify-between items-start gap-4 mb-2 ">
-                <div className="w-full">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md mb -2 inline-block">
-                      {data.category.name} Experience
-                    </span>
-                    {reviewStats && reviewStats?.totalReviews > 0 ? (
-                      <button
-                        onClick={(e) => {
-                          scrollToReviews();
-                          e.currentTarget.blur();
-                        }}
-                        className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-md transition-colors cursor-pointer "
-                      >
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        <span>{reviewStats?.averageRating.toFixed(1)}</span>
-                        <span className="text-amber-600 font-normal">
-                          ({reviewStats?.totalReviews})
-                        </span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          scrollToReviews();
-                          e.currentTarget.blur();
-                        }}
-                        className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-md transition-colors cursor-pointer "
-                      >
-                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <div className="w-full">
+                <div className="flex items-center gap-2 ">
+                  <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md mb -2 inline-block">
+                    {data.category.name} Experience
+                  </span>
+                  {reviewStats && reviewStats?.totalReviews > 0 ? (
+                    <button
+                      onClick={(e) => {
+                        scrollToReviews();
+                        e.currentTarget.blur();
+                      }}
+                      className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-md transition-colors cursor-pointer "
+                    >
+                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                      <span>{reviewStats?.averageRating.toFixed(1)}</span>
+                      <span className="text-amber-600 font-normal">
+                        ({reviewStats?.totalReviews})
+                      </span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => {
+                        scrollToReviews();
+                        e.currentTarget.blur();
+                      }}
+                      className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-md transition-colors cursor-pointer "
+                    >
+                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
 
-                        <span className="text-amber-600 font-normal">
-                          Be the first to review
-                        </span>
-                      </button>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
-                      {data.name}
-                    </h1>
-                    <span className="flex items-center gap-1.5 ">
-                      <Clock className="w-4 h-4 text-gray-400" />
-                      {data.duration.day} Days / {data.duration.night} Nights
-                    </span>
-                  </div>
+                      <span className="text-amber-600 font-normal">
+                        Be the first to review
+                      </span>
+                    </button>
+                  )}
                 </div>
+                <div className="flex items-center justify-between mb-2 ">
+                  <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
+                    {data.name}
+                  </h1>
+                  <span className="flex items-center gap-1.5 ">
+                    <Clock className="w-4 h-4 text-gray-400" />
+                    {data.duration.day} Days / {data.duration.night} Nights
+                  </span>
+                </div>
+                <p className="text-sm mb-2">
+                  Starts from: <strong>{data.startPoint}</strong>
+                </p>
               </div>
 
               <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-gray-500 border-b border-gray-100 pb-4 mb-4 ">
                 {" "}
                 <span className="flex items-center gap-1.5 font-semibold text-gray-700">
                   <MapPin className="w-4 h-4 text-blue-600" />
-                  {data.destinations.map((dest) => dest.name).join(", ")}
+                  Destinations:
+                  <strong>
+                    {data.destinations.map((dest) => dest.name).join(", ")}
+                  </strong>
                 </span>
               </div>
 
@@ -391,7 +463,7 @@ const PackageDetails = () => {
                   Specifications
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {data.specifications?.split(',').map((specification, idx) => (
+                  {data.specifications?.split(",").map((specification, idx) => (
                     <span
                       key={idx}
                       className="bg-gray-50 border border-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-medium"
@@ -405,161 +477,18 @@ const PackageDetails = () => {
 
             <div className="space-y-6">
               {data.itinerary.map((dayPlan) => (
-                <div
+                <ItineraryDayCard
                   key={dayPlan.day}
-                  ref={(el) => {
-                    dayRefs.current[dayPlan.day] = el;
+                  dayPlan={dayPlan}
+                  activeDay={activeDay}
+                  removedActivityIds={removedActivityIds}
+                  addedActivityIds={addedActivityIds}
+                  toggleAddedActivity={toggleAddedActivity}
+                  toggleRemovedActivity={toggleRemovedActivity}
+                  setDayRef={(day, el) => {
+                    dayRefs.current[day] = el;
                   }}
-                  className={`bg-white border rounded-3xl p-6 transition-all duration-300 scroll-mt-28 ${activeDay === dayPlan.day ? "border-blue-500 shadow-md ring-4 ring-blue-50" : "border-gray-100 shadow-sm "}`}
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="bg-blue-600 text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider shrink-0">
-                      Day {dayPlan.day}
-                    </span>
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight">
-                      {dayPlan.title}
-                    </h3>
-                  </div>
-
-                  <div className=" flex flex-col justify-center">
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {dayPlan.description}
-                    </p>
-                  </div>
-
-                  <div className="bg-amber-50 border border-gray-100 rounded-2xl p-4 mt-5">
-                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-3 flex items-center gap-1.5 ">
-                      <Camera className="w-3.5 h-3.5 text-gray-400" /> Day
-                      Activities Included
-                    </h4>
-                    <div className="space-y-2.5">
-                      {dayPlan.activities.map((act) => {
-                        const isRemoved = removedActivityIds.includes(act.id);
-                        return (
-                          <div
-                            key={act.id}
-                            className={`flex justify-between items-center p-3 rounded-xl border transition-all text-sm ${isRemoved ? "bg-gray-100/50 border-dashed border-gray-200 " : "bg-white border-gray-100 shadow-xs"} `}
-                          >
-                            <div className="flex items-start gap-2.5">
-                              {!isRemoved ? (
-                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                              ) : (
-                                <div className="w-4 h-4 border border-gray-300 rounded-full shrink-0 mt-0.5" />
-                              )}
-                              <div>
-                                <span
-                                  className={`${isRemoved ? "line-through text-gray-400" : "font-semibold text-gray-800"}`}
-                                >
-                                  {act.name}
-                                </span>
-                                {act.customizable && (
-                                  <span className="block text-[11px] text-blue-600 font-medium mt-0.5">
-                                    {isRemoved
-                                      ? "✕ Activity Removed"
-                                      : "✨ Optional Activity"}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-3 ml-4 shrink-0">
-                              {act.cost > 0 && act.customizable && (
-                                <span
-                                  className={`text-xs font-bold ${isRemoved ? "line-through text-gray-400 " : "text-gray-700"}`}
-                                >
-                                  + Rs {act.cost}
-                                </span>
-                              )}
-                              {act.customizable && (
-                                <button
-                                  onClick={() => toggleRemovedActivity(act.id)}
-                                  className={`p-1.5  rounded-lg transition-colors `}
-                                >
-                                  {isRemoved ? (
-                                    <p className="bg-emerald-100 hover:bg-emerald-200 rounded-md text-emerald-600 px-1 cursor-pointer">
-                                      add
-                                    </p>
-                                  ) : (
-                                    <>
-                                      <p className="hidden bg-red-100 hover:bg-red-200 min-[360px]:inline rounded-md text-red-600 px-1 cursor-pointer">
-                                        Remove
-                                      </p>
-                                      <span className=" min-[360px]:hidden text-red-500 inline-flex items-center justify-center bg-red-200 hover:bg-red-300 p-1 rounded-lg ">
-                                        <Trash2 className="size-4" />
-                                      </span>
-                                    </>
-                                  )}
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mt-5">
-                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-3 flex items-center gap-1.5 ">
-                      You can add extra activities
-                    </h4>
-                    <div className="space-y-2.5">
-                      {dayPlan.optionalActivities.map((act) => {
-                        const isAdded = addedActivityIds.includes(act.id);
-                        return (
-                          <div
-                            key={act.id}
-                            className={`flex justify-between items-center p-3 rounded-xl border transition-all text-sm ${!isAdded ? " border-dashed border-gray-200 " : "bg-white border-gray-100 shadow-xs"} `}
-                          >
-                            <div className="flex items-start gap-2.5">
-                              {isAdded ? (
-                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                              ) : (
-                                ""
-                              )}
-                              <div>
-                                <span className={`text-gray-800 font-semibold`}>
-                                  {act.name}
-                                </span>
-
-                                <span className="block text-[11px] text-blue-600 font-medium mt-0.5">
-                                  {isAdded ? " Activity Added" : ""}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-3 ml-4 shrink-0">
-                              {act.cost > 0 && (
-                                <span className={`text-xs font-bold `}>
-                                  + Rs {act.cost}
-                                </span>
-                              )}
-
-                              <button
-                                onClick={() => toggleAddedActivity(act.id)}
-                                className={`p-1.5  rounded-lg transition-colors`}
-                              >
-                                {!isAdded ? (
-                                  <p className="bg-emerald-100 hover:bg-emerald-200 rounded-md text-emerald-600 px-1 cursor-pointer">
-                                    Add
-                                  </p>
-                                ) : (
-                                  <>
-                                    <p className="hidden bg-red-100 hover:bg-red-200 min-[360px]:inline rounded-md text-red-600 px-1 cursor-pointer">
-                                      Remove
-                                    </p>
-                                    <span className=" min-[360px]:hidden text-red-500 inline-flex items-cener justify-center bg-red-200 hover:bg-red-300 p-1 rounded-lg ">
-                                      <Trash2 className="size-4" />
-                                    </span>
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
+                />
               ))}
             </div>
           </main>
@@ -579,7 +508,7 @@ const PackageDetails = () => {
 
                 <div className="space-y-2 mb-4 text-sm flex-1 overflow-y-auto pr-2">
                   <div className="flex justify-between  text-gray-900">
-                    <span>Base Package Price</span>
+                    <span>Base Package Price ({data?.childPricing.enabled?'Per Adult':'Per Traveler'})</span>
                     <span className="font-semibold text-gray-800">
                       Rs {data.amount.toFixed(2)}
                     </span>
@@ -626,17 +555,37 @@ const PackageDetails = () => {
                     )}
                   </div>
 
-                  {(addedCost > 0 || removedCost > 0) && (
-                    <div className="flex justify-between text-xs text-gray-500 pt-2 border-t border-gray-100 font-medium">
-                      <span>Sub Total</span>
-                      <span>Rs {subTotalPrice.toFixed(2)}</span>
+                  <div className="pt-2 border-t border-gray-100 space-y-1.5 text-sm text-gray-600">
+                    <div className="flex justify-between font-medium">
+                      <span>
+                     {data?.childPricing?.enabled?'Adults: ':'Travelers: '}
+                        (<strong className="text-gray-900">{adultCount}</strong>{" "}
+                        x Rs {singleAdultPayable.toFixed(2)})
+                      </span>
+                      <span className="font-semibold text-gray-800">
+                        Rs {totalAdultAmount.toFixed(2)}
+                      </span>
                     </div>
-                  )}
+                    {childCount > 0 && data?.childPricing?.enabled && (
+                      <div className="flex justify-between font-medium">
+                        <span>
+                          Children:{" "}
+                          (<strong className="text-gray-900">
+                            {childCount}
+                          </strong>{" "}
+                          x Rs {childUnitPrice.toFixed(2)})
+                        </span>
+                        <span className="font-semibold text-gray-800">
+                          Rs {totalChildAmount.toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
                   {(appliedCoupons.general || appliedCoupons.bank) && (
                     <div className="pt-2 border-t border-gray-100 space-y-1.5">
                       <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
-                        Discounts Applied
+                        Discounts Applied(Per Adult)
                       </span>
 
                       {appliedCoupons.general && (
@@ -650,7 +599,7 @@ const PackageDetails = () => {
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             <span className="font-bold text-emerald-700">
-                              - Rs {generalDiscount.toFixed(2)}
+                              - Rs {singleAdultGeneralDiscount.toFixed(2)}
                             </span>
                             <button
                               onClick={() => handleRemoveCoupon("GENERAL")}
@@ -673,7 +622,7 @@ const PackageDetails = () => {
 
                           <div className="flex items-center gap-1.5 shrink-0">
                             <span className="font-bold text-amber-700">
-                              - Rs {bankDiscount.toFixed(2)}
+                              - Rs {singleAdultBankDiscount.toFixed(2)}
                             </span>
                             <button
                               onClick={() => handleRemoveCoupon("BANK")}
@@ -687,6 +636,11 @@ const PackageDetails = () => {
                       )}
                     </div>
                   )}
+
+                  <div className="flex justify-between font-bold text-sm text-gray-800 mt-4">
+                    <p>SubTotal</p>
+                    <p>{grandSubTotal.toFixed(2)}</p>
+                  </div>
 
                   <div className="pt-3 border-t border-gray-100 ">
                     <div className="bg-blue-50/60 border border-blue-100 rounded-2xl p-3">
@@ -726,16 +680,16 @@ const PackageDetails = () => {
                   </div>
 
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
-                    <div className="font-bold text-sm text-gray-900">
+                    <div className="font-bold text-[16px] text-gray-800">
                       Final Total
                     </div>
                     <div className="text-right">
                       <span className="text-xl font-black text-blue-600">
                         Rs {finalPayablePrice.toFixed(2)}
                       </span>
-                      {totalDiscount > 0 && (
+                      {totalDiscountApplied > 0 && (
                         <span className="block text-[11px] text-emerald-600 font-bold">
-                          Total saved:Rs {totalDiscount.toFixed(2)}
+                          Total saved:Rs {totalDiscountApplied.toFixed(2)}
                         </span>
                       )}
 
@@ -746,7 +700,7 @@ const PackageDetails = () => {
                   </div>
                 </div>
 
-                <button
+                {/* <button
                   onClick={onProceedToBooking}
                   disabled={isBookingLoading}
                   className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-sm rounded-xl px-4 py-3 shadow-md shadow-blue-200 text-white transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
@@ -771,6 +725,13 @@ const PackageDetails = () => {
                       </span>
                     </>
                   )}
+                </button> */}
+                <button
+                  onClick={onProceedToTravelerDetails}
+                  className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-sm rounded-xl px-4 py-3 shadow-md shadow-blue-200 text-white transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer "
+                >
+                  <span>Continue to Traveler Details</span>
+                  <ArrowRightCircle className="w-5 h-5" />
                 </button>
                 <p className="text-[11px] text-center text-gray-500 mt-3 flex items-center justify-center gap-1 ">
                   <Sparkles className="w-3 h-3 text-amber-500 " />
@@ -789,8 +750,8 @@ const PackageDetails = () => {
                       Bank Offers & Promo Codes
                     </span>
                     <span className="text-[11px] text-gray-500">
-                      {totalDiscount > 0
-                        ? `Rs ${totalDiscount.toFixed(2)} total savings applied`
+                      {totalDiscountApplied > 0
+                        ? `Rs ${totalDiscountApplied.toFixed(2)} total savings applied`
                         : "Combine One Promo + 1 Bank Offer"}
                     </span>
                   </div>
@@ -807,35 +768,35 @@ const PackageDetails = () => {
                 </button>
               </div>
 
-              <div className="  hidden lg:flex flex-col bg-white p-4 rounded-2xl border border-gray-100 shadow-sm  ">
-                <h3 className="text-xs font-bold uppercase text-gray-400 tracking-wider p-4 pb-3 border-b border-gray-100">
-                  Itinerary Schedule
-                </h3>
-                <div className="flex-1 overflow-auto p-3">
-                  {data.itinerary.map((item) => (
-                    <button
-                      key={item.day}
-                      onClick={() => scrollToDay(item.day)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl text-left font-semibold transition-all text-sm ${activeDay === item.day ? "bg-blue-600 text-white shadow-md shadow-blue-100" : "text-gray-600  hover:bg-gray-50"} `}
-                    >
-                      <div className="flex items-center gap-3 truncate">
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-md font-bold shrink-0 ${activeDay === item.day ? "bg-blue-500 text-white " : "bg-gray-100 text-gray-700"}`}
-                        >
-                          Day {item.day}
-                        </span>
-                        <span
-                          className={`truncate ${activeDay === item.day ? " text-white " : "bg-gray-100 text-gray-700"}`}
-                        >
-                          {item.title}
-                        </span>
-                      </div>
-                      <ChevronRight
-                        className={`w-4 h-4 shrink-0 ml-1 opacity-80 ${activeDay === item.day ? "block" : "hidden"}`}
-                      />
-                    </button>
-                  ))}
+              <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-3 flex items-center justify-between mb-4 ">
+                <div className=" flex items-center gap-2.5">
+                  <div className="bg-blue-600 text-white p-2 rounded-xl">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-gray-900 block">
+                      Travelers & Guests
+                    </span>
+                    {data?.childPricing?.enabled && (
+                      <span className="text-[14px] font-semibold text-gray-800">
+                        <strong>{adultCount}</strong> Adult
+                        {adultCount > 1 ? "s" : ""},{" "}
+                        <strong>{childCount}</strong> Child
+                        {childCount > 1 ? "ren" : ""}
+                      </span>
+                    )}
+                  </div>
                 </div>
+
+                <button
+                  onClick={(e) => {
+                    setIsMemberModalOpen(true);
+                    e.currentTarget.blur();
+                  }}
+                  className="text-xs font-bold text-blue-700 hover:text-blue-800 bg-white px-3 py-1.5 rounded-lg border border-blue-200 shadow-xs hover:bg-blue-50 transition cursor-pointer"
+                >
+                  Manage Travelers Count
+                </button>
               </div>
             </div>
           </aside>
@@ -887,10 +848,10 @@ const PackageDetails = () => {
             Total Payable
           </span>
           <span className="text-lg font-black text-blue-600 ">
-            Rs {payablePrice.toLocaleString("en-IN")}
+            Rs {grandSubTotal.toLocaleString("en-IN")}
           </span>
         </div>
-        <button
+        {/* <button
           onClick={onProceedToBooking}
           disabled={isBookingLoading}
           className="flex-1 max-w-[200px] bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer "
@@ -903,7 +864,7 @@ const PackageDetails = () => {
           ) : (
             <span>Pay with Razorpay</span>
           )}
-        </button>
+        </button> */}
       </div>
 
       <AddUserReviewModal
@@ -916,10 +877,19 @@ const PackageDetails = () => {
       <Coupon
         isOpen={isCouponModalOpen}
         onClose={() => setIsCouponModalOpen(false)}
-        bookingAmount={subTotalPrice}
+        bookingAmount={singleAdultSubTotal}
         appliedCoupons={appliedCoupons}
         onApplyCoupon={handleApplyCoupon}
         onRemoveCoupon={handleRemoveCoupon}
+      />
+      <MemberSelectionModal
+        isOpen={isMemberModalOPen}
+        onClose={() => setIsMemberModalOpen(false)}
+        adultCount={adultCount}
+        setAdultCount={setAdultCount}
+        childCount={childCount}
+        setChildCount={setChildCount}
+        childPricing={data?.childPricing}
       />
     </div>
   );

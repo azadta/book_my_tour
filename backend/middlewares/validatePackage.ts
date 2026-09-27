@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import { body, ValidationChain, validationResult } from "express-validator";
 import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { StatusCode } from "../constants/statusCodeConstants";
 
 export const validatePackage: (ValidationChain | RequestHandler)[] = [
   body("name")
@@ -14,6 +15,39 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
     .withMessage("Package amount is required")
     .isFloat({ min: 0 })
     .withMessage("Amount must be a non negative number"),
+  body("childPricing.enabled")
+    .optional()
+    .isBoolean()
+    .withMessage("Child pricing enabled must be true or false"),
+  body("childPricing.minAge")
+    .if((value, { req }) => req.body['childPricing.enabled'] === true)
+    .notEmpty()
+    .withMessage("Child minimum age is required")
+    .isInt({ min: 0 })
+    .withMessage("Child minimum age must be a non-negative integer"),
+  body("childPricing.maxAge")
+    .if((value, { req }) =>  req.body['childPricing.enabled'] === true)
+    .notEmpty()
+    .withMessage("Child maximum age is required")
+    .isInt({ min: 0 })
+    .withMessage("Child maximum age must be a non-negative integer")
+    .custom((maxAge, { req }) => {
+      const minAge =  req.body['childPricing.minAge']
+      if (Number(maxAge) <= Number(minAge)) {
+        throw new CustomError(
+          "Child maximum age must be greater than minimum age",
+          StatusCode.BAD_REQUEST,
+        );
+      }
+      return true;
+    }),
+  body("childPricing.percentage")
+    .if((value, { req }) =>  req.body['childPricing.enabled'] === true)
+    .notEmpty()
+    .withMessage("Child dicount percentage is required")
+    .isFloat({ min: 0, max: 100 })
+    .withMessage("Child discount percentage must be between zero and 100"),
+
   body("destinations")
     .isArray({ min: 1 })
     .withMessage("Destinations must be a non empty array of objectIds"),
@@ -79,11 +113,6 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
   body("itinerary.*.day")
     .isInt({ min: 1 })
     .withMessage("Day must be a positive integer"),
-  body("itinerary.*.title").trim().notEmpty().withMessage("Title is required"),
-  body("itinerary.*.description")
-    .trim()
-    .notEmpty()
-    .withMessage("Descripion is required"),
   body("itinerary.*.gallery")
     .isArray({ min: 4 })
     .withMessage("Gallery must be an array with atleast four images"),
@@ -100,9 +129,24 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
     .trim()
     .notEmpty()
     .withMessage("Activity name is required"),
+
+  body("itinerary.*.activities.*.description")
+    .trim()
+    .notEmpty()
+    .withMessage("Activity description is required"),
+  body("itinerary.*.activities.*.image")
+    .notEmpty()
+    .withMessage("Activity image is required")
+    .isURL()
+    .withMessage("Activity image must be a valid URL"),
+  body("itinerary.*.activities.*.timing.from")
+    .notEmpty()
+    .withMessage("Activity start time is required"),
+  body("itinerary.*.activities.*.timing.to")
+    .notEmpty()
+    .withMessage("Activity end time is required"),
   body("itinerary.*.activities.*.cost")
     .isFloat({ min: 0 })
-
     .withMessage("Activity cost must be a non negative number"),
   body("itinerary.*.activities.*.customizable")
     .isBoolean()
@@ -118,6 +162,21 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
     .trim()
     .notEmpty()
     .withMessage("Optional activity name is required"),
+  body("itinerary.*.optionalActivities.*.description")
+    .trim()
+    .notEmpty()
+    .withMessage("Optional activity description is required"),
+  body("itinerary.*.optionalActivities.*.image")
+    .notEmpty()
+    .withMessage("Optional activity image is required")
+    .isURL()
+    .withMessage("Optional activity image must be a valid URL"),
+  body("itinerary.*.optionalActivities.*.timing.from")
+    .notEmpty()
+    .withMessage("Optional activity start time is required"),
+  body("itinerary.*.optionalActivities.*.timing.to")
+    .notEmpty()
+    .withMessage("Optional activity end time is required"),
   body("itinerary.*.optionalActivities.*.cost")
     .isFloat({ min: 0 })
 
@@ -133,7 +192,13 @@ export const validatePackage: (ValidationChain | RequestHandler)[] = [
           formattedError[standardizedPath] = err.msg;
         }
       });
-      return next(new CustomError(RESPONSE_MESSAGES.VALIDATION.ERROR.VALIDATION_ERROR, 400, formattedError));
+      return next(
+        new CustomError(
+          RESPONSE_MESSAGES.VALIDATION.ERROR.VALIDATION_ERROR,
+          400,
+          formattedError,
+        ),
+      );
     }
     next();
   },

@@ -24,13 +24,19 @@ export class BookingResponseMapper {
   }
   private static mapPricing(pricing: any): BookingPricingDTO {
     return {
-      baseAmount: Number(pricing?.baseAmount ?? 0),
+      baseAmount:Number(pricing.baseAmount),
+      adultCount: Number(pricing.adultCount),
+      childCount: Number(pricing.childCount),
+      adultUnitPrice: Number(pricing.adultUnitPrice),
+      childUnitPrice: Number(pricing.childUnitPrice),
+      adultAmount: Number(pricing.adultAmount),
+      childAmount: Number(pricing.childAmount),
       addedActivitiesAmount: Number(pricing.addedActivitiesAmount ?? 0),
       removedActivitiesAmount: Number(pricing.removedActivitiesAmount ?? 0),
       subtotal: Number(pricing?.subtotal ?? 0),
       generalCoupon: this.mapCoupon(pricing?.generalCoupon),
       bankCoupon: this.mapCoupon(pricing?.bankCoupon),
-      totalDiscount: Number(pricing?.discount ?? 0),
+      totalDiscount: Number(pricing?.totalDiscount ?? 0),
       walletApplied: Number(pricing.walletApplied ?? 0),
       finalAmount: Number(pricing?.finalAmount ?? 0),
     };
@@ -57,7 +63,7 @@ export class BookingResponseMapper {
           ? {
               _id: entity?.userId?._id.toString() ?? "",
               name: entity.userId?.name ?? "",
-              email:entity.userId?.email??''
+              email: entity.userId?.email ?? "",
             }
           : (entity?.userId.toString() ?? ""),
       packageId:

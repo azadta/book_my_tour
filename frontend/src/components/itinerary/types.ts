@@ -1,6 +1,13 @@
 export interface Activity {
   id: string;
   name: string;
+
+  description: string;
+  image: File | string;
+  timing: {
+    from: string;
+    to: string;
+  };
   cost: number;
   customizable: boolean;
 }
@@ -8,15 +15,19 @@ export interface Activity {
 export interface OptionalActivity {
   id: string;
   name: string;
+
+  description: string;
+  image: File | string;
+  timing: {
+    from: string;
+    to: string;
+  };
   cost: number;
 }
 
-export  interface ItineraryDay{
-    day:number,
-    title:string,
-    description:string,
-    gallery:(File|string)[],
-    activities:Activity[],
-    optionalActivities:OptionalActivity[]
-
+export interface ItineraryDay {
+  day: number;
+  gallery: (File | string)[];
+  activities: Activity[];
+  optionalActivities: OptionalActivity[];
 }

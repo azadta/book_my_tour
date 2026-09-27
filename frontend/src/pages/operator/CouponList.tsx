@@ -109,7 +109,7 @@ const CouponList = () => {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-[calc(100vh-5.125rem)]">
         <div className="flex-1 flex bg-gray-100">
           <div className="flex-1 p-5 min-w-0">
             <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2 ">

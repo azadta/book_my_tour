@@ -20,8 +20,7 @@ const BookingSuccessPage = () => {
   const { booking, fetchBookingDetails, isLoading } = useBookingSuccessPage();
   const packageName = booking?.packageId.name;
   const pricing = booking?.pricing;
-  const totalPaid=(pricing?.walletApplied||0)+(pricing?.finalAmount||0)
-
+  const totalPaid = (pricing?.walletApplied || 0) + (pricing?.finalAmount || 0);
 
   useEffect(() => {
     if (orderId) {
@@ -73,13 +72,26 @@ const BookingSuccessPage = () => {
               </div>
             )}
 
-
             {pricing && (
               <div className="pt-3 border-t border-gray-200/60 space-y-2 text-xs">
                 <div className="flex justify-between text-gray-600">
-                  <span>Base Amount</span>
-                  <span>Rs {pricing.baseAmount?.toLocaleString("en-IN")}</span>
+                  <span>
+                    Adults  ({pricing.adultCount} x Rs
+                    {pricing.adultUnitPrice?.toLocaleString("en-IN")})
+                  </span>
+                  <span>Rs {pricing.adultAmount?.toLocaleString("en-IN")}</span>
                 </div>
+                {pricing.childCount > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>
+                      Children ({pricing.childCount} x Rs
+                      {pricing.childUnitPrice?.toLocaleString("en-IN")})
+                    </span>
+                    <span>
+                      Rs {pricing.childAmount?.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
 
                 {pricing.addedActivitiesAmount > 0 && (
                   <div className="flex justify-between text-gray-600">
@@ -131,25 +143,29 @@ const BookingSuccessPage = () => {
                   </div>
                 )}
 
-                <div  className="flex justify-between text-gray-900 font-semibold pt-2 border-t border-gray-200/40 ">
-                <span >Total Payable</span>
-                <span>Rs {totalPaid.toLocaleString('en-IN')}</span>
+                <div className="flex justify-between text-gray-900 font-semibold pt-2 border-t border-gray-200/40 ">
+                  <span>Total Payable</span>
+                  <span>Rs {totalPaid.toLocaleString("en-IN")}</span>
                 </div>
 
-                {pricing.walletApplied>0&&(<div className="flex justify-between text-indigo-600 font-semibold pt-1">
-                  <span className="flex items-center gap-1">
-                    <Wallet className="w-3.5 h-3.5"/>
-                    Paid via Wallet
-                  </span>
-                  <span>
-                    -Rs {pricing.walletApplied.toLocaleString('en-IN')}
-                  </span>
-                </div>)}
+                {pricing.walletApplied > 0 && (
+                  <div className="flex justify-between text-indigo-600 font-semibold pt-1">
+                    <span className="flex items-center gap-1">
+                      <Wallet className="w-3.5 h-3.5" />
+                      Paid via Wallet
+                    </span>
+                    <span>
+                      -Rs {pricing.walletApplied.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
 
-                {pricing.finalAmount>0&&pricing.walletApplied>0&&(<div className="flex justify-between text-gray-600 font-medium ">
-                  <span>Paid via Online Gateway</span>
-                  <span>{pricing.finalAmount.toLocaleString('en-IN')}</span>
-                </div>)}
+                {pricing.finalAmount > 0 && pricing.walletApplied > 0 && (
+                  <div className="flex justify-between text-gray-600 font-medium ">
+                    <span>Paid via Online Gateway</span>
+                    <span>{pricing.finalAmount.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
               </div>
             )}
 

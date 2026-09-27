@@ -133,7 +133,7 @@ const OperatorBookingList = () => {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-[calc(100vh-5.125rem)]">
         <div className="flex-1 flex bg-gray-100">
           <div className="flex-1 p-5 min-w-0">
             <div className="flex flex-col md:flex-row items-center justify-between bg-sky-200 rounded p-3  mb-4">

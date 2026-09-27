@@ -1,6 +1,7 @@
 import ChatBox from "@/components/chat/ChatBox";
 import ChatList from "@/components/chat/ChatList";
 import { useChat } from "@/hooks/useChats";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -9,7 +10,6 @@ const ChatPage = () => {
   const {
     activeChat,
     chats,
-
     messages,
     onlineUsers,
     selectChat,
@@ -21,6 +21,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const userIdParam = searchParams.get("userId");
+  const currentUser = useCurrentUser();
 
   const accessedUserRef = useRef<string | null>(null);
 
@@ -44,7 +45,9 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-sky-100 overflow-hidden min-h-[calc(100vh-4.5rem)]    border-t border-sky-800/40">
+    <div
+      className={`flex flex-col h-full bg-sky-100 overflow-hidden ${currentUser?.role==='Operator'?'min-h-[calc(100vh-5.125rem)]':'min-h-[calc(100vh-6rem)]'} border-t border-sky-800/40`}
+    >
       <div className="flex items-center px-4 py-2 border-b border-sky-800/60 bg-sky-900/60 md:hidden">
         {activeChat ? (
           <button
@@ -95,7 +98,9 @@ const ChatPage = () => {
           )}
           {chats.length > 0 && !activeChat && (
             <div className="hidden md:flex flex-col items-center justify-center text-sky-400/80">
-              <p className="font-semibold animate-pulse text-white">Select a chat for conversation</p>
+              <p className="font-semibold animate-pulse text-white">
+                Select a chat for conversation
+              </p>
             </div>
           )}
         </div>

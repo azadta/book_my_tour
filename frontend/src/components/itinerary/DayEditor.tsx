@@ -1,8 +1,8 @@
+import { ImagePlus, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import type { ItineraryDay } from "./types";
-import { ImagePlus, Trash2, X } from "lucide-react";
 import ActivityEditor from "./ActivityEditor";
 import OptionalActivityEditor from "./OptionalActivityEditor";
+import type { ItineraryDay } from "./types";
 
 interface Props {
   value: ItineraryDay;
@@ -17,12 +17,11 @@ interface Props {
 const DayEditor = ({
   value,
   onChange,
-  isLastDay,
-  onAddDay,
   dayIndex,
   fieldError,
   setFieldError,
 }: Props) => {
+
   const [previews, setPreviews] = useState<string[]>([]);
   const inputId = `gallery-${dayIndex}`;
 
@@ -75,50 +74,9 @@ const DayEditor = ({
     <div className="rounded-[30px] bg-linear-to-b from-white to-slate-100 border-[4px] border-white shadow-[0px_20px_20px_5px_rgba(133,189,215,0.88)] p-8 ">
       <div className="space-y-5">
         <div>
-          <label className="font-medium ">Title <span className="text-red-500 font-bold">*</span></label>
-          <input
-            type="text"
-            value={value.title}
-            onChange={(e) => {
-              handleInput("title", e.target.value);
-              setFieldError((prev) => ({
-                ...prev,
-                [`itinerary.${dayIndex}.title`]: "",
-              }));
-            }}
-            className="w-full bg-white px-5 py-4 mt-2 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500"
-            placeholder="Arrival & Welcome "
-          />
-          {fieldError[`itinerary.${dayIndex}.title`] && (
-            <p className="text-red-500 text-sm mt-1">
-              {fieldError[`itinerary.${dayIndex}.title`]}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="font-medium">Description <span className="text-red-500 font-bold">*</span></label>
-          <textarea
-            value={value.description}
-            onChange={(e) => {
-              handleInput("description", e.target.value);
-              setFieldError((prev) => ({
-                ...prev,
-                [`itinerary.${dayIndex}.description`]: "",
-              }));
-            }}
-            className="w-full h-32 mt-2 bg-white rounded-[20px] px-5 py-4 shadow-[0px_10px_10px_5px_#cff0ff] resize-none focus:outline-none focus:border-l-2 focus:border-r-2 focus:border-cyan-500 "
-            placeholder="Describe today's itinerary..."
-          />
-          {fieldError[`itinerary.${dayIndex}.description`] && (
-            <p className="text-red-500 text-sm mt-1">
-              {fieldError[`itinerary.${dayIndex}.description`]}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="font-medium block mb-3">Gallery Images <span className="text-red-500 font-bold">*</span></label>
+          <label className="font-medium block mb-3">
+            Gallery Images <span className="text-red-500 font-bold">*</span>
+          </label>
           <input
             id={inputId}
             hidden

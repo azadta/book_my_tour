@@ -190,8 +190,8 @@ export const APP_ROUTES = {
       CLEAR_ALL: "/notification/user",
     },
   },
-  COMMON: {
-    REFRESH: "/auth/refresh",
+  COMMON_AUTH: {
+    REFRESH_TOKEN: "/auth/refresh",
   },
   DASHBOARD: {
     ADMIN: {

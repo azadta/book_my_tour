@@ -60,6 +60,7 @@ export class PackageService implements IPackageService {
     operatorId: string,
     dto: IUpdatePackageRequestDTO,
   ): Promise<Ipackage | null> {
+    console.log('dto from update package service:',dto)
     const existingPackage = await this.packageRepository.getByIdAndOperator(
       packageId,
       operatorId,
@@ -70,6 +71,7 @@ export class PackageService implements IPackageService {
         StatusCode.NOT_FOUND,
       );
     }
+
     return await this.packageRepository.updatePackageById(packageId, dto);
   }
   async deleteOperatorPackageService(

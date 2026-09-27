@@ -67,7 +67,8 @@ const OperatorPackagesList = () => {
   const actions: ActionButton<IPackageItem>[] = [
     {
       label: () => "Edit",
-      onClick: (pkg) => navigate( FRONTEND_ROUTES.OPERATOR.EDIT_PACKAGE(pkg._id)),
+      onClick: (pkg) =>
+        navigate(FRONTEND_ROUTES.OPERATOR.EDIT_PACKAGE(pkg._id)),
       className: `bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600`,
       disabled: () => false,
       loadingText: "Editing...",
@@ -87,13 +88,8 @@ const OperatorPackagesList = () => {
   ];
   return (
     <>
-      <div className="flex flex-col min-h-screen ">
-   
-
+      <div className="flex flex-col min-h-[calc(100vh-5.125rem)] ">
         <div className="flex-1 flex  bg-gray-100 ">
-       
-      
-
           <div className="flex-1 p-5 min-w-0">
             <h1 className="text-md bg-sky-200 font-bold mb-1 text-center py-2   ">
               Package Management
@@ -106,7 +102,13 @@ const OperatorPackagesList = () => {
               loading={loading}
             />
             <div className="mt-5">
-              <CreateButton onClick={()=>navigate(FRONTEND_ROUTES.OPERATOR.CREATE_PACKAGE)}>Create Package</CreateButton>
+              <CreateButton
+                onClick={() =>
+                  navigate(FRONTEND_ROUTES.OPERATOR.CREATE_PACKAGE)
+                }
+              >
+                Create Package
+              </CreateButton>
             </div>
 
             <Pagination

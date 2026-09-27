@@ -172,7 +172,7 @@ export const useChat = () => {
     return () => {
       socket.off("connect", handleConnect);
       socket.off("receive_message");
-      // socket.off("new_message_notification");
+
       socket.off("user_status_change");
       socket.off("user_typing");
       socket.off("user_stop_typing");

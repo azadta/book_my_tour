@@ -77,7 +77,11 @@ export interface IBookingService {
     booking: IBooking | null;
   }>;
   findBookingByOrderId(razorpayOrderId: string): Promise<IBooking>;
-  getUserBookings(userId: string): Promise<IBooking[]>;
+  getUserBookings(
+    userId: string,
+    page?: number,
+    limit?: number,
+  ): Promise<{ bookings: IBooking[]; totalCount: number }>;
   cancelBooking(dto: CancelBookingRequestDTO): Promise<
     | {
         requiresAdminApproval: boolean;

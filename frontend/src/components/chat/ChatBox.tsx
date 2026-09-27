@@ -25,17 +25,13 @@ const ChatBox = ({
 }: ChatBoxProps) => {
   const [text, setText] = useState("");
   const currentUser = useCurrentUser();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const recipientParticipent = activeChat?.participants.find(
     (p) => p.participantId?._id !== currentUser?.id,
   );
   const recipient = recipientParticipent?.participantId;
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -71,26 +67,26 @@ const ChatBox = ({
     <div className="flex-1 flex flex-col h-full ">
       <div className="flex items-center justify-between p-4 border-b border-sky-800/60 bg-sky-700/90">
         <div className="flex gap-5 items-center justify-center">
-        <div className="  flex items-center gap-3  ">
-          <img
-            src={recipient?.image}
-            alt={recipient?.name}
-            className="w-10 h-10 rounded-full object-cover bg-sky-800 ring-1 ring-sky-700"
-          />
-          <div>
-            <h3 className="text-md font-semibold text-sky-50 ">
-              {recipient?.name}
-            </h3>
-            <p className="text-xs text-emerald-400 font-medium capitalize ">
-              {recipientParticipent?.participantModel}
-            </p>
+          <div className="  flex items-center gap-3  ">
+            <img
+              src={recipient?.image}
+              alt={recipient?.name}
+              className="w-10 h-10 rounded-full object-cover bg-sky-800 ring-1 ring-sky-700"
+            />
+            <div>
+              <h3 className="text-md font-semibold text-sky-50 ">
+                {recipient?.name}
+              </h3>
+              <p className="text-xs text-emerald-400 font-medium capitalize ">
+                {recipientParticipent?.participantModel}
+              </p>
+            </div>
           </div>
-        </div>
-        {isTyping && (
-          <div className="text-xs text-emerald-100 italic font-medium">
-            typing...
-          </div>
-        )}
+          {isTyping && (
+            <div className="text-xs text-emerald-100 italic font-medium">
+              typing...
+            </div>
+          )}
         </div>
         <button
           onClick={() => onClearChat(activeChat?._id as string)}
@@ -125,8 +121,6 @@ const ChatBox = ({
             </div>
           );
         })}
-
-        <div ref={messagesEndRef} />
       </div>
 
       <form

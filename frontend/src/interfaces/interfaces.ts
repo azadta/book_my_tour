@@ -35,6 +35,12 @@ export interface ICategory {
 export interface IActivity {
   id: string;
   name: string;
+  description: string;
+  image: string | File;
+  timing: {
+    from: string;
+    to: string;
+  };
   cost: number;
   customizable: boolean;
 }
@@ -42,13 +48,17 @@ export interface IActivity {
 export interface IOptionalActivity {
   id: string;
   name: string;
+  description: string;
+  image: string | File;
+  timing: {
+    from: string;
+    to: string;
+  };
   cost: number;
 }
 
 export interface IItineraryDay {
   day: number;
-  title: string;
-  description: string;
   gallery: string[];
   activities: IActivity[];
   optionalActivities: IOptionalActivity[];
@@ -58,10 +68,17 @@ export interface IPackageItem {
   _id: string;
   name: string;
   amount: number;
+  childPricing: {
+    enabled: boolean;
+    minAge?: number;
+    maxAge?: number;
+    percentage?: number;
+  };
   destinations: Destination[];
   specifications?: string;
 
   startDate?: string;
+  startPoint: string;
   duration: { day: number; night: number };
   remark?: string;
   discount?: number;
@@ -135,6 +152,12 @@ export interface IAppliedCoupon {
 }
 export interface IPricing {
   baseAmount: number;
+  adultCount:number,
+  childCount:number,
+  adultUnitPrice:number,
+  childUnitPrice:number,
+  adultAmount:number,
+  childAmount:number,
   addedActivitiesAmount: number;
   removedActivitiesAmount: number;
   subtotal: number;

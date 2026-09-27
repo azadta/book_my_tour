@@ -1,3 +1,4 @@
+import { type } from "node:os";
 import {
   CancelBookingRequestDTO,
   CreateBookingRequestDTO,
@@ -30,6 +31,24 @@ export class BookingRequestMapper {
     return {
       userId,
       packageId: body?.packageId || "",
+      adultCount: Number(body?.adultCount ?? 1),
+      childCount: Number(body?.childCount ?? 0),
+      primaryContact: {
+        name: body?.primaryContact?.name || "",
+        email: body?.primaryContact?.email || "",
+        phone: body?.primaryContact?.phone || "",
+      },
+      members: Array.isArray(body?.members)
+        ? body.members.map((member: any) => ({
+            type: member?.type,
+            firstName: member?.firstName || "",
+            lastName: member?.lastName || "",
+            dob: new Date(member?.dob),
+            gender: member?.gender || "",
+            passportNumber: member?.passportNumber || null,
+          }))
+        : [],
+
       addedActivityIds: Array.isArray(body.addedActivityIds)
         ? body.addedActivityIds
         : [],
@@ -38,7 +57,7 @@ export class BookingRequestMapper {
         : [],
       generalCouponCode: body?.generalCouponCode,
       bankCouponCode: body?.bankCouponCode,
-      useWallet: Boolean(body?.useWallet),
+      isWalletApplied: Boolean(body?.isWalletApplied),
     };
   }
   static toVerifyPaymentDTO(

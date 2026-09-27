@@ -1,5 +1,9 @@
 import { model, Schema } from "mongoose";
-import { IBooking } from "../interfaces/IBookingRepository";
+import {
+  IBooking,
+  ILeadContact,
+  ITourMember,
+} from "../interfaces/IBookingRepository";
 import { IBookingPricing } from "../interfaces/IBookingPricing";
 import { Ipackage } from "./Package";
 
@@ -8,7 +12,11 @@ export interface IPopulatedBooking extends Omit<IBooking, "packageId"> {
   packageId: Ipackage;
 }
 
-export type AttendanceStatus='PENDING'|'CHECKED_IN'|'NOT_SHOW'|'COMPLETED'
+export type AttendanceStatus =
+  | "PENDING"
+  | "CHECKED_IN"
+  | "NOT_SHOW"
+  | "COMPLETED";
 
 const AppliedCoupnSchema = new Schema(
   {
@@ -37,12 +45,60 @@ const AppliedCoupnSchema = new Schema(
   { _id: false },
 );
 
+const tourMemberSchema = new Schema<ITourMember>(
+  {
+    type: { type: String, enum: ["adult", "child"], required: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, require: true, trim: true },
+    dob: { type: Date, required: true },
+    gender: { type: String, enum: ["male", "female", "other"], required: true },
+    passportNumber: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+  },
+  { _id: false },
+);
+
+const leadContactSchema = new Schema<ILeadContact>(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, trim: true, lowercase: true },
+    phone: { type: String, required: true, trim: true },
+  },
+  { _id: false },
+);
+
 const pricingSchema = new Schema<IBookingPricing>(
   {
-    baseAmount: {
+    adultCount: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    childCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    adultUnitPrice: {
       type: Number,
       required: true,
     },
+    childUnitPrice: {
+      type: Number,
+      default: 0,
+    },
+    adultAmount: {
+      type: Number,
+      required: true,
+    },
+    childAmount: {
+      type: Number,
+      default: 0,
+    },
+
     addedActivitiesAmount: {
       type: Number,
       default: 0,
@@ -50,6 +106,10 @@ const pricingSchema = new Schema<IBookingPricing>(
     removedActivitiesAmount: {
       type: Number,
       default: 0,
+    },
+    baseAmount: {
+      type: Number,
+      required:true
     },
     subtotal: {
       type: Number,
@@ -108,6 +168,8 @@ const bookingSchema = new Schema<IBookingDocument>(
 
     addedActivityIds: [{ type: String }],
     removedActivityIds: [{ type: String }],
+    primaryContact: { type: leadContactSchema, required: true },
+    members: [tourMemberSchema],
     status: {
       type: String,
       enum: ["PENDING", "CONFIRMED", "CANCEL_REQUESTED", "FAILED", "CANCELLED"],

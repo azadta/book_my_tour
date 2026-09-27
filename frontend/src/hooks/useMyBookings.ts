@@ -17,7 +17,7 @@ export interface PopulatedPackage {
   duration: { day: number; night: number };
   images?: string[];
   amount: number;
-  startDate:string
+  startDate: string;
 }
 
 export interface IBooking {
@@ -32,19 +32,28 @@ export interface IBooking {
   createdAt: string;
 }
 
-export const useMyBookings = () => {
+export const useMyBookings = (
+  currentPage: number,
+  resultPerPage: number = 5,
+) => {
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null,
   );
   const [isCancelling, setIsCancelling] = useState(false);
   const [cancelReason, setCancelReason] = useState<string>("");
   const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const fetchBookings = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get(APP_ROUTES.BOOKINGS.USER.MY_BOOKINGS);
-      setBookings(response.data);
+      const response = await axiosInstance.get(
+        `${APP_ROUTES.BOOKINGS.USER.MY_BOOKINGS}?page=${currentPage}&limit=${resultPerPage}`,
+      );
+      console.log('bookings from useMyBookins',response.data.bookings)
+      console.log('total Count from useMyBookins',response.data.totalCount)
+      setBookings(response.data.bookings);
+      setTotalCount(response.data.totalCount);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||
@@ -69,7 +78,8 @@ export const useMyBookings = () => {
     setIsCancelling(true);
     try {
       const res = await axiosInstance.post(
-        APP_ROUTES.BOOKINGS.USER.CANCEL(selectedBookingId),{reason:cancelReason.trim()}
+        APP_ROUTES.BOOKINGS.USER.CANCEL(selectedBookingId),
+        { reason: cancelReason.trim() },
       );
       toast.success(res.data?.message);
       handleCloseModal();
@@ -85,10 +95,11 @@ export const useMyBookings = () => {
 
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [currentPage]);
 
   return {
     bookings,
+    totalCount,
     isLoading,
     refetch: fetchBookings,
     handleCancelBooking,

@@ -39,6 +39,7 @@ const ReUsableForm = ({
   setFieldError,
   renderAfterFields,
 }: ReUsableFormProps) => {
+  console.log('formData from reusable form:',formData)
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
   const [showPasswordMap, setShowPasswordMap] = useState<
@@ -101,25 +102,53 @@ const ReUsableForm = ({
     const itineraryData: ItineraryDay[] = formData.itinerary || [];
     if (itineraryData) {
       itineraryData.forEach((day: ItineraryDay, dayIndex: number) => {
-        if (!day.title || day.title.trim() === "") {
-          newErrors[`itinerary.${dayIndex}.title`] = "Title is required";
-        }
-        if (!day.description || day.description.trim() === "") {
-          newErrors[`itinerary.${dayIndex}.description`] =
-            "description is required";
-        }
         if (!day.gallery || day.gallery.length < 4) {
           newErrors[`itinerary.${dayIndex}.gallery`] =
             "At least four gallery images are required";
         }
         if (!day.activities || day.activities.length === 0) {
           newErrors[`itinerary.${dayIndex}.activities`] =
-            "At least one activity is  required";
+            "At least one activity is required";
         } else {
           day.activities.forEach((activity: IActivity, index: number) => {
             if (!activity.name || activity.name.trim() === "") {
               newErrors[`itinerary.${dayIndex}.activities.${index}.name`] =
-                " activity name is  required";
+                "Activity name is required";
+            }
+
+            if (!activity.description || activity.description.trim() === "") {
+              newErrors[
+                `itinerary.${dayIndex}.activities.${index}.description`
+              ] = "Activity description is required";
+            }
+            if (!activity.image) {
+              newErrors[`itinerary.${dayIndex}.activities.${index}.image`] =
+                "Activity image is required";
+            }
+            if (
+              !activity?.timing?.from ||
+              activity?.timing?.from.trim() === ""
+            ) {
+              newErrors[
+                `itinerary.${dayIndex}.activities.${index}.timing.from`
+              ] = "Activity start time is required";
+            }
+            if (!activity?.timing?.to || activity?.timing?.to.trim() === "") {
+              newErrors[`itinerary.${dayIndex}.activities.${index}.timing.to`] =
+                "Activity end time is required";
+            }
+
+            if (
+              activity?.timing?.from &&
+              activity?.timing?.to &&
+              activity.timing.from.trim() !== "" &&
+              activity.timing.to.trim() !== ""
+            ) {
+              if (activity.timing.to <= activity.timing.from) {
+                newErrors[
+                  `itinerary.${dayIndex}.activities.${index}.timing.to`
+                ] = "End time must be grater than  start time";
+              }
             }
           });
         }
@@ -130,7 +159,49 @@ const ReUsableForm = ({
               if (!optActivity.name || optActivity.name.trim() === "") {
                 newErrors[
                   `itinerary.${dayIndex}.optionalActivities.${index}.name`
-                ] = " optional Activity name is  required";
+                ] = "Optional Activity name is  required";
+              }
+
+              if (
+                !optActivity.description ||
+                optActivity.description.trim() === ""
+              ) {
+                newErrors[
+                  `itinerary.${dayIndex}.optionalActivities.${index}.description`
+                ] = "Optional activity description is required";
+              }
+              if (!optActivity.image) {
+                newErrors[
+                  `itinerary.${dayIndex}.optionalActivities.${index}.image`
+                ] = " Optional activity image is required";
+              }
+              if (
+                !optActivity?.timing?.from ||
+                optActivity?.timing?.from.trim() === ""
+              ) {
+                newErrors[
+                  `itinerary.${dayIndex}.optionalActivities.${index}.timing.from`
+                ] = "Optional activity start time is required";
+              }
+              if (
+                !optActivity?.timing?.to ||
+                optActivity?.timing?.to.trim() === ""
+              ) {
+                newErrors[
+                  `itinerary.${dayIndex}.optionalActivities.${index}.timing.to`
+                ] = "Optional activity end time is required";
+              }
+              if (
+                optActivity?.timing?.from &&
+                optActivity?.timing?.to &&
+                optActivity.timing.from.trim() !== "" &&
+                optActivity.timing.to.trim() !== ""
+              ) {
+                if (optActivity.timing.to <= optActivity.timing.from) {
+                  newErrors[
+                    `itinerary.${dayIndex}.optionalActivities.${index}.timing.to`
+                  ] = "End time must be grater than  start time";
+                }
               }
             },
           );
@@ -418,7 +489,7 @@ const ReUsableForm = ({
                     accept="image/*"
                   />
                   {fieldError[field.id] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-2">
                       {fieldError[field.id]}
                     </p>
                   )}
@@ -476,7 +547,7 @@ const ReUsableForm = ({
                     )}
                   </div>
                   {fieldError[field.id] && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-3">
                       {fieldError[field.id]}
                     </p>
                   )}

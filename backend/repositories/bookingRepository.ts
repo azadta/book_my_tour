@@ -30,9 +30,12 @@ export class BookingRepository
   }
 
   async createBooking(dto: ICreateBookingDTO): Promise<IBooking> {
+    console.log("base Amount from repository:", dto.pricing.baseAmount);
     const newBooking = await Booking.create({
       userId: dto.userId,
       packageId: dto.packageId,
+      primaryContact: dto.primaryContact,
+      members: dto.members,
       razorpayOrderId: dto.razorpayOrderId,
       razorpayPaymentId: dto.razorpayPaymentId || null,
       pricing: dto.pricing,
@@ -72,18 +75,28 @@ export class BookingRepository
     ).lean();
   }
 
-  async getUserBookings(userId: string): Promise<IBooking[]> {
-    return await Booking.find({ userId })
-      .populate({
-        path: "packageId",
-        select: "name destinations duration images amount startDate",
-        populate: {
-          path: "destinations",
-          select: "name",
-        },
-      })
-      .sort({ createdAt: -1 })
-      .lean();
+  async getUserBookings(
+    userId: string,
+    skip: number,
+    limit: number,
+  ): Promise<{ bookings: IBooking[]; totalCount: number }> {
+    const [bookings, totalCount] = await Promise.all([
+      Booking.find({ userId })
+        .populate({
+          path: "packageId",
+          select: "name destinations duration images amount startDate",
+          populate: {
+            path: "destinations",
+            select: "name",
+          },
+        })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Booking.countDocuments({ userId }),
+    ]);
+    return { bookings, totalCount };
   }
 
   async getPendingCancellationRequests(): Promise<IBooking[]> {

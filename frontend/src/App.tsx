@@ -59,6 +59,7 @@ import OperatorLayout from "./components/layouts/OperatorLayout";
 import OperatorAuthLayout from "./components/layouts/OperatorAuthLayout";
 import AdminAuthLayout from "./components/layouts/AdminAuthLayout";
 import AdminLayout from "./components/layouts/AdminLayout";
+import TravelerDetailsPage from "./pages/user/TravelerDetailsPage";
 
 const App = () => {
   useGlobalChatSocket();
@@ -144,6 +145,10 @@ const App = () => {
             <Route
               path={FRONTEND_ROUTES.USER.NOTIFICATIONS}
               element={<NotificationList />}
+            />
+            <Route
+              path={`/booking/traveler-details`}
+              element={<TravelerDetailsPage />}
             />
           </Route>
         </Route>
@@ -258,68 +263,62 @@ const App = () => {
             />
           </Route>
         </Route>
-        <Route element={<AdminLayout/>}>
-             <Route
-          element={
-            <ProtectedRoute
-              isAuthenticated={!!currentAdmin}
-              redirectedPath={FRONTEND_ROUTES.ADMIN.LOGIN}
+        <Route element={<AdminLayout />}>
+          <Route
+            element={
+              <ProtectedRoute
+                isAuthenticated={!!currentAdmin}
+                redirectedPath={FRONTEND_ROUTES.ADMIN.LOGIN}
+              />
+            }
+          >
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.PROFILE}
+              element={<AdminProfile />}
             />
-          }
-        >
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.PROFILE}
-            element={<AdminProfile />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH}
-            element={<AdminResetPasswordAuthenticated />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.DASHBOARD}
-            element={<AdminDashboard />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.USERS}
-            element={<AdminUserDetails />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.EDIT_USER_PATTERN}
-            element={<EditUser />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.OPERATORS}
-            element={<AdminOperatorDetails />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.EDIT_OPERATOR_PATTERN}
-            element={<EditOperator />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.OPERATOR_VERIFICATION}
-            element={<AdminOperatorVerification />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.PACKAGES}
-            element={<AdminPackageDetails />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.CREATE_DESTINATION}
-            element={<CreateDestination />}
-          />
-          <Route
-            path={FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY}
-            element={<CreatePackageCategory />}
-          />
-        </Route>
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH}
+              element={<AdminResetPasswordAuthenticated />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.DASHBOARD}
+              element={<AdminDashboard />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.USERS}
+              element={<AdminUserDetails />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.EDIT_USER_PATTERN}
+              element={<EditUser />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.OPERATORS}
+              element={<AdminOperatorDetails />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.EDIT_OPERATOR_PATTERN}
+              element={<EditOperator />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.OPERATOR_VERIFICATION}
+              element={<AdminOperatorVerification />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.PACKAGES}
+              element={<AdminPackageDetails />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.CREATE_DESTINATION}
+              element={<CreateDestination />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY}
+              element={<CreatePackageCategory />}
+            />
+          </Route>
         </Route>
 
-
-       
-        
-   
-
-    
         <Route
           path={FRONTEND_ROUTES.ADMIN.EDIT_PACKAGE_PATTERN}
           element={<AdminEditPackage />}

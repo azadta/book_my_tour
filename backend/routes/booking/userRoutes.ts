@@ -4,12 +4,14 @@ import {
     bookingController
 } from "../../config/container";
 import { ROUTES } from "../../constants/routesConstants";
+import { validateCreateBooking } from "../../middlewares/validateCreateBooking";
 
 const userRouter = express.Router();
 
 userRouter.post(
   ROUTES.BOOKINGS.USER.CREATE,
   authMiddleware.verifyRole("user"),
+  validateCreateBooking,
   bookingController.createBookingOrder,
 );
 userRouter.post(

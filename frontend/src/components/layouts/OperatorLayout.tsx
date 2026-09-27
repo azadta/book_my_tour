@@ -7,10 +7,10 @@ import {
   Package,
   Plus,
   SquarePen,
-  Ticket
+  Ticket,
 } from "lucide-react";
 import { Outlet, useLocation } from "react-router-dom";
-import DashboardHeader from "../DashboardHeader";
+import DashboardHeader from "../header/DashboardHeader";
 import OperatorDashboardSideBar from "../OperatorDashboardSidebar";
 
 const OperatorLayout = () => {
@@ -35,7 +35,10 @@ const OperatorLayout = () => {
         icon: Ticket,
       };
     }
-    if (pathName.includes("/booking-list")||pathName.includes("/booking-details")) {
+    if (
+      pathName.includes("/booking-list") ||
+      pathName.includes("/booking-details")
+    ) {
       return {
         statusText: "Booking",
         icon: CalendarCheck,
@@ -71,7 +74,7 @@ const OperatorLayout = () => {
         icon: Plus,
       };
     }
-        if (pathName.includes("/reset-password")) {
+    if (pathName.includes("/reset-password")) {
       return {
         statusText: "Reset-password",
         icon: KeyRound,
@@ -95,7 +98,7 @@ const OperatorLayout = () => {
           statusText={headerConfig.statusText}
           icon={headerConfig.icon}
         />
-        <main className="flex-1 pt-20 ">
+        <main className="flex-1 pt-[82px] ">
           <Outlet />
         </main>
       </div>

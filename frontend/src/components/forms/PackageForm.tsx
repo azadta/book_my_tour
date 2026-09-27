@@ -2,11 +2,11 @@ import ItineraryEditor from "@/components/itinerary/ItineraryEditor";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { useAdminEditPackage } from "@/hooks/useAdminEditPackage";
 import { useOperatorEditPackage } from "@/hooks/useOperatorEditPackage";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import ReUsableForm from "../../components/forms/ReUsableForm";
-import { createPackageFields, type Option } from "../../formConfig/fields";
+import { getCreatePackageFields, type Option } from "../../formConfig/fields";
 
 import { useCreatePackage } from "@/hooks/useCreatePackage";
 import type { FormField, IPackageItem } from "../../interfaces/interfaces";
@@ -45,12 +45,20 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
       {
         day: 1,
         activities: [
-          { id: crypto.randomUUID(), name: "", cost: 0, customizable: false },
+          {
+            id: crypto.randomUUID(),
+            name: "",
+
+            description: "",
+            image: "",
+            timing: { from: "", to: "" },
+            cost: 0,
+            customizable: false,
+          },
         ],
-        description: "",
+
         gallery: [],
         optionalActivities: [],
-        title: "",
       },
     ];
   };
@@ -76,11 +84,19 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
       );
     }
   };
+  const activeFields = useMemo(
+    () => getCreatePackageFields(formData),
+    [formData?.['childPricing.enabled']],
+  );
 
-  const enrichedFields = createPackageFields.map((field: FormField) => ({
-    ...field,
-    options: options[field.id as keyof IOptions] ?? [],
-  }));
+  const enrichedFields = useMemo(
+    () =>
+      activeFields.map((field: FormField) => ({
+        ...field,
+        options: options[field.id as keyof IOptions] ?? [],
+      })),
+    [activeFields, categories, destinations],
+  );
 
   useEffect(() => {
     if (!packageData) {

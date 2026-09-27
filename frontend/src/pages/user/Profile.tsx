@@ -254,7 +254,7 @@ const Profile = () => {
           </button>
         </div>
       </div>
-      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto mt-15   w-full max-sm:order-1  ">
+      <div className="p-3 max-w-lg sm:max-w-2xl mx-auto mt-5   w-full max-sm:order-1  ">
         <ProfileForm
           currentUser={currentUser}
           formData={formData}

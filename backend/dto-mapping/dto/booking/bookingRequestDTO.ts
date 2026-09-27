@@ -7,11 +7,26 @@ export interface CancelBookingRequestDTO {
 export interface CreateBookingRequestDTO {
   userId: string;
   packageId: string;
+  adultCount: number;
+  childCount: number;
+  primaryContact: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  members: Array<{
+    type: "adult" | "child";
+    firstName: string;
+    lastName: string;
+    dob:  Date;
+    gender: "male" | "female" | "other";
+    passportNumber: string|null;
+  }>;
   addedActivityIds?: string[];
   removedActivityIds: string[];
   generalCouponCode?: string;
   bankCouponCode?: string;
-  useWallet?: boolean;
+  isWalletApplied?: boolean;
 }
 
 export interface VerifyPaymentRequestDTO {
@@ -54,8 +69,8 @@ export interface GetOperatorBookingsQueryDTO {
   limit: number;
 }
 
-export interface ProcessAdminCancellationRequestDTO{
-  bookingId:string,
-  approve:boolean,
-  adminNotes?:string
+export interface ProcessAdminCancellationRequestDTO {
+  bookingId: string;
+  approve: boolean;
+  adminNotes?: string;
 }

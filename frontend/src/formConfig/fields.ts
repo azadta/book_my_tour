@@ -438,77 +438,118 @@ export const OperatorResetPasswordFields: FormField[] = [
   },
 ];
 
-export const createPackageFields: FormField[] = [
-  {
-    id: "name",
-    label: "Name",
-    type: "text",
-    placeholder: "Enter Name",
-    required: true,
-  },
-  {
-    id: "amount",
-    label: "Amount",
-    type: "number",
-    placeholder: "Enter Amount",
-    required: true,
-  },
-  {
-    id: "destinations",
-    label: "Destinations",
-    type: "select",
-    placeholder: "Select destinations",
-    multiple: true,
-    required: true,
-  },
-  {
-    id: "duration.day",
-    label: "Number of days",
-    type: "number",
-    placeholder: "Enter number of days",
-    required: true,
-  },
-  {
-    id: "duration.night",
-    label: "Number of nights",
-    type: "number",
-    placeholder: "Enter number of nights",
-    required: true,
-  },
-  {
-    id: "specifications",
-    label: "Specifications",
-    type: "text",
-    placeholder: "Enter specifications",
-    required: false,
-  },
+export const getCreatePackageFields = (
+  formData: Record<string, any>,
+): FormField[] => {
 
-  { id: "startDate", label: "Start Date", type: "date", required: true },
-  { id: "remark", label: "Remark", type: "text", required: false },
-  { id: "discount", label: "Discount (%)", type: "number", required: false },
-  {
-    id: "availableSlots",
-    label: "Available Slots",
-    type: "text",
-    placeholder: "Enter slots",
-    required: true,
-  },
-  {
-    id: "images",
-    label: "Upload Images",
-    type: "file",
-    multiple: true,
-    required: true,
-  },
+  const isChildPricingEnabled = formData['childPricing.enabled'] === true;
+  const baseFields: FormField[] = [
+    {
+      id: "name",
+      label: "Name",
+      type: "text",
+      placeholder: "Enter Name",
+      required: true,
+    },
+    {
+      id: "amount",
+      label: "Amount",
+      type: "number",
+      placeholder: "Enter Amount",
+      required: true,
+    },
+    {
+      id: "childPricing.enabled",
+      label: "Child Pricing",
+      type: "checkbox",
+      required: false,
+    },
+  ];
+  if (isChildPricingEnabled) {
+    baseFields.push(
+      {
+        id: "childPricing.minAge",
+        type: "number",
+        label: "Child Min.age ",
+        placeholder: "Enter child's minimum age",
+        required: true,
+      },
+      {
+        id: "childPricing.maxAge",
+        type: "number",
+        label: "Child Max.age ",
+        placeholder: "Enter child's maximum age",
+        required: true,
+      },
+      {
+        id: "childPricing.percentage",
+        type: "number",
+        label: "Child's disount percentage",
+        placeholder: "Enter child's discount percentage",
+        required: true,
+      },
+    );
+  }
+  baseFields.push(
+    {
+      id: "destinations",
+      label: "Destinations",
+      type: "select",
+      placeholder: "Select destinations",
+      multiple: true,
+      required: true,
+    },
+    {
+      id: "duration.day",
+      label: "Number of days",
+      type: "number",
+      placeholder: "Enter number of days",
+      required: true,
+    },
+    {
+      id: "duration.night",
+      label: "Number of nights",
+      type: "number",
+      placeholder: "Enter number of nights",
+      required: true,
+    },
+    {
+      id: "specifications",
+      label: "Specifications",
+      type: "text",
+      placeholder: "Enter specifications",
+      required: false,
+    },
 
-  {
-    id: "category",
-    label: "Package Category",
-    type: "select",
-    placeholder: "Select Category",
-    required: true,
-  },
-];
+    { id: "startDate", label: "Start Date", type: "date", required: true },
+    { id: "startPoint", label: "Start Point", type: "string", required: true },
+    { id: "remark", label: "Remark", type: "text", required: false },
+    { id: "discount", label: "Discount (%)", type: "number", required: false },
+    {
+      id: "availableSlots",
+      label: "Available Slots",
+      type: "text",
+      placeholder: "Enter slots",
+      required: true,
+    },
+    {
+      id: "images",
+      label: "Upload Images",
+      type: "file",
+      multiple: true,
+      required: true,
+    },
+
+    {
+      id: "category",
+      label: "Package Category",
+      type: "select",
+      placeholder: "Select Category",
+      required: true,
+    },
+  );
+  return baseFields;
+};
 
 export const adminLoginFields: FormField[] = [
   {

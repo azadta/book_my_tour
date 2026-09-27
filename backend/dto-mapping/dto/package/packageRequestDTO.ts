@@ -3,6 +3,12 @@ import { Types } from "mongoose";
 export interface IActivityDTO {
   id: string;
   name: string;
+  image: string;
+  description: string;
+  timing: {
+    from: string;
+    to: string;
+  };
   cost: number;
   customizable: boolean;
 }
@@ -10,13 +16,17 @@ export interface IActivityDTO {
 export interface IOptionalActivityDTO {
   id: string;
   name: string;
+  image: string;
+  description: string;
+  timing: {
+    from: string;
+    to: string;
+  };
   cost: number;
 }
 
 export interface IItineraryDayDTO {
   day: number;
-  title: string;
-  description: string;
   gallery: string[];
   activities: IActivityDTO[];
   optionalActivities: IOptionalActivityDTO[];
@@ -48,8 +58,15 @@ export interface ICreatePackageRequestDTO {
     day: number;
     night: number;
   };
+    childPricing: {
+    enabled: boolean;
+    minAge?: number|undefined;
+    maxAge?: number|undefined;
+    percentage?: number|undefined;
+  };
   specifications?: string;
   startDate: Date;
+  startPoint:string,
   remark?: string;
   discount?: number;
   availableSlots?: string;

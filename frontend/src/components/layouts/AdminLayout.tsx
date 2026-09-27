@@ -12,7 +12,7 @@ import {
 
 import { Outlet, useLocation } from "react-router-dom";
 import AdminDashboardSideBar from "../AdminDashboardSideBar";
-import DashboardHeader from "../DashboardHeader";
+import DashboardHeader from "../header/DashboardHeader";
 
 const AdminLayout = () => {
   const location = useLocation();

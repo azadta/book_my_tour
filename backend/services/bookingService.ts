@@ -260,8 +260,12 @@ export class BookingService implements IBookingService {
       removedActivityIds = [],
       generalCouponCode,
       bankCouponCode,
-      useWallet,
+      isWalletApplied,
       userId,
+      adultCount = 1,
+      childCount = 0,
+      primaryContact,
+      members = [],
     } = dto;
 
     const pkg = await this.packageRepository.getPackageById(packageId);
@@ -294,16 +298,16 @@ export class BookingService implements IBookingService {
     }
 
     const baseAmount = pkg.amount;
-    const subtotal = Math.max(
+    const singleAdultSubtotal = Math.max(
       0,
       baseAmount + addedActivitiesAmount - removedActivitiesAmount,
     );
 
     let generalCoupon: ICouponDocument | null = null;
     let bankCoupon: ICouponDocument | null = null;
-    let generalDiscount = 0;
-    let bankDiscount = 0;
-    let runningAmount = subtotal;
+    let singleAdultGeneralDiscount = 0;
+    let singleAdultBankDiscount = 0;
+    let singleAdultRunning = singleAdultSubtotal;
     if (generalCouponCode?.trim()) {
       generalCoupon = await this.couponRepository.findByCode(
         generalCouponCode?.trim(),
@@ -323,7 +327,7 @@ export class BookingService implements IBookingService {
 
       if (
         generalCoupon?.minBookingAmount &&
-        subtotal < generalCoupon.minBookingAmount
+        singleAdultSubtotal < generalCoupon.minBookingAmount
       ) {
         throw new CustomError(
           RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(
@@ -334,17 +338,18 @@ export class BookingService implements IBookingService {
       }
 
       if (generalCoupon.discountType === "PERCENTAGE") {
-        generalDiscount = (subtotal * generalCoupon.discountValue) / 100;
+        singleAdultGeneralDiscount =
+          (singleAdultSubtotal * generalCoupon.discountValue) / 100;
         if (
           generalCoupon.maxDiscountAmount &&
-          generalDiscount > generalCoupon.maxDiscountAmount
+          singleAdultGeneralDiscount > generalCoupon.maxDiscountAmount
         ) {
-          generalDiscount = generalCoupon.maxDiscountAmount;
+          singleAdultGeneralDiscount = generalCoupon.maxDiscountAmount;
         }
       } else {
-        generalDiscount = generalCoupon.discountValue;
+        singleAdultGeneralDiscount = generalCoupon.discountValue;
       }
-      runningAmount -= generalDiscount;
+      singleAdultRunning -= singleAdultGeneralDiscount;
     }
 
     if (bankCouponCode?.trim()) {
@@ -365,7 +370,7 @@ export class BookingService implements IBookingService {
       }
       if (
         bankCoupon.minBookingAmount &&
-        subtotal < bankCoupon.minBookingAmount
+        singleAdultSubtotal < bankCoupon.minBookingAmount
       ) {
         throw new CustomError(
           RESPONSE_MESSAGES.COUPON.ERROR.MINIMUM_AMOUNT(
@@ -376,42 +381,68 @@ export class BookingService implements IBookingService {
       }
 
       if (bankCoupon.discountType === "PERCENTAGE") {
-        bankDiscount = (runningAmount * bankCoupon.discountValue) / 100;
+        singleAdultBankDiscount =
+          (singleAdultRunning * bankCoupon.discountValue) / 100;
         if (
           bankCoupon.maxDiscountAmount &&
-          bankDiscount > bankCoupon.maxDiscountAmount
+          singleAdultBankDiscount > bankCoupon.maxDiscountAmount
         ) {
-          bankDiscount = bankCoupon.maxDiscountAmount;
+          singleAdultBankDiscount = bankCoupon.maxDiscountAmount;
         }
       } else {
-        bankDiscount = bankCoupon.discountValue;
+        singleAdultBankDiscount = bankCoupon.discountValue;
       }
-      runningAmount -= bankDiscount;
+      singleAdultRunning -= singleAdultBankDiscount;
     }
 
-    const finalAmount = Math.max(0, runningAmount);
+    const singleAdultTotalDiscount =
+      singleAdultGeneralDiscount + singleAdultBankDiscount;
+
+    const singleAdultPayalbe = Math.max(0, singleAdultRunning);
+    let childUnitPrice = singleAdultPayalbe;
+    let childPercentage = 1;
+    if (childCount > 0 && pkg?.childPricing?.enabled) {
+      childPercentage = (pkg.childPricing.percentage ?? 100) / 100;
+      childUnitPrice = Math.round(singleAdultPayalbe * childPercentage);
+    }
+
+    const totalAdultAmount = singleAdultPayalbe * adultCount;
+    const totalChildAmount = childUnitPrice * childCount;
+    const grandSubtotal = totalAdultAmount + totalChildAmount;
+
+    const singleChildTotalDiscount = singleAdultTotalDiscount * childPercentage;
+    const totalDiscountApplied =
+      singleAdultTotalDiscount * adultCount +
+      singleChildTotalDiscount * childCount;
+
     let walletDeduction = 0;
-    let remainingPayable = finalAmount;
-    if (useWallet) {
+    let remainingPayable = grandSubtotal;
+    if (isWalletApplied) {
       const wallet = await this.walletRepository.findOne({ userId });
       if (wallet && wallet?.balance > 0) {
-        walletDeduction = Math.min(wallet?.balance, finalAmount);
-        remainingPayable = finalAmount - walletDeduction;
+        walletDeduction = Math.min(wallet?.balance, grandSubtotal);
+        remainingPayable = grandSubtotal - walletDeduction;
       }
     }
 
     const pricing: IBookingPricing = {
+      adultCount,
+      childCount,
+      adultUnitPrice: singleAdultPayalbe,
+      childUnitPrice,
+      adultAmount: totalAdultAmount,
+      childAmount: totalChildAmount,
       baseAmount,
       addedActivitiesAmount,
       removedActivitiesAmount,
-      subtotal,
+      subtotal: grandSubtotal,
       ...(generalCoupon && {
         generalCoupon: {
           couponId: generalCoupon._id.toString(),
           code: generalCoupon.code,
           title: generalCoupon.title,
           type: generalCoupon.type,
-          discountAmount: generalDiscount,
+          discountAmount: singleAdultGeneralDiscount,
         },
       }),
       ...(bankCoupon && {
@@ -420,10 +451,10 @@ export class BookingService implements IBookingService {
           code: bankCoupon.code,
           title: bankCoupon.title,
           type: bankCoupon.type,
-          discountAmount: bankDiscount,
+          discountAmount: singleAdultBankDiscount,
         },
       }),
-      totalDiscount: generalDiscount + bankDiscount,
+      totalDiscount: totalDiscountApplied,
       walletApplied: walletDeduction,
       finalAmount: remainingPayable,
     };
@@ -457,6 +488,8 @@ export class BookingService implements IBookingService {
 
         addedActivityIds,
         removedActivityIds,
+        primaryContact,
+        members,
         status: "CONFIRMED",
       });
 
@@ -511,6 +544,8 @@ export class BookingService implements IBookingService {
       packageId,
       razorpayOrderId: order.id,
       pricing,
+      members,
+      primaryContact,
 
       addedActivityIds,
       removedActivityIds,
@@ -623,14 +658,19 @@ export class BookingService implements IBookingService {
     return booking;
   }
 
-  async getUserBookings(userId: string) {
+  async getUserBookings(userId: string, page: number = 1, limit: number = 5) {
     if (!userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.BOOKING.ERROR.USER_ID_MISSING,
         StatusCode.BAD_REQUEST,
       );
     }
-    const bookings = await this.bookingRepository.getUserBookings(userId);
+    const skip = (page - 1) * limit;
+    const bookings = await this.bookingRepository.getUserBookings(
+      userId,
+      skip,
+      limit,
+    );
 
     return bookings;
   }

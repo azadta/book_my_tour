@@ -176,111 +176,6 @@ export const usePackageDetails = (packageId: string) => {
     }
   };
 
-  const handleBooking = async (
-    addedActivityIds: string[],
-    removedActivityIds: string[],
-    generalCouponCode: string,
-    bankCouponCode: string,
-    isWalletApplied: boolean = false,
-    userProfile?: { name: string; email: string; phone?: string },
-  ) => {
-    setIsBookingLoading(true);
-    try {
-      const { data: response } = await axiosInstance.post(
-        APP_ROUTES.BOOKINGS.USER.CREATE,
-        {
-          packageId,
-          addedActivityIds,
-          removedActivityIds,
-          generalCouponCode,
-          bankCouponCode,
-          useWallet: isWalletApplied,
-        },
-      );
-      const {
-        orderId,
-        amount,
-        currency,
-        keyId,
-        packageName,
-        packageDescription,
-        offerId,
-        isFullyPaidByWallet,
-      } = response.data;
-      if (isFullyPaidByWallet) {
-        toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.BOOKING);
-        setIsBookingLoading(false);
-        navigate(FRONTEND_ROUTES.USER.BOOKING_SUCCESS(orderId));
-        return;
-      }
-
-      const isLoaded = await loadRazorpayScript();
-      if (!isLoaded) {
-        toast.error(FEEDBACK_MESSAGES.PAYMENT.ERROR.RAZORPAY_LOAD);
-        setIsBookingLoading(false);
-        return;
-      }
-      const options = {
-        key: keyId,
-        amount: amount,
-        currency: currency,
-        name: "Book My Tour",
-        description: packageName || packageDescription,
-        order_id: orderId,
-        ...(offerId ? { offer_id: offerId } : {}),
-        handler: async (response: {
-          razorpay_order_id: string;
-          razorpay_payment_id: string;
-          razorpay_signature: string;
-        }) => {
-          try {
-            await axiosInstance.post(APP_ROUTES.BOOKINGS.USER.PAYMENT_VERIFY, {
-              razorpayOrderId: response.razorpay_order_id,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpaySignature: response.razorpay_signature,
-              packageId,
-            });
-            toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.BOOKING);
-            navigate(
-              FRONTEND_ROUTES.USER.BOOKING_SUCCESS(response.razorpay_order_id),
-            );
-          } catch (error: any) {
-            toast.error(
-              error.response?.data?.message ||
-                FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_VERIFICATION,
-            );
-          } finally {
-            setIsBookingLoading(false);
-          }
-        },
-
-        prefill: {
-          name: userProfile?.name || "",
-          email: userProfile?.email || "",
-          contact: userProfile?.phone || "",
-        },
-        theme: {
-          color: "#2563eb",
-        },
-        modal: {
-          ondismiss: () => {
-            setIsBookingLoading(false);
-            toast.info(FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_POPUP);
-          },
-        },
-      };
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.BOOKING.ERROR.INITIATE,
-      );
-      setIsBookingLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchPackage();
     fetchReviews();
@@ -301,7 +196,6 @@ export const usePackageDetails = (packageId: string) => {
     openEditModal,
     closeModal,
     saveReview,
-    handleBooking,
     isBookingLoading,
   };
 };

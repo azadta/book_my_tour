@@ -9,7 +9,9 @@ export const useOperatorEditPackage = () => {
   const fetchPackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(APP_ROUTES.PACKAGES.OPERATOR.DETAIL(id));
+      const res = await axiosInstance.get(
+        APP_ROUTES.PACKAGES.OPERATOR.DETAIL(id),
+      );
       return res.data;
     } finally {
       setLoading(false);
@@ -32,12 +34,41 @@ export const useOperatorEditPackage = () => {
           const galleryFiles = day.gallery.filter(
             (img: any) => img instanceof File,
           );
-          const existingUrls = day.gallery.filter(
+          const existingGalleryUrls = day.gallery.filter(
             (img: any) => typeof img === "string",
           );
 
-          const uploadedUrls = await uploadImagesToCloudinary(galleryFiles);
-          return { ...day, gallery: [...existingUrls, ...uploadedUrls!] };
+          const uploadedGalleryUrls =
+            await uploadImagesToCloudinary(galleryFiles);
+
+          const processedActivities = await Promise.all(
+            (day.activities ?? []).map(async (activity: any) => {
+              if (activity.image instanceof File) {
+                const uploaded = await uploadImagesToCloudinary([
+                  activity.image,
+                ]);
+                return { ...activity, image: uploaded?.[0] || "" };
+              }
+              return activity;
+            }),
+          );
+
+          const processedOptionals = await Promise.all(
+            (day.optionalActivities ?? []).map(async (opt: any) => {
+              if (opt.image instanceof File) {
+                const uploaded = await uploadImagesToCloudinary([opt.image]);
+                return { ...opt, image: uploaded?.[0] || "" };
+              }
+              return opt;
+            }),
+          );
+
+          return {
+            ...day,
+            gallery: [...existingGalleryUrls, ...(uploadedGalleryUrls ?? [])],
+            activities: processedActivities,
+            optionalActivities: processedOptionals,
+          };
         }),
       );
       const payload = {

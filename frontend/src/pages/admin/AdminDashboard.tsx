@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   }
   return (
     <>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-[calc(100vh-5.125rem)] flex flex-col">
         <div className="flex flex-1 ">
           <main className="flex-1 p-8 bg-gray-100 pt-10">
             <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6 justify-items-center max-sm:w-60 mx-auto   ">

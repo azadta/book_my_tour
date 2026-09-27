@@ -21,13 +21,11 @@ const UserLayout = () => {
         <AppHeader showNavigation={showNavigation} />
       )}
 
-      <main
-        className={` grow ${isHomePage ? " pt-33" : isChatPage ? "pt-24" : "pt-18"} `}
-      >
+      <main className={` grow ${isHomePage ? " pt-33" : "pt-24"} `}>
         <Outlet />
       </main>
       {!isChatPage && <ChatNotificationBadgeButton />}
-      <Footer />
+      {!isChatPage&&<Footer />}
     </div>
   );
 };

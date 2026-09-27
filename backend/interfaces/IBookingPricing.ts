@@ -9,7 +9,13 @@ export interface IAppliedCoupon {
 }
 
 export interface IBookingPricing {
-  baseAmount: number;
+  baseAmount:number,
+  adultCount: number;
+  childCount: number;
+  adultUnitPrice: number;
+  childUnitPrice: number;
+  adultAmount: number;
+  childAmount: number;
   addedActivitiesAmount: number;
   removedActivitiesAmount: number;
   subtotal: number;

@@ -17,7 +17,7 @@ const CreatePackageCategory = () => {
     }
   };
   return (
-    <div className=" flex flex-col  items-center justify-center min-h-[calc(100vh-5rem)] ">
+    <div className=" flex flex-col  items-center justify-center min-h-[calc(100vh-5.125rem)] ">
       <div className="max-w-lg    w-full">
         <ReUsableForm
           heading="Create Package Category"

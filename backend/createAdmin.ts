@@ -12,7 +12,7 @@ const createAdmin = async () => {
 
     const existingAdmin = await Admin.findOne({ email: "admin@abc.com" });
     if (existingAdmin) {
-      console.log(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS);
+      console.error(RESPONSE_MESSAGES.AUTH.ERROR.EMAIL_EXISTS);
       process.exit(0);
     }
 

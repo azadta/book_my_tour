@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IBookingController } from "../interfaces/IBookingController";
 import { Types } from "../types/types";
-import type{ IBookingService } from "../interfaces/IBookingService";
+import type { IBookingService } from "../interfaces/IBookingService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCode } from "../constants/statusCodeConstants";
 import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
@@ -11,9 +11,9 @@ import { CustomError } from "../utils/customError";
 
 @injectable()
 export class BookingController implements IBookingController {
-  constructor(@inject(Types.BookingService) private bookingService:IBookingService){
-
-  }
+  constructor(
+    @inject(Types.BookingService) private bookingService: IBookingService,
+  ) {}
   //admin
   getPendingCancellations = async (
     req: Request,
@@ -61,7 +61,7 @@ export class BookingController implements IBookingController {
   };
 
   //operator
-    getOperatorBookings = async (
+  getOperatorBookings = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -79,7 +79,7 @@ export class BookingController implements IBookingController {
         queryDTO.skip,
         queryDTO.limit,
       );
-   
+
       const currentPage = Math.floor(queryDTO.skip / queryDTO.limit) + 1;
       const data = BookingResponseMapper.toOperatorBookingListResponseDTO(
         rawData,
@@ -235,7 +235,7 @@ export class BookingController implements IBookingController {
   };
 
   //user
-   createBookingOrder = async (
+  createBookingOrder = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -295,11 +295,16 @@ export class BookingController implements IBookingController {
   getUserBookings = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?.id;
-      const rawBookings = await this.bookingService.getUserBookings(
-        userId as string,
-      );
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const { bookings: rawBookings, totalCount } =
+        await this.bookingService.getUserBookings(
+          userId as string,
+          page,
+          limit,
+        );
       const bookings = BookingResponseMapper.toBookingListDTO(rawBookings);
-      res.status(StatusCode.OK).json(bookings);
+      res.status(StatusCode.OK).json({ bookings, totalCount });
     } catch (error) {
       next(error);
     }

@@ -11,10 +11,9 @@ interface Props {
 const createNewDay = (dayNumber: number): ItineraryDay => ({
   day: dayNumber,
   activities: [],
-  description: "",
+
   gallery: [],
   optionalActivities: [],
-  title: "",
 });
 
 const ItineraryEditor = ({

@@ -11,11 +11,11 @@ import type{ ISocketService } from "../interfaces/ISocketService";
 @injectable()
 export class ChatService implements IChatService {
   constructor(
-    @inject(Types.ChatRepository) private chatRepository: IChatRepository,
+    @inject(Types.ChatRepository) private _chatRepository: IChatRepository,
     @inject(Types.MessageRepository)
-    private messageRepository: IMessageRepository,
+    private _messageRepository: IMessageRepository,
     @inject(Types.SocketService)
-    private socketService: ISocketService,
+    private _socketService: ISocketService,
   ) {}
   async accessChatService(
     currentUserId: string,
@@ -23,7 +23,7 @@ export class ChatService implements IChatService {
     targetId: string,
     targetModel: "User" | "Operator" | "Admin",
   ): Promise<IChat> {
-    let chat = await this.chatRepository.findExistingChat(
+    let chat = await this._chatRepository.findExistingChat(
       currentUserId,
       currentUserRole,
       targetId,
@@ -32,14 +32,14 @@ export class ChatService implements IChatService {
     let isNewChat=false
     if (!chat) {
       isNewChat=true
-      const createdChat = await this.chatRepository.create({
+      const createdChat = await this._chatRepository.create({
         participants: [
           { participantId: currentUserId, participantModel: currentUserRole },
           { participantId: targetId, participantModel: targetModel },
         ],
       });
 
-      chat = await this.chatRepository.findByIdAndPopulate(createdChat._id);
+      chat = await this._chatRepository.findByIdAndPopulate(createdChat._id);
       if (!chat) {
         throw new CustomError(
           RESPONSE_MESSAGES.CHAT.ERROR.RETRIEVE_AFTER_CREATION,
@@ -47,13 +47,13 @@ export class ChatService implements IChatService {
       }
     }
     if(isNewChat&&chat){
-      this.socketService.emitToUser(targetId,'new_chat',chat)
+      this._socketService.emitToUser(targetId,'new_chat',chat)
     }
     return chat;
   }
 
   async getMyChatsService(userId: string): Promise<IChat[]> {
-    return this.chatRepository.getUserChats(userId);
+    return this._chatRepository.getUserChats(userId);
   }
 
   async getChatMessagesService(
@@ -67,7 +67,7 @@ export class ChatService implements IChatService {
     hasMore: boolean;
   }> {
     const skip = (page - 1) * limit;
-    const [messages, total] = await this.messageRepository.getPaginatedMessages(
+    const [messages, total] = await this._messageRepository.getPaginatedMessages(
       chatId,
       skip,
       limit,
@@ -79,13 +79,14 @@ export class ChatService implements IChatService {
     senderId: string;
     senderModel: "User" | "Operator" | "Admin";
     text: string;
+    image?:string;
     status: "SENT" | "DELIVERED";
   }): Promise<IMessage> {
-    const message = await this.messageRepository.create(data);
+    const message = await this._messageRepository.create(data);
     return message;
   }
  async clearChatService(chatId:string,userId:string):Promise<void>{
-    await this.messageRepository.deleteMessageByChatId(chatId)
-    await this.chatRepository.clearChatLastMessage(chatId)
+    await this._messageRepository.deleteMessageByChatId(chatId)
+    await this._chatRepository.clearChatLastMessage(chatId)
   }
 }

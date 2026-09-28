@@ -15,7 +15,7 @@ import { logger } from "../utils/logger";
 @injectable()
 export class OperatorController implements IOperatorController {
   constructor(
-    @inject(Types.OperatorService) private operatorService: IOperatorService,
+    @inject(Types.OperatorService) private _operatorService: IOperatorService,
   ) {}
 
   operatorRegister = async (
@@ -30,7 +30,7 @@ export class OperatorController implements IOperatorController {
         action: "REGISTER",
       });
       const dto = OperatorRequestMapper.toOperatorRegisterRequestDTO(req.body);
-      const result = await this.operatorService.operatorRegisterService(dto);
+      const result = await this._operatorService.operatorRegisterService(dto);
       res.status(StatusCode.CREATED).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
@@ -48,7 +48,7 @@ export class OperatorController implements IOperatorController {
   ) => {
     try {
       const dto = OperatorRequestMapper.toVerityOperatorOtpDTO(req.body);
-      await this.operatorService.operatorVerifyOtpService(dto);
+      await this._operatorService.operatorVerifyOtpService(dto);
       res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
@@ -66,7 +66,7 @@ export class OperatorController implements IOperatorController {
     const { operatorId } = req.body;
     try {
       const { otpExpire } =
-        await this.operatorService.operatorResendOtpService(operatorId);
+        await this._operatorService.operatorResendOtpService(operatorId);
       res.status(StatusCode.OK).json({
         succuss: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
@@ -88,7 +88,7 @@ export class OperatorController implements IOperatorController {
         email: req.body.email,
       });
       const { accessToken, refreshToken, operatorData } =
-        await this.operatorService.operatorLoginService(dto);
+        await this._operatorService.operatorLoginService(dto);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -111,7 +111,7 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const data = await this.operatorService.operatorForgotPasswordService(
+      const data = await this._operatorService.operatorForgotPasswordService(
         req.body.email,
       );
       res.status(StatusCode.OK).json(data);
@@ -126,7 +126,7 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const data = await this.operatorService.operatorResetPasswordService(
+      const data = await this._operatorService.operatorResetPasswordService(
         req.params.token as string,
         req.body.newPassword,
       );
@@ -139,7 +139,7 @@ export class OperatorController implements IOperatorController {
   operatorLogout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
-      const result = this.operatorService.operatorLogoutService();
+      const result = this._operatorService.operatorLogoutService();
       res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
@@ -160,7 +160,7 @@ export class OperatorController implements IOperatorController {
     }
     try {
       const dto = OperatorRequestMapper.toUpdateOperatorProfileDTO(req.body);
-      const updatedOperator = await this.operatorService.updateOperatorService(
+      const updatedOperator = await this._operatorService.updateOperatorService(
         req.params.id as string,
         dto,
       );
@@ -186,7 +186,7 @@ export class OperatorController implements IOperatorController {
     try {
       const { image } = req.body;
       const operator =
-        await this.operatorService.updateOperatorProfileImageService(
+        await this._operatorService.updateOperatorProfileImageService(
           req.user!.id,
           image,
         );
@@ -207,7 +207,7 @@ export class OperatorController implements IOperatorController {
         OperatorRequestMapper.toOperatorResetPasswordAuthenticatedRequestDTO(
           req.body,
         );
-      const data = await this.operatorService.resetPasswordAuthenticatedService(
+      const data = await this._operatorService.resetPasswordAuthenticatedService(
         req.user!.id,
         dto,
       );
@@ -225,7 +225,7 @@ export class OperatorController implements IOperatorController {
   ) => {
     try {
       const data =
-        await this.operatorService.getOperatorVerificationRequestsService();
+        await this._operatorService.getOperatorVerificationRequestsService();
       res
         .status(StatusCode.OK)
         .json(AdminResponseMapper.toAdminOperatorListResponseDTO(data));
@@ -239,7 +239,7 @@ export class OperatorController implements IOperatorController {
       const { id } = req.params;
       const dto = AdminRequestMapper.toVerifyOperatorPayload(req.body);
 
-      const data = await this.operatorService.verifyOperatorService(
+      const data = await this._operatorService.verifyOperatorService(
         id as string,
         dto,
       );
@@ -259,8 +259,8 @@ export class OperatorController implements IOperatorController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [rawOperators, totalCount] = await Promise.all([
-        this.operatorService.getPaginatedOperatorsService(skip, limit),
-        this.operatorService.getTotalOperatorsCount(),
+        this._operatorService.getPaginatedOperatorsService(skip, limit),
+        this._operatorService.getTotalOperatorsCount(),
       ]);
       res.status(StatusCode.OK).json({
         operators:
@@ -278,7 +278,7 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const operator = await this.operatorService.getOperatorDetailsService(
+      const operator = await this._operatorService.getOperatorDetailsService(
         req.params.id as string,
       );
 
@@ -297,7 +297,7 @@ export class OperatorController implements IOperatorController {
   ) => {
     try {
       const dto = AdminRequestMapper.toAdminUpdateOperatorRequestDTO(req.body);
-      const updated = await this.operatorService.adminUpdateOperatorService(
+      const updated = await this._operatorService.adminUpdateOperatorService(
         req.params.id as string,
         dto,
       );
@@ -313,7 +313,7 @@ export class OperatorController implements IOperatorController {
   blockOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const dto = AdminRequestMapper.toBlockOperatorPayload(req.body);
-      const blocked = await this.operatorService.blockOperatorService(
+      const blocked = await this._operatorService.blockOperatorService(
         req.params.id as string,
         dto,
       );
@@ -330,7 +330,7 @@ export class OperatorController implements IOperatorController {
 
   deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.operatorService.deleteOperatorService(req.params.id as string);
+      await this._operatorService.deleteOperatorService(req.params.id as string);
       res
         .status(StatusCode.OK)
         .json({ message: RESPONSE_MESSAGES.OPERATOR.SUCCESS.DELETED });

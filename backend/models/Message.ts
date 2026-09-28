@@ -21,10 +21,15 @@ const MessageSchema = new Schema<IMessage>(
     },
     text: {
       type: String,
-      required: true,
-      trim: true,
+      required: function (this: any) {
+        return !this.image;
+      },
+      default: "",
     },
-    attachments: [{ type: String }],
+    image: {
+      type: String,
+      default: "",
+    },
     status: {
       type: String,
       enum: ["SENT", "DELIVERED", "READ"],

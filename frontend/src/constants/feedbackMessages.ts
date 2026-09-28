@@ -191,7 +191,8 @@ export const FEEDBACK_MESSAGES = {
       FETCH_CHATS: "Failed to fetch chats",
       FETCH_MESSAGES: "Failed to fetch messages",
       START_CHAT: "Failed to start chat session",
-      CLEAR_CHAT:'Failed to clear chat'
+      CLEAR_CHAT:'Failed to clear chat',
+      IMAGE_MESSAGE:'Failed to send image message'
     },
   },
   NOTIFICATIONS: {

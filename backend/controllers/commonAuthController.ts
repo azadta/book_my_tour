@@ -11,7 +11,7 @@ import { RESPONSE_MESSAGES } from "../constants/messages";
 export class CommonAuthController implements ICommonAuthController {
   constructor(
     @inject(Types.CommonAuthService)
-    private commonAuthService: ICommonAuthService,
+    private _commonAuthService: ICommonAuthService,
   ) {}
   refresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,7 +22,7 @@ export class CommonAuthController implements ICommonAuthController {
         );
       }
       const { newAccessToken } =
-        await this.commonAuthService.refreshToken(refreshToken);
+        await this._commonAuthService.refreshToken(refreshToken);
       res.cookie("access_token", newAccessToken, {
         httpOnly: true,
 

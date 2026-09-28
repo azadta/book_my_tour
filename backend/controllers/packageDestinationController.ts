@@ -12,7 +12,7 @@ import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-
 export class PackageDestinationController implements IPackageDestinationController {
   constructor(
     @inject(Types.PackageDestinationService)
-    private packageDestinationService: IPackageDestinationService,
+    private _packageDestinationService: IPackageDestinationService,
   ) {}
   //admin
   createDestination = async (
@@ -23,7 +23,7 @@ export class PackageDestinationController implements IPackageDestinationControll
     try {
       const dto = PackageDestinationRequestMapper.toDestinationEntity(req.body);
       const rawDestination =
-        await this.packageDestinationService.createDestinationService(dto);
+        await this._packageDestinationService.createDestinationService(dto);
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED,
         destination:
@@ -43,7 +43,7 @@ export class PackageDestinationController implements IPackageDestinationControll
   ) => {
     try {
       const rawDestinations =
-        await this.packageDestinationService.getAllDestinationsService();
+        await this._packageDestinationService.getAllDestinationsService();
       res.json(
         PackageDestinationResponseMapper.toDestinationListResponseDTO(
           rawDestinations,
@@ -61,7 +61,7 @@ export class PackageDestinationController implements IPackageDestinationControll
   ) => {
     try {
       const rawDestination =
-        await this.packageDestinationService.getDestinationByIdService(
+        await this._packageDestinationService.getDestinationByIdService(
           req.params.id as string,
         );
       res.json({
@@ -82,7 +82,7 @@ export class PackageDestinationController implements IPackageDestinationControll
     next: NextFunction,
   ) => {
     try {
-      await this.packageDestinationService.deleteDestinationByIdService(
+      await this._packageDestinationService.deleteDestinationByIdService(
         req.params.id as string,
       );
       res.json({ success: true, message: "Destination deleted" });
@@ -101,7 +101,7 @@ export class PackageDestinationController implements IPackageDestinationControll
     try {
       const { category } = req.params;
       const rawDestinations =
-        await this.packageDestinationService.getDestinationsByPackageCategoryService(
+        await this._packageDestinationService.getDestinationsByPackageCategoryService(
           category as string,
         );
       res

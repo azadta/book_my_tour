@@ -10,9 +10,9 @@ import { IWebhookController } from "../interfaces/IWebhookController";
 @injectable()
 export class WebhookController implements IWebhookController {
   constructor(
-    @inject(Types.PaymentService) private paymentService: IPaymentService,
+    @inject(Types.PaymentService) private _paymentService: IPaymentService,
     @inject(Types.BookingRepository)
-    private bookingRepository: IBookingRepository,
+    private _bookingRepository: IBookingRepository,
   ) {}
 
   handleRazorpayWebhook = async (
@@ -23,7 +23,7 @@ export class WebhookController implements IWebhookController {
     try {
       const signature = req.headers["x-razorpay-signature"] as string;
       const rawBody = (req as any).rawBody || JSON.stringify(req.body);
-      const isValid = this.paymentService.verifyWebhookSignature({
+      const isValid = this._paymentService.verifyWebhookSignature({
         rawBody,
         signature,
         secret: process.env.RAZORPAY_WEBHOOK_SECRET as string,
@@ -38,7 +38,7 @@ export class WebhookController implements IWebhookController {
         const paymentEntity = event.payload.payment.entity;
         const orderId = paymentEntity.order_id;
         const paymentId = paymentEntity.id;
-        await this.bookingRepository.updateStatusByOrderId(orderId, {
+        await this._bookingRepository.updateStatusByOrderId(orderId, {
           status: "CONFIRMED",
           razorpayPaymentId: paymentId,
         });
@@ -47,7 +47,7 @@ export class WebhookController implements IWebhookController {
       if (event.event === "payment.failed") {
         const paymentEntity = event.payload.payment.entity;
         const orderId = paymentEntity.order_id;
-        await this.bookingRepository.updateStatusByOrderId(orderId, {
+        await this._bookingRepository.updateStatusByOrderId(orderId, {
           status: "FAILED",
         });
       }

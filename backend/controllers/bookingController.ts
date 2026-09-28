@@ -12,7 +12,7 @@ import { CustomError } from "../utils/customError";
 @injectable()
 export class BookingController implements IBookingController {
   constructor(
-    @inject(Types.BookingService) private bookingService: IBookingService,
+    @inject(Types.BookingService) private _bookingService: IBookingService,
   ) {}
   //admin
   getPendingCancellations = async (
@@ -22,7 +22,7 @@ export class BookingController implements IBookingController {
   ) => {
     try {
       const rawRequests =
-        await this.bookingService.getPendingCancelationRequests();
+        await this._bookingService.getPendingCancelationRequests();
       const requests =
         BookingResponseMapper.toPendingCancellationListDTO(rawRequests);
       res.status(StatusCode.OK).json(requests);
@@ -43,7 +43,7 @@ export class BookingController implements IBookingController {
       );
 
       const rawUpdatedBooking =
-        await this.bookingService.processAdminCancellation(dto);
+        await this._bookingService.processAdminCancellation(dto);
       const successMessage = dto.approve
         ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
         : RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_REJECTED;
@@ -73,7 +73,7 @@ export class BookingController implements IBookingController {
         req.query,
       );
 
-      const rawData = await this.bookingService.getOperatorBookingsService(
+      const rawData = await this._bookingService.getOperatorBookingsService(
         queryDTO.operatorId,
         queryDTO.status,
         queryDTO.skip,
@@ -102,7 +102,7 @@ export class BookingController implements IBookingController {
       const { bookingId } = req.params;
       const operatorId = req.user?.id as string;
       const rawBooking =
-        await this.bookingService.getOperatorBookingDetailsService(
+        await this._bookingService.getOperatorBookingDetailsService(
           bookingId as string,
           operatorId,
         );
@@ -127,7 +127,7 @@ export class BookingController implements IBookingController {
       );
 
       const rawUpdatedBooking =
-        await this.bookingService.updateAttendanceService(dto);
+        await this._bookingService.updateAttendanceService(dto);
       const updatedBooking =
         BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
       res.status(StatusCode.OK).json({
@@ -159,7 +159,7 @@ export class BookingController implements IBookingController {
         );
       }
       const rawUpdatedBooking =
-        await this.bookingService.operatorCancelBookingService(dto);
+        await this._bookingService.operatorCancelBookingService(dto);
       const updatedBooking =
         BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
       res.status(StatusCode.OK).json({
@@ -190,7 +190,7 @@ export class BookingController implements IBookingController {
         );
       }
       const updatedPackage =
-        await this.bookingService.operatorRescheduleBookingService(dto);
+        await this._bookingService.operatorRescheduleBookingService(dto);
       res.status(StatusCode.OK).json({
         message: RESPONSE_MESSAGES.BOOKING.SUCCESS.DATE_RESCHEDULED_BY_OPERATOR,
         package: updatedPackage,
@@ -219,7 +219,7 @@ export class BookingController implements IBookingController {
         );
       }
       const rawUpdatedBooking =
-        await this.bookingService.verifyCancellationService(dto);
+        await this._bookingService.verifyCancellationService(dto);
       const updatedBooking =
         BookingResponseMapper.toBookingDTO(rawUpdatedBooking);
       res.status(StatusCode.OK).json({
@@ -244,7 +244,7 @@ export class BookingController implements IBookingController {
       const userId = req.user?.id as string;
       const dto = BookingRequestMapper.toCreateBookingDTO(userId, req.body);
 
-      const result = await this.bookingService.createBookingOrder(dto);
+      const result = await this._bookingService.createBookingOrder(dto);
 
       const response =
         BookingResponseMapper.toCreateBookingOrderResposeDTO(result);
@@ -263,7 +263,7 @@ export class BookingController implements IBookingController {
       const userId = req.user?.id as string;
       const dto = BookingRequestMapper.toVerifyPaymentDTO(userId, req.body);
 
-      const result = await this.bookingService.verifyAndConfirmBooking(dto);
+      const result = await this._bookingService.verifyAndConfirmBooking(dto);
       const response =
         BookingResponseMapper.toVerifyPayementResponseDTO(result);
       res
@@ -281,7 +281,7 @@ export class BookingController implements IBookingController {
   ) => {
     try {
       const { orderId } = req.params;
-      const rawBooking = await this.bookingService.findBookingByOrderId(
+      const rawBooking = await this._bookingService.findBookingByOrderId(
         orderId as string,
       );
 
@@ -298,7 +298,7 @@ export class BookingController implements IBookingController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
       const { bookings: rawBookings, totalCount } =
-        await this.bookingService.getUserBookings(
+        await this._bookingService.getUserBookings(
           userId as string,
           page,
           limit,
@@ -323,7 +323,7 @@ export class BookingController implements IBookingController {
         req.body,
       );
 
-      const result = await this.bookingService.cancelBooking(dto);
+      const result = await this._bookingService.cancelBooking(dto);
       const response = BookingResponseMapper.toCancelBookingResponseDTO(result);
       res.status(StatusCode.OK).json({
         success: true,

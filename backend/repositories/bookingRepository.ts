@@ -30,7 +30,7 @@ export class BookingRepository
   }
 
   async createBooking(dto: ICreateBookingDTO): Promise<IBooking> {
-    console.log("base Amount from repository:", dto.pricing.baseAmount);
+
     const newBooking = await Booking.create({
       userId: dto.userId,
       packageId: dto.packageId,

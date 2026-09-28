@@ -12,7 +12,7 @@ import type { ISocketService } from "../interfaces/ISocketService";
 export class NotificationController implements INotificationController {
   constructor(
     @inject(Types.NotificationService)
-    private notificationService: INotificationService,
+    private _notificationService: INotificationService,
     @inject(Types.SocketService)
     private socketService: ISocketService,
   ) {}
@@ -31,7 +31,7 @@ export class NotificationController implements INotificationController {
           StatusCode.BAD_REQUEST,
         );
       }
-      const notification = await this.notificationService.createNotification({
+      const notification = await this._notificationService.createNotification({
         senderId,
         recipientId,
         title,
@@ -55,7 +55,7 @@ export class NotificationController implements INotificationController {
   ) => {
     try {
       const userId = req.user?.id as string;
-      const result = await this.notificationService.getUserNotification(userId);
+      const result = await this._notificationService.getUserNotification(userId);
       res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -66,7 +66,7 @@ export class NotificationController implements INotificationController {
     try {
       const userId = req.user?.id as string;
       const { notificationId } = req.params;
-      const result = await this.notificationService.markAsRead(
+      const result = await this._notificationService.markAsRead(
         notificationId as string,
         userId,
       );
@@ -81,7 +81,7 @@ export class NotificationController implements INotificationController {
   markAllAsRead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?.id as string;
-      const result = await this.notificationService.markAllAsRead(userId);
+      const result = await this._notificationService.markAllAsRead(userId);
       res.status(StatusCode.OK).json({
         message: RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.MARKED_ALL_AS_READ,
         data: result,
@@ -99,7 +99,7 @@ export class NotificationController implements INotificationController {
     try {
       const userId = req.user?.id as string;
       const result =
-        await this.notificationService.clearAllNotifications(userId);
+        await this._notificationService.clearAllNotifications(userId);
       res
         .status(StatusCode.OK)
         .json({

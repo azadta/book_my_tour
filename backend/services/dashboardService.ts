@@ -12,17 +12,17 @@ import type { IOperatorService } from "../interfaces/IOperatorService";
 export class DashboardService implements IDashboardService {
   constructor(
     @inject(Types.UserRepository)
-    private userRepository: IUserRepository,
+    private _userRepository: IUserRepository,
     @inject(Types.OperatorRepository)
-    private operatorRepository: IOperatorRepository,
+    private _operatorRepository: IOperatorRepository,
     @inject(Types.BookingRepository)
-    private bookingRepository: IBookingRepository,
+    private _bookingRepository: IBookingRepository,
     @inject(Types.PackageRepository)
-    private packageRepository: IPackageRepository,
+    private _packageRepository: IPackageRepository,
     @inject(Types.UserService)
-    private userService: IUserService,
+    private _userService: IUserService,
     @inject(Types.OperatorService)
-    private operatorService: IOperatorService,
+    private _operatorService: IOperatorService,
   ) {}
   async getSignupCountTodayService() {
     const startOfDay = new Date();
@@ -30,28 +30,28 @@ export class DashboardService implements IDashboardService {
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
     const [users, operators] = await Promise.all([
-      this.userRepository.countUsersByDateRange(startOfDay, endOfDay),
-      this.operatorRepository.countOperatorsByDateRange(startOfDay, endOfDay),
+      this._userRepository.countUsersByDateRange(startOfDay, endOfDay),
+      this._operatorRepository.countOperatorsByDateRange(startOfDay, endOfDay),
     ]);
     return users + operators;
   }
 
   async getPendingOperatorsCountService() {
-    return await this.operatorRepository.getPendingOperatorsCount();
+    return await this._operatorRepository.getPendingOperatorsCount();
   }
 
   async getOperatorDashboardStatsService(operatorId: string) {
     const [stats, packagesCount] = await Promise.all([
-      this.bookingRepository.getOperatorStats(operatorId),
-      this.packageRepository.countPackagesByOperatorId(operatorId),
+      this._bookingRepository.getOperatorStats(operatorId),
+      this._packageRepository.countPackagesByOperatorId(operatorId),
     ]);
     return { ...stats, packagesCount };
   }
 
   async getTotalUsersCountService() {
-    return await this.userService.getTotalUsersCount();
+    return await this._userService.getTotalUsersCount();
   }
   async getTotalOperatorsCountService() {
-    return await this.operatorService.getTotalOperatorsCount();
+    return await this._operatorService.getTotalOperatorsCount();
   }
 }

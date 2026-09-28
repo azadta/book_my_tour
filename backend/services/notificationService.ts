@@ -9,7 +9,7 @@ import { Types } from "../types/types";
 export class NotificationService implements INotificationService {
   constructor(
     @inject(Types.NotificationRepository)
-    private notificationRepository: INotificationRepository,
+    private _notificationRepository: INotificationRepository,
   ) {}
   async createNotification(data: {
     recipientId: string;
@@ -18,7 +18,7 @@ export class NotificationService implements INotificationService {
     message: string;
     bookingId?: string;
   }) {
-    return this.notificationRepository.create({
+    return this._notificationRepository.create({
       recipientId: new mongooseType.ObjectId(data.recipientId),
       senderId: new mongooseType.ObjectId(data.senderId),
       title: data.title,
@@ -31,25 +31,25 @@ export class NotificationService implements INotificationService {
 
   async getUserNotification(userId: string) {
     const [notifications, unreadCount] = await Promise.all([
-      this.notificationRepository.findByRecipient(userId),
-      this.notificationRepository.countUnread(userId),
+      this._notificationRepository.findByRecipient(userId),
+      this._notificationRepository.countUnread(userId),
     ]);
     return { notifications, unreadCount };
   }
 
   async markAsRead(notificationId: string, userId: string) {
-    await this.notificationRepository.markAsRead(notificationId, userId);
-    const unreadCount = await this.notificationRepository.countUnread(userId);
+    await this._notificationRepository.markAsRead(notificationId, userId);
+    const unreadCount = await this._notificationRepository.countUnread(userId);
     return { unreadCount };
   }
 
   async markAllAsRead(userId: string) {
-    await this.notificationRepository.markAllAsRead(userId);
+    await this._notificationRepository.markAllAsRead(userId);
     return { unreadCount: 0 };
   }
 
   async clearAllNotifications(userId: string) {
-    await this.notificationRepository.deletAllByRecipient(userId);
+    await this._notificationRepository.deletAllByRecipient(userId);
     return { unreadCount: 0 };
   }
 }

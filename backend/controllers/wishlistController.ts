@@ -11,7 +11,7 @@ import { WishlistRequestMapper } from "../dto-mapping/mapper/wishlist/WishlistRe
 @injectable()
 export class WishlistController implements IWishlistController {
   constructor(
-    @inject(Types.WishlistService) private wishlistService: IWishlistService,
+    @inject(Types.WishlistService) private _wishlistService: IWishlistService,
   ) {}
   //user
   getWishlists = async (
@@ -30,7 +30,7 @@ export class WishlistController implements IWishlistController {
       }
 
       const wishlistGroups =
-        await this.wishlistService.getUserWishlists(userId);
+        await this._wishlistService.getUserWishlists(userId);
       res.status(StatusCode.OK).json({
         success: true,
         wishlistGroups:
@@ -57,7 +57,7 @@ export class WishlistController implements IWishlistController {
       }
       const dto = WishlistRequestMapper.toCreateGroupReqDTO(req.body);
 
-      const wishlistGroup = await this.wishlistService.createWishlistGroup(
+      const wishlistGroup = await this._wishlistService.createWishlistGroup(
         userId,
         dto,
       );
@@ -87,7 +87,7 @@ export class WishlistController implements IWishlistController {
 
       const dto = WishlistRequestMapper.toTogglePackageReqDTO(req.body);
       const updatedGroup =
-        await this.wishlistService.togglePackageInWishlistGroup(userId, dto);
+        await this._wishlistService.togglePackageInWishlistGroup(userId, dto);
       res.status(StatusCode.OK).json({
         success: true,
         data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
@@ -110,7 +110,7 @@ export class WishlistController implements IWishlistController {
 
       const { groupId } = req.params;
       const dto = WishlistRequestMapper.toAddNoteReqDTO(req.body);
-      const updatedGroup = await this.wishlistService.addNoteToWishlistGroup(
+      const updatedGroup = await this._wishlistService.addNoteToWishlistGroup(
         userId,
         groupId as string,
         dto,
@@ -140,7 +140,7 @@ export class WishlistController implements IWishlistController {
       }
 
       const { groupId } = req.params;
-      const shareData = await this.wishlistService.generateShareableLink(
+      const shareData = await this._wishlistService.generateShareableLink(
         userId,
         groupId as string,
       );
@@ -160,7 +160,7 @@ export class WishlistController implements IWishlistController {
   ) => {
     try {
       const { shareToken } = req.params;
-      const sharedGroup = await this.wishlistService.getSharedGroup(
+      const sharedGroup = await this._wishlistService.getSharedGroup(
         shareToken as string,
       );
       res.status(StatusCode.OK).json({
@@ -188,7 +188,7 @@ export class WishlistController implements IWishlistController {
       }
       const { groupId } = req.params;
       const dto = WishlistRequestMapper.toEditGroupReqDTO(req.body);
-      const updatedGroup = await this.wishlistService.editGroup(
+      const updatedGroup = await this._wishlistService.editGroup(
         userId,
         groupId as string,
         dto,
@@ -218,7 +218,7 @@ export class WishlistController implements IWishlistController {
       }
       const { groupId } = req.params;
 
-      await this.wishlistService.deleteGroup(userId, groupId as string);
+      await this._wishlistService.deleteGroup(userId, groupId as string);
       res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
@@ -245,7 +245,7 @@ export class WishlistController implements IWishlistController {
       const { groupId, noteId } = req.params;
       const dto = WishlistRequestMapper.toEditNoteReqDTO(req.body);
 
-      const updatedGroup = await this.wishlistService.editNote(
+      const updatedGroup = await this._wishlistService.editNote(
         userId,
         groupId as string,
         noteId as string,
@@ -275,7 +275,7 @@ export class WishlistController implements IWishlistController {
       }
       const { groupId, noteId } = req.params;
 
-      const updatedGroup = await this.wishlistService.deleteNote(
+      const updatedGroup = await this._wishlistService.deleteNote(
         userId,
         groupId as string,
         noteId as string,

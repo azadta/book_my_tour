@@ -13,7 +13,7 @@ import { RESPONSE_MESSAGES } from "../constants/messages";
 export class PackageReviewController implements IPackageReviewController {
   constructor(
     @inject(Types.PackageReviewService)
-    private packageReviewService: IPackageReviewService,
+    private _packageReviewService: IPackageReviewService,
   ) {}
   //user
   getPackageReviewsByPackageId = async (
@@ -25,7 +25,7 @@ export class PackageReviewController implements IPackageReviewController {
       const { packageId } = req.params;
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 5;
-      const data = await this.packageReviewService.getPackageReviewService(
+      const data = await this._packageReviewService.getPackageReviewService(
         packageId as string,
         page,
         limit,
@@ -58,7 +58,7 @@ export class PackageReviewController implements IPackageReviewController {
         userId,
       );
       const data =
-        await this.packageReviewService.createPackageReviewService(payload);
+        await this._packageReviewService.createPackageReviewService(payload);
 
       res
         .status(StatusCode.CREATED)
@@ -89,7 +89,7 @@ export class PackageReviewController implements IPackageReviewController {
       const dto = ReviewRequestMapper.toUpdateReviewReqDTO(req.body);
 
       const updatedData =
-        await this.packageReviewService.updatePackageReviewService(
+        await this._packageReviewService.updatePackageReviewService(
           userId!,
           reviewId as string,
           packageId as string,
@@ -116,7 +116,7 @@ export class PackageReviewController implements IPackageReviewController {
     try {
       const { reviewId, packageId } = req.params;
       const userId = req.user?.id;
-      const result = await this.packageReviewService.deletePackageReviewService(
+      const result = await this._packageReviewService.deletePackageReviewService(
         userId!,
         reviewId as string,
         packageId as string,

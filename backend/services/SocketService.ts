@@ -22,11 +22,11 @@ export class SocketService implements ISocketService {
   private io!: Server;
   private onlineUsers = new Map<string, Set<string>>();
   constructor(
-    @inject(Types.ChatRepository) private chatRepository: IChatRepository,
+    @inject(Types.ChatRepository) private _chatRepository: IChatRepository,
     @inject(Types.MessageRepository)
-    private messageRepository: IMessageRepository,
+    private _messageRepository: IMessageRepository,
     @inject(Types.SecurityService)
-    private securityService: ISecurityService,
+    private _securityService: ISecurityService,
   ) {}
   public init(httpServer: HTTPServer) {
     this.io = new Server(httpServer, {
@@ -45,7 +45,7 @@ export class SocketService implements ISocketService {
             StatusCode.UNAUTHORIZED,
           );
         }
-        const decoded = this.securityService.verifyAccessToken(token);
+        const decoded = this._securityService.verifyAccessToken(token);
         socket.user = {
           id: decoded.id,
           role: decoded.role,
@@ -117,19 +117,21 @@ export class SocketService implements ISocketService {
         async (data: {
           chatId: string;
           text: string;
+          image?:string;
           recipientId: string;
           recipientModel: "User" | "Operator" | "Admin";
           senderModel: "User" | "Operator" | "Admin";
         }) => {
           const isReciepentOnline = this.onlineUsers.has(data.recipientId);
-          const message = await this.messageRepository.create({
+          const message = await this._messageRepository.create({
             chatId: data.chatId,
             senderId: userId,
             senderModel: data.senderModel,
             text: data.text,
+            image:data.image||null,
             status: isReciepentOnline ? "DELIVERED" : "SENT",
           });
-          await this.chatRepository.incrementUnreadCount(
+          await this._chatRepository.incrementUnreadCount(
             data.chatId,
             data.recipientId,
             message._id.toString(),
@@ -163,22 +165,22 @@ export class SocketService implements ISocketService {
           messageIds?: string[];
         }) => {
           if (!messageIds || messageIds.length === 0) {
-            await this.messageRepository.markAllMessagesAsReadInChat(
+            await this._messageRepository.markAllMessagesAsReadInChat(
               chatId,
               userId,
             );
           } else {
-            await this.messageRepository.markMessagesAsRead(messageIds, chatId);
+            await this._messageRepository.markMessagesAsRead(messageIds, chatId);
           }
 
-          await this.chatRepository.resetUnreadCount(chatId, userId);
+          await this._chatRepository.resetUnreadCount(chatId, userId);
           this.io
             .to(`chat:${chatId}`)
             .emit("message_read", { chatId, messageIds, readBy: userId });
         },
       );
       socket.on("clear_chat", async({ chatId }: { chatId: string }) => {
-        const chat=await this.chatRepository.findById(chatId)
+        const chat=await this._chatRepository.findById(chatId)
         if(chat&&chat.participants){
           chat.participants.forEach((p:any)=>{
             const participantId=p.participantId?._id?.toString()||p.participantId?.toString()

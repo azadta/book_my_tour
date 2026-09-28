@@ -4,10 +4,10 @@ import { IHashService } from "../interfaces/IHashService";
 
 @injectable()
 export class BcryptHashService implements IHashService {
-  private readonly saltRounds = 10;
+  private readonly _saltRounds = 10;
 
   hash(data: string): string {
-    return bcrypt.hashSync(data, this.saltRounds);
+    return bcrypt.hashSync(data, this._saltRounds);
   }
   compare(data: string, encrypted: string): boolean {
     return bcrypt.compareSync(data, encrypted);

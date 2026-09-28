@@ -34,26 +34,26 @@ import { CustomError } from "../utils/customError";
 @injectable()
 export class BookingService implements IBookingService {
   constructor(
-    @inject(Types.UserRepository) private userRepository: IUserRepository,
+    @inject(Types.UserRepository) private _userRepository: IUserRepository,
 
     @inject(Types.PackageRepository)
-    private packageRepository: IPackageRepository,
+    private _packageRepository: IPackageRepository,
 
     @inject(Types.BookingRepository)
-    private bookingRepository: IBookingRepository,
+    private _bookingRepository: IBookingRepository,
     @inject(Types.WalletRepository)
-    private walletRepository: IWalletRepository,
+    private _walletRepository: IWalletRepository,
     @inject(Types.CouponRepository)
-    private couponRepository: ICouponRepository,
+    private _couponRepository: ICouponRepository,
 
-    @inject(Types.MailService) private mailService: IMailService,
+    @inject(Types.MailService) private _mailService: IMailService,
 
-    @inject(Types.PaymentService) private paymentService: IPaymentService,
+    @inject(Types.PaymentService) private _paymentService: IPaymentService,
   ) {}
 
   async processAdminCancellation(dto: ProcessAdminCancellationRequestDTO) {
     const { approve, bookingId, adminNotes } = dto;
-    const booking = await this.bookingRepository.findByBookingId(bookingId);
+    const booking = await this._bookingRepository.findByBookingId(bookingId);
     if (!booking || booking.status !== "CANCEL_REQUESTED") {
       throw new CustomError(
         RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_REQ_NOT_FOUND,
@@ -63,7 +63,7 @@ export class BookingService implements IBookingService {
     const now = new Date();
     if (approve) {
       const refundAmound = booking.cancellation?.refundAmount || 0;
-      await this.walletRepository.addCreditTransaction(
+      await this._walletRepository.addCreditTransaction(
         booking.userId.toString(),
         {
           transactionId: `REFUND_${Date.now()}`,
@@ -74,13 +74,13 @@ export class BookingService implements IBookingService {
           description: `50% refund approved for cancelled tour: ${booking.packageId.name}`,
         },
       );
-      return await this.bookingRepository.updateById(bookingId, {
+      return await this._bookingRepository.updateById(bookingId, {
         status: "CANCELLED",
         "cancellation.processedAt": now,
         "cancellation.adminNotes": adminNotes || "Approved by admin",
       } as UpdateQuery<IBookingDocument>);
     } else {
-      return await this.bookingRepository.updateById(bookingId, {
+      return await this._bookingRepository.updateById(bookingId, {
         status: "CONFIRMED",
         "cancellation.adminNotes": adminNotes || "Rejected by Admin",
       } as UpdateQuery<IBookingDocument>);
@@ -88,7 +88,7 @@ export class BookingService implements IBookingService {
   }
 
   async getPendingCancelationRequests(): Promise<IBooking[]> {
-    return await this.bookingRepository.getPendingCancellationRequests();
+    return await this._bookingRepository.getPendingCancellationRequests();
   }
 
   async getOperatorBookingsService(
@@ -99,8 +99,8 @@ export class BookingService implements IBookingService {
   ) {
     const filter: IOperatorBookingFilter = { operatorId, status };
     const [bookings, totalCount] = await Promise.all([
-      this.bookingRepository.getOperatorBookings(filter, skip, limit),
-      this.bookingRepository.getOperatorBookingsCount(filter),
+      this._bookingRepository.getOperatorBookings(filter, skip, limit),
+      this._bookingRepository.getOperatorBookingsCount(filter),
     ]);
     return { bookings, totalCount };
   }
@@ -109,7 +109,7 @@ export class BookingService implements IBookingService {
     bookingId: string,
     operatorId: string,
   ) {
-    const booking = await this.bookingRepository.getOperatorBookingDetails(
+    const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
     );
@@ -124,7 +124,7 @@ export class BookingService implements IBookingService {
 
   async operatorCancelBookingService(dto: OperatorCancelBookingRequestDTO) {
     const { bookingId, operatorId, reason } = dto;
-    const booking = await this.bookingRepository.getOperatorBookingDetails(
+    const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
     );
@@ -136,7 +136,7 @@ export class BookingService implements IBookingService {
     }
     const totalPaid =
       (booking.pricing.walletApplied ?? 0) + (booking.pricing.finalAmount ?? 0);
-    await this.walletRepository.addCreditTransaction(
+    await this._walletRepository.addCreditTransaction(
       booking.userId._id.toString(),
       {
         transactionId: `REFUND_OPERATOR_${Date.now()}`,
@@ -148,7 +148,7 @@ export class BookingService implements IBookingService {
       },
     );
 
-    return await this.bookingRepository.updateById(bookingId, {
+    return await this._bookingRepository.updateById(bookingId, {
       status: "CANCELLED",
       "cancellation.requestedAt": new Date(),
       "cancellation.processedAt": new Date(),
@@ -161,7 +161,7 @@ export class BookingService implements IBookingService {
     dto: OperatorRescheduleBookingRequestDTO,
   ) {
     const { bookingId, operatorId, startDate } = dto;
-    const booking = await this.bookingRepository.getOperatorBookingDetails(
+    const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
     );
@@ -172,7 +172,7 @@ export class BookingService implements IBookingService {
       );
     }
 
-    return await this.packageRepository.updatePackageById(
+    return await this._packageRepository.updatePackageById(
       booking.packageId._id.toString(),
       {
         startDate: new Date(startDate),
@@ -182,7 +182,7 @@ export class BookingService implements IBookingService {
 
   async updateAttendanceService(dto: UpdateAttendanceRequestDTO) {
     const { attendance, bookingId, operatorId } = dto;
-    const booking = await this.bookingRepository.getOperatorBookingDetails(
+    const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
     );
@@ -202,11 +202,11 @@ export class BookingService implements IBookingService {
     if (attendance === "CHECKED_IN" || attendance === "COMPLETED") {
       updateData.checkInTime = new Date();
     }
-    return await this.bookingRepository.updateById(bookingId, updateData);
+    return await this._bookingRepository.updateById(bookingId, updateData);
   }
   async verifyCancellationService(dto: VerifyCancellationRequestDTO) {
     const { action, bookingId, operatorId, operatorNotes } = dto;
-    const booking = await this.bookingRepository.getOperatorBookingDetails(
+    const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
     );
@@ -227,7 +227,7 @@ export class BookingService implements IBookingService {
         (booking.pricing.walletApplied ?? 0) +
         (booking.pricing.finalAmount ?? 0);
       const refundAmount = Math.round(totalPaid * 0.5);
-      await this.walletRepository.addCreditTransaction(
+      await this._walletRepository.addCreditTransaction(
         booking.userId._id.toString(),
         {
           transactionId: `REFUND_50_OPERATOR_${Date.now()}`,
@@ -239,14 +239,14 @@ export class BookingService implements IBookingService {
         },
       );
 
-      return await this.bookingRepository.updateById(bookingId, {
+      return await this._bookingRepository.updateById(bookingId, {
         status: "CANCELLED",
         "cancellation.processedAt": new Date(),
         "cancellation.refundAmount": refundAmount,
         "cancellation.reason": `Approved by Operator: ${operatorNotes || "50% refund issued"}`,
       } as UpdateQuery<IBookingDocument>);
     } else {
-      return await this.bookingRepository.updateById(bookingId, {
+      return await this._bookingRepository.updateById(bookingId, {
         status: "CONFIRMED",
         "cancellation.processedAt": Date.now(),
         "cancellation.reason": `Rejected by Operator: ${operatorNotes || "Request denied."}`,
@@ -268,7 +268,7 @@ export class BookingService implements IBookingService {
       members = [],
     } = dto;
 
-    const pkg = await this.packageRepository.getPackageById(packageId);
+    const pkg = await this._packageRepository.getPackageById(packageId);
     if (!pkg) {
       throw new CustomError(
         RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
@@ -309,7 +309,7 @@ export class BookingService implements IBookingService {
     let singleAdultBankDiscount = 0;
     let singleAdultRunning = singleAdultSubtotal;
     if (generalCouponCode?.trim()) {
-      generalCoupon = await this.couponRepository.findByCode(
+      generalCoupon = await this._couponRepository.findByCode(
         generalCouponCode?.trim(),
       );
       if (!generalCoupon) {
@@ -353,7 +353,7 @@ export class BookingService implements IBookingService {
     }
 
     if (bankCouponCode?.trim()) {
-      bankCoupon = await this.couponRepository.findByCode(
+      bankCoupon = await this._couponRepository.findByCode(
         bankCouponCode.trim(),
       );
       if (!bankCoupon) {
@@ -418,7 +418,7 @@ export class BookingService implements IBookingService {
     let walletDeduction = 0;
     let remainingPayable = grandSubtotal;
     if (isWalletApplied) {
-      const wallet = await this.walletRepository.findOne({ userId });
+      const wallet = await this._walletRepository.findOne({ userId });
       if (wallet && wallet?.balance > 0) {
         walletDeduction = Math.min(wallet?.balance, grandSubtotal);
         remainingPayable = grandSubtotal - walletDeduction;
@@ -461,7 +461,7 @@ export class BookingService implements IBookingService {
 
     if (remainingPayable === 0) {
       const internalOrderId = `ORDER_WALLET_${Date.now()}`;
-      const updatedWallet = await this.walletRepository.deductBalance(
+      const updatedWallet = await this._walletRepository.deductBalance(
         userId,
         walletDeduction,
         {
@@ -480,7 +480,7 @@ export class BookingService implements IBookingService {
         );
       }
 
-      const booking = await this.bookingRepository.createBooking({
+      const booking = await this._bookingRepository.createBooking({
         userId,
         packageId,
         razorpayOrderId: internalOrderId,
@@ -493,7 +493,7 @@ export class BookingService implements IBookingService {
         status: "CONFIRMED",
       });
 
-      const user = await this.userRepository.findById(userId);
+      const user = await this._userRepository.findById(userId);
       if (!user) {
         throw new CustomError(
           RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
@@ -501,7 +501,7 @@ export class BookingService implements IBookingService {
         );
       }
 
-      await this.mailService.sendEmail(
+      await this._mailService.sendEmail(
         user?.email,
         "Tour booking confirmed",
         bookingConfirmationMessage({
@@ -518,7 +518,7 @@ export class BookingService implements IBookingService {
       };
     }
 
-    const order = await this.paymentService.createOrder({
+    const order = await this._paymentService.createOrder({
       amount: remainingPayable,
       receipt: `receipt_pkg_${Date.now()}`,
       ...(bankCoupon && {
@@ -539,7 +539,7 @@ export class BookingService implements IBookingService {
         StatusCode.INTERNAL_SERVER_ERROR,
       );
 
-    await this.bookingRepository.createBooking({
+    await this._bookingRepository.createBooking({
       userId,
       packageId,
       razorpayOrderId: order.id,
@@ -565,14 +565,14 @@ export class BookingService implements IBookingService {
   }
 
   async verifyAndConfirmBooking(dto: VerifyPaymentRequestDTO) {
-    const isValid = this.paymentService.verifySignature({
+    const isValid = this._paymentService.verifySignature({
       razorpayOrderId: dto.razorpayOrderId,
       razorpayPaymentId: dto.razorpayPaymentId,
       razorpaySignature: dto.razorpaySignature,
     });
 
     if (!isValid) {
-      await this.bookingRepository.updateStatusByOrderId(dto.razorpayOrderId, {
+      await this._bookingRepository.updateStatusByOrderId(dto.razorpayOrderId, {
         status: "FAILED",
       });
       throw new CustomError(
@@ -581,7 +581,7 @@ export class BookingService implements IBookingService {
       );
     }
 
-    const booking = await this.bookingRepository.findByOrderId(
+    const booking = await this._bookingRepository.findByOrderId(
       dto.razorpayOrderId,
     );
     if (!booking) {
@@ -591,7 +591,7 @@ export class BookingService implements IBookingService {
       );
     }
     if (booking.pricing.walletApplied && booking.pricing.walletApplied > 0) {
-      await this.walletRepository.deductBalance(
+      await this._walletRepository.deductBalance(
         dto.userId,
         booking.pricing.walletApplied,
         {
@@ -605,14 +605,14 @@ export class BookingService implements IBookingService {
       );
     }
 
-    const updatedBooking = await this.bookingRepository.updateStatusByOrderId(
+    const updatedBooking = await this._bookingRepository.updateStatusByOrderId(
       dto.razorpayOrderId,
       {
         status: "CONFIRMED",
         razorpayPaymentId: dto.razorpayPaymentId,
       },
     );
-    const user = await this.userRepository.findById(dto.userId);
+    const user = await this._userRepository.findById(dto.userId);
 
     if (!user) {
       throw new CustomError(
@@ -620,7 +620,7 @@ export class BookingService implements IBookingService {
         StatusCode.NOT_FOUND,
       );
     }
-    const pkg = await this.packageRepository.findById(dto.packageId);
+    const pkg = await this._packageRepository.findById(dto.packageId);
     if (!pkg) {
       throw new CustomError(
         RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
@@ -628,7 +628,7 @@ export class BookingService implements IBookingService {
       );
     }
 
-    await this.mailService.sendEmail(
+    await this._mailService.sendEmail(
       user?.email,
       "Tour booking confirmed",
       bookingConfirmationMessage({
@@ -648,7 +648,7 @@ export class BookingService implements IBookingService {
   }
 
   async findBookingByOrderId(razorpayOrderId: string) {
-    const booking = await this.bookingRepository.findByOrderId(razorpayOrderId);
+    const booking = await this._bookingRepository.findByOrderId(razorpayOrderId);
     if (!booking) {
       throw new CustomError(
         RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_ORDER_ID,
@@ -666,7 +666,7 @@ export class BookingService implements IBookingService {
       );
     }
     const skip = (page - 1) * limit;
-    const bookings = await this.bookingRepository.getUserBookings(
+    const bookings = await this._bookingRepository.getUserBookings(
       userId,
       skip,
       limit,
@@ -676,7 +676,7 @@ export class BookingService implements IBookingService {
   }
   async cancelBooking(dto: CancelBookingRequestDTO) {
     const { bookingId, reason, userId } = dto;
-    const booking = await this.bookingRepository.findByBookingId(bookingId);
+    const booking = await this._bookingRepository.findByBookingId(bookingId);
     if (!booking) {
       throw new CustomError(
         RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
@@ -709,7 +709,7 @@ export class BookingService implements IBookingService {
       (booking.pricing.walletApplied ?? 0) + (booking.pricing.finalAmount ?? 0);
     if (diffInDays > 7) {
       const refundAmount = totalPaid;
-      await this.walletRepository.addCreditTransaction(userId, {
+      await this._walletRepository.addCreditTransaction(userId, {
         transactionId: `REFUND_${Date.now()}`,
         type: "CREDIT",
         purpose: "REFUND",
@@ -718,7 +718,7 @@ export class BookingService implements IBookingService {
         description: `Full refund for cancelled tour: ${booking.packageId.name}`,
       });
 
-      const updatedBooking = await this.bookingRepository.updateById(
+      const updatedBooking = await this._bookingRepository.updateById(
         bookingId,
         {
           status: "CANCELLED",
@@ -737,7 +737,7 @@ export class BookingService implements IBookingService {
     }
 
     const estimatedRefund = Math.round(totalPaid * 0.5);
-    const updatedBooking = await this.bookingRepository.updateById(bookingId, {
+    const updatedBooking = await this._bookingRepository.updateById(bookingId, {
       status: "CANCEL_REQUESTED",
       "cancellation.requestedAt": now,
 

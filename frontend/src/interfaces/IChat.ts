@@ -15,7 +15,8 @@ export interface IMessage {
   chatId: string;
   senderId: string;
   senderModel: "User" | "Operator" | "Admin";
-  text: string;
+  text?: string;
+  image?:string;
   status: "SENT" | "DELIVERED" | "READ";
   createdAt: string;
 }

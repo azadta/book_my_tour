@@ -39,7 +39,7 @@ const ReUsableForm = ({
   setFieldError,
   renderAfterFields,
 }: ReUsableFormProps) => {
-  console.log('formData from reusable form:',formData)
+
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
   const [showPasswordMap, setShowPasswordMap] = useState<

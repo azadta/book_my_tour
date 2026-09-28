@@ -50,8 +50,7 @@ export const useMyBookings = (
       const response = await axiosInstance.get(
         `${APP_ROUTES.BOOKINGS.USER.MY_BOOKINGS}?page=${currentPage}&limit=${resultPerPage}`,
       );
-      console.log('bookings from useMyBookins',response.data.bookings)
-      console.log('total Count from useMyBookins',response.data.totalCount)
+
       setBookings(response.data.bookings);
       setTotalCount(response.data.totalCount);
     } catch (error: any) {

@@ -12,15 +12,15 @@ import { createCouponRequestDTO, updateCouponRequestDTO, ValidateCouponRequestDT
 export class CouponService implements ICouponService {
   constructor(
     @inject(Types.CouponRepository)
-    private couponRepository: ICouponRepository,
+    private _couponRepository: ICouponRepository,
   ) {}
 
   async getAllCoupons(page: number, limit: number) {
-    return await this.couponRepository.findAllCoupons(page, limit);
+    return await this._couponRepository.findAllCoupons(page, limit);
   }
 
   async getCouponById(id: string) {
-    const coupon = await this.couponRepository.findById(id);
+    const coupon = await this._couponRepository.findById(id);
     if (!coupon) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.NOT_FOUND,
@@ -37,7 +37,7 @@ export class CouponService implements ICouponService {
         StatusCode.BAD_REQUEST,
       );
     }
-    const existingCoupon = await this.couponRepository.findOne({
+    const existingCoupon = await this._couponRepository.findOne({
       code: dto.code.toUpperCase(),
     });
     if (existingCoupon) {
@@ -47,7 +47,7 @@ export class CouponService implements ICouponService {
       );
     }
 
-    return await this.couponRepository.create({
+    return await this._couponRepository.create({
       ...dto,
       code: dto.code.toUpperCase(),
     });
@@ -57,7 +57,7 @@ export class CouponService implements ICouponService {
     id: string,
     dto:updateCouponRequestDTO,
   ): Promise<ICouponDocument | null> {
-    const existingCoupon = await this.couponRepository.findById(id);
+    const existingCoupon = await this._couponRepository.findById(id);
     if (!existingCoupon) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.NOT_FOUND,
@@ -69,7 +69,7 @@ export class CouponService implements ICouponService {
       dto.code &&
       dto.code.toUpperCase() !== existingCoupon.code
     ) {
-      const codeTaken = await this.couponRepository.findOne({
+      const codeTaken = await this._couponRepository.findOne({
         code: dto.code.toUpperCase(),
         _id: { $ne: id },
       });
@@ -97,22 +97,22 @@ export class CouponService implements ICouponService {
       delete updatedPayload.$set.allowedBins;
     }
 
-    return this.couponRepository.updateCouponById(id, updatedPayload);
+    return this._couponRepository.updateCouponById(id, updatedPayload);
   }
 
   async toggleCouponStatus(id: string, isActive: boolean) {
-    const coupon = await this.couponRepository.findById(id);
+    const coupon = await this._couponRepository.findById(id);
     if (!coupon) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.NOT_FOUND,
         StatusCode.NOT_FOUND,
       );
     }
-    return this.couponRepository.toggleStatus(id, isActive);
+    return this._couponRepository.toggleStatus(id, isActive);
   }
 
   async getAllAvailableCoupons() {
-    const coupons = await this.couponRepository.findActiveCoupons();
+    const coupons = await this._couponRepository.findActiveCoupons();
     const bankOffers = coupons.filter((c) => c.type === CouponType.BANK);
     const generalCoupons = coupons.filter((c) => c.type === CouponType.GENERAL);
     return { bankOffers, generalCoupons };
@@ -126,7 +126,7 @@ export class CouponService implements ICouponService {
     coupon: ICouponDocument;
   }> {
     const {bookingAmount,code,cardBin}=dto
-    const coupon = await this.couponRepository.findByCode(code);
+    const coupon = await this._couponRepository.findByCode(code);
     if (!coupon) {
       throw new CustomError(
         RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,

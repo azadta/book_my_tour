@@ -16,14 +16,14 @@ import { CustomError } from "../utils/customError";
 @injectable()
 export class WalletService implements IWalletService {
   constructor(
-    @inject(Types.WalletRepository) private walletRepository: IWalletRepository,
-    @inject(Types.PaymentService) private paymentService: IPaymentService,
+    @inject(Types.WalletRepository) private _walletRepository: IWalletRepository,
+    @inject(Types.PaymentService) private _paymentService: IPaymentService,
   ) {}
 
   async getWallet(userId: string) {
-    let wallet = await this.walletRepository.findOne({ userId });
+    let wallet = await this._walletRepository.findOne({ userId });
     if (!wallet) {
-      wallet = await this.walletRepository.create({
+      wallet = await this._walletRepository.create({
         userId: new mongoose.Types.ObjectId(userId),
         balance: 0,
         transactions: [],
@@ -39,7 +39,7 @@ export class WalletService implements IWalletService {
         StatusCode.BAD_REQUEST,
       );
     }
-    const order = await this.paymentService.createOrder({
+    const order = await this._paymentService.createOrder({
       amount: dto.amount,
       receipt: `receipt_wallet_${Date.now()}`,
       notes: { userId, purpose: "WALLET_TOPUP" },
@@ -60,7 +60,7 @@ export class WalletService implements IWalletService {
       status: "PENDING" as const,
       description: "Wallet Top-up via Razorpay",
     };
-    await this.walletRepository.addPendingTransaction(userId, transaction);
+    await this._walletRepository.addPendingTransaction(userId, transaction);
     return {
       orderId: order.id,
       amount: order.amount,
@@ -70,10 +70,10 @@ export class WalletService implements IWalletService {
   }
 
   async verifyTopupPayment(userId: string, dto: verifyTopupPaymentRequestDTO) {
-    const isValid = this.paymentService.verifySignature(dto);
+    const isValid = this._paymentService.verifySignature(dto);
     const status = isValid ? "SUCCESS" : "FAILED";
     const updatedWallet =
-      await this.walletRepository.updatePendingTransactionAndBalance(
+      await this._walletRepository.updatePendingTransactionAndBalance(
         userId,
         dto.razorpayOrderId,
         dto.razorpayPaymentId,
@@ -94,9 +94,9 @@ export class WalletService implements IWalletService {
     limit: number = 5,
   ) {
     let { wallet, totalCount, transactions } =
-      await this.walletRepository.getPaginatedWallet(userId, page, limit);
+      await this._walletRepository.getPaginatedWallet(userId, page, limit);
     if (!wallet) {
-      const newWallet = await this.walletRepository.create({
+      const newWallet = await this._walletRepository.create({
         userId: new mongoose.Types.ObjectId(userId),
         balance: 0,
         transactions: [],

@@ -15,7 +15,7 @@ import { logger } from "../utils/logger";
 @injectable()
 export class AdminController implements IAdminController {
   constructor(
-    @inject(Types.AdminService) private adminService: IAdminService,
+    @inject(Types.AdminService) private _adminService: IAdminService,
   ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +29,7 @@ export class AdminController implements IAdminController {
         email: req.body.email,
       });
       const { accessToken, refreshToken, adminData } =
-        await this.adminService.loginAdminService(dto);
+        await this._adminService.loginAdminService(dto);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -69,7 +69,7 @@ export class AdminController implements IAdminController {
 
     try {
       const dto = AdminRequestMapper.toUpdateAdminRequestDTO(req.body);
-      const updatedAdmin = await this.adminService.updateAdminService(
+      const updatedAdmin = await this._adminService.updateAdminService(
         req.params.id as string,
         dto,
       );
@@ -98,7 +98,7 @@ export class AdminController implements IAdminController {
     try {
       const dto = AdminRequestMapper.toUpdateProfileImageRequestDTO(req.body);
 
-      const admin = await this.adminService.updateProfieImageService(
+      const admin = await this._adminService.updateProfieImageService(
         req.user!.id,
         dto,
       );
@@ -120,7 +120,7 @@ export class AdminController implements IAdminController {
       const dto = AdminRequestMapper.toResetPasswordAuthenticatedRequestDTO(
         req.body,
       );
-      const data = await this.adminService.resetPasswordAuthenticatedService(
+      const data = await this._adminService.resetPasswordAuthenticatedService(
         req.user!.id,
         dto,
       );

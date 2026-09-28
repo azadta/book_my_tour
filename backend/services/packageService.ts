@@ -19,23 +19,23 @@ import {
 export class PackageService implements IPackageService {
   constructor(
     @inject(Types.PackageCategoryRepository)
-    private packageCategoryRepository: IPackageCategoryRepository,
+    private _packageCategoryRepository: IPackageCategoryRepository,
     @inject(Types.PackageRepository)
-    private packageRepository: IPackageRepository,
+    private _packageRepository: IPackageRepository,
     @inject(Types.DestinationRepository)
-    private destinationRepository: IDestinationRepository,
+    private _destinationRepository: IDestinationRepository,
   ) {}
 
   getTotalPackagesCount() {
-    return this.packageRepository.countDocuments();
+    return this._packageRepository.countDocuments();
   }
 
   async deletePackageService(packageId: string): Promise<Ipackage | null> {
-    return this.packageRepository.deleteById(packageId);
+    return this._packageRepository.deleteById(packageId);
   }
 
   async createPackageService(dto: ICreatePackageRequestDTO): Promise<Ipackage> {
-    const existingPackage = await this.packageRepository.getPackageByName(
+    const existingPackage = await this._packageRepository.getPackageByName(
       dto.name as string,
     );
     if (existingPackage) {
@@ -45,7 +45,7 @@ export class PackageService implements IPackageService {
       );
     }
 
-    return await this.packageRepository.create(dto);
+    return await this._packageRepository.create(dto);
   }
 
   async updatePackageService(
@@ -53,15 +53,15 @@ export class PackageService implements IPackageService {
 
     dto: IUpdatePackageRequestDTO,
   ): Promise<Ipackage | null> {
-    return await this.packageRepository.updatePackageById(packageId, dto);
+    return await this._packageRepository.updatePackageById(packageId, dto);
   }
   async updateOperatorPackageService(
     packageId: string,
     operatorId: string,
     dto: IUpdatePackageRequestDTO,
   ): Promise<Ipackage | null> {
-    console.log('dto from update package service:',dto)
-    const existingPackage = await this.packageRepository.getByIdAndOperator(
+
+    const existingPackage = await this._packageRepository.getByIdAndOperator(
       packageId,
       operatorId,
     );
@@ -72,13 +72,13 @@ export class PackageService implements IPackageService {
       );
     }
 
-    return await this.packageRepository.updatePackageById(packageId, dto);
+    return await this._packageRepository.updatePackageById(packageId, dto);
   }
   async deleteOperatorPackageService(
     packageId: string,
     operatorId: string,
   ): Promise<Ipackage | null> {
-    return this.packageRepository.deleteByIdAndOperator(packageId, operatorId);
+    return this._packageRepository.deleteByIdAndOperator(packageId, operatorId);
   }
 
   async getFilteredPaginatedPackagesService(
@@ -86,18 +86,18 @@ export class PackageService implements IPackageService {
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.getFilteredPackages(filter, skip, limit);
+    return this._packageRepository.getFilteredPackages(filter, skip, limit);
   }
 
   getOperatorPackagesCountService(operatorId: string): Promise<number> {
-    return this.packageRepository.countPackagesByOperatorId(operatorId);
+    return this._packageRepository.countPackagesByOperatorId(operatorId);
   }
 
   async getPackageByIdAndOperatorService(
     packageId: string,
     operatorId: string,
   ) {
-    const pkg = await this.packageRepository.getByIdAndOperator(
+    const pkg = await this._packageRepository.getByIdAndOperator(
       packageId,
       operatorId,
     );
@@ -113,11 +113,11 @@ export class PackageService implements IPackageService {
     skip: number,
     limit: number,
   ): Promise<Ipackage[]> {
-    return this.packageRepository.getFilteredPackages({}, skip, limit);
+    return this._packageRepository.getFilteredPackages({}, skip, limit);
   }
 
   getAllPackagesService() {
-    return this.packageRepository.findAllPackages();
+    return this._packageRepository.findAllPackages();
   }
 
   async getFilteredPackagesService(query: any) {
@@ -153,7 +153,7 @@ export class PackageService implements IPackageService {
     }
     if (search) {
       const destinationIds =
-        await this.destinationRepository.findDestinationIdsByName(search);
+        await this._destinationRepository.findDestinationIdsByName(search);
       filter.$or = [
         { name: { $regex: search, $options: "i" } },
         { destinations: { $in: destinationIds } },
@@ -165,21 +165,21 @@ export class PackageService implements IPackageService {
     }
 
     const [packages, totalCount, uniqueCategoryCount] = await Promise.all([
-      this.packageRepository.getFilteredPackages(
+      this._packageRepository.getFilteredPackages(
         filter,
         skip,
         Number(limit),
         String(sortBy),
         String(sortOrder),
       ),
-      this.packageRepository.getFilteredPackagesCount(filter),
-      this.packageRepository.getUniqueCategoryCount(filter),
+      this._packageRepository.getFilteredPackagesCount(filter),
+      this._packageRepository.getUniqueCategoryCount(filter),
     ]);
 
     return { packages, totalCount, uniqueCategoryCount };
   }
   async getPackageByIdService(id: string) {
-    const pkg = await this.packageRepository.getPackageById(id);
+    const pkg = await this._packageRepository.getPackageById(id);
     if (!pkg) {
       throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, 404);
     }
@@ -187,12 +187,12 @@ export class PackageService implements IPackageService {
   }
   async getPackagesByCategoryService(categoryName: string) {
     const category =
-      await this.packageCategoryRepository.findPackageCategoryByName(
+      await this._packageCategoryRepository.findPackageCategoryByName(
         categoryName,
       );
     if (!category) return [];
 
-    return this.packageRepository.findPackageByCategory(
+    return this._packageRepository.findPackageByCategory(
       category._id.toString(),
     );
   }

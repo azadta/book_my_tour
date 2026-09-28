@@ -14,11 +14,11 @@ import { RESPONSE_MESSAGES } from "../constants/messages";
 @injectable()
 export class AuthMiddleware implements IAuthMiddleware {
   constructor(
-    @inject(Types.SecurityService) private securityService: ISecurityService,
-    @inject(Types.UserRepository) private userRepository: IUserRepository,
+    @inject(Types.SecurityService) private _securityService: ISecurityService,
+    @inject(Types.UserRepository) private _userRepository: IUserRepository,
     @inject(Types.OperatorRepository)
-    private operatorRepository: IOperatorRepository,
-    @inject(Types.AdminRepository) private adminRepository: IAdminRepository,
+    private _operatorRepository: IOperatorRepository,
+    @inject(Types.AdminRepository) private _adminRepository: IAdminRepository,
   ) {}
 
   verifyRole = (...allowedRoles: string[]) => {
@@ -35,7 +35,7 @@ export class AuthMiddleware implements IAuthMiddleware {
       }
 
       try {
-        const decoded = this.securityService.verifyAccessToken(token);
+        const decoded = this._securityService.verifyAccessToken(token);
 
         if (!allowedRoles.includes(decoded.role)) {
           return next(
@@ -47,7 +47,7 @@ export class AuthMiddleware implements IAuthMiddleware {
         }
 
         if (decoded.role === "user") {
-          const user = await this.userRepository.findById(decoded.id);
+          const user = await this._userRepository.findById(decoded.id);
           if (!user)
             return next(
               new CustomError(
@@ -63,7 +63,7 @@ export class AuthMiddleware implements IAuthMiddleware {
               ),
             );
         } else if (decoded.role === "operator") {
-          const operator = await this.operatorRepository.findById(decoded.id);
+          const operator = await this._operatorRepository.findById(decoded.id);
           if (!operator)
             return next(
               new CustomError(
@@ -79,7 +79,7 @@ export class AuthMiddleware implements IAuthMiddleware {
               ),
             );
         } else if (decoded.role === "admin") {
-          const admin = await this.adminRepository.findById(decoded.id);
+          const admin = await this._adminRepository.findById(decoded.id);
           if (!admin)
             return next(
               new CustomError(

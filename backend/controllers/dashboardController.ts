@@ -8,7 +8,7 @@ import { IDashboardController } from "../interfaces/IDashboardController";
 
 @injectable()
 export class DashboardController implements IDashboardController {
-  constructor(@inject(Types.DashboardService) private dashboardService:IDashboardService){
+  constructor(@inject(Types.DashboardService) private _dashboardService:IDashboardService){
 
   }
   //admin
@@ -18,7 +18,7 @@ export class DashboardController implements IDashboardController {
     next: NextFunction,
   ) => {
     try {
-      const usersCount = await this.dashboardService.getTotalUsersCountService();
+      const usersCount = await this._dashboardService.getTotalUsersCountService();
       res.status(StatusCode.OK).json({ success: true, usersCount });
     } catch (error) {
       next(error);
@@ -31,7 +31,7 @@ export class DashboardController implements IDashboardController {
   ) => {
     try {
       const operatorsCount =
-        await this.dashboardService.getTotalOperatorsCountService();
+        await this._dashboardService.getTotalOperatorsCountService();
       res.status(StatusCode.OK).json({ success: true, operatorsCount });
     } catch (error) {
       next(error);
@@ -45,7 +45,7 @@ export class DashboardController implements IDashboardController {
   ) => {
     try {
       const todaySignupCount =
-        await this.dashboardService.getSignupCountTodayService();
+        await this._dashboardService.getSignupCountTodayService();
       res.status(StatusCode.OK).json({ success: true, todaySignupCount });
     } catch (error) {
       next(error);
@@ -59,7 +59,7 @@ export class DashboardController implements IDashboardController {
   ) => {
     try {
       const count =
-        await this.dashboardService.getPendingOperatorsCountService();
+        await this._dashboardService.getPendingOperatorsCountService();
       res.status(StatusCode.OK).json({ success: true, count });
     } catch (error) {
       next(error);
@@ -75,7 +75,7 @@ export class DashboardController implements IDashboardController {
     try {
       const operatorId = req.user?.id as string;
       const stats =
-        await this.dashboardService.getOperatorDashboardStatsService(
+        await this._dashboardService.getOperatorDashboardStatsService(
           operatorId,
         );
       res.status(StatusCode.OK).json(stats);

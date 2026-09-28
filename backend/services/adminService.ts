@@ -22,11 +22,11 @@ import {
 @injectable()
 export class AdminService implements IAdminService {
   constructor(
-    @inject(Types.AdminRepository) private adminRepository: IAdminRepository,
+    @inject(Types.AdminRepository) private _adminRepository: IAdminRepository,
 
     @inject(Types.BcryptHashService)
-    private hashService: IHashService,
-    @inject(Types.SecurityService) private securityService: ISecurityService,
+    private _hashService: IHashService,
+    @inject(Types.SecurityService) private _securityService: ISecurityService,
   ) {}
 
   async loginAdminService(dto: LoginAdminRequestDTO): Promise<{
@@ -35,23 +35,23 @@ export class AdminService implements IAdminService {
     adminData: IAdminResponse;
   }> {
     const { email, password } = dto;
-    const admin = await this.adminRepository.findByEmail(email);
+    const admin = await this._adminRepository.findByEmail(email);
     if (!admin)
       throw new CustomError(
         RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
         StatusCode.NOT_FOUND,
       );
-    const isPasswordValid = this.hashService.compare(password, admin.password);
+    const isPasswordValid = this._hashService.compare(password, admin.password);
     if (!isPasswordValid)
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
         StatusCode.UNAUTHORIZED,
       );
-    const accessToken = this.securityService.generateAccessToken({
+    const accessToken = this._securityService.generateAccessToken({
       id: admin._id.toString(),
       role: admin.role,
     });
-    const refreshToken = this.securityService.generateRefreshToken({
+    const refreshToken = this._securityService.generateRefreshToken({
       id: admin._id.toString(),
       role: admin.role,
     });
@@ -65,13 +65,13 @@ export class AdminService implements IAdminService {
     dto: ResetAdminPasswordAuthenticatedRequestDTO,
   ) {
     const { confirmPassword, newPassword, oldPassword } = dto;
-    const admin = await this.adminRepository.findById(adminId);
+    const admin = await this._adminRepository.findById(adminId);
     if (!admin)
       throw new CustomError(
         RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
         StatusCode.NOT_FOUND,
       );
-    const isMatch = this.hashService.compare(oldPassword, admin.password);
+    const isMatch = this._hashService.compare(oldPassword, admin.password);
     if (!isMatch)
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
@@ -82,8 +82,8 @@ export class AdminService implements IAdminService {
         RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
         StatusCode.BAD_REQUEST,
       );
-    admin.password = this.hashService.hash(newPassword);
-    await this.adminRepository.save(admin);
+    admin.password = this._hashService.hash(newPassword);
+    await this._adminRepository.save(admin);
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
@@ -92,9 +92,9 @@ export class AdminService implements IAdminService {
     dto: UpdateAdminRequestDTO,
   ): Promise<HydratedDocument<IAdmin> | null> {
     if (dto.password) {
-      dto.password = this.hashService.hash(dto.password);
+      dto.password = this._hashService.hash(dto.password);
     }
-    return await this.adminRepository.updateById(id, dto);
+    return await this._adminRepository.updateById(id, dto);
   }
 
   async updateProfieImageService(
@@ -102,6 +102,6 @@ export class AdminService implements IAdminService {
     dto: UpdateAdminProfileImageRequestDTO,
   ): Promise<HydratedDocument<IAdmin> | null> {
     const { image } = dto;
-    return this.adminRepository.updateProfieImage(id, image);
+    return this._adminRepository.updateProfieImage(id, image);
   }
 }

@@ -12,7 +12,7 @@ import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/P
 export class PackageCategoryController implements IPackageCategoryController {
   constructor(
     @inject(Types.PackageCategoryService)
-    private packageCategoryService: IPackageCategoryService,
+    private _packageCategoryService: IPackageCategoryService,
   ) {}
 
   //admin
@@ -26,7 +26,7 @@ export class PackageCategoryController implements IPackageCategoryController {
         req.body,
       );
       const rawCategory =
-        await this.packageCategoryService.createCategoryService(dto);
+        await this._packageCategoryService.createCategoryService(dto);
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED,
         category: CategoryResponseMapper.toCategoryResponseDTO(rawCategory),
@@ -45,7 +45,7 @@ export class PackageCategoryController implements IPackageCategoryController {
     next: NextFunction,
   ) => {
     try {
-      const categories = await this.packageCategoryService.getAllCategories();
+      const categories = await this._packageCategoryService.getAllCategories();
       res.json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
     } catch (error) {
       next(error);
@@ -58,7 +58,7 @@ export class PackageCategoryController implements IPackageCategoryController {
   ) => {
     try {
       const rawCategories =
-        await this.packageCategoryService.getActiveCategoryService();
+        await this._packageCategoryService.getActiveCategoryService();
       res.status(200).json({
         categories:
           CategoryResponseMapper.toCategoryListResponseDTO(rawCategories),

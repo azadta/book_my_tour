@@ -10,7 +10,7 @@ import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestM
 @injectable()
 export class WalletController implements IWalletController {
   constructor(
-    @inject(Types.WalletService) private walletService: IWalletService,
+    @inject(Types.WalletService) private _walletService: IWalletService,
   ) {}
   //user
   getWallet = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +18,7 @@ export class WalletController implements IWalletController {
       const userId = req.user?.id as string;
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
-      const data = await this.walletService.getWalletWithPagination(
+      const data = await this._walletService.getWalletWithPagination(
         userId,
         page,
         limit,
@@ -40,7 +40,7 @@ export class WalletController implements IWalletController {
       const userId = req.user?.id as string;
       const dto = WalletRequestMapper.toCreateTopupOrderReqDTO(req.body);
 
-      const result = await this.walletService.createTopupOrder(userId, dto);
+      const result = await this._walletService.createTopupOrder(userId, dto);
       res
         .status(StatusCode.OK)
         .json(WalletResponseMapper.toTopupOrderResponseDTO(result));
@@ -57,7 +57,7 @@ export class WalletController implements IWalletController {
       const userId = req.user?.id as string;
       const dto = WalletRequestMapper.toVerifyTopupPaymentReqDTO(req.body);
 
-      const wallet = await this.walletService.verifyTopupPayment(userId, dto);
+      const wallet = await this._walletService.verifyTopupPayment(userId, dto);
       res
         .status(StatusCode.OK)
         .json(WalletResponseMapper.toWalletResponseDTO(wallet));

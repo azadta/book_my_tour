@@ -13,7 +13,7 @@ import { logger } from "../utils/logger";
 
 @injectable()
 export class UserController implements IUserController {
-  constructor(@inject(Types.UserService) private userService: IUserService) {}
+  constructor(@inject(Types.UserService) private _userService: IUserService) {}
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       logger.info(`Attempting registration for email ${req.body.email}`, {
@@ -21,7 +21,7 @@ export class UserController implements IUserController {
         module: "USER",
         action: "REGISTER",
       });
-      const result = await this.userService.registerUser(req.body);
+      const result = await this._userService.registerUser(req.body);
       res.status(StatusCode.CREATED).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
@@ -35,7 +35,7 @@ export class UserController implements IUserController {
   verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { userId, otp } = req.body;
-      await this.userService.verifyUserOtp({ userId, otp });
+      await this._userService.verifyUserOtp({ userId, otp });
       res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
@@ -48,7 +48,7 @@ export class UserController implements IUserController {
   resendOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { userId } = req.body;
-      const data = await this.userService.resendUserOtp(userId);
+      const data = await this._userService.resendUserOtp(userId);
       res.status(StatusCode.OK).json({
         success: true,
         message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_RESENT_EMAIL,
@@ -70,7 +70,7 @@ export class UserController implements IUserController {
       });
 
       const { accessToken, refreshToken, userData } =
-        await this.userService.loginUser(email, password);
+        await this._userService.loginUser(email, password);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -89,7 +89,7 @@ export class UserController implements IUserController {
     const { name, email } = req.body;
     try {
       const { accessToken, refreshToken, user } =
-        await this.userService.googleLogin(name, email);
+        await this._userService.googleLogin(name, email);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -106,7 +106,7 @@ export class UserController implements IUserController {
 
   forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.userService.forgotPasswordService(req.body.email);
+      const data = await this._userService.forgotPasswordService(req.body.email);
       res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
@@ -115,7 +115,7 @@ export class UserController implements IUserController {
 
   resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.userService.resetPasswordService(
+      const data = await this._userService.resetPasswordService(
         req.params.token as string,
         req.body.newPassword,
       );
@@ -128,7 +128,7 @@ export class UserController implements IUserController {
   logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
-      const result = this.userService.userLogoutService();
+      const result = this._userService.userLogoutService();
       res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
@@ -148,7 +148,7 @@ export class UserController implements IUserController {
       );
     }
     try {
-      const updatedUser = await this.userService.updateUserService(
+      const updatedUser = await this._userService.updateUserService(
         req.params.id as string,
         req.body,
       );
@@ -172,7 +172,7 @@ export class UserController implements IUserController {
       );
     }
     try {
-      await this.userService.deleteUserService(req.params.id as string);
+      await this._userService.deleteUserService(req.params.id as string);
       res.clearCookie("access_token");
       res
         .status(StatusCode.OK)
@@ -189,7 +189,7 @@ export class UserController implements IUserController {
   ) => {
     try {
       const { image } = req.body;
-      const user = await this.userService.updateProfileImageService(
+      const user = await this._userService.updateProfileImageService(
         req.user!.id,
         image,
       );
@@ -204,7 +204,7 @@ export class UserController implements IUserController {
     next: NextFunction,
   ) => {
     try {
-      const data = await this.userService.resetPasswordAuthenticatedService(
+      const data = await this._userService.resetPasswordAuthenticatedService(
         req.user!.id,
         req.body.oldPassword,
         req.body.newPassword,
@@ -227,8 +227,8 @@ export class UserController implements IUserController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [users, totalCount] = await Promise.all([
-        this.userService.getPaginatedUsersService(skip, limit),
-        this.userService.getTotalUsersCount(),
+        this._userService.getPaginatedUsersService(skip, limit),
+        this._userService.getTotalUsersCount(),
       ]);
       res.status(StatusCode.OK).json({ users, totalCount });
     } catch (error) {
@@ -238,7 +238,7 @@ export class UserController implements IUserController {
 
   getUserDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await this.userService.getUserDetailsService(
+      const user = await this._userService.getUserDetailsService(
         req.params.id as string,
       );
 
@@ -250,7 +250,7 @@ export class UserController implements IUserController {
 
   adminUpdateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await this.userService.AdminUpdateUserService(
+      const updated = await this._userService.AdminUpdateUserService(
         req.params.id as string,
         req.body,
       );
@@ -269,7 +269,7 @@ export class UserController implements IUserController {
         targetUserId: req.params.id,
         adminId: req.user?.id,
       });
-      const blocked = await this.userService.blockUserService(
+      const blocked = await this._userService.blockUserService(
         req.params.id as string,
         req.body.isBlocked,
       );
@@ -286,7 +286,7 @@ export class UserController implements IUserController {
 
   adminDeleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this.userService.deleteUserService(req.params.id as string);
+      await this._userService.deleteUserService(req.params.id as string);
       res
         .status(StatusCode.OK)
         .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });

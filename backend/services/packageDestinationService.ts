@@ -14,17 +14,17 @@ import { ICreateDestinationRequestDTO } from "../dto-mapping/dto/package-destina
 export class PackageDestinationService implements IPackageDestinationService {
   constructor(
     @inject(Types.PackageCategoryRepository)
-    private packageCategoryRepository: IPackageCategoryRepository,
+    private _packageCategoryRepository: IPackageCategoryRepository,
     @inject(Types.PackageRepository)
-    private packageRepository: IPackageRepository,
+    private _packageRepository: IPackageRepository,
     @inject(Types.DestinationRepository)
-    private destinationRepository: IDestinationRepository,
+    private _destinationRepository: IDestinationRepository,
   ) {}
 
   async createDestinationService(
     dto: ICreateDestinationRequestDTO,
   ): Promise<IDestination> {
-    const existing = await this.destinationRepository.findDestinationByName(
+    const existing = await this._destinationRepository.findDestinationByName(
       dto.name as string,
     );
     if (existing)
@@ -33,7 +33,7 @@ export class PackageDestinationService implements IPackageDestinationService {
         StatusCode.BAD_REQUEST,
       );
 
-    return this.destinationRepository.create({
+    return this._destinationRepository.create({
       name: (dto.name as string).trim(),
       location: {
         latitude: dto.location.latitude,
@@ -43,10 +43,10 @@ export class PackageDestinationService implements IPackageDestinationService {
     });
   }
   getAllDestinationsService(): Promise<IDestination[]> {
-    return this.destinationRepository.findAll();
+    return this._destinationRepository.findAll();
   }
   async getDestinationByIdService(id: string): Promise<IDestination> {
-    const destination = await this.destinationRepository.findById(id);
+    const destination = await this._destinationRepository.findById(id);
     if (!destination) {
       throw new CustomError(
         RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND,
@@ -56,7 +56,7 @@ export class PackageDestinationService implements IPackageDestinationService {
     return destination;
   }
   async deleteDestinationByIdService(id: string): Promise<void> {
-    const deleted = await this.destinationRepository.deleteById(id);
+    const deleted = await this._destinationRepository.deleteById(id);
     if (!deleted)
       throw new CustomError(
         RESPONSE_MESSAGES.DESTINATION.ERROR.NOT_FOUND,
@@ -66,12 +66,12 @@ export class PackageDestinationService implements IPackageDestinationService {
 
   async getDestinationsByPackageCategoryService(categoryName: string) {
     const category =
-      await this.packageCategoryRepository.findPackageCategoryByName(
+      await this._packageCategoryRepository.findPackageCategoryByName(
         categoryName,
       );
     if (!category) return [];
 
-    const packages = await this.packageRepository.findPackageByCategory(
+    const packages = await this._packageRepository.findPackageByCategory(
       category._id.toString(),
     );
     const destinationMap = new Map();

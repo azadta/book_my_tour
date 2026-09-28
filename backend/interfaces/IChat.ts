@@ -18,6 +18,7 @@ export interface IMessage extends Document {
   senderId: Types.ObjectId | string;
   senderModel: "User" | "Operator" | "Admin";
   text: string;
+  image?:string|null
   attachments: string[];
   status: "SENT" | "DELIVERED" | "READ";
   createdAt: Date;

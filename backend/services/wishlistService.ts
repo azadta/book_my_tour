@@ -20,24 +20,24 @@ import {
 export class WishlistService implements IWishlistService {
   constructor(
     @inject(Types.WishlistRepository)
-    private wishlistRepository: IWishlistRepository,
+    private _wishlistRepository: IWishlistRepository,
   ) {}
 
   async getUserWishlists(userId: string): Promise<IWishlistGroup[]> {
-    return this.wishlistRepository.findByUserId(userId);
+    return this._wishlistRepository.findByUserId(userId);
   }
   async createWishlistGroup(
     userId: string,
     dto: CreateWishlistGroupRequestDTO,
   ): Promise<IWishlistGroup> {
-    return this.wishlistRepository.createGroup(userId, dto);
+    return this._wishlistRepository.createGroup(userId, dto);
   }
   async togglePackageInWishlistGroup(
     userId: string,
     dto: ToggleWishlistPackageRequestDTO,
   ): Promise<IWishlistGroup> {
     const { groupId, packageId } = dto;
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.NOT_FOUND,
@@ -53,8 +53,8 @@ export class WishlistService implements IWishlistService {
         (pkg._id ? pkg._id.toString() : pkg.toString()) === packageId,
     );
     const updatedGroup = hasPackage
-      ? await this.wishlistRepository.removePackageToGroup(groupId, packageId)
-      : await this.wishlistRepository.addPackageToGroup(groupId, packageId);
+      ? await this._wishlistRepository.removePackageToGroup(groupId, packageId)
+      : await this._wishlistRepository.addPackageToGroup(groupId, packageId);
     if (!updatedGroup) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
@@ -66,7 +66,7 @@ export class WishlistService implements IWishlistService {
     dto: AddWishlistNoteRequestDTO,
   ): Promise<IWishlistGroup> {
     const { text } = dto;
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
@@ -74,7 +74,7 @@ export class WishlistService implements IWishlistService {
       );
     }
 
-    const updatedGroup = await this.wishlistRepository.addNote(groupId, text);
+    const updatedGroup = await this._wishlistRepository.addNote(groupId, text);
     if (!updatedGroup) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.ADD_NOTE);
     }
@@ -84,7 +84,7 @@ export class WishlistService implements IWishlistService {
     userId: string,
     groupId: string,
   ): Promise<{ shareToken: string }> {
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
@@ -97,12 +97,12 @@ export class WishlistService implements IWishlistService {
     }
 
     const token = randomBytes(12).toString("hex");
-    await this.wishlistRepository.updateShareToken(groupId, token, true);
+    await this._wishlistRepository.updateShareToken(groupId, token, true);
     return { shareToken: token };
   }
 
   async getSharedGroup(shareToken: string): Promise<IWishlistGroup> {
-    const group = await this.wishlistRepository.findByShareToken(shareToken);
+    const group = await this._wishlistRepository.findByShareToken(shareToken);
     if (!group) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.LINK_EXPIRE_OR_NOT_FOUND,
@@ -116,14 +116,14 @@ export class WishlistService implements IWishlistService {
     groupId: string,
     dto: EditWishlistGroupRequestDTO,
   ): Promise<IWishlistGroup> {
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
         StatusCode.UNAUTHORIZED,
       );
     }
-    const updated = await this.wishlistRepository.updateById(groupId, dto);
+    const updated = await this._wishlistRepository.updateById(groupId, dto);
     if (!updated) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
@@ -134,7 +134,7 @@ export class WishlistService implements IWishlistService {
     userId: string,
     groupId: string,
   ): Promise<IWishlistGroup | null> {
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
@@ -142,11 +142,11 @@ export class WishlistService implements IWishlistService {
       );
     }
 
-    return this.wishlistRepository.deleteById(groupId);
+    return this._wishlistRepository.deleteById(groupId);
   }
 
   async deleteNote(userId: string, groupId: string, noteId: string) {
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
@@ -154,7 +154,7 @@ export class WishlistService implements IWishlistService {
       );
     }
 
-    const updated = await this.wishlistRepository.deleteNote(groupId, noteId);
+    const updated = await this._wishlistRepository.deleteNote(groupId, noteId);
     if (!updated) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
@@ -168,7 +168,7 @@ export class WishlistService implements IWishlistService {
     dto: EditWishlistNoteRequestDTO,
   ): Promise<IWishlistGroup> {
     const { text } = dto;
-    const group = await this.wishlistRepository.findWishlistGroupById(groupId);
+    const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.UNAUTHORIZED_OR_NOT_FOUND,
@@ -176,7 +176,7 @@ export class WishlistService implements IWishlistService {
       );
     }
 
-    const updated = await this.wishlistRepository.updateNote(
+    const updated = await this._wishlistRepository.updateNote(
       groupId,
       noteId,
       text,

@@ -10,13 +10,13 @@ import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestM
 
 @injectable()
 export class CouponController implements ICouponController{
-  constructor(@inject(Types.CouponService) private couponService:ICouponService ){
+  constructor(@inject(Types.CouponService) private _couponService:ICouponService ){
 
   }
     //operator
       getCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this.couponService.getAllAvailableCoupons();
+      const data = await this._couponService.getAllAvailableCoupons();
       res
         .status(StatusCode.OK)
         .json(CouponResponseMapper.toAvailableCouponsDTO(data));
@@ -30,7 +30,7 @@ export class CouponController implements ICouponController{
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
-      const result = await this.couponService.getAllCoupons(page, limit);
+      const result = await this._couponService.getAllCoupons(page, limit);
       res.status(StatusCode.OK).json({
         coupons: CouponResponseMapper.toCouponResponseDTOList(result.coupons),
         totalCount: result.totalCount,
@@ -43,7 +43,7 @@ export class CouponController implements ICouponController{
   getCouponById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const coupon = await this.couponService.getCouponById(id as string);
+      const coupon = await this._couponService.getCouponById(id as string);
       res
         .status(StatusCode.OK)
         .json(CouponResponseMapper.toCouponResponseDTO(coupon));
@@ -55,7 +55,7 @@ export class CouponController implements ICouponController{
   createCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const dto = CouponRequestMapper.toCreateCouponDTO(req.body);
-      const rawCoupon = await this.couponService.createCoupon(dto);
+      const rawCoupon = await this._couponService.createCoupon(dto);
       res.status(StatusCode.CREATED).json({
         message: RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED,
         coupon: CouponResponseMapper.toCouponResponseDTO(rawCoupon),
@@ -70,7 +70,7 @@ export class CouponController implements ICouponController{
       const { id } = req.params;
       const dto = CouponRequestMapper.toUpdateCouponDTO(req.body);
 
-      const rawUpdatedCoupon = await this.couponService.updateCoupon(
+      const rawUpdatedCoupon = await this._couponService.updateCoupon(
         id as string,
         dto,
       );
@@ -92,7 +92,7 @@ export class CouponController implements ICouponController{
     try {
       const { id } = req.params;
       const { isActive } = req.body;
-      const updatedCoupon = await this.couponService.toggleCouponStatus(
+      const updatedCoupon = await this._couponService.toggleCouponStatus(
         id as string,
         isActive,
       );
@@ -117,7 +117,7 @@ export class CouponController implements ICouponController{
       }
       const dto = CouponRequestMapper.toValidateCouponDTO(req.body);
       const result =
-        await this.couponService.validateAndCalculateCouponDiscount(dto);
+        await this._couponService.validateAndCalculateCouponDiscount(dto);
       res
         .status(StatusCode.OK)
         .json(CouponResponseMapper.toValidateCouponResponseDTO(result));

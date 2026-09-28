@@ -257,12 +257,14 @@ export const useChat = () => {
       text: string,
       recipientId: string,
       recipientIdModel: "User" | "Operator" | "Admin",
+      image?: string,
     ) => {
-      if (!activeChat || !text.trim() || !currentUser) return;
+      if (!activeChat || !text.trim()&&!image || !currentUser) return;
       const socket = getSocket();
       socket.emit("send_message", {
         chatId: activeChat._id,
         text,
+        image,
         recipientId,
         recipientModel: recipientIdModel,
 

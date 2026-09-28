@@ -6,18 +6,19 @@ import { CustomError } from "../utils/customError";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import type { ICouponRepository } from "../interfaces/ICouponRepository";
-import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
 import type { IHashGenerator } from "../interfaces/IHashGenerator";
 import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
 import { IOperatorResponse } from "../interfaces/IOperator";
-import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
-import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
 import { Types } from "../types/types";
 
+import {
+  IAdminUpdateOperatorRequestDTO,
+  IBlockOperatorRequestDTO,
+  IVerifyOperatorRequestDTO,
+} from "../dto-mapping/dto/admin/adminRequestDTO";
 import {
   IOperatorLoginRequestDTO,
   IOperatorRegisterRequestDTO,
@@ -25,27 +26,20 @@ import {
   IUpdateOperatorProfileRequestDTO,
   IVerifyOperatorOtpRequestDTO,
 } from "../dto-mapping/dto/operator/operatorRequestDTO";
-import type { IBookingRepository } from "../interfaces/IBookingRepository";
-import type { IWalletRepository } from "../interfaces/IWalletRepository";
-import {
-  IAdminUpdateOperatorRequestDTO,
-  IBlockOperatorRequestDTO,
-  IVerifyOperatorRequestDTO,
-} from "../dto-mapping/dto/admin/adminRequestDTO";
 
 @injectable()
 export class OperatorService implements IOperatorService {
   constructor(
     @inject(Types.OperatorRepository)
-    private operatorRepository: IOperatorRepository,
-    @inject(Types.MailService) private mailService: IMailService,
-    @inject(Types.BcryptHashService) private hashService: IHashService,
-    @inject(Types.SecurityService) private securityService: ISecurityService,
-    @inject(Types.TokenService) private tokenService: ITokenService,
-    @inject(Types.CryptoHashService) private resetTokenHasher: IHashGenerator,
+    private _operatorRepository: IOperatorRepository,
+    @inject(Types.MailService) private _mailService: IMailService,
+    @inject(Types.BcryptHashService) private _hashService: IHashService,
+    @inject(Types.SecurityService) private _securityService: ISecurityService,
+    @inject(Types.TokenService) private _tokenService: ITokenService,
+    @inject(Types.CryptoHashService) private _resetTokenHasher: IHashGenerator,
   ) {}
   async operatorRegisterService(dto: IOperatorRegisterRequestDTO) {
-    const existing = await this.operatorRepository.findByEmail(
+    const existing = await this._operatorRepository.findByEmail(
       dto.email as string,
     );
     if (existing) {
@@ -54,17 +48,17 @@ export class OperatorService implements IOperatorService {
         StatusCode.BAD_REQUEST,
       );
     }
-    const hashedPassword = this.hashService.hash(dto.password as string);
+    const hashedPassword = this._hashService.hash(dto.password as string);
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     const otpExpire = Date.now() + 10 * 60 * 1000;
-    const newOperator = await this.operatorRepository.create({
+    const newOperator = await this._operatorRepository.create({
       ...dto,
       password: hashedPassword,
       otp,
       otpExpire,
     });
 
-    await this.mailService.sendEmail(
+    await this._mailService.sendEmail(
       dto.email as string,
       "Verify your email",
       `Your otp is ${otp} .It expires in 10 minutes`,
@@ -78,7 +72,7 @@ export class OperatorService implements IOperatorService {
 
   async operatorVerifyOtpService(dto: IVerifyOperatorOtpRequestDTO) {
     const { operatorId, otp } = dto;
-    const operator = await this.operatorRepository.findById(operatorId);
+    const operator = await this._operatorRepository.findById(operatorId);
     if (!operator)
       throw new CustomError(
         RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND,
@@ -98,13 +92,13 @@ export class OperatorService implements IOperatorService {
     operator.isEmailVerified = true;
     operator.otp = undefined;
     operator.otpExpire = undefined;
-    await this.operatorRepository.save(operator);
+    await this._operatorRepository.save(operator);
   }
 
   async operatorResendOtpService(
     operatorId: string,
   ): Promise<{ otpExpire: number }> {
-    const operator = await this.operatorRepository.findById(operatorId);
+    const operator = await this._operatorRepository.findById(operatorId);
     if (!operator)
       throw new CustomError(
         RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
@@ -114,8 +108,8 @@ export class OperatorService implements IOperatorService {
     const otpExpire = Date.now() + 10 * 60 * 1000;
     operator.otp = otp;
     operator.otpExpire = otpExpire;
-    await this.operatorRepository.save(operator);
-    await this.mailService.sendEmail(
+    await this._operatorRepository.save(operator);
+    await this._mailService.sendEmail(
       operator.email,
       "Your new OTP",
       `your new otp is ${otp}`,
@@ -129,13 +123,13 @@ export class OperatorService implements IOperatorService {
     operatorData: IOperatorResponse;
   }> {
     const { email, password } = dto;
-    const operator = await this.operatorRepository.findByEmail(email);
+    const operator = await this._operatorRepository.findByEmail(email);
     if (!operator)
       throw new CustomError(
         RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
         StatusCode.NOT_FOUND,
       );
-    const isMatch = this.hashService.compare(password, operator.password);
+    const isMatch = this._hashService.compare(password, operator.password);
     if (!isMatch)
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS,
@@ -151,11 +145,11 @@ export class OperatorService implements IOperatorService {
         RESPONSE_MESSAGES.AUTH.ERROR.ACCOUNT_BLOCKED,
         StatusCode.UNAUTHORIZED,
       );
-    const accessToken = this.securityService.generateAccessToken({
+    const accessToken = this._securityService.generateAccessToken({
       id: operator._id.toString(),
       role: operator.role,
     });
-    const refreshToken = this.securityService.generateRefreshToken({
+    const refreshToken = this._securityService.generateRefreshToken({
       id: operator._id.toString(),
       role: operator.role,
     });
@@ -165,20 +159,20 @@ export class OperatorService implements IOperatorService {
   }
 
   async operatorForgotPasswordService(email: string) {
-    const operator = await this.operatorRepository.findByEmail(email);
+    const operator = await this._operatorRepository.findByEmail(email);
     if (!operator)
       throw new CustomError(
         RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
         StatusCode.NOT_FOUND,
       );
     const { resetToken, expireTime, hashedToken } =
-      this.tokenService.getPasswordResetToken();
+      this._tokenService.getPasswordResetToken();
 
     operator.resetPasswordToken = hashedToken;
     operator.resetPasswordExpire = expireTime;
-    await this.operatorRepository.save(operator);
+    await this._operatorRepository.save(operator);
     const resetUrl = `${process.env.FRONTEND_URL}/operator/reset-password/${resetToken}`;
-    await this.mailService.sendEmail(
+    await this._mailService.sendEmail(
       operator.email,
       "Reset Password",
       `Click this link to reset your password: ${resetUrl}`,
@@ -188,17 +182,17 @@ export class OperatorService implements IOperatorService {
   }
 
   async operatorResetPasswordService(token: string, newPassword: string) {
-    const hashedToken = this.resetTokenHasher.hash(token);
+    const hashedToken = this._resetTokenHasher.hash(token);
 
     const operator =
-      await this.operatorRepository.findByResetToken(hashedToken);
+      await this._operatorRepository.findByResetToken(hashedToken);
     if (!operator)
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.INVALID_TOKEN,
         StatusCode.BAD_REQUEST,
       );
 
-    operator.password = this.hashService.hash(newPassword);
+    operator.password = this._hashService.hash(newPassword);
     operator.resetPasswordToken = undefined;
     operator.resetPasswordExpire = undefined;
     await operator.save();
@@ -209,11 +203,11 @@ export class OperatorService implements IOperatorService {
     id: string,
     dto: IUpdateOperatorProfileRequestDTO,
   ) {
-    return await this.operatorRepository.updateById(id, dto);
+    return await this._operatorRepository.updateById(id, dto);
   }
 
   async updateOperatorProfileImageService(id: string, image: string) {
-    return await this.operatorRepository.updateOperatorProfileImage(id, image);
+    return await this._operatorRepository.updateOperatorProfileImage(id, image);
   }
 
   operatorLogoutService(): { message: string } {
@@ -225,13 +219,13 @@ export class OperatorService implements IOperatorService {
     dto: IResetOperatorPasswordAuthenticatedRequestDTO,
   ) {
     const { confirmPassword, newPassword, oldPassword } = dto;
-    const operator = await this.operatorRepository.findById(operatorId);
+    const operator = await this._operatorRepository.findById(operatorId);
     if (!operator)
       throw new CustomError(
         RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
         StatusCode.NOT_FOUND,
       );
-    const isMatch = this.hashService.compare(oldPassword, operator.password);
+    const isMatch = this._hashService.compare(oldPassword, operator.password);
     if (!isMatch)
       throw new CustomError(
         RESPONSE_MESSAGES.AUTH.ERROR.OLD_PASSWORD_INCORRECT,
@@ -242,20 +236,20 @@ export class OperatorService implements IOperatorService {
         RESPONSE_MESSAGES.AUTH.ERROR.PASSWORD_MISMATCH,
         StatusCode.BAD_REQUEST,
       );
-    operator.password = this.hashService.hash(newPassword);
-    await this.operatorRepository.save(operator);
+    operator.password = this._hashService.hash(newPassword);
+    await this._operatorRepository.save(operator);
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
   getTotalOperatorsCount() {
-    return this.operatorRepository.countDocuments();
+    return this._operatorRepository.countDocuments();
   }
 
   async getOperatorVerificationRequestsService() {
-    return await this.operatorRepository.getPendingOperator();
+    return await this._operatorRepository.getPendingOperator();
   }
   async verifyOperatorService(id: string, dto: IVerifyOperatorRequestDTO) {
     const { isVerified } = dto;
-    const updated = await this.operatorRepository.updateOperatorStatus(
+    const updated = await this._operatorRepository.updateOperatorStatus(
       id,
       isVerified,
     );
@@ -269,34 +263,34 @@ export class OperatorService implements IOperatorService {
     const message = isVerified
       ? `Hi ${updated.name},<br><br>your operator account has been  <b>verified</b>.You can now access your dashboard and manage packages`
       : `Hi ${updated.name},<br><br>your verification request has been  <b>rejected</b>.Please contact support for clarification`;
-    await this.mailService.sendEmail(updated.email, subject, message);
+    await this._mailService.sendEmail(updated.email, subject, message);
     if (!isVerified) {
-      await this.operatorRepository.deleteById(id);
+      await this._operatorRepository.deleteById(id);
     }
 
     return { message: `Operator ${isVerified ? "verified" : "rejected"}` };
   }
 
   async getPaginatedOperatorsService(skip: number, limit: number) {
-    return this.operatorRepository.getPaginatedOperators(skip, limit);
+    return this._operatorRepository.getPaginatedOperators(skip, limit);
   }
 
   async getOperatorDetailsService(id: string) {
-    return this.operatorRepository.findById(id);
+    return this._operatorRepository.findById(id);
   }
 
   async blockOperatorService(id: string, dto: IBlockOperatorRequestDTO) {
     const { isBlocked } = dto;
-    return this.operatorRepository.updateOperatorBlockStatus(id, isBlocked);
+    return this._operatorRepository.updateOperatorBlockStatus(id, isBlocked);
   }
 
   async deleteOperatorService(id: string) {
-    return this.operatorRepository.deleteById(id);
+    return this._operatorRepository.deleteById(id);
   }
   async adminUpdateOperatorService(
     id: string,
     dto: IAdminUpdateOperatorRequestDTO,
   ) {
-    return await this.operatorRepository.updateById(id, dto);
+    return await this._operatorRepository.updateById(id, dto);
   }
 }

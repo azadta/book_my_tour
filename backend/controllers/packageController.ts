@@ -13,14 +13,14 @@ import { logger } from "../utils/logger";
 @injectable()
 export class PackageController implements IPackageController {
   constructor(
-    @inject(Types.PackageService) private packageService: IPackageService,
+    @inject(Types.PackageService) private _packageService: IPackageService,
   ) {}
 
   getPackageById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const packageId = req.params.id;
 
-      const pkg = await this.packageService.getPackageByIdService(
+      const pkg = await this._packageService.getPackageByIdService(
         packageId as string,
       );
 
@@ -39,7 +39,7 @@ export class PackageController implements IPackageController {
   ) => {
     try {
       const { id: packageId } = req.params;
-      const deletePackage = await this.packageService.deletePackageService(
+      const deletePackage = await this._packageService.deletePackageService(
         packageId as string,
       );
       if (!deletePackage) {
@@ -77,7 +77,7 @@ export class PackageController implements IPackageController {
         operatorId,
       };
       const created =
-        await this.packageService.createPackageService(packageData);
+        await this._packageService.createPackageService(packageData);
       res.status(StatusCode.CREATED).json({
         success: true,
         data: PackageResponseMapper.toPackageResponseDTO(created),
@@ -97,12 +97,12 @@ export class PackageController implements IPackageController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [rawPackages, totalCount] = await Promise.all([
-        this.packageService.getFilteredPaginatedPackagesService(
+        this._packageService.getFilteredPaginatedPackagesService(
           {},
           skip,
           limit,
         ),
-        this.packageService.getTotalPackagesCount(),
+        this._packageService.getTotalPackagesCount(),
       ]);
       res.json({
         packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
@@ -122,7 +122,7 @@ export class PackageController implements IPackageController {
     try {
       const operatorId = req.user?.id;
       const totalPakagesCount =
-        await this.packageService.getOperatorPackagesCountService(
+        await this._packageService.getOperatorPackagesCountService(
           operatorId as string,
         );
       res.status(StatusCode.OK).json({ success: true, totalPakagesCount });
@@ -143,12 +143,12 @@ export class PackageController implements IPackageController {
       const skip = (Number(page) - 1) * Number(limit);
 
       const totalCount =
-        await this.packageService.getOperatorPackagesCountService(
+        await this._packageService.getOperatorPackagesCountService(
           operatorId as string,
         );
 
       const packages =
-        await this.packageService.getFilteredPaginatedPackagesService(
+        await this._packageService.getFilteredPaginatedPackagesService(
           { operatorId },
           skip,
           Number(limit),
@@ -168,7 +168,7 @@ export class PackageController implements IPackageController {
       const packageId = req.params.id;
       const operatorId = req.user!.id;
 
-      const pkg = await this.packageService.getPackageByIdAndOperatorService(
+      const pkg = await this._packageService.getPackageByIdAndOperatorService(
         packageId as string,
         operatorId,
       );
@@ -192,7 +192,7 @@ export class PackageController implements IPackageController {
       }
       const { id: packageId } = req.params;
       const deletePackage =
-        await this.packageService.deleteOperatorPackageService(
+        await this._packageService.deleteOperatorPackageService(
           packageId as string,
           operatorId,
         );
@@ -216,7 +216,7 @@ export class PackageController implements IPackageController {
       const packageId = req.params.id;
       const dto = PackageRequestMapper.toUpdatePackageEntity(req.body);
       const updatedPackage =
-        await this.packageService.updateOperatorPackageService(
+        await this._packageService.updateOperatorPackageService(
           packageId as string,
           req.user!.id,
           dto,
@@ -248,8 +248,8 @@ export class PackageController implements IPackageController {
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
       const [rawPackages, totalCount] = await Promise.all([
-        this.packageService.getPaginatedPackagesService(skip, limit),
-        this.packageService.getTotalPackagesCount(),
+        this._packageService.getPaginatedPackagesService(skip, limit),
+        this._packageService.getTotalPackagesCount(),
       ]);
 
       res.json({
@@ -263,7 +263,7 @@ export class PackageController implements IPackageController {
 
   getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rawPackages = await this.packageService.getAllPackagesService();
+      const rawPackages = await this._packageService.getAllPackagesService();
       res.json({
         packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
       });
@@ -283,7 +283,7 @@ export class PackageController implements IPackageController {
         packages: rawPackages,
         totalCount,
         uniqueCategoryCount,
-      } = await this.packageService.getFilteredPackagesService(query);
+      } = await this._packageService.getFilteredPackagesService(query);
       res.status(200).json({
         packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
         totalCount,
@@ -302,7 +302,7 @@ export class PackageController implements IPackageController {
     try {
       const { category } = req.params;
 
-      const packages = await this.packageService.getPackagesByCategoryService(
+      const packages = await this._packageService.getPackagesByCategoryService(
         category as string,
       );
       res

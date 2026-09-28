@@ -8,7 +8,7 @@ import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class ChatController implements IChatController {
-  constructor(@inject(Types.ChatService) private chatService: IChatService) {}
+  constructor(@inject(Types.ChatService) private _chatService: IChatService) {}
   accessChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const currentUserId = req.user?.id;
@@ -22,7 +22,7 @@ export class ChatController implements IChatController {
           | "Operator";
       const currentUserRole = toTitleCase(rawUserRole);
       const formattedTargetModel = toTitleCase(targetModel);
-      const chat = await this.chatService.accessChatService(
+      const chat = await this._chatService.accessChatService(
         currentUserId as string,
         currentUserRole,
         targetId,
@@ -35,7 +35,7 @@ export class ChatController implements IChatController {
   };
   getMyChats = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const chats = await this.chatService.getMyChatsService(
+      const chats = await this._chatService.getMyChatsService(
         req.user?.id as string,
       );
       res.status(StatusCode.OK).json(chats);
@@ -49,7 +49,7 @@ export class ChatController implements IChatController {
       const { chatId } = req.params;
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
-      const result = await this.chatService.getChatMessagesService(
+      const result = await this._chatService.getChatMessagesService(
         chatId as string,
         page,
         limit,
@@ -64,7 +64,7 @@ export class ChatController implements IChatController {
     try {
       const { chatId } = req.params;
       const userId = req.user?.id as string;
-      await this.chatService.clearChatService(chatId as string, userId);
+      await this._chatService.clearChatService(chatId as string, userId);
       res
         .status(StatusCode.OK)
         .json({ message: RESPONSE_MESSAGES.CHAT.SUCCESS.CLEARED });

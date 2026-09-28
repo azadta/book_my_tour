@@ -13,16 +13,16 @@ import { ICreateCategoryRequestDTO } from "../dto-mapping/dto/package-category/p
 export class PackageCategoryService implements IPackageCategoryService {
   constructor(
     @inject(Types.PackageCategoryRepository)
-    private packageCategoryRepository: IPackageCategoryRepository,
+    private _packageCategoryRepository: IPackageCategoryRepository,
     @inject(Types.PackageRepository)
-    private packageRepository: IPackageRepository,
+    private _packageRepository: IPackageRepository,
   ) {}
 
   async createCategoryService(
     dto: ICreateCategoryRequestDTO,
   ): Promise<IPackageCategory> {
     const existing =
-      await this.packageCategoryRepository.findPackageCategoryByName(
+      await this._packageCategoryRepository.findPackageCategoryByName(
         dto?.name as string,
       );
     if (existing)
@@ -30,15 +30,15 @@ export class PackageCategoryService implements IPackageCategoryService {
         RESPONSE_MESSAGES.CATEGORY.ERROR.ALREADY_EXIST,
         StatusCode.BAD_REQUEST,
       );
-    return this.packageCategoryRepository.create(dto);
+    return this._packageCategoryRepository.create(dto);
   }
   getAllCategories() {
-    return this.packageCategoryRepository.findAll();
+    return this._packageCategoryRepository.findAll();
   }
 
   async getActiveCategoryService() {
-    const categoryIds = await this.packageRepository.getUsedCategoryIds();
+    const categoryIds = await this._packageRepository.getUsedCategoryIds();
 
-    return this.packageCategoryRepository.findCategoriesByIds(categoryIds);
+    return this._packageCategoryRepository.findCategoriesByIds(categoryIds);
   }
 }

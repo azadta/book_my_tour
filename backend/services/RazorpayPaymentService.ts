@@ -10,9 +10,9 @@ import crypto from "crypto";
 
 @injectable()
 export class RazorpayPaymentService implements IPaymentService {
-  private razorpay: Razorpay;
+  private _razorpay: Razorpay;
   constructor() {
-    this.razorpay = new Razorpay({
+    this._razorpay = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID as string,
       key_secret: process.env.RAZORPAY_KEY_SECRET as string,
     });
@@ -28,7 +28,7 @@ export class RazorpayPaymentService implements IPaymentService {
         ...(data.offerId && { offer: data.offerId }),
       };
 
-      const order = await this.razorpay.orders.create(options);
+      const order = await this._razorpay.orders.create(options);
 
       return {
         id: order.id,

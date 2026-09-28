@@ -76,7 +76,7 @@ const TravelerDetailsPage = () => {
     return list;
   });
 
-  console.log("members length", members.length);
+
 
   const handleMemberChange = (
     index: number,

@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import NavItem from "../NavItem";
 import NotificationBadgeButton from "./NotificationBadgeButton";
-import ChatNotificationBadgeButton from "../chat/ChatNotificationBadgeButton";
 
 interface Props {
   openDrawer: () => void;

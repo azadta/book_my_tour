@@ -59,12 +59,10 @@ export interface IBooking {
 export interface ICreateBookingDTO {
   userId: string;
   packageId: string;
-
   members: ITourMember[];
   primaryContact: ILeadContact;
   razorpayOrderId: string;
   razorpayPaymentId?: string;
-
   addedActivityIds?: string[];
   removedActivityIds?: string[];
   status: BookingStatus;

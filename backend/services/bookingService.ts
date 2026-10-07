@@ -398,15 +398,15 @@ export class BookingService implements IBookingService {
     const singleAdultTotalDiscount =
       singleAdultGeneralDiscount + singleAdultBankDiscount;
 
-    const singleAdultPayalbe = Math.max(0, singleAdultRunning);
-    let childUnitPrice = singleAdultPayalbe;
+    const singleAdultPayable = Math.max(0, singleAdultRunning);
+    let childUnitPrice = singleAdultPayable;
     let childPercentage = 1;
     if (childCount > 0 && pkg?.childPricing?.enabled) {
       childPercentage = (pkg.childPricing.percentage ?? 100) / 100;
-      childUnitPrice = Math.round(singleAdultPayalbe * childPercentage);
+      childUnitPrice = Math.round(singleAdultPayable * childPercentage);
     }
 
-    const totalAdultAmount = singleAdultPayalbe * adultCount;
+    const totalAdultAmount = singleAdultPayable * adultCount;
     const totalChildAmount = childUnitPrice * childCount;
     const grandSubtotal = totalAdultAmount + totalChildAmount;
 
@@ -428,7 +428,7 @@ export class BookingService implements IBookingService {
     const pricing: IBookingPricing = {
       adultCount,
       childCount,
-      adultUnitPrice: singleAdultPayalbe,
+      adultUnitPrice: singleAdultPayable,
       childUnitPrice,
       adultAmount: totalAdultAmount,
       childAmount: totalChildAmount,
@@ -546,7 +546,6 @@ export class BookingService implements IBookingService {
       pricing,
       members,
       primaryContact,
-
       addedActivityIds,
       removedActivityIds,
       status: "PENDING",
@@ -648,7 +647,8 @@ export class BookingService implements IBookingService {
   }
 
   async findBookingByOrderId(razorpayOrderId: string) {
-    const booking = await this._bookingRepository.findByOrderId(razorpayOrderId);
+    const booking =
+      await this._bookingRepository.findByOrderId(razorpayOrderId);
     if (!booking) {
       throw new CustomError(
         RESPONSE_MESSAGES.BOOKING.ERROR.INVALID_ORDER_ID,

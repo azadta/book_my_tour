@@ -36,7 +36,7 @@ export class BookingRepository
       packageId: dto.packageId,
       primaryContact: dto.primaryContact,
       members: dto.members,
-      razorpayOrderId: dto.razorpayOrderId,
+      razorpayOrderId: dto.razorpayOrderId, 
       razorpayPaymentId: dto.razorpayPaymentId || null,
       pricing: dto.pricing,
       addedActivityIds: dto.addedActivityIds || [],

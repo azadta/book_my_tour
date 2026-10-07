@@ -109,7 +109,7 @@ const pricingSchema = new Schema<IBookingPricing>(
     },
     baseAmount: {
       type: Number,
-      required:true
+      required: true,
     },
     subtotal: {
       type: Number,

@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 import { IReview } from "../interfaces/IReview";
 
-
 const ReviewSchema = new Schema<IReview>(
   {
     packageId: { type: Schema.Types.ObjectId, ref: "Package", required: true },
@@ -11,7 +10,6 @@ const ReviewSchema = new Schema<IReview>(
       guide: { type: Number, default: 5 },
       value: { type: Number, default: 5 },
       itinerary: { type: Number, default: 5 },
-
       transport: { type: Number, default: 5 },
     },
     comment: {
@@ -30,4 +28,4 @@ const ReviewSchema = new Schema<IReview>(
 );
 
 ReviewSchema.index({ packageId: 1, createdAt: -1 });
-export const Review=model<IReview>('Review',ReviewSchema)
+export const Review = model<IReview>("Review", ReviewSchema);

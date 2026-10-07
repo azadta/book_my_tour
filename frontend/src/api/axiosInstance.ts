@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
           {},
           { withCredentials: true },
         );
-        return axiosInstance(originalRequest);
+        return axiosInstance(originalRequest)
       } catch (refreshError) {
         return Promise.reject(refreshError);
       }

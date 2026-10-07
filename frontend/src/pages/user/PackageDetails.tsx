@@ -1,18 +1,16 @@
 import AddUserReviewModal from "@/components/AddUserReviewModal";
 import { ItineraryDayCard } from "@/components/itinerary/ItineraryDayCard";
 import Loading from "@/components/Loading";
+import MemberSelectionModal from "@/components/MemberSelectionModal";
 import PackageReviews from "@/components/PackageReviews";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { usePackageDetails } from "@/hooks/usePackageDetails";
 import { useWallet } from "@/hooks/useWallet";
 import type { ICouponItem } from "@/interfaces/interfaces";
-import type { RootState } from "@/redux/store";
 import {
-  ArrowRight,
   ArrowRightCircle,
   ChevronRight,
   Clock,
-  Loader2,
   MapPin,
   MessageSquare,
   ShieldCheck,
@@ -25,10 +23,8 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Coupon from "./Coupon";
-import MemberSelectionModal from "@/components/MemberSelectionModal";
 
 interface AppliedCouponsState {
   general?: ICouponItem | null;
@@ -39,7 +35,8 @@ const PackageDetails = () => {
   const { id } = useParams();
   const {
     pkg: data,
-    loading,
+    packageLoading,
+    reviewLoading,
     reviewStats,
     reviews,
     closeModal,
@@ -50,7 +47,6 @@ const PackageDetails = () => {
     saveReview,
     submittingReview,
     deleteReview,
-    isBookingLoading,
   } = usePackageDetails(id as string);
 
   const navigate = useNavigate();
@@ -155,11 +151,11 @@ const PackageDetails = () => {
 
   const totalAdultAmount = singleAdultPayable * adultCount;
 
-  const grandSubTotal = totalAdultAmount + totalChildAmount;
+  const grandSubtotal = totalAdultAmount + totalChildAmount;
   const walletDeduction = isWalletApplied
-    ? Math.min(walletBalance, grandSubTotal)
+    ? Math.min(walletBalance, grandSubtotal)
     : 0;
-  const finalPayablePrice = Math.max(0, grandSubTotal - walletDeduction);
+  const finalPayablePrice = Math.max(0, grandSubtotal - walletDeduction);
 
   const handleApplyCoupon = (coupon: ICouponItem) => {
     if (coupon.type === "GENERAL") {
@@ -272,11 +268,13 @@ const PackageDetails = () => {
       isWalletApplied,
       adultCount,
       childCount,
+      walletDeduction,
+      finalPayablePrice,
     };
     navigate(`/booking/traveler-details`, { state: bookingPayload });
   };
 
-  if (loading) return <Loading />;
+  if (packageLoading) return <Loading />;
 
   if (!data) {
     return <p>Package not found</p>;
@@ -508,7 +506,13 @@ const PackageDetails = () => {
 
                 <div className="space-y-2 mb-4 text-sm flex-1 overflow-y-auto pr-2">
                   <div className="flex justify-between  text-gray-900">
-                    <span>Base Package Price ({data?.childPricing.enabled?'Per Adult':'Per Traveler'})</span>
+                    <span>
+                      Base Package Price (
+                      {data?.childPricing.enabled
+                        ? "Per Adult"
+                        : "Per Traveler"}
+                      )
+                    </span>
                     <span className="font-semibold text-gray-800">
                       Rs {data.amount.toFixed(2)}
                     </span>
@@ -558,7 +562,9 @@ const PackageDetails = () => {
                   <div className="pt-2 border-t border-gray-100 space-y-1.5 text-sm text-gray-600">
                     <div className="flex justify-between font-medium">
                       <span>
-                     {data?.childPricing?.enabled?'Adults: ':'Travelers: '}
+                        {data?.childPricing?.enabled
+                          ? "Adults: "
+                          : "Travelers: "}
                         (<strong className="text-gray-900">{adultCount}</strong>{" "}
                         x Rs {singleAdultPayable.toFixed(2)})
                       </span>
@@ -569,8 +575,8 @@ const PackageDetails = () => {
                     {childCount > 0 && data?.childPricing?.enabled && (
                       <div className="flex justify-between font-medium">
                         <span>
-                          Children:{" "}
-                          (<strong className="text-gray-900">
+                          Children: (
+                          <strong className="text-gray-900">
                             {childCount}
                           </strong>{" "}
                           x Rs {childUnitPrice.toFixed(2)})
@@ -639,7 +645,7 @@ const PackageDetails = () => {
 
                   <div className="flex justify-between font-bold text-sm text-gray-800 mt-4">
                     <p>SubTotal</p>
-                    <p>{grandSubTotal.toFixed(2)}</p>
+                    <p>{grandSubtotal.toFixed(2)}</p>
                   </div>
 
                   <div className="pt-3 border-t border-gray-100 ">
@@ -679,13 +685,14 @@ const PackageDetails = () => {
                     </div>
                   </div>
 
+
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
                     <div className="font-bold text-[16px] text-gray-800">
-                      Final Total
+                      Total booking Amount
                     </div>
                     <div className="text-right">
                       <span className="text-xl font-black text-blue-600">
-                        Rs {finalPayablePrice.toFixed(2)}
+                        Rs {grandSubtotal.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
                       </span>
                       {totalDiscountApplied > 0 && (
                         <span className="block text-[11px] text-emerald-600 font-bold">
@@ -700,32 +707,6 @@ const PackageDetails = () => {
                   </div>
                 </div>
 
-                {/* <button
-                  onClick={onProceedToBooking}
-                  disabled={isBookingLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-sm rounded-xl px-4 py-3 shadow-md shadow-blue-200 text-white transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  {isBookingLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Processing Payment...</span>
-                    </>
-                  ) : finalPayablePrice === 0 ? (
-                    <>
-                      <Wallet className="w-4 h-4" />
-                      <span>Pay Full Amount Via Wallet</span>
-                    </>
-                  ) : (
-                    <>
-                      <Wallet className="w-4 h-4" />
-                      <span>
-                        {isWalletApplied && walletDeduction > 0
-                          ? `Pay remaining Rs ${finalPayablePrice.toFixed(2)}`
-                          : `Pay with Razorpay`}
-                      </span>
-                    </>
-                  )}
-                </button> */}
                 <button
                   onClick={onProceedToTravelerDetails}
                   className="w-full bg-blue-600 hover:bg-blue-700 font-bold text-sm rounded-xl px-4 py-3 shadow-md shadow-blue-200 text-white transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer "
@@ -848,23 +829,9 @@ const PackageDetails = () => {
             Total Payable
           </span>
           <span className="text-lg font-black text-blue-600 ">
-            Rs {grandSubTotal.toLocaleString("en-IN")}
+            Rs {grandSubtotal.toLocaleString("en-IN")}
           </span>
         </div>
-        {/* <button
-          onClick={onProceedToBooking}
-          disabled={isBookingLoading}
-          className="flex-1 max-w-[200px] bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer "
-        >
-          {isBookingLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Processing...</span>
-            </>
-          ) : (
-            <span>Pay with Razorpay</span>
-          )}
-        </button> */}
       </div>
 
       <AddUserReviewModal

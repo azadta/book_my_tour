@@ -78,24 +78,23 @@ const ChatBox = ({
         if (urls && urls.length > 0) {
           imageUrl = urls[0];
         }
-         }
-        onSendMessage(
-          text,
-          recipient._id,
-          recipientParticipent.participantModel,
-          imageUrl,
-        );
-        setText("");
-        setImageFile(null);
-        setIMagePreview(null);
-        if (fileInputRef.current) fileInputRef.current.value = "";
-        if (activeChat) {
-          getSocket().emit("stop_typing", {
-            chatId: activeChat._id,
-            recipientId: recipient._id,
-          });
-        }
-     
+      }
+      onSendMessage(
+        text,
+        recipient._id,
+        recipientParticipent.participantModel,
+        imageUrl,
+      );
+      setText("");
+      setImageFile(null);
+      setIMagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (activeChat) {
+        getSocket().emit("stop_typing", {
+          chatId: activeChat._id,
+          recipientId: recipient._id,
+        });
+      }
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.CHATS.ERROR.IMAGE_MESSAGE, error);
     } finally {
@@ -145,7 +144,7 @@ const ChatBox = ({
               className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}
             >
               <div
-                className={`max-w-md px-2 py-2  rounded-2xl text-sm ${isMe ? "bg-emerald-200 text-gray-900 rounded-br-none shadow-md shadow-emerald-950/20" : "bg-emerald-300/90 text-white border border-emerald-800 rounded-bl-none"}`}
+                className={`max-w-md px-2 py-2  rounded-2xl text-sm ${isMe ? "bg-emerald-200 text-gray-900 rounded-br-none shadow-md shadow-emerald-950/20" : "bg-emerald-300 text-white border border-emerald-800 rounded-bl-none"}`}
               >
                 {msg.image && (
                   <img
@@ -155,7 +154,7 @@ const ChatBox = ({
                     onClick={() => window.open(msg.image, "_blank")}
                   />
                 )}
-                {msg.text && <div className="px-5 py-2.5 ">{msg.text}</div>}
+                {msg.text && <div className="px-1 py-1 ">{msg.text}</div>}
               </div>
               <div className="flex items-center gap-0.5 mt-1 px-1 text-[10px] text-sky-400">
                 <span className="text-[10px] text-sky-400/80 mt-1 px-1">

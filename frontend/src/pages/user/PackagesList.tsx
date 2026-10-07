@@ -270,7 +270,7 @@ const PackagesList = () => {
               {hasActiveFiters && (
                 <button
                   onClick={clearFilters}
-                  className=" font-semibold text-sm text-white border-gray-600  border bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-xl mt-2 mb-1 hover:cursor-pointer"
+                  className="font-medium text-xs sm:text-sm text-sky-100 bg-sky-600 hover:bg-sky-500 border border-sky-400/40 px-3 py-1.5 rounded-lg mt-2 mb-1 shadow-sm hover:shadow-sky-400/30 transition-all duration-200 cursor-pointer"
                 >
                   Clear All filters
                 </button>
@@ -348,7 +348,7 @@ const PackagesList = () => {
                         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute top-4 right-4 z-10 flex gap-2 items-center justify-center">
-                        {pkg.discount!==undefined&&pkg.discount>0 && (
+                        {pkg.discount !== undefined && pkg.discount > 0 && (
                           <div className=" bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-pulse ">
                             Save {pkg.discount}%
                           </div>

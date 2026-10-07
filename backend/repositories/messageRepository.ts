@@ -1,10 +1,8 @@
 import { injectable } from "inversify";
-import { IChat, IMessage } from "../interfaces/IChat";
-import { Chat } from "../models/Chat";
-import { BaseRepository } from "./baseRepository";
-import { IChatRepository } from "../interfaces/IChatRepository";
+import { IMessage } from "../interfaces/IChat";
 import { IMessageRepository } from "../interfaces/IMessageRepository";
 import { Message } from "../models/Message";
+import { BaseRepository } from "./baseRepository";
 
 @injectable()
 export class MessageRepository

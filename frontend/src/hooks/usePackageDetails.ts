@@ -1,22 +1,20 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import type {
   IPackageItem,
   IReviewItem,
   IReviewStats,
 } from "@/interfaces/interfaces";
-import { loadRazorpayScript } from "@/utils/loadRazorpay";
 import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { unFlattenObject } from "../../../backend/utils/unFlattenObject";
 
 export const usePackageDetails = (packageId: string) => {
   const [pkg, setPkg] = useState<IPackageItem | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [packageLoading, setPackageLoading] = useState<boolean>(true);
+  const [reviewLoading,setReviewLoading]=useState(false)
   const [reviewStats, setReviewStats] = useState<IReviewStats | null>(null);
   const [reviews, setReviews] = useState<IReviewItem[]>([]);
   const [submittingReview, setSubmittingReview] = useState(false);
@@ -26,10 +24,8 @@ export const usePackageDetails = (packageId: string) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
 
-  const navigate = useNavigate();
-
   const fetchPackage = async () => {
-    setLoading(true);
+    setPackageLoading(true);
     try {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGES.USER.DETAIL(packageId),
@@ -39,12 +35,12 @@ export const usePackageDetails = (packageId: string) => {
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
-      setLoading(false);
+      setPackageLoading(false);
     }
   };
 
   const fetchReviews = async () => {
-    setLoading(true);
+    setReviewLoading(true);
     try {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGE_REVIEWS.PUBLIC.LIST_BY_PACKAGE_ID(packageId),
@@ -55,7 +51,7 @@ export const usePackageDetails = (packageId: string) => {
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.REVIEWS.ERROR, error);
     } finally {
-      setLoading(false);
+      setReviewLoading(false);
     }
   };
 
@@ -183,7 +179,8 @@ export const usePackageDetails = (packageId: string) => {
 
   return {
     pkg,
-    loading,
+    packageLoading,
+    reviewLoading,
     reviewStats,
     reviews,
     isModalOpen,

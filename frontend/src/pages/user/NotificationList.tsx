@@ -71,7 +71,7 @@ const NotificationList = () => {
             </p>
           </div>
         ) : (
-          notifications.map((item) => (
+          notifications.map((item:any) => (
             <div
               key={item._id}
               className={`group relative p-5 rounded-2xl border transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${!item.isRead ? "bg-linear-r from-sky-50/80 to-indigo-50/30 border-sky-200/80 shadow-sm" : "bg-white border-slate-100 hover:border-slate-200"}`}

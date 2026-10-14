@@ -63,16 +63,16 @@ const Wishlist = () => {
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gray-50 p-6 ">
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+     
           <div>
-            <h1 className="text-3xl font-black text-gray-900 ">
-              Saved Wishlists
+            <h1 className="text-2xl font-black text-gray-900 ">
+              Saved <span className="text-sky-600"> Wishlists</span>
             </h1>
             <p className="text-gray-500 text-sm mt-1">
               Organize travel bundles, take notes, and share with trip partners.
             </p>
           </div>
-        </div>
+     
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="space-y-3">
@@ -80,8 +80,8 @@ const Wishlist = () => {
               Your Folders
             </h3>
             {groups?.map((group) => {
-              const isActive = activeGroup._id === group?._id;
-              const isEditing = editingGroupId === group._id;
+              const isActive = activeGroup?._id === group?._id;
+              const isEditing = editingGroupId === group?._id;
               return (
                 <div
                   key={group._id}
@@ -165,7 +165,7 @@ const Wishlist = () => {
             <div className="lg:col-span-3 space-y-6">
               <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row justify-between md:items-center gap-4 ">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 ">
+                  <h2 className="text-[22px] font-bold text-gray-900 ">
                     {activeGroup.title}
                   </h2>
                   <p className="text-gray-400 text-xs mt-1">

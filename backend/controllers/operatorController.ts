@@ -155,7 +155,7 @@ export class OperatorController implements IOperatorController {
 
     if (req.user.id !== req.params.id) {
       return next(
-        new CustomError("RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED", 401),
+        new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
       );
     }
     try {

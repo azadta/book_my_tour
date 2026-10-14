@@ -124,6 +124,7 @@ export const useNotifications = () => {
     const socket = getSocket();
     const handleNewNotification = (notification: INotification) => {
       dispatch(addNotification(notification));
+   
     };
     socket.on("new_notification", handleNewNotification);
     return () => {

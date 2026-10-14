@@ -24,7 +24,7 @@ export const useAdminDashboard = () => {
       ] = await Promise.all([
         axiosInstance.get(APP_ROUTES.DASHBOARD.ADMIN.USERS_COUNT),
         axiosInstance.get(APP_ROUTES.DASHBOARD.ADMIN.OPERATORS_COUNT),
-        axiosInstance.get( APP_ROUTES.DASHBOARD.ADMIN.SIGNUP_TODAY),
+        axiosInstance.get(APP_ROUTES.DASHBOARD.ADMIN.SIGNUP_TODAY),
         axiosInstance.get(APP_ROUTES.DASHBOARD.ADMIN.OPERATORS_PENDING_COUNT),
       ]);
       setUsersCount(usersCount.data.usersCount);

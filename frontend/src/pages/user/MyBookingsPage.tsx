@@ -17,9 +17,10 @@ import {
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const MyBookingsPage = () => {
+  const navigate=useNavigate()
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 5;
   const {
@@ -106,13 +107,23 @@ const MyBookingsPage = () => {
   if (isLoading) return <Loading />;
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8 ">
-      <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-          My Booked Tours
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Manage your upcoming travel itineraries and download payment reciepts.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-sky-100/80 mb-8">
+        <div>
+          <h1 className="text-2xl font-black text-gray-900 trcking-tight   ">
+            My Booked{" "}
+            <span className="bg-linear-to-r from-emerald-600 to-sky-500 bg-clip-text text-transparent">
+              Tours
+            </span>
+          </h1>
+          <p className="text-gray-500 text-sm mt-1 font-medium ">
+            Manage your upcoming travel itineraries and download payment
+            receipts.
+          </p>
+        </div>
+
+        <button  onClick={() => navigate(FRONTEND_ROUTES.USER.PACKAGES_LIST)} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm transition-all shadow-xs shrink-0 cursor-pointer ">
+          Explore more tours
+        </button>
       </div>
 
       {bookings?.length === 0 ? (

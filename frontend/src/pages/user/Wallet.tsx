@@ -23,14 +23,26 @@ const Wallet = () => {
   } = useWallet();
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6 ">
-      <div className="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 shadow-xl">
+      <div className="pb-6 border-b border-gray-200/80 mb-8">
+      <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+        <span className="bg-linear-to-r from-sky-600 to-sky-500 bg-clip-text text-transparent ">
+          Wallet
+        </span>
+      </h1>
+      <p className="text-gray-500 text-sm mt-1 font-medium max-w-md ">
+        Manage your available balance ,travel credits and payment history.
+      </p>
+
+      </div>
+      
+      <div className="relative overflow-hidden bg-linear-to-r from-sky-900 to-sky-500 text-white rounded-2xl p-8 shadow-xl">
         <div className="flex justify-between items-start">
           <div>
             <p className="text-blue-100 text-sm font-medium tracking-wide">
               Available balance
             </p>
-            <h1 className="text-2xl font-semibold">
-              Rs {balance.toLocaleString("en-IN")}
+            <h1 className="text-2xl font-bold">
+              Rs {balance.toLocaleString("en-IN",{maximumFractionDigits:2,minimumFractionDigits:2})}
             </h1>
           </div>
           <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md">
@@ -57,7 +69,7 @@ const Wallet = () => {
           <button
             onClick={() => handleTopup(Number(topupAmount))}
             disabled={isLoading}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 transition disabled:opacity-50 "
+            className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 transition disabled:opacity-50 "
           >
             {isLoading ? (
               <RefreshCcw className="w-5 h-5 animate-spin" />

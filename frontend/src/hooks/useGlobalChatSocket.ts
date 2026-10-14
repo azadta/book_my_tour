@@ -13,6 +13,7 @@ import { axiosInstance } from "@/api/axiosInstance";
 import type { IChat, IMessage } from "@/interfaces/IChat";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { toast } from "react-toastify";
 
 export const useGlobalChatSocket = () => {
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ export const useGlobalChatSocket = () => {
         );
       }
       dispatch(updateChatLastMessage({ chatId: chatId, message }));
+      toast.info('New message is arrived')
     };
     const handleChatCleared = ({ chatId }: { chatId: string }) => {
       dispatch(clearChatMessages(chatId));

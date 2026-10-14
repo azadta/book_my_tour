@@ -24,6 +24,7 @@ import { IUser } from "../interfaces/IUser";
 export class BookingRepository
   extends BaseRepository<IBookingDocument>
   implements IBookingRepository
+  
 {
   constructor() {
     super(Booking);

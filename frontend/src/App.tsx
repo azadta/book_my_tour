@@ -2,8 +2,13 @@ import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
+import AdminAuthLayout from "./components/layouts/AdminAuthLayout";
+import AdminLayout from "./components/layouts/AdminLayout";
+import OperatorAuthLayout from "./components/layouts/OperatorAuthLayout";
+import OperatorLayout from "./components/layouts/OperatorLayout";
 import UserLayout from "./components/layouts/UserLayout";
 import { FRONTEND_ROUTES } from "./constants/frontEndRoutes";
+import { useGlobalChatSocket } from "./hooks/useGlobalChatSocket";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminEditPackage from "./pages/admin/AdminEditPackage";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -48,18 +53,13 @@ import Register from "./pages/user/Register";
 import { ResetPassword } from "./pages/user/ResetPassword";
 import ResetPasswordAuthenticated from "./pages/user/ResetPasswordAuthenticated";
 import SharedWishlist from "./pages/user/SharedWishlist";
+import TravelerDetailsPage from "./pages/user/TravelerDetailsPage";
 import VerifyOtp from "./pages/user/VerifyOtp";
 import Wallet from "./pages/user/Wallet";
 import Wishlist from "./pages/user/Wishlist";
 import type { RootState } from "./redux/store";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
-import { useGlobalChatSocket } from "./hooks/useGlobalChatSocket";
-import OperatorLayout from "./components/layouts/OperatorLayout";
-import OperatorAuthLayout from "./components/layouts/OperatorAuthLayout";
-import AdminAuthLayout from "./components/layouts/AdminAuthLayout";
-import AdminLayout from "./components/layouts/AdminLayout";
-import TravelerDetailsPage from "./pages/user/TravelerDetailsPage";
 
 const App = () => {
   useGlobalChatSocket();
@@ -88,6 +88,7 @@ const App = () => {
             path={FRONTEND_ROUTES.USER.PACKAGE_DETAILS_PATTERN}
             element={<PackageDetails />}
           />
+
           <Route
             path={FRONTEND_ROUTES.USER.SHARED_WISHLIST_PATTERN}
             element={<SharedWishlist />}

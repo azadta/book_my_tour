@@ -12,46 +12,47 @@ operatorRouter.post(
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.VERIFY_OTP,
-operatorController.operatorOtpverification,
+  operatorController.operatorOtpverification,
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.RESEND_OTP,
-operatorController.operatorResendOtp,
+  operatorController.operatorResendOtp,
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.LOGIN,
-operatorController.loginOperator,
+  operatorController.loginOperator,
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.FORGOT_PASSWORD,
-operatorController.forgotOperatorPassword,
+  operatorController.forgotOperatorPassword,
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD,
   resetPasswordValidator,
-operatorController.resetOperatorPassword,
+  operatorController.resetOperatorPassword,
 );
 operatorRouter.delete(
   ROUTES.OPERATORS.OPERATOR.LOGOUT,
-operatorController.operatorLogout,
+  operatorController.operatorLogout,
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.UPDATE_IMAGE,
-  authMiddleware.verifyRole('operator'),
+  authMiddleware.verifyRole("operator"),
   validateUpdateOperator,
-operatorController.updateOperatorProfileImage,
+  operatorController.updateOperatorProfileImage,
+);
+
+operatorRouter.post(
+  ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD_AUTH,
+  authMiddleware.verifyRole("operator"),
+  resetPasswordValidator,
+  operatorController.resetPasswordAuthenticated,
 );
 operatorRouter.post(
   ROUTES.OPERATORS.OPERATOR.UPDATE,
-  authMiddleware.verifyRole('operator'),
+  authMiddleware.verifyRole("operator"),
   validateUpdateOperator,
-operatorController.updateOperator,
-);
-operatorRouter.post(
-  ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD_AUTH,
-  authMiddleware.verifyRole('operator'),
-  resetPasswordValidator,
-operatorController.resetPasswordAuthenticated,
+  operatorController.updateOperator,
 );
 
 export { operatorRouter };

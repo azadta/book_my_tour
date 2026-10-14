@@ -259,7 +259,9 @@ const PackagesList = () => {
               <h1 className="text-2xl font-bold text-gray-900 ">
                 {destinationName ? (
                   <>
-                    <span className="text-yellow-400">{destinationName}</span>{" "}
+                    <span className="text-yellow-400 capitalize ">
+                      {destinationName}
+                    </span>{" "}
                     Tour Packages
                   </>
                 ) : (

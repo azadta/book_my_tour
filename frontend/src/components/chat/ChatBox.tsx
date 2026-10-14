@@ -144,17 +144,17 @@ const ChatBox = ({
               className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}
             >
               <div
-                className={`max-w-md px-2 py-2  rounded-2xl text-sm ${isMe ? "bg-emerald-200 text-gray-900 rounded-br-none shadow-md shadow-emerald-950/20" : "bg-emerald-300 text-white border border-emerald-800 rounded-bl-none"}`}
+                className={`max-w-md px-1 py-1   rounded-2xl text-sm ${isMe ? "bg-emerald-200 text-gray-900 rounded-br-none shadow-md shadow-emerald-950/20" : "bg-white text-gray-900 border border-gray-500 rounded-bl-none"}`}
               >
                 {msg.image && (
                   <img
                     src={msg.image}
                     alt="Attachement"
-                    className="w-full max-h-40 object-cover cursor-pointer  hover:opacity-95"
+                    className="w-full max-h-40 object-cover cursor-pointer  hover:opacity-95 rounded-xl"
                     onClick={() => window.open(msg.image, "_blank")}
                   />
                 )}
-                {msg.text && <div className="px-1 py-1 ">{msg.text}</div>}
+                {msg.text && <div className="px-2 py-2 ">{msg.text}</div>}
               </div>
               <div className="flex items-center gap-0.5 mt-1 px-1 text-[10px] text-sky-400">
                 <span className="text-[10px] text-sky-400/80 mt-1 px-1">

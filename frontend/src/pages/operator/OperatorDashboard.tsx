@@ -8,6 +8,9 @@ import Loading from "../../components/Loading";
 import OperatorDashboardSideBar from "../../components/OperatorDashboardSidebar";
 import style from "../../css/operatorDashboard.module.css";
 import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
+import RevenueLineChart from "@/components/Charts/operator/RevenueLineChart";
+import BookingsBarChart from "@/components/Charts/operator/BookingsBarChart";
+import BookingStatusDonutChat from "@/components/Charts/operator/BookingStatusDonutChat";
 
 const OperatorDashboard = () => {
   const [open, setOpen] = useState(false);
@@ -20,8 +23,8 @@ const OperatorDashboard = () => {
     <>
       <div className="min-h-[calc(100vh-5.125rem)] flex flex-col">
         <div className="flex flex-1 ">
-          <main className="flex-1 p-8 bg-gray-100 pt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-x-6  justify-items-center max-sm:w-60 mx-auto gap-y-10  ">
+          <main className="flex-1 p-8  bg-gray-100 pt-10 flex flex-col gap-10 ">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-x-6  justify-items-center max-sm:w-60 mx-auto gap-y-15  ">
               <div className={style.card}>
                 <div
                   className={`${style.image} flex items-center justify-center`}
@@ -86,6 +89,15 @@ const OperatorDashboard = () => {
                   <p>{dashBoardData?.totalBookings} </p>
                 </div>
               </div>
+            </div>
+            <RevenueLineChart monthlyRevenue={dashBoardData?.monthlyRevenue} />
+            <div className="grid grid-cols-2 gap-5">
+              <BookingsBarChart
+                monthlyRevenue={dashBoardData?.monthlyRevenue}
+              />
+              <BookingStatusDonutChat
+                statusData={dashBoardData?.bookingStatusBreakDown}
+              />
             </div>
           </main>
         </div>

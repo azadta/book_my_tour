@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 export interface IBusinessAddress {
   buildingNo?: string;
   landmark?: string;
@@ -13,6 +13,13 @@ export interface IVerificationDetails {
   licenseNo?: string;
   businessAddress?: IBusinessAddress;
   submittedAt?: Date;
+}
+
+export interface ISubscriptionDetails {
+  planId?: Types.ObjectId | string;
+  startDate?: Date;
+  endDate?: Date;
+  status: "active" | "expired" | "inactive";
 }
 
 export interface IOperator extends Document {
@@ -35,6 +42,7 @@ export interface IOperator extends Document {
   referralCode: string;
   referredBy: string;
   role: string;
+  subscriptionDetails: ISubscriptionDetails;
 }
 
-export type IOperatorResponse=Omit<IOperator,'password'>
+export type IOperatorResponse = Omit<IOperator, "password">;

@@ -52,4 +52,9 @@ export const Types = {
   PackageReviewController: Symbol.for("PackageReviewController"),
   WalletController: Symbol.for("WalletController"),
   WishlistController: Symbol.for("WishlistController"),
+  SubscriptionPlanRepository:Symbol.for('SubscriptionPlanRepository'),
+  SubscriptionPlanService:Symbol.for('SubscriptionPlanService'),
+  SubscriptionPlanController:Symbol.for('SubscriptionPlanController'),
+  SubscriptionService:Symbol.for('SubscriptionService'),
+  SubscriptionController:Symbol.for('SubscriptionController'),
 };

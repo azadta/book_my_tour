@@ -136,7 +136,8 @@ export const RESPONSE_MESSAGES = {
       CANCEL_BY_OPERATOR:
         "Booking cancelled successfully and full refund issued to guest wallet",
       DATE_RESCHEDULED_BY_OPERATOR: "Tour date rescheduled successfully",
-      ATTENDANCE_UPDATE:(status:string)=>`Guest attendance updated to ${status}`
+      ATTENDANCE_UPDATE: (status: string) =>
+        `Guest attendance updated to ${status}`,
     },
     ERROR: {
       INVALID_SIGNATURE:
@@ -194,8 +195,8 @@ export const RESPONSE_MESSAGES = {
     },
   },
   CHAT: {
-    SUCCESS:{
-      CLEARED:'Chat cleared successfully'
+    SUCCESS: {
+      CLEARED: "Chat cleared successfully",
     },
     ERROR: {
       RETRIEVE_AFTER_CREATION: "Failed to retrieve chat after creation",
@@ -215,6 +216,25 @@ export const RESPONSE_MESSAGES = {
     },
     ERROR: {
       SEND: "Socket send_notification error",
+    },
+  },
+  SUBSCRIPTION_PLAN: {
+    SUCCESS: {
+      DELETED: "Subscription plan deleted successfully",
+    },
+    ERROR: {
+      NOT_FOUND: "Subscription plan not found",
+    },
+  },
+  SUBSCRIPTION: {
+    SUCCESS: {
+      CREATE_ORDER:'Subscription order created successfully',
+      ACTIVATE: "Your subscription has been successfully activated",
+    },
+    ERROR: {
+      UPDATE: "Failed to update subscription",
+      INVALID_SIGNATURE:
+        "Payment verification failed. Invalid transaction signature.",
     },
   },
 } as const;

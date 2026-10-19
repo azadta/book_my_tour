@@ -152,12 +152,12 @@ export interface IAppliedCoupon {
 }
 export interface IPricing {
   baseAmount: number;
-  adultCount:number,
-  childCount:number,
-  adultUnitPrice:number,
-  childUnitPrice:number,
-  adultAmount:number,
-  childAmount:number,
+  adultCount: number;
+  childCount: number;
+  adultUnitPrice: number;
+  childUnitPrice: number;
+  adultAmount: number;
+  childAmount: number;
   addedActivitiesAmount: number;
   removedActivitiesAmount: number;
   subtotal: number;
@@ -286,4 +286,19 @@ export interface IWalletTransaction {
   status: "PENDING" | "SUCCESS" | "FAILED";
   description: string;
   createdAt: string;
+}
+
+export interface ISubscriptionPlan {
+  _id: string;
+  name: string;
+  price: number;
+  packageLimit: number;
+  durationDays: number;
+}
+
+export interface  ISubscriptionDetails{
+  planId?:ISubscriptionPlan
+  startDate?:string;
+  endDate?:string;
+  status:'active'|'expired'|'inactive'
 }

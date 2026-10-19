@@ -3,6 +3,7 @@ import { IOperatorRepository } from "../interfaces/IOperatorRepository";
 import Operator from "../models/Operator";
 import { BaseRepository } from "./baseRepository";
 import { IOperator } from "../interfaces/IOperator";
+import { HydratedDocument } from "mongoose";
 
 @injectable()
 export class OperatorRepository
@@ -68,5 +69,9 @@ export class OperatorRepository
 
   async countOperatorsByDateRange(start: Date, end: Date): Promise<number> {
     return Operator.countDocuments({ createdAt: { $gte: start, $lte: end } });
+  }
+  async findByIdWithSubscription(id:string):Promise<HydratedDocument<IOperator>|null>{
+    return Operator.findById(id).populate('subscriptionDetails.planId')
+
   }
 }

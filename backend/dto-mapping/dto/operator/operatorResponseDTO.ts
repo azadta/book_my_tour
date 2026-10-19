@@ -1,3 +1,4 @@
+import { ISubscriptionDetails } from "../../../interfaces/IOperator";
 import { IOperatorVerificationDetailsDTO } from "./operatorRequestDTO";
 
 export interface IOperatorResponseDTO {
@@ -13,6 +14,7 @@ export interface IOperatorResponseDTO {
   referralCode?: string;
   referredBy?: string;
   verificationDetails: IOperatorVerificationDetailsDTO;
+  subscriptionDetails?:ISubscriptionDetails;
   role: string;
   createdAt: string;
   updatedAt: string;

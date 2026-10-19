@@ -195,4 +195,17 @@ export const ROUTES = {
       STATS: "/",
     },
   },
+  SUBSCRIPTION_PLAN: {
+    ADMIN: {
+      CREATE: "/",
+      LIST: "/",
+      DETAIL: "/:id",
+      UPDATE: "/:id",
+      DELETE: "/:id",
+    },
+  },
+  SUBSCRIPTION:{
+    CREATE_ORDER:'/create-order',
+    VERIFY_PAYMENT:'/verify-payment'
+  }
 } as const;

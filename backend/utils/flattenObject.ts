@@ -1,3 +1,4 @@
+
 export function flattenObjects(
   obj: Record<string, unknown>,
   prefix = "",
@@ -6,7 +7,13 @@ export function flattenObjects(
   for (const key in obj) {
     const value = obj[key];
     const newKey = prefix ? `${prefix}.${key}` : key;
-    if (value && typeof value === "object" && !Array.isArray(value)) {
+    if (
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      !(value instanceof Date) &&
+      value.constructor?.name !== "ObjectId"
+    ) {
       flattenObjects(value as Record<string, unknown>, newKey, res);
     } else {
       res[newKey] = value;

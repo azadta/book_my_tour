@@ -57,6 +57,7 @@ export const FRONTEND_ROUTES = {
     BOOKING_DETAILS: (bookingId: string) =>
       `/operator/booking-details/${bookingId}`,
     BOOKING_LIST: "/operator/booking-list",
+    SUBSCRIPTION:'/operator/subscription'
   },
   ADMIN: {
     LOGIN: "/admin/login",
@@ -77,9 +78,14 @@ export const FRONTEND_ROUTES = {
     EDIT_USER: (id: string) => `/admin/edit-user/${id}`,
     EDIT_OPERATOR: (id: string) => `/admin/edit-operator/${id}`,
     EDIT_PACKAGE: (id: string) => `/admin/edit-package/${id}`,
+    SUBSCRIPTION_PLANS: "/admin/subscription-plans",
+    CREATE_SUBSCRIPTION_PLAN: "/admin/create-subscription-plan",
+    EDIT_SUBSCRIPTION_PLAN: (planId: string) =>
+      `/admin/edit-subscription-plan/${planId}`,
+    EDIT_SUBSCRIPTION_PLAN_PATTERN: "/admin/edit-subscription-plan/:id",
   },
-  CHAT:{
-    USER_CHAT_PAGE:'/user/chat',
-    OPERATOR_CHAT_PAGE:'/operator/chat'
-  }
+  CHAT: {
+    USER_CHAT_PAGE: "/user/chat",
+    OPERATOR_CHAT_PAGE: "/operator/chat",
+  },
 } as const;

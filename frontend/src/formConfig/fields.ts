@@ -441,8 +441,7 @@ export const OperatorResetPasswordFields: FormField[] = [
 export const getCreatePackageFields = (
   formData: Record<string, any>,
 ): FormField[] => {
-
-  const isChildPricingEnabled = formData['childPricing.enabled'] === true;
+  const isChildPricingEnabled = formData["childPricing.enabled"] === true;
   const baseFields: FormField[] = [
     {
       id: "name",
@@ -920,6 +919,36 @@ export const createDestinationFields: FormField[] = [
     type: "file",
     label: "Upload Images",
     multiple: true,
+    required: true,
+  },
+];
+export const subscriptionPlanFields: FormField[] = [
+  {
+    id: "name",
+    type: "text",
+    label: "Plan Name",
+    placeholder: "Enter Plan name",
+    required: true,
+  },
+  {
+    id: "price",
+    type: "number",
+    label: "Price",
+    placeholder: "Enter Price",
+    required: true,
+  },
+  {
+    id: "packageLimit",
+    type: "number",
+    label: "Package Limit",
+    placeholder: "Enter Package Limit",
+    required: true,
+  },
+  {
+    id: "durationDays",
+    type: "number",
+    label: "Duration Days",
+    placeholder: "Enter duration days",
     required: true,
   },
 ];

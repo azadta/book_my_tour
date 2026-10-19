@@ -1,7 +1,7 @@
 import { IOperatorVerificationDetailsDTO } from "../../dto/operator/operatorRequestDTO";
 import {
   IOperatorRegisterResponseDTO,
-  IOperatorResponseDTO
+  IOperatorResponseDTO,
 } from "../../dto/operator/operatorResponseDTO";
 import { OperatorRequestMapper } from "./OperatorRequestMapper";
 
@@ -34,6 +34,9 @@ export class OperatorResponseMapper {
         verificationDetails: this.verificationDetailsResponseMapper(
           entity.verificationDetails,
         ),
+      }),
+      ...(entity?.subscriptionDetails && {
+        subscriptionDetails: entity.subscriptionDetails,
       }),
       role: entity.role,
       createdAt: entity.createdAt?.toISOString(),

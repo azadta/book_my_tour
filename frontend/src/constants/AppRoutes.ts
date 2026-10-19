@@ -190,6 +190,19 @@ export const APP_ROUTES = {
       CLEAR_ALL: "/notification/user",
     },
   },
+  SUBSCRIPTION_PLANS: {
+    ADMIN: {
+      CREATE: "/subscription-plan/admin",
+      LIST: "/subscription-plan/admin",
+      UPDATE: (planId: string) => `/subscription-plan/admin/${planId}`,
+      DELETE: (planId: string) => `/subscription-plan/admin/${planId}`,
+      DETAIL:(planId:string)=>`/subscription-plan/admin/${planId}`
+    },
+  },
+  SUBSCRIPTION:{
+    CREATE_ORDER:'/subscription/create-order',
+    PAYMENT_VERIFY:'/subscription/verify-payment'
+  },
   COMMON_AUTH: {
     REFRESH_TOKEN: "/auth/refresh",
   },

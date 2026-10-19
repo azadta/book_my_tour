@@ -106,13 +106,23 @@ import { IPackageCategoryController } from "../interfaces/IPackageCategoryContro
 import { IPackageController } from "../interfaces/IPackageController";
 import { IPackageDestinationController } from "../interfaces/IPackageDestinationController";
 import { IPackageReviewController } from "../interfaces/IPackageReviewController";
+import { ISubscriptionPlanController } from "../interfaces/ISubscriptionPlanController";
+import { ISubscriptionPlanRepository } from "../interfaces/ISubscriptionPlanRepository";
+import { ISubscriptionPlanService } from "../interfaces/ISubscriptionPlanService";
 import { IWalletController } from "../interfaces/IWalletController";
 import { IWishlistController } from "../interfaces/IWishlistController";
 import { IWishlistService } from "../interfaces/IWishlistService";
+import { SubscriptionPlanRepository } from "../repositories/subscriptionPlanRepository";
 import { DashboardService } from "../services/dashboardService";
 import { OperatorService } from "../services/operatorService";
+import { SubscriptionPlanService } from "../services/subscriptionPlanService";
 import { UserService } from "../services/userService";
 import { WishlistService } from "../services/wishlistService";
+import { SubscriptionPlanController } from "../controllers/subscriptionPlanController";
+import { ISubscriptionService } from "../interfaces/ISubscriptionService";
+import { SubscriptionService } from "../services/SubscriptionService";
+import { ISubscriptionController } from "../interfaces/ISubscriptionController";
+import { SubscriptionController } from "../controllers/subscriptionController";
 
 const container = new Container();
 
@@ -335,6 +345,26 @@ container
   .bind<IWishlistController>(Types.WishlistController)
   .to(WishlistController)
   .inSingletonScope();
+container
+  .bind<ISubscriptionPlanRepository>(Types.SubscriptionPlanRepository)
+  .to(SubscriptionPlanRepository)
+  .inSingletonScope();
+container
+  .bind<ISubscriptionPlanService>(Types.SubscriptionPlanService)
+  .to(SubscriptionPlanService)
+  .inSingletonScope();
+container
+  .bind<ISubscriptionPlanController>(Types.SubscriptionPlanController)
+  .to(SubscriptionPlanController)
+  .inSingletonScope();
+container
+  .bind<ISubscriptionService>(Types.SubscriptionService)
+  .to(SubscriptionService)
+  .inSingletonScope();
+container
+  .bind<ISubscriptionController>(Types.SubscriptionController)
+  .to(SubscriptionController)
+  .inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,
@@ -390,4 +420,9 @@ export const walletController = container.get<IWalletController>(
 );
 export const wishlistController = container.get<IWishlistController>(
   Types.WishlistController,
+);
+export const subscriptionPlanController =
+  container.get<ISubscriptionPlanController>(Types.SubscriptionPlanController);
+export const subscriptionController = container.get<ISubscriptionController>(
+  Types.SubscriptionController,
 );

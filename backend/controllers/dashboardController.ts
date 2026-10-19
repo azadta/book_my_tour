@@ -74,11 +74,11 @@ export class DashboardController implements IDashboardController {
   ) => {
     try {
       const operatorId = req.user?.id as string;
-      const stats =
+      const dashboardData =
         await this._dashboardService.getOperatorDashboardStatsService(
           operatorId,
         );
-      res.status(StatusCode.OK).json(stats);
+      res.status(StatusCode.OK).json(dashboardData);
     } catch (error) {
       next(error);
     }

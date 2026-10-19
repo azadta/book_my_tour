@@ -4,12 +4,25 @@ import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 
+export interface IMonthlyRevenue {
+  year: number;
+  month: number;
+  totalRevenue: number;
+  totalBookings: number;
+}
+export interface BookingStatusItem {
+  status: "PENDING" | "CONFIRMED" | "CANCEL_REQUESTED" | "FAILED" | "CANCELLED";
+  count: number;
+}
+
 export interface IOperatorDashboardData {
   packagesCount: number;
   totalBookings: number;
   confirmedBookings: number;
   cancelRequestedBookings: number;
   totalRevenue: number;
+  monthlyRevenue:IMonthlyRevenue[];
+  bookingStatusBreakDown:BookingStatusItem[]
 }
 
 export const useOperatorDashboard = () => {

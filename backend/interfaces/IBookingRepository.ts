@@ -99,4 +99,6 @@ export interface IBookingRepository extends IBaseRepository<IBookingDocument> {
     operatorId: string,
   ): Promise<IOperatorBookingDetails | null>;
   getOperatorStats(operatorId: string): Promise<IOperatorBookingStats>;
+  getMonthlyRevenue(operatorId: string): Promise<any[]>;
+  getBookingStatusBreakDown(operatorId: string): Promise<any[]>;
 }

@@ -1,3 +1,4 @@
+import type { ISubscriptionDetails } from "@/interfaces/interfaces";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface IBusinessAddress {
@@ -26,6 +27,7 @@ export interface IOperator {
   isBlocked: boolean;
   isPremium: boolean;
   verificationDetails?: IVerificationDetails;
+  subscriptionDetails?:ISubscriptionDetails;
   referralCode?: string;
   referredBy?: string;
 }

@@ -1,14 +1,13 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useAdminOperatorActions } from "../../hooks/useAdminOperatorActions";
-import { useEffect, useState } from "react";
-import { adminUpdateOperatorFields } from "../../formConfig/fields";
-import ReusableForm from "../../components/forms/ReUsableForm";
-import ConfirmationModal from "../../components/ConfirmationModal";
-import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
-import { toast } from "react-toastify";
-import BackToDashboard from "../../components/BackToDashboard";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import ReusableForm from "../../components/forms/ReUsableForm";
+import { adminUpdateOperatorFields } from "../../formConfig/fields";
+import { useAdminOperatorActions } from "../../hooks/useAdminOperatorActions";
 
 const EditOperator = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});

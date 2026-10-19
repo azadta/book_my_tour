@@ -41,11 +41,16 @@ export class DashboardService implements IDashboardService {
   }
 
   async getOperatorDashboardStatsService(operatorId: string) {
-    const [stats, packagesCount] = await Promise.all([
-      this._bookingRepository.getOperatorStats(operatorId),
-      this._packageRepository.countPackagesByOperatorId(operatorId),
-    ]);
-    return { ...stats, packagesCount };
+    const [stats, packagesCount, monthlyRevenue, bookingStatusBreakDown] =
+      await Promise.all([
+        this._bookingRepository.getOperatorStats(operatorId),
+        this._packageRepository.countPackagesByOperatorId(operatorId),
+        this._bookingRepository.getMonthlyRevenue(operatorId),
+        this._bookingRepository.getBookingStatusBreakDown(operatorId),
+      ]);
+
+     
+    return { ...stats, packagesCount, monthlyRevenue, bookingStatusBreakDown };
   }
 
   async getTotalUsersCountService() {

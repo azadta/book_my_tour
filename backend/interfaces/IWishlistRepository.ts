@@ -1,12 +1,13 @@
+import { CreateWishlistGroupRequestDTO } from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
 import { IBaseRepository } from "./IBaseRepository";
-import { ICreateWishlistDTO, IWishlistGroup } from "./IWishList";
+import { IWishlistGroup } from "./IWishList";
 
 export interface IWishlistRepository extends IBaseRepository<IWishlistGroup>  {
   findByUserId(userId: string): Promise<IWishlistGroup[]>;
   findWishlistGroupById(groupId: string): Promise<IWishlistGroup | null>;
   findByShareToken(shareToken: string): Promise<IWishlistGroup | null>;
 
-  createGroup(userId: string, dto: ICreateWishlistDTO): Promise<IWishlistGroup>;
+  createGroup(userId: string, dto: CreateWishlistGroupRequestDTO): Promise<IWishlistGroup>;
   addPackageToGroup(
     groupId: string,
     packageId: string,

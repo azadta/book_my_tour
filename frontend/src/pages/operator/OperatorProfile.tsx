@@ -1,25 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { operatorProfileFields } from "../../formConfig/fields";
 
 import {
+  logoutOperatorFailure,
+  logoutOperatorStart,
+  logoutOperatorSuccess,
+  updateOperatorFailure,
   updateOperatorStart,
   updateOperatorSuccess,
-  updateOperatorFailure,
-  logoutOperatorSuccess,
-  logoutOperatorStart,
-  logoutOperatorFailure,
 } from "../../redux/operator/operatorSlice.ts";
 
-import { useApi } from "../../hooks/useApi.js";
-import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
-import type { RootState } from "../../redux/store.ts";
-import { toast } from "react-toastify";
-import BackToDashboard from "../../components/BackToDashboard.tsx";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
 import { APP_ROUTES } from "@/constants/AppRoutes.ts";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.ts";
+import { toast } from "react-toastify";
+import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
+import { useApi } from "../../hooks/useApi.js";
+import type { RootState } from "../../redux/store.ts";
 
 interface FormDataType {
   [key: string]: any;

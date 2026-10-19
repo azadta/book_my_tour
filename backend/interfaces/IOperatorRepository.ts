@@ -1,5 +1,7 @@
-import { IOperator } from "../models/Operator";
+import { HydratedDocument } from "mongoose";
+
 import { IBaseRepository } from "./IBaseRepository";
+import { IOperator } from "./IOperator";
 
 export interface IOperatorRepository extends IBaseRepository<IOperator> {
   findByEmail(email: string): Promise<IOperator | null>;
@@ -26,4 +28,7 @@ export interface IOperatorRepository extends IBaseRepository<IOperator> {
   ): Promise<IOperator | null>;
   countOperatorsByDateRange(start: Date, end: Date): Promise<number>;
   save(operator: IOperator): Promise<IOperator>;
+  findByIdWithSubscription(
+    id: string,
+  ): Promise<HydratedDocument<IOperator> | null>;
 }

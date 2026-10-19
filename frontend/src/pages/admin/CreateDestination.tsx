@@ -1,5 +1,4 @@
 import { useState } from "react";
-import BackToDashboard from "../../components/BackToDashboard";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createDestinationFields } from "../../formConfig/fields";
 import { useCreateDestination } from "../../hooks/useCreateDestination";

@@ -185,7 +185,7 @@ export const ProfileForm = ({
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Account{" "}
               <span className="bg-linear-to-r from-emerald-600 to-sky-500 bg-clip-text text-transparent">
-                Over view
+                Overview
               </span>
             </h1>
             <p className="text-slate-500 text-sm mt-1 max-w-md font-medium  ">

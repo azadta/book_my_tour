@@ -17,10 +17,13 @@ import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
 import AdminPackageDetails from "./pages/admin/AdminPackageDetails";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AdminResetPasswordAuthenticated from "./pages/admin/AdminResetPasswordAuthenticated";
+
 import AdminUserDetails from "./pages/admin/AdminUserDetails";
 import CreateDestination from "./pages/admin/CreateDestination";
 import CreatePackageCategory from "./pages/admin/CreatePackageCategory";
+import CreateSubscriptionPlan from "./pages/admin/CreateSubscriptionPlan";
 import EditOperator from "./pages/admin/EditOperator";
+import EditSubscriptionPlan from "./pages/admin/EditSubscriptionPlan";
 import EditUser from "./pages/admin/EditUser";
 import ChatPage from "./pages/chat/ChatPage";
 import CouponList from "./pages/operator/CouponList";
@@ -60,6 +63,8 @@ import Wishlist from "./pages/user/Wishlist";
 import type { RootState } from "./redux/store";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
+import AdminSubscriptionPlanList from "./pages/admin/AdminSubscriptionPlanList";
+import OperatorSubscription from "./pages/operator/OperatorSubscription";
 
 const App = () => {
   useGlobalChatSocket();
@@ -241,6 +246,10 @@ const App = () => {
               path={FRONTEND_ROUTES.CHAT.OPERATOR_CHAT_PAGE}
               element={<ChatPage />}
             />
+            <Route
+              path={FRONTEND_ROUTES.OPERATOR.SUBSCRIPTION}
+              element={<OperatorSubscription />}
+            />
           </Route>
 
           <Route
@@ -316,6 +325,18 @@ const App = () => {
             <Route
               path={FRONTEND_ROUTES.ADMIN.CREATE_PACKAGE_CATEGORY}
               element={<CreatePackageCategory />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.SUBSCRIPTION_PLANS}
+              element={<AdminSubscriptionPlanList />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.CREATE_SUBSCRIPTION_PLAN}
+              element={<CreateSubscriptionPlan />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.EDIT_SUBSCRIPTION_PLAN_PATTERN}
+              element={<EditSubscriptionPlan />}
             />
           </Route>
         </Route>

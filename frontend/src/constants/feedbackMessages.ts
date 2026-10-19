@@ -191,8 +191,8 @@ export const FEEDBACK_MESSAGES = {
       FETCH_CHATS: "Failed to fetch chats",
       FETCH_MESSAGES: "Failed to fetch messages",
       START_CHAT: "Failed to start chat session",
-      CLEAR_CHAT:'Failed to clear chat',
-      IMAGE_MESSAGE:'Failed to send image message'
+      CLEAR_CHAT: "Failed to clear chat",
+      IMAGE_MESSAGE: "Failed to send image message",
     },
   },
   NOTIFICATIONS: {
@@ -205,6 +205,28 @@ export const FEEDBACK_MESSAGES = {
       MARK_ALL_AS_READ: "Failed to mark all notification as read",
       SEND: "Failed to send notification",
       CLEAR_ALL: "Failed to clear all notifications",
+    },
+  },
+  SUBSCRIPTION_PLANS: {
+    SUCCESS: {
+      CREATE: "Subscription plan created successfully",
+      UPDATE: "Subscription plan updated successfully",
+      DELETE: "Subscription plan deleted successfully",
+    },
+    ERROR: {
+      FETCH_PLANS: "Failed to fetch subscription plans",
+      FETCH: "Failed to fetch subscription plan",
+      CREATE: "Failed to create subscription plan",
+      UPDATE: "Failed to update subscription plan",
+      DELETE: "Failed to delete subscription plan",
+    },
+  },
+  SUBSCRIPTION: {
+    SUCCESS: {
+      ACTIVATE: "Subscription activated successfully!",
+    },
+    ERROR: {
+      INITIATE_PAYMENT: "Failed to initiate subscription payment",
     },
   },
 } as const;

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { IOperator } from "../interfaces/IOperator";
 
-
 const operatorSchema = new mongoose.Schema(
   {
     name: {
@@ -30,6 +29,22 @@ const operatorSchema = new mongoose.Schema(
     isPremium: {
       type: Boolean,
       default: false,
+    },
+    subscriptionDetails: {
+      planId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SubscriptionPlan",
+      },
+      startDate: {
+        type: Date,
+      },
+      endDate: {
+        type: Date,
+      },
+      status: {
+        type: String,
+        enum: ["active", "expired", "inactive"],
+      },
     },
     referralCode: String,
     referredBy: String,

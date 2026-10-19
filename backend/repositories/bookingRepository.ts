@@ -17,27 +17,25 @@ import {
   IOperatorBookingFilter,
   IOperatorBookingStats,
 } from "../interfaces/IBooking";
-import mongoose, { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument, PipelineStage } from "mongoose";
 import { IUser } from "../interfaces/IUser";
 
 @injectable()
 export class BookingRepository
   extends BaseRepository<IBookingDocument>
   implements IBookingRepository
-  
 {
   constructor() {
     super(Booking);
   }
 
   async createBooking(dto: ICreateBookingDTO): Promise<IBooking> {
-
     const newBooking = await Booking.create({
       userId: dto.userId,
       packageId: dto.packageId,
       primaryContact: dto.primaryContact,
       members: dto.members,
-      razorpayOrderId: dto.razorpayOrderId, 
+      razorpayOrderId: dto.razorpayOrderId,
       razorpayPaymentId: dto.razorpayPaymentId || null,
       pricing: dto.pricing,
       addedActivityIds: dto.addedActivityIds || [],
@@ -248,5 +246,83 @@ export class BookingRepository
         totalRevenue: 0,
       }
     );
+  }
+
+  async getMonthlyRevenue(operatorId: string) {
+    const pipeline: PipelineStage[] = [
+      {
+        $lookup: {
+          from: "packages",
+          localField: "packageId",
+          foreignField: "_id",
+          as: "packageId",
+        },
+      },
+      { $unwind: "$packageId" },
+      {
+        $match: {
+          "packageId.operatorId": new mongoose.Types.ObjectId(operatorId),
+          status: "CONFIRMED",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          totalRevenue: {
+            $sum: { $add: ["$pricing.finalAmount", "$pricing.walletApplied"] },
+          },
+          totalBookings: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } },
+      {
+        $project: {
+          _id: 0,
+          year: "$_id.year",
+          month: "$_id.month",
+          totalRevenue: 1,
+          totalBookings: 1,
+        },
+      },
+    ];
+    return await Booking.aggregate(pipeline);
+  }
+
+  async getBookingStatusBreakDown(operatorId: string) {
+    const pipeline = [
+      {
+        $lookup: {
+          from: "packages",
+          localField: "packageId",
+          foreignField: "_id",
+          as: "packageId",
+        },
+      },
+      {
+        $unwind: "$packageId",
+      },
+      {
+        $match: {
+          "packageId.operatorId": new mongoose.Types.ObjectId(operatorId),
+        },
+      },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          status: "$_id",
+          count: 1,
+        },
+      },
+    ];
+    return Booking.aggregate(pipeline);
   }
 }

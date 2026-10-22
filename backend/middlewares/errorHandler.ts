@@ -35,18 +35,16 @@ const errorHandler = (
       user: req.user,
     });
     console.error("💥 Stack Trace:", err.stack);
-    return res
-      .status(500)
-      .json({ success: false, statusCode: 500, message: err.message });
+  } else {
+    logger.error("Unknown Error", {
+      status: 500,
+      method: req.method,
+      url: req.originalUrl,
+
+      user: req.user,
+    });
+    console.error("💥 Unknown error:", err);
   }
-
-  logger.error("Unknown Error", {
-    status: 500,
-    method: req.method,
-    url: req.originalUrl,
-
-    user: req.user,
-  });
 
   return res.status(500).json({
     success: false,

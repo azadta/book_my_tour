@@ -296,9 +296,32 @@ export interface ISubscriptionPlan {
   durationDays: number;
 }
 
-export interface  ISubscriptionDetails{
-  planId?:ISubscriptionPlan
-  startDate?:string;
-  endDate?:string;
-  status:'active'|'expired'|'inactive'
+export interface ISubscriptionDetails {
+  planId?: ISubscriptionPlan;
+  startDate?: string;
+  endDate?: string;
+  status: "active" | "expired" | "inactive";
+}
+
+export interface IPopulatedPayout {
+  _id: string;
+  operatorId: { name: string; email: string; mobile?: number };
+  bookingId: {
+    packageId: {
+      name: string;
+      startDate: string;
+      duration: { day: number; night: number };
+      amount: number;
+    };
+  };
+  grossAmount: number;
+  platformCommissionRate: number;
+  platformCommissionAmount: number;
+  netPayoutAmount: number;
+  payoutStatus: "PENDING" | "ELIGIBLE" | "PAID" | "FAILED";
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  paidAt: string;
+  createdAt: string;
+  updatedAt: string;
 }

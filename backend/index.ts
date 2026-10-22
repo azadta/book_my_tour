@@ -24,6 +24,7 @@ import operatorRouter from "./routes/operator/routes";
 import couponRouter from "./routes/coupon/routes";
 import subscriptionPlanRouter from "./routes/subscription-plan/routes";
 import subscriptionRouter from "./routes/subscription/routes";
+import payoutRouter from "./routes/payout/routes";
 
 dotenv.config();
 
@@ -58,6 +59,7 @@ app.use("/api/dashboard", dashboardRouter);
 app.use("/api/auth", commonAuthRouter);
 app.use("/api/subscription-plan", subscriptionPlanRouter);
 app.use("/api/subscription", subscriptionRouter);
+app.use("/api/payout", payoutRouter);
 app.use(errorHandler);
 
 const httpServer = createServer(app);

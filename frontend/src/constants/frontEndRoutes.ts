@@ -57,7 +57,7 @@ export const FRONTEND_ROUTES = {
     BOOKING_DETAILS: (bookingId: string) =>
       `/operator/booking-details/${bookingId}`,
     BOOKING_LIST: "/operator/booking-list",
-    SUBSCRIPTION:'/operator/subscription'
+    SUBSCRIPTION: "/operator/subscription",
   },
   ADMIN: {
     LOGIN: "/admin/login",
@@ -67,6 +67,7 @@ export const FRONTEND_ROUTES = {
     USERS: "/admin/users",
     OPERATORS: "/admin/operators",
     OPERATOR_VERIFICATION: "/admin/operator-verification",
+    OPERATOR_PAYOUTS: "/admin/operator-payout",
     PACKAGES: "/admin/packages",
     CREATE_DESTINATION: "/admin/create-destination",
     CREATE_PACKAGE_CATEGORY: "/admin/create-package-category",

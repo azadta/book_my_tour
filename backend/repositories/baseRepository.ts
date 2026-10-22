@@ -1,7 +1,7 @@
-import { Model } from "mongoose";
+import { Model, UpdateResult } from "mongoose";
 import { IBaseRepository } from "../interfaces/IBaseRepository";
 import { flattenObjects } from "../utils/flattenObject";
-import { HydratedDocument,QueryFilter } from "mongoose";
+import { HydratedDocument, QueryFilter } from "mongoose";
 
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
   protected model: Model<T>;
@@ -18,7 +18,10 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return await this.model.findById(id);
   }
 
-  async updateById(id: string, data: Partial<T>): Promise<HydratedDocument<T> | null> {
+  async updateById(
+    id: string,
+    data: Partial<T>,
+  ): Promise<HydratedDocument<T> | null> {
     const flattenedData = flattenObjects(data);
 
     return this.model.findByIdAndUpdate(
@@ -40,7 +43,15 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return this.model.find();
   }
 
-  async findOne(filter:QueryFilter<T>):Promise<T|null>{
-    return this.model.findOne(filter)
+  async findOne(filter: QueryFilter<T>): Promise<T | null> {
+    return this.model.findOne(filter);
+  }
+
+  async updateMany(
+    filter: QueryFilter<T>,
+    data: Partial<T>,
+  ): Promise<UpdateResult> {
+    const flattendData = flattenObjects(data);
+    return this.model.updateMany(filter, { $set: flattendData });
   }
 }

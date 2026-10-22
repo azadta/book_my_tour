@@ -207,5 +207,10 @@ export const ROUTES = {
   SUBSCRIPTION:{
     CREATE_ORDER:'/create-order',
     VERIFY_PAYMENT:'/verify-payment'
+  },
+  PAYOUT:{
+    LIST:'/',
+    CREATE_ORDER:'/create-order',
+    VERIFY_PAYMENT:'/verify-payment'
   }
 } as const;

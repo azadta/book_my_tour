@@ -1,3 +1,6 @@
+import BookingsBarChart from "@/components/Charts/operator/BookingsBarChart";
+import BookingStatusDonutChart from "@/components/Charts/operator/BookingStatusDonutChat";
+import RevenueLineChart from "@/components/Charts/operator/RevenueLineChart";
 import { useState } from "react";
 import { BsBoxSeamFill } from "react-icons/bs";
 import { HiCash } from "react-icons/hi";
@@ -8,9 +11,6 @@ import Loading from "../../components/Loading";
 import OperatorDashboardSideBar from "../../components/OperatorDashboardSidebar";
 import style from "../../css/operatorDashboard.module.css";
 import { useOperatorDashboard } from "../../hooks/useOperatorDashboard";
-import RevenueLineChart from "@/components/Charts/operator/RevenueLineChart";
-import BookingsBarChart from "@/components/Charts/operator/BookingsBarChart";
-import BookingStatusDonutChat from "@/components/Charts/operator/BookingStatusDonutChat";
 
 const OperatorDashboard = () => {
   const [open, setOpen] = useState(false);
@@ -95,7 +95,7 @@ const OperatorDashboard = () => {
               <BookingsBarChart
                 monthlyRevenue={dashBoardData?.monthlyRevenue}
               />
-              <BookingStatusDonutChat
+              <BookingStatusDonutChart
                 statusData={dashBoardData?.bookingStatusBreakDown}
               />
             </div>

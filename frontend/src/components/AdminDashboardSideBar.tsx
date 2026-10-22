@@ -55,6 +55,23 @@ const AdminDashboardSideBar = () => {
             </>
           )}
         </NavLink>
+           <NavLink
+         
+          to={FRONTEND_ROUTES.ADMIN.OPERATOR_PAYOUTS}
+          className={({ isActive }) =>
+            ` relative py-2 shadow-md px-4 rounded-xl transition w-full text-center ${isActive ? "bg-emerald-400  hover:bg-emerald-500" : " bg-sky-400   hover:bg-sky-500"} `
+          }
+        >
+          {({ isActive }) => (
+            <>
+              {isActive && (
+                <div className="bg-emerald-500 absolute w-1.5 h-8 rounded-l-full top-1/2 -translate-y-1/2 -right-6  "></div>
+              )}
+              Operator Payouts
+            </>
+          )}
+        </NavLink>
+        
         <NavLink
           to={FRONTEND_ROUTES.ADMIN.PACKAGES}
           className={({ isActive }) =>

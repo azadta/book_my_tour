@@ -123,6 +123,12 @@ import { ISubscriptionService } from "../interfaces/ISubscriptionService";
 import { SubscriptionService } from "../services/SubscriptionService";
 import { ISubscriptionController } from "../interfaces/ISubscriptionController";
 import { SubscriptionController } from "../controllers/subscriptionController";
+import { IPayoutRepository } from "../interfaces/IPayoutRepository";
+import { PayoutRepository } from "../repositories/payoutRepository";
+import { IPayoutService } from "../interfaces/IPayoutService";
+import { PayoutService } from "../services/payoutService";
+import { IPayoutController } from "../interfaces/IPayoutController";
+import { PayoutController } from "../controllers/payoutController";
 
 const container = new Container();
 
@@ -365,6 +371,18 @@ container
   .bind<ISubscriptionController>(Types.SubscriptionController)
   .to(SubscriptionController)
   .inSingletonScope();
+container
+  .bind<IPayoutRepository>(Types.PayoutRepository)
+  .to(PayoutRepository)
+  .inSingletonScope();
+container
+  .bind<IPayoutService>(Types.PayoutService)
+  .to(PayoutService)
+  .inSingletonScope();
+container
+  .bind<IPayoutController>(Types.PayoutController)
+  .to(PayoutController)
+  .inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,
@@ -425,4 +443,7 @@ export const subscriptionPlanController =
   container.get<ISubscriptionPlanController>(Types.SubscriptionPlanController);
 export const subscriptionController = container.get<ISubscriptionController>(
   Types.SubscriptionController,
+);
+export const payoutController = container.get<IPayoutController>(
+  Types.PayoutController,
 );

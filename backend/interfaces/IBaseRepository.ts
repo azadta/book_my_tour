@@ -1,4 +1,4 @@
-import { HydratedDocument, QueryFilter } from "mongoose";
+import { HydratedDocument, QueryFilter, UpdateResult } from "mongoose";
 
 export interface IBaseRepository<T> {
   create(data: Partial<T>): Promise<T>;
@@ -9,4 +9,5 @@ export interface IBaseRepository<T> {
   countDocuments(): Promise<number>;
   findAll(): Promise<T[]>;
   findOne(filter: QueryFilter<T>): Promise<T | null>;
+  updateMany(filter: QueryFilter<T>, data: Partial<T>): Promise<UpdateResult>
 }

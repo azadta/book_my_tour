@@ -203,6 +203,12 @@ export const APP_ROUTES = {
     CREATE_ORDER:'/subscription/create-order',
     PAYMENT_VERIFY:'/subscription/verify-payment'
   },
+  PAYOUT:{
+    LIST:'/payout',
+    CREATE_ORDER:'/payout/create-order',
+    VERIFY_PAYMENT:'/payout/verify-payment'
+
+  },
   COMMON_AUTH: {
     REFRESH_TOKEN: "/auth/refresh",
   },

@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { UpdateQuery } from "mongoose";
+import { ObjectId, UpdateQuery } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import {
@@ -30,6 +30,7 @@ import { CouponType, ICouponDocument } from "../models/Coupon";
 import { Types } from "../types/types";
 import { bookingConfirmationMessage } from "../utils/bookingConfirmationMessage";
 import { CustomError } from "../utils/customError";
+import type { IPayoutRepository } from "../interfaces/IPayoutRepository";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -49,6 +50,8 @@ export class BookingService implements IBookingService {
     @inject(Types.MailService) private _mailService: IMailService,
 
     @inject(Types.PaymentService) private _paymentService: IPaymentService,
+    @inject(Types.PayoutRepository)
+    private _payoutRepository: IPayoutRepository,
   ) {}
 
   async processAdminCancellation(dto: ProcessAdminCancellationRequestDTO) {
@@ -493,6 +496,21 @@ export class BookingService implements IBookingService {
         status: "CONFIRMED",
       });
 
+      const commissionRate = 5;
+      const grossAmount = grandSubtotal;
+      const platformCommissionAmount = (grossAmount * commissionRate) / 100;
+      const netPayoutAmount = grossAmount - platformCommissionAmount;
+      await this._payoutRepository.create({
+        bookingId: booking._id,
+        operatorId: pkg.operatorId,
+        packageId,
+        grossAmount,
+        platformCommissionRate: commissionRate,
+        platformCommissionAmount,
+        netPayoutAmount,
+        payoutStatus: "PENDING",
+      });
+
       const user = await this._userRepository.findById(userId);
       if (!user) {
         throw new CustomError(
@@ -539,7 +557,7 @@ export class BookingService implements IBookingService {
         StatusCode.INTERNAL_SERVER_ERROR,
       );
 
-    await this._bookingRepository.createBooking({
+    const booking = await this._bookingRepository.createBooking({
       userId,
       packageId,
       razorpayOrderId: order.id,
@@ -549,6 +567,21 @@ export class BookingService implements IBookingService {
       addedActivityIds,
       removedActivityIds,
       status: "PENDING",
+    });
+
+    const commissionRate = 5;
+    const grossAmount = grandSubtotal;
+    const platformCommissionAmount = (grossAmount * commissionRate) / 100;
+    const netPayoutAmount = grossAmount - platformCommissionAmount;
+    await this._payoutRepository.create({
+      bookingId: booking._id,
+      operatorId: pkg.operatorId,
+      packageId,
+      grossAmount,
+      platformCommissionRate: commissionRate,
+      platformCommissionAmount,
+      netPayoutAmount,
+      payoutStatus: "PENDING",
     });
 
     return {

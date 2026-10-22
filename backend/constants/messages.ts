@@ -228,13 +228,26 @@ export const RESPONSE_MESSAGES = {
   },
   SUBSCRIPTION: {
     SUCCESS: {
-      CREATE_ORDER:'Subscription order created successfully',
+      CREATE_ORDER: "Subscription order created successfully",
       ACTIVATE: "Your subscription has been successfully activated",
     },
     ERROR: {
       UPDATE: "Failed to update subscription",
       INVALID_SIGNATURE:
         "Payment verification failed. Invalid transaction signature.",
+    },
+  },
+  PAYOUT: {
+    SUCCESS:{
+      TRANSFERRED:'Payout transferred and recorded successfully',
+    },
+    ERROR: {
+      NOT_FOUND: "Payout item not found",
+      ALREADY_PROCESSED: "Payout already processed",
+      INITIATE: "Failed to initiate payout order",
+      INVALID_SIGNATURE:
+        "Payment verification failed. Invalid transaction signature.",
+      UPDATE: "Failed to update payout report details",
     },
   },
 } as const;

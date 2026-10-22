@@ -65,6 +65,7 @@ import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
 import AdminSubscriptionPlanList from "./pages/admin/AdminSubscriptionPlanList";
 import OperatorSubscription from "./pages/operator/OperatorSubscription";
+import AdminPayoutList from "./pages/admin/AdminPayoutList";
 
 const App = () => {
   useGlobalChatSocket();
@@ -337,6 +338,10 @@ const App = () => {
             <Route
               path={FRONTEND_ROUTES.ADMIN.EDIT_SUBSCRIPTION_PLAN_PATTERN}
               element={<EditSubscriptionPlan />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.ADMIN.OPERATOR_PAYOUTS}
+              element={<AdminPayoutList/>}
             />
           </Route>
         </Route>

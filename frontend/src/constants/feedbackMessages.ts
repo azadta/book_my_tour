@@ -229,4 +229,13 @@ export const FEEDBACK_MESSAGES = {
       INITIATE_PAYMENT: "Failed to initiate subscription payment",
     },
   },
+  PAYOUT: {
+    SUCCESS: {
+      COMPLETED: "Payout completed successfully",
+    },
+    ERROR: {
+      FETCH: "Failed to fetch eligible payouts",
+      INITIATE: "Failed to initiate payout payment",
+    },
+  },
 } as const;

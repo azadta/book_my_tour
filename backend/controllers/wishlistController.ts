@@ -1,19 +1,18 @@
-import { inject, injectable } from "inversify";
-import { IWishlistController } from "../interfaces/IWishlistController";
-import { Types } from "../types/types";
-import type { IWishlistService } from "../interfaces/IWishlistService";
 import { NextFunction, Request, Response } from "express";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import { WishlistResponseMapper } from "../dto-mapping/mapper/wishlist/WishlistResponseMapper";
-import { WishlistRequestMapper } from "../dto-mapping/mapper/wishlist/WishlistRequestMapper";
+import { IWishlistController } from "../interfaces/IWishlistController";
+import type { IWishlistService } from "../interfaces/IWishlistService";
+import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class WishlistController implements IWishlistController {
   constructor(
     @inject(Types.WishlistService) private _wishlistService: IWishlistService,
   ) {}
-  //user
+
   getWishlists = async (
     req: Request,
     res: Response,
@@ -31,11 +30,12 @@ export class WishlistController implements IWishlistController {
 
       const wishlistGroups =
         await this._wishlistService.getUserWishlists(userId);
-      res.status(StatusCode.OK).json({
-        success: true,
-        wishlistGroups:
-          WishlistResponseMapper.toGroupResponseListDTO(wishlistGroups),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.FETCH_GROUPS,
+        wishlistGroups,
+        StatusCode.OK,
+      );
     } catch (error: any) {
       next(error);
     }
@@ -47,24 +47,18 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
-      const dto = WishlistRequestMapper.toCreateGroupReqDTO(req.body);
+      const userId = req.user?.id as string;
 
       const wishlistGroup = await this._wishlistService.createWishlistGroup(
         userId,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        wishlistGroup: WishlistResponseMapper.toGroupResponseDTO(wishlistGroup),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.CREATED_GROUP,
+        wishlistGroup,
+        StatusCode.CREATED,
+      );
     } catch (error: any) {
       next(error);
     }
@@ -76,22 +70,19 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
 
-      const dto = WishlistRequestMapper.toTogglePackageReqDTO(req.body);
       const updatedGroup =
-        await this._wishlistService.togglePackageInWishlistGroup(userId, dto);
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
+        await this._wishlistService.togglePackageInWishlistGroup(
+          userId,
+          req.body,
+        );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.TOGGLE_PACKAGE,
+        updatedGroup,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -99,26 +90,21 @@ export class WishlistController implements IWishlistController {
 
   addWishlistNote = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
 
       const { groupId } = req.params;
-      const dto = WishlistRequestMapper.toAddNoteReqDTO(req.body);
+
       const updatedGroup = await this._wishlistService.addNoteToWishlistGroup(
         userId,
         groupId as string,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.ADD_NOTE,
+        updatedGroup,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -130,24 +116,19 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
 
       const { groupId } = req.params;
       const shareData = await this._wishlistService.generateShareableLink(
         userId,
         groupId as string,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toShareLinkDTO(shareData),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.CREATE_SHARE_LINK,
+        shareData,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -163,10 +144,12 @@ export class WishlistController implements IWishlistController {
       const sharedGroup = await this._wishlistService.getSharedGroup(
         shareToken as string,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(sharedGroup),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.FETCH_SHARED_WHISHLIST,
+        sharedGroup,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -178,25 +161,21 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
+
       const { groupId } = req.params;
-      const dto = WishlistRequestMapper.toEditGroupReqDTO(req.body);
+
       const updatedGroup = await this._wishlistService.editGroup(
         userId,
         groupId as string,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.EDIT_GROUP,
+        updatedGroup,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -208,21 +187,17 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
+
       const { groupId } = req.params;
 
       await this._wishlistService.deleteGroup(userId, groupId as string);
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -234,27 +209,20 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
       const { groupId, noteId } = req.params;
-      const dto = WishlistRequestMapper.toEditNoteReqDTO(req.body);
-
       const updatedGroup = await this._wishlistService.editNote(
         userId,
         groupId as string,
         noteId as string,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.EDIT_NOTE,
+        updatedGroup,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -265,14 +233,8 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ) => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(StatusCode.UNAUTHORIZED).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
+
       const { groupId, noteId } = req.params;
 
       const updatedGroup = await this._wishlistService.deleteNote(
@@ -280,10 +242,12 @@ export class WishlistController implements IWishlistController {
         groupId as string,
         noteId as string,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        data: WishlistResponseMapper.toGroupResponseDTO(updatedGroup),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WISHLIST.SUCCESS.DELETE_NOTE,
+        updatedGroup,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

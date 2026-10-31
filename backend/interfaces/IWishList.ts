@@ -7,12 +7,13 @@ export interface INote {
 }
 
 export interface IWishlistGroup  {
+  _id:Types.ObjectId;
   userId: Types.ObjectId;
   title: string;
   description: string;
   packages: Types.ObjectId[];
   notes: INote[];
-  shareToken: string;
+  shareToken?: string;
   isPublic: boolean;
   createdAt: Date;
   updatedAt: Date;

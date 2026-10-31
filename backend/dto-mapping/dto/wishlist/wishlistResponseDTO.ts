@@ -1,13 +1,16 @@
+import { IWishlistGroup } from "../../../interfaces/IWishList";
+import { PackageWithDestinations } from "../package/packageResponseDTO";
+
 export interface WishlistPackageResponseDTO {
   _id: string;
   name: string;
   amount: number;
-  discount?:number;
+  discount?: number;
   duration?: { day: number; night: number };
   images: string[];
   category?: string;
   destinations?: any[];
-  isCustomizable: boolean;
+
   availableSlots: string;
 }
 
@@ -18,11 +21,22 @@ export interface WishlistGroupResponseDTO {
   description?: string;
   isPublic: boolean;
   shareToken?: string;
-  packages: WishlistPackageResponseDTO[];
+  packages: WishlistPackageResponseDTO[]|string[]
   notes: WishlistNoteResponseDTO[];
   createdAt: string;
   updatedAt: string;
 }
+
+export type WishlistGroupWithPopulatedPackages = Omit<
+  IWishlistGroup,
+  "packages"
+> & {
+  packages: PackageWithDestinations[];
+};
+
+export type WishlistGroupMapperInput =
+  | IWishlistGroup
+  | WishlistGroupWithPopulatedPackages;
 
 export interface ShareLinkResponseDTO {
   shareToken: string;
@@ -33,5 +47,3 @@ export interface WishlistNoteResponseDTO {
   text: string;
   createdAt: string;
 }
-
-

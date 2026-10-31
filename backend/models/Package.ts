@@ -35,6 +35,7 @@ export interface IItineraryDay {
 }
 
 export interface Ipackage {
+  _id: Types.ObjectId;
   name: string;
   amount: number;
   destinations: Types.ObjectId[];

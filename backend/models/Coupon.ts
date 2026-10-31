@@ -19,6 +19,8 @@ export interface ICouponDocument extends Document {
   razorpayOfferId: string;
   validTill: Date;
   isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const couponSchema = new Schema<ICouponDocument>(

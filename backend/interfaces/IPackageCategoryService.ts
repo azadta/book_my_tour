@@ -1,10 +1,11 @@
-import { ICreateCategoryRequestDTO } from "../dto-mapping/dto/package-category/packageCategoryRequestDTO";
+import { CreateCategoryInput, ICreateCategoryRequestDTO } from "../dto-mapping/dto/package-category/packageCategoryRequestDTO";
+import { ICategoryResponseDTO } from "../dto-mapping/dto/package-category/packageCategoryResponseDTO";
 import { IPackageCategory } from "../models/PackageCategory";
 
 export interface IPackageCategoryService {
   createCategoryService(
-    dto: ICreateCategoryRequestDTO,
-  ): Promise<IPackageCategory>;
-  getAllCategories(): Promise<IPackageCategory[]>;
-  getActiveCategoryService(): Promise<IPackageCategory[]>;
+    body: CreateCategoryInput,
+  ): Promise<ICategoryResponseDTO>;
+  getAllCategories(): Promise<ICategoryResponseDTO[]>;
+  getActiveCategoryService(): Promise<ICategoryResponseDTO[]>;
 }

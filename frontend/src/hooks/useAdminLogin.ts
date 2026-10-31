@@ -19,7 +19,7 @@ export const useAdminLogin = (
     try {
       dispatch(adminLoginStart());
       const res = await axiosInstance.post(APP_ROUTES.ADMINS.LOGIN, formData);
-      dispatch(adminLoginSuccess(res.data));
+      dispatch(adminLoginSuccess(res.data.result));
       navigate(`/admin/dashboard`, { replace: true });
     } catch (error: any) {
       const errMsg =

@@ -1,3 +1,6 @@
+import { Types } from "mongoose";
+import { IReview } from "../../../interfaces/IReview";
+
 export interface UserPopulatedDTO {
   _id: string;
   name: string;
@@ -24,7 +27,7 @@ export interface ReviewResponseDTO {
   updatedAt: string;
 }
 
-export interface ReviewStatsDTO {
+export interface ReviewStats {
   totalReviews: number;
   averageRating: number;
   avgGuide: number;
@@ -40,9 +43,13 @@ export interface ReviewStatsDTO {
 
 export interface PackageReviewResponseDTO {
   reviews: ReviewResponseDTO[];
-  stats: ReviewStatsDTO;
+  stats: ReviewStats;
 }
 export interface UpdateReviewResponseDTO {
   review: ReviewResponseDTO | null;
-  stats: ReviewStatsDTO;
+  stats: ReviewStats;
+}
+
+export type ReviewWithOptionalPopulatedUser=Omit<IReview,'userId'>&{
+  userId:Types.ObjectId|UserPopulatedDTO
 }

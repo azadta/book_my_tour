@@ -31,6 +31,16 @@ export const RESPONSE_MESSAGES = {
     },
   },
   ADMIN: {
+    SUCCESS: {
+      LOGIN: "Admin login successfull",
+      UPDATE: "Admin updated successfully",
+      UPDATE_IMAGE: "Admin image updated successfully",
+      UPDATE_PASSWORD: "Admin password updated successfully",
+      FETCH_OPERATOR_VERIFICATION_REQS:
+        "Operator verifaction request fetched successfully",
+      FETCH_OPERATORS: "Operators fetched successfully",
+      FETCH_OPERATOR_DETAILS: "Operator details fetched successfully",
+    },
     ERROR: {
       NOT_FOUND: "Admin not found",
     },
@@ -50,6 +60,10 @@ export const RESPONSE_MESSAGES = {
       BLOCKED: "operator is blocked",
       UNBLOCKED: "operator unblocked",
       DELETED: "Operator deleted successfully",
+      REGISTRATION_PROCESSING: "Registration is processing",
+      LOGGED_IN: "Operator logged in successfully",
+      UPDATED: "Operator updated successfully",
+      IMAGE_UPDATED: "Operator image updated successfully",
     },
     ERROR: {
       NOT_FOUND: "Operator not found",
@@ -58,8 +72,12 @@ export const RESPONSE_MESSAGES = {
   },
   DESTINATION: {
     SUCCESS: {
-      CREATED: "Destination created",
-      DELETED: "Destination deleted",
+      CREATED: "Destination created successfully",
+      DELETED: "Destination deleted successfully",
+      FETCH_ALL: "All Destinations fetched successfully",
+      FETCH: " Destination fetched successfully",
+      FETCH_BY_PACKAGE_CATEGORY:
+        "Destinations fetched successfully by package category",
     },
     ERROR: {
       ALREADY_EXISTS: "Destination with same name already exists",
@@ -69,6 +87,11 @@ export const RESPONSE_MESSAGES = {
   PACKAGE: {
     SUCCESS: {
       DELETED: "Package deleted successfully",
+      FETCH_PACKAGE: "Package fetched successfully",
+      FETCH_PACKAGES: "Packages fetched successfully",
+      CREATED: "Package created successfully",
+      UPDATE: "Package updated successfully",
+      FETCH_COUNT: "Packages count fetched successfully",
     },
     ERROR: {
       NOT_FOUND: "Package not found",
@@ -79,6 +102,8 @@ export const RESPONSE_MESSAGES = {
   CATEGORY: {
     SUCCESS: {
       CREATED: "Category created",
+      FETCH_ALL: "Package categories fetched successfully",
+      FETCH_ACTIVE: "Active categories fetched successfully",
     },
     ERROR: {
       ALREADY_EXIST: "Category already exist",
@@ -100,7 +125,16 @@ export const RESPONSE_MESSAGES = {
   },
   WISHLIST: {
     SUCCESS: {
-      DELETE: "Wishlist Group deleted successfully",
+      DELETE: "Wishlist group deleted successfully",
+      DELETE_NOTE: "Wishlist group note deleted successfully",
+      FETCH_GROUPS: "Wishlist groups fetched successfully",
+      CREATED_GROUP: "Wishlist group created successfully ",
+      TOGGLE_PACKAGE: "Package added to or removed from wishlist successfully",
+      ADD_NOTE: "Wishlist note added successfully",
+      CREATE_SHARE_LINK: "Wishlist share link created successfully",
+      FETCH_SHARED_WHISHLIST: "Shared wishlist group fetched successfully",
+      EDIT_GROUP: "Wishlist group updated successfully",
+      EDIT_NOTE: "Wishlist group note updated successfully",
     },
     ERROR: {
       NOT_FOUND: "Wishlist group not found",
@@ -115,6 +149,8 @@ export const RESPONSE_MESSAGES = {
     SUCCESS: {
       UPDATE: "Review updated successfully",
       DELETE: "Review deleted successfully",
+      FETCH: "Package reviews fetched successfully",
+      CREATE: "Package review created successfully",
     },
     ERROR: {
       ALREADY_EXIST: "You have already submitted a review for this package",
@@ -138,6 +174,14 @@ export const RESPONSE_MESSAGES = {
       DATE_RESCHEDULED_BY_OPERATOR: "Tour date rescheduled successfully",
       ATTENDANCE_UPDATE: (status: string) =>
         `Guest attendance updated to ${status}`,
+      FETCH_OPERATOR_BOOKINGS: "Operator Bookings retrieved successfully",
+      FETCH_OPERATOR_BOOKING_DETAILS:
+        "Operator Booking details fetched successfully",
+      CREATE_BOOKING_ORDER: "Booking order created successfully",
+      FETCH_BOOKING: "Booking fetched successfully",
+      FETCH_BOOKINGS: "Bookings fetched successfully",
+      FETCH_PENDING_CANCELLATION_REQS:
+        " Pending cancellation requests fetched successfully",
     },
     ERROR: {
       INVALID_SIGNATURE:
@@ -172,6 +216,10 @@ export const RESPONSE_MESSAGES = {
       UPDATE: "Coupon updated successfully",
       TOGGLE_STATUS: (isActive: boolean) =>
         `Coupon ${isActive ? "activated" : "deactivated"} successfully`,
+      FETCH_AVAILABLE_COUPONS: "Available coupons fetched successfully",
+      FETCH_COUPONS: "All Coupons fetched successfully",
+      FETCH_COUPON: "Coupon fetched successfully",
+      VALIDATE: "Coupon validated and calculated discount successfully",
     },
     ERROR: {
       INVALID_CODE: "Invalid or expired coupon code",
@@ -189,9 +237,15 @@ export const RESPONSE_MESSAGES = {
     },
   },
   WALLET: {
+    SUCCESS: {
+      FETCH: "Wallet fetched successfully",
+      TOPUP_ORDER: "Wallet topup order created successfully",
+      VERIFIED_TOPUP: "Wallet topup payment verified successfully",
+    },
     ERROR: {
       NON_POSITIVE_AMOUNT: "Amount must be greater than zero",
       TRANSACTION_FAILED: "Failed to process wallet transaction",
+      NOT_FOUND: "Wallet not found",
     },
   },
   CHAT: {
@@ -238,8 +292,8 @@ export const RESPONSE_MESSAGES = {
     },
   },
   PAYOUT: {
-    SUCCESS:{
-      TRANSFERRED:'Payout transferred and recorded successfully',
+    SUCCESS: {
+      TRANSFERRED: "Payout transferred and recorded successfully",
     },
     ERROR: {
       NOT_FOUND: "Payout item not found",

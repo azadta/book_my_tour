@@ -7,16 +7,17 @@ import type { IAdminService } from "../interfaces/IAdminService";
 import type { IHashService } from "../interfaces/IHashService";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 
-import { IAdmin, IAdminResponse } from "../interfaces/IAdmin";
 import { Types } from "../types/types";
 
-import { HydratedDocument } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { AdminResponseDTO } from "../dto-mapping/dto/admin/adminResponseDTO";
+import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
+import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
 import {
-  LoginAdminRequestDTO,
-  ResetAdminPasswordAuthenticatedRequestDTO,
-  UpdateAdminProfileImageRequestDTO,
-  UpdateAdminRequestDTO,
+  LoginAdminBody,
+  ResetAdminPasswordAuthenticatedBody,
+  UpdateAdminBody,
+  UpdateAdminProfileImageBody,
 } from "../dto-mapping/dto/admin/adminRequestDTO";
 
 @injectable()
@@ -29,11 +30,12 @@ export class AdminService implements IAdminService {
     @inject(Types.SecurityService) private _securityService: ISecurityService,
   ) {}
 
-  async loginAdminService(dto: LoginAdminRequestDTO): Promise<{
+  async loginAdminService(body: LoginAdminBody): Promise<{
     accessToken: string;
     refreshToken: string;
-    adminData: IAdminResponse;
+    adminData: AdminResponseDTO;
   }> {
+    const dto = AdminRequestMapper.toLoginRequestDTO(body);
     const { email, password } = dto;
     const admin = await this._adminRepository.findByEmail(email);
     if (!admin)
@@ -55,15 +57,15 @@ export class AdminService implements IAdminService {
       id: admin._id.toString(),
       role: admin.role,
     });
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: pass, ...adminData } = admin.toObject();
+    const adminData = AdminResponseMapper.toAdminResponseDTO(admin);
     return { accessToken, refreshToken, adminData };
   }
   async resetPasswordAuthenticatedService(
     adminId: string,
 
-    dto: ResetAdminPasswordAuthenticatedRequestDTO,
+    body: ResetAdminPasswordAuthenticatedBody,
   ) {
+    const dto = AdminRequestMapper.toResetPasswordAuthenticatedRequestDTO(body);
     const { confirmPassword, newPassword, oldPassword } = dto;
     const admin = await this._adminRepository.findById(adminId);
     if (!admin)
@@ -84,24 +86,31 @@ export class AdminService implements IAdminService {
       );
     admin.password = this._hashService.hash(newPassword);
     await this._adminRepository.save(admin);
-    return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
-  async updateAdminService(
-    id: string,
-    dto: UpdateAdminRequestDTO,
-  ): Promise<HydratedDocument<IAdmin> | null> {
+  async updateAdminService(id: string, body: UpdateAdminBody) {
+    const dto = AdminRequestMapper.toUpdateAdminRequestDTO(body);
     if (dto.password) {
       dto.password = this._hashService.hash(dto.password);
     }
-    return await this._adminRepository.updateById(id, dto);
+    const updatedAdmin = await this._adminRepository.updateById(id, dto);
+    if (!updatedAdmin) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+
+    return AdminResponseMapper.toAdminResponseDTO(updatedAdmin);
   }
 
   async updateProfieImageService(
     id: string,
-    dto: UpdateAdminProfileImageRequestDTO,
-  ): Promise<HydratedDocument<IAdmin> | null> {
+    body: UpdateAdminProfileImageBody,
+  ) {
+    const dto = AdminRequestMapper.toUpdateProfileImageRequestDTO(body);
     const { image } = dto;
-    return this._adminRepository.updateProfieImage(id, image);
+    const updatedAdmin = this._adminRepository.updateProfieImage(id, image);
+    return AdminResponseMapper.toAdminResponseDTO(updatedAdmin);
   }
 }

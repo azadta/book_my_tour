@@ -1,6 +1,7 @@
 import { Document, model, Schema, Types } from "mongoose";
 
 export interface IWalletTransaction {
+  _id: Types.ObjectId;
   transactionId: string;
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
@@ -9,13 +10,17 @@ export interface IWalletTransaction {
   amount: number;
   status: "PENDING" | "SUCCESS" | "FAILED";
   description: string;
-  createdAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IWalletDocument extends Document {
-  userId:Types.ObjectId;
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
   balance: number;
   transactions: IWalletTransaction[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 const transactionSchema = new Schema<IWalletTransaction>(

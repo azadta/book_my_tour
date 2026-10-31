@@ -8,6 +8,7 @@ import { ReviewResponseMapper } from "../dto-mapping/mapper/package-review/Revie
 import { ReviewRequestMapper } from "../dto-mapping/mapper/package-review/ReviewRequestMapper";
 import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class PackageReviewController implements IPackageReviewController {
@@ -15,7 +16,7 @@ export class PackageReviewController implements IPackageReviewController {
     @inject(Types.PackageReviewService)
     private _packageReviewService: IPackageReviewService,
   ) {}
-  //user
+
   getPackageReviewsByPackageId = async (
     req: Request,
     res: Response,
@@ -30,14 +31,12 @@ export class PackageReviewController implements IPackageReviewController {
         page,
         limit,
       );
-      res
-        .status(StatusCode.OK)
-        .json(
-          ReviewResponseMapper.toPackageReviewsResponseDTO(
-            data.reviews,
-            data.stats,
-          ),
-        );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.REVIEW.SUCCESS.FETCH,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -52,17 +51,19 @@ export class PackageReviewController implements IPackageReviewController {
       const { packageId } = req.params;
 
       const userId = req.user?.id as string;
-      const payload = ReviewRequestMapper.toCreateReviewReqDTO(
-        req.body,
+
+      const data = await this._packageReviewService.createPackageReviewService(
         packageId as string,
         userId,
+        req.body,
       );
-      const data =
-        await this._packageReviewService.createPackageReviewService(payload);
 
-      res
-        .status(StatusCode.CREATED)
-        .json(ReviewResponseMapper.toReviewResponseDTO(data));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.REVIEW.SUCCESS.CREATE,
+        data,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -76,33 +77,21 @@ export class PackageReviewController implements IPackageReviewController {
     try {
       const { reviewId, packageId } = req.params;
 
-      const userId = req.user?.id;
-      if (!userId) {
-        return next(
-          new CustomError(
-            RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-            StatusCode.UNAUTHORIZED,
-          ),
-        );
-      }
-
-      const dto = ReviewRequestMapper.toUpdateReviewReqDTO(req.body);
+      const userId = req.user?.id as string;
 
       const updatedData =
         await this._packageReviewService.updatePackageReviewService(
           userId!,
           reviewId as string,
           packageId as string,
-          dto,
+          req.body,
         );
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.REVIEW.SUCCESS.UPDATE,
-        data: ReviewResponseMapper.toUpdateReviewResponseDTO(
-          updatedData.review,
-          updatedData.stats,
-        ),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.REVIEW.SUCCESS.UPDATE,
+        updatedData,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -116,16 +105,18 @@ export class PackageReviewController implements IPackageReviewController {
     try {
       const { reviewId, packageId } = req.params;
       const userId = req.user?.id;
-      const result = await this._packageReviewService.deletePackageReviewService(
-        userId!,
-        reviewId as string,
-        packageId as string,
+      const result =
+        await this._packageReviewService.deletePackageReviewService(
+          userId!,
+          reviewId as string,
+          packageId as string,
+        );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
+        result,
+        StatusCode.OK,
       );
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.REVIEW.SUCCESS.DELETE,
-        data: ReviewResponseMapper.toReviewStatsDTO(result.stats),
-      });
     } catch (error) {
       next(error);
     }

@@ -1,17 +1,17 @@
 import { Document, Types } from "mongoose";
 export interface IBusinessAddress {
-  buildingNo?: string;
+  buildingNo: string;
   landmark?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  postalCode?: string;
+  city: string;
+  state: string;
+  country: string;
+  postalCode: string;
 }
 
 export interface IVerificationDetails {
-  companyName?: string;
-  licenseNo?: string;
-  businessAddress?: IBusinessAddress;
+  companyName: string;
+  licenseNo: string;
+  businessAddress: IBusinessAddress;
   submittedAt?: Date;
 }
 
@@ -23,6 +23,7 @@ export interface ISubscriptionDetails {
 }
 
 export interface IOperator extends Document {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;

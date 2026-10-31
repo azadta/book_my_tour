@@ -6,13 +6,15 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCode } from "../constants/statusCodeConstants";
 import { WalletResponseMapper } from "../dto-mapping/mapper/wallet/WalletResponseMapper";
 import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestMapper";
+import { sendSuccessResponse } from "../utils/apiResponse";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class WalletController implements IWalletController {
   constructor(
     @inject(Types.WalletService) private _walletService: IWalletService,
   ) {}
-  //user
+
   getWallet = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?.id as string;
@@ -24,9 +26,12 @@ export class WalletController implements IWalletController {
         limit,
       );
 
-      res
-        .status(StatusCode.OK)
-        .json(WalletResponseMapper.toPaginatedWalletResponseDTO(data));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WALLET.SUCCESS.FETCH,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -38,12 +43,17 @@ export class WalletController implements IWalletController {
   ) => {
     try {
       const userId = req.user?.id as string;
-      const dto = WalletRequestMapper.toCreateTopupOrderReqDTO(req.body);
 
-      const result = await this._walletService.createTopupOrder(userId, dto);
-      res
-        .status(StatusCode.OK)
-        .json(WalletResponseMapper.toTopupOrderResponseDTO(result));
+      const result = await this._walletService.createTopupOrder(
+        userId,
+        req.body,
+      );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WALLET.SUCCESS.TOPUP_ORDER,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -55,12 +65,17 @@ export class WalletController implements IWalletController {
   ) => {
     try {
       const userId = req.user?.id as string;
-      const dto = WalletRequestMapper.toVerifyTopupPaymentReqDTO(req.body);
 
-      const wallet = await this._walletService.verifyTopupPayment(userId, dto);
-      res
-        .status(StatusCode.OK)
-        .json(WalletResponseMapper.toWalletResponseDTO(wallet));
+      const wallet = await this._walletService.verifyTopupPayment(
+        userId,
+        req.body,
+      );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.WALLET.SUCCESS.VERIFIED_TOPUP,
+        wallet,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

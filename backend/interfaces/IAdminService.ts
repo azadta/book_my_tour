@@ -1,26 +1,28 @@
 import { HydratedDocument } from "mongoose";
 
-
-import { LoginAdminRequestDTO,  ResetAdminPasswordAuthenticatedRequestDTO,  UpdateAdminProfileImageRequestDTO, UpdateAdminRequestDTO } from "../dto-mapping/dto/admin/adminRequestDTO";
+import {
+  LoginAdminRequestDTO,
+  ResetAdminPasswordAuthenticatedRequestDTO,
+  UpdateAdminProfileImageRequestDTO,
+  UpdateAdminRequestDTO,
+} from "../dto-mapping/dto/admin/adminRequestDTO";
 import { IAdmin, IAdminResponse } from "./IAdmin";
+import { AdminResponseDTO } from "../dto-mapping/dto/admin/adminResponseDTO";
 
 export interface IAdminService {
-  loginAdminService(
-   dto:LoginAdminRequestDTO
-  ): Promise<{
+  loginAdminService(body: unknown): Promise<{
     accessToken: string;
     refreshToken: string;
-    adminData: IAdminResponse;
+    adminData: AdminResponseDTO;
   }>;
-  updateAdminService(
-    id: string,
-   dto:UpdateAdminRequestDTO
-  ): Promise<HydratedDocument<IAdmin> | null>;
+  updateAdminService(id: string, body: unknown): Promise<AdminResponseDTO>;
+
   resetPasswordAuthenticatedService(
     adminId: string,
-  dto:ResetAdminPasswordAuthenticatedRequestDTO
-  ): Promise<{
-    message: "Password updated successfully";
-  }>;
-  updateProfieImageService(id: string, dto:UpdateAdminProfileImageRequestDTO): Promise<HydratedDocument<IAdmin> | null>;
+    dto: ResetAdminPasswordAuthenticatedRequestDTO,
+  ): Promise<void>;
+  updateProfieImageService(
+    id: string,
+    body: unknown,
+  ): Promise<AdminResponseDTO>;
 }

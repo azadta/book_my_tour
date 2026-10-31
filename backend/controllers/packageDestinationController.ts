@@ -7,6 +7,7 @@ import { PackageDestinationRequestMapper } from "../dto-mapping/mapper/package-d
 import { StatusCode } from "../constants/statusCodeConstants";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class PackageDestinationController implements IPackageDestinationController {
@@ -14,23 +15,23 @@ export class PackageDestinationController implements IPackageDestinationControll
     @inject(Types.PackageDestinationService)
     private _packageDestinationService: IPackageDestinationService,
   ) {}
-  //admin
+
   createDestination = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const dto = PackageDestinationRequestMapper.toDestinationEntity(req.body);
-      const rawDestination =
-        await this._packageDestinationService.createDestinationService(dto);
-      res.status(StatusCode.CREATED).json({
-        message: RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED,
-        destination:
-          PackageDestinationResponseMapper.toDestinationResponseDTO(
-            rawDestination,
-          ),
-      });
+      const destination =
+        await this._packageDestinationService.createDestinationService(
+          req.body,
+        );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DESTINATION.SUCCESS.CREATED,
+        destination,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -42,12 +43,13 @@ export class PackageDestinationController implements IPackageDestinationControll
     next: NextFunction,
   ) => {
     try {
-      const rawDestinations =
+      const destinations =
         await this._packageDestinationService.getAllDestinationsService();
-      res.json(
-        PackageDestinationResponseMapper.toDestinationListResponseDTO(
-          rawDestinations,
-        ),
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DESTINATION.SUCCESS.FETCH_ALL,
+        destinations,
+        StatusCode.OK,
       );
     } catch (error) {
       next(error);
@@ -60,17 +62,16 @@ export class PackageDestinationController implements IPackageDestinationControll
     next: NextFunction,
   ) => {
     try {
-      const rawDestination =
+      const destination =
         await this._packageDestinationService.getDestinationByIdService(
           req.params.id as string,
         );
-      res.json({
-        success: true,
-        destination:
-          PackageDestinationResponseMapper.toDestinationResponseDTO(
-            rawDestination,
-          ),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DESTINATION.SUCCESS.FETCH,
+        destination,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -85,13 +86,16 @@ export class PackageDestinationController implements IPackageDestinationControll
       await this._packageDestinationService.deleteDestinationByIdService(
         req.params.id as string,
       );
-      res.json({ success: true, message: "Destination deleted" });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DESTINATION.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
-
-  //user
 
   getDestinationsByPackageCategory = async (
     req: Request,
@@ -100,17 +104,16 @@ export class PackageDestinationController implements IPackageDestinationControll
   ) => {
     try {
       const { category } = req.params;
-      const rawDestinations =
+      const destinations =
         await this._packageDestinationService.getDestinationsByPackageCategoryService(
           category as string,
         );
-      res
-        .status(StatusCode.OK)
-        .json(
-          PackageDestinationResponseMapper.toDestinationListResponseDTO(
-            rawDestinations,
-          ),
-        );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DESTINATION.SUCCESS.FETCH_BY_PACKAGE_CATEGORY,
+        destinations,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

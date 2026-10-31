@@ -1,11 +1,8 @@
 export interface CancelBookingRequestDTO {
-  userId: string;
-  bookingId: string;
   reason: string;
 }
 
 export interface CreateBookingRequestDTO {
-  userId: string;
   packageId: string;
   adultCount: number;
   childCount: number;
@@ -18,19 +15,18 @@ export interface CreateBookingRequestDTO {
     type: "adult" | "child";
     firstName: string;
     lastName: string;
-    dob:  Date;
+    dob: Date;
     gender: "male" | "female" | "other";
-    passportNumber: string|null;
+    passportNumber: string | null;
   }>;
   addedActivityIds?: string[];
   removedActivityIds: string[];
-  generalCouponCode?: string;
-  bankCouponCode?: string;
+  generalCouponCode?: string | null;
+  bankCouponCode?: string | null;
   isWalletApplied?: boolean;
 }
 
 export interface VerifyPaymentRequestDTO {
-  userId: string;
   razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;
@@ -38,39 +34,91 @@ export interface VerifyPaymentRequestDTO {
 }
 
 export interface UpdateAttendanceRequestDTO {
-  bookingId: string;
-  operatorId: string;
   attendance: string;
 }
 
 export interface OperatorCancelBookingRequestDTO {
-  bookingId: string;
-  operatorId: string;
   reason: string;
 }
 
 export interface OperatorRescheduleBookingRequestDTO {
-  bookingId: string;
-  operatorId: string;
-  startDate: string;
+  startDate: Date;
 }
 
 export interface VerifyCancellationRequestDTO {
-  bookingId: string;
-  operatorId: string;
   action: "APPROVE" | "REJECT";
   operatorNotes?: string;
 }
 
 export interface GetOperatorBookingsQueryDTO {
-  operatorId: string;
   status?: string;
   skip: number;
   limit: number;
 }
+export interface GetOperatorBookingsQuery {
+  page?: string;
+  status?: number;
+  limit?: number;
+}
 
 export interface ProcessAdminCancellationRequestDTO {
-  bookingId: string;
   approve: boolean;
-  adminNotes?: string;
+  adminNotes: string;
+}
+
+export interface ProcessAdminCancellationBody {
+  approve: boolean;
+  adminNotes: string;
+}
+
+export interface OperatorCancelBookingBody {
+  reason: string;
+}
+
+export interface toOperatorReschuduleBookingBody {
+  startDate: Date;
+}
+
+export interface UpdateAttendanceBody {
+  attendance: string;
+}
+
+export interface toVerifyCancellationBody {
+  action: "APPROVE" | "REJECT";
+  operatorNotes: string;
+}
+
+export interface CreateBookingBody {
+  packageId: string;
+  adultCount: number | string;
+  childCount?: number | string;
+  primaryContact: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  members: {
+    type: "adult" | "child";
+    firstName: string;
+    lastName: string;
+    dob: string;
+    gender: "male" | "female" | "other";
+    passportNumber?: string | null;
+  };
+  addedActivityIds?: string[];
+  removedActivityIds?: string[];
+  generalCouponCode?: string | null;
+  bankCouponCode?: string | null;
+  isWalletApplied?: boolean | string;
+}
+
+export interface VerifyBookingPaymentBody {
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
+  packageId: string;
+}
+
+export interface CancelBookingBody {
+  reason: string;
 }

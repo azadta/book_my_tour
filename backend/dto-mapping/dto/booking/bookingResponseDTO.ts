@@ -102,8 +102,3 @@ export interface PendingCancellationItemResponseDTO {
   refundAmount: number;
 }
 
-export interface ProcessAdminCancellationResponseDTO {
-  success: boolean;
-  message: string;
-  data: BookingResponseDTO;
-}

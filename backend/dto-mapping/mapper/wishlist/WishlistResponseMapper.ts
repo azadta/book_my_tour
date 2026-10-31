@@ -1,5 +1,8 @@
+import { Types } from "mongoose";
+import { PackageWithDestinations } from "../../dto/package/packageResponseDTO";
 import {
   ShareLinkResponseDTO,
+  WishlistGroupMapperInput,
   WishlistGroupResponseDTO,
   WishlistNoteResponseDTO,
   WishlistPackageResponseDTO,
@@ -15,7 +18,9 @@ export class WishlistResponseMapper {
         : new Date().toISOString(),
     };
   }
-  static toPackageResponseDTO(pkg: any): WishlistPackageResponseDTO {
+  static toPackageResponseDTO(
+    pkg: PackageWithDestinations,
+  ): WishlistPackageResponseDTO {
     return {
       _id: pkg._id.toString(),
       name: pkg.name,
@@ -23,33 +28,39 @@ export class WishlistResponseMapper {
       discount: pkg.discount ?? 0,
       duration: pkg.duration,
       images: pkg.images,
-      category: pkg.category,
+      category: pkg.category.toString(),
       destinations: pkg.destinations?.map((dest: any) =>
         typeof dest === "object" && dest !== null
           ? { _id: dest._id.toString(), name: dest.name }
           : dest.toString(),
       ),
-      isCustomizable: pkg.isCustomizable,
       availableSlots: pkg.availableSlots,
     };
   }
-  static toGroupResponseDTO(group: any): WishlistGroupResponseDTO {
+  static toGroupResponseDTO(
+    group: WishlistGroupMapperInput,
+  ): WishlistGroupResponseDTO {
     return {
       _id: group._id.toString(),
       userId: group.userId.toString(),
       title: group.title || "",
       description: group.description || "",
       isPublic: group.isPublic ?? false,
-      shareToken: group.shareToken,
-      packages: group.packages
-        ? group.packages.map(this.toPackageResponseDTO)
-        : [],
+      ...(group.shareToken && { shareToken: group.shareToken }),
+      packages:
+        group.packages.length > 0 && group.packages[0] instanceof Types.ObjectId
+          ? group.packages.map((pkg) => pkg.toString())
+          : group.packages.map((pkg) =>
+              this.toPackageResponseDTO(pkg as PackageWithDestinations),
+            ),
       notes: group.notes ? group.notes.map(this.toNoteResponseDTO) : [],
       createdAt: new Date(group.createdAt).toISOString(),
       updatedAt: new Date(group.updatedAt).toISOString(),
     };
   }
-  static toGroupResponseListDTO(groups: any[]): WishlistGroupResponseDTO[] {
+  static toGroupResponseListDTO(
+    groups: WishlistGroupMapperInput[],
+  ): WishlistGroupResponseDTO[] {
     return groups.map((group) => this.toGroupResponseDTO(group));
   }
   static toShareLinkDTO(data: { shareToken: string }): ShareLinkResponseDTO {

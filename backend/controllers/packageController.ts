@@ -1,13 +1,14 @@
-import { inject, injectable } from "inversify";
-import { IPackageController } from "../interfaces/IPackageController";
-import { Types } from "../types/types";
-import type { IPackageService } from "../interfaces/IPackageService";
 import { NextFunction, Request, Response } from "express";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
-import { CustomError } from "../utils/customError";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { StatusCode } from "../constants/statusCodeConstants";
 import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
+import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
+import { IPackageController } from "../interfaces/IPackageController";
+import type { IPackageService } from "../interfaces/IPackageService";
+import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
+import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
 
 @injectable()
@@ -24,9 +25,12 @@ export class PackageController implements IPackageController {
         packageId as string,
       );
 
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(pkg));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGE,
+        pkg,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -48,16 +52,17 @@ export class PackageController implements IPackageController {
           StatusCode.NOT_FOUND,
         );
       }
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
 
-  //operator
   createPackage = async (req: Request, res: Response, next: NextFunction) => {
     try {
       logger.info("operator creating a new package", {
@@ -67,21 +72,17 @@ export class PackageController implements IPackageController {
         action: "CREATE_PACKAGE",
       });
       const operatorId = req?.user?.id;
-      const dto = PackageRequestMapper.toCreatePackageEntity(
-        req.body,
-        operatorId as string,
-      );
 
-      const packageData = {
-        ...req.body,
-        operatorId,
-      };
-      const created =
-        await this._packageService.createPackageService(packageData);
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        data: PackageResponseMapper.toPackageResponseDTO(created),
-      });
+      const created = await this._packageService.createPackageService(
+        operatorId as string,
+        req.body,
+      );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.CREATED,
+        created,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -96,7 +97,7 @@ export class PackageController implements IPackageController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawPackages, totalCount] = await Promise.all([
+      const [packages, totalCount] = await Promise.all([
         this._packageService.getFilteredPaginatedPackagesService(
           {},
           skip,
@@ -104,15 +105,17 @@ export class PackageController implements IPackageController {
         ),
         this._packageService.getTotalPackagesCount(),
       ]);
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-      });
+      const data = { packages, totalCount };
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGES,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
-  //operator
 
   getMyPackagesCount = async (
     req: Request,
@@ -125,7 +128,7 @@ export class PackageController implements IPackageController {
         await this._packageService.getOperatorPackagesCountService(
           operatorId as string,
         );
-      res.status(StatusCode.OK).json({ success: true, totalPakagesCount });
+      sendSuccessResponse(res,RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_COUNT,totalPakagesCount,StatusCode.OK)
     } catch (error) {
       next(error);
     }
@@ -153,7 +156,13 @@ export class PackageController implements IPackageController {
           skip,
           Number(limit),
         );
-      res.status(StatusCode.OK).json({ success: true, totalCount, packages });
+      const data = { packages, totalCount };
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGES,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -173,9 +182,12 @@ export class PackageController implements IPackageController {
         operatorId,
       );
 
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(pkg));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGE,
+        pkg,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -202,10 +214,12 @@ export class PackageController implements IPackageController {
           StatusCode.NOT_FOUND,
         );
       }
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -214,12 +228,12 @@ export class PackageController implements IPackageController {
   updatePackage = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const packageId = req.params.id;
-      const dto = PackageRequestMapper.toUpdatePackageEntity(req.body);
+
       const updatedPackage =
         await this._packageService.updateOperatorPackageService(
           packageId as string,
           req.user!.id,
-          dto,
+          req.body,
         );
       if (!updatedPackage) {
         return next(
@@ -229,15 +243,17 @@ export class PackageController implements IPackageController {
           ),
         );
       }
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageResponseDTO(updatedPackage));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.UPDATE,
+        updatedPackage,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
 
-  //user
   getPaginatedPackages = async (
     req: Request,
     res: Response,
@@ -247,15 +263,18 @@ export class PackageController implements IPackageController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawPackages, totalCount] = await Promise.all([
+      const [packages, totalCount] = await Promise.all([
         this._packageService.getPaginatedPackagesService(skip, limit),
         this._packageService.getTotalPackagesCount(),
       ]);
 
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-      });
+      const data = { packages, totalCount };
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGES,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -263,10 +282,13 @@ export class PackageController implements IPackageController {
 
   getAllPackages = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const rawPackages = await this._packageService.getAllPackagesService();
-      res.json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-      });
+      const packages = await this._packageService.getAllPackagesService();
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGES,
+        packages,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -279,16 +301,13 @@ export class PackageController implements IPackageController {
   ) => {
     try {
       const query = req.query;
-      const {
-        packages: rawPackages,
-        totalCount,
-        uniqueCategoryCount,
-      } = await this._packageService.getFilteredPackagesService(query);
-      res.status(200).json({
-        packages: PackageResponseMapper.toPackageListResponseDTO(rawPackages),
-        totalCount,
-        uniqueCategoryCount,
-      });
+      const data = await this._packageService.getFilteredPackagesService(query);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGES,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -305,9 +324,12 @@ export class PackageController implements IPackageController {
       const packages = await this._packageService.getPackagesByCategoryService(
         category as string,
       );
-      res
-        .status(StatusCode.OK)
-        .json(PackageResponseMapper.toPackageListResponseDTO(packages));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PACKAGE.SUCCESS.FETCH_PACKAGES,
+        packages,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

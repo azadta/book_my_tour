@@ -1028,7 +1028,6 @@ export const getCouponFields = (formData: Record<string, any>): FormField[] => {
       id: "type",
       label: "Coupon Type",
       type: "select",
-
       required: true,
       options: [
         { label: "General Promo", value: "GENERAL" },

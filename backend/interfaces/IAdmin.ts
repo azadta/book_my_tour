@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+
 interface Address {
   houseNo?: string;
   landmark?: string;

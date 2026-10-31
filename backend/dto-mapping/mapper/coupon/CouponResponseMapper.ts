@@ -1,11 +1,13 @@
+import { ICouponDocument } from "../../../models/Coupon";
 import {
   AvailableCouponsResponseDTO,
+  AvailalbleCouponsMapperInput,
   CouponResponseDTO,
   ValidateCouponResponseDTO,
 } from "../../dto/coupon/couponResponseDTO";
 
 export class CouponResponseMapper {
-  static toCouponResponseDTO(doc: any): CouponResponseDTO {
+  static toCouponResponseDTO(doc: ICouponDocument): CouponResponseDTO {
     return {
       _id: doc?._id?.toString() ?? "",
       code: doc?.code ?? "",
@@ -17,7 +19,7 @@ export class CouponResponseMapper {
       maxDiscountAmount: doc?.maxDiscountAmount,
       minBookingAmount: doc?.minBookingAmount ?? 0,
       bankName: doc?.bankName,
-      allowedBins: doc?.allowedBins,
+      ...(doc.allowedBins !== undefined && { allowedBins: doc?.allowedBins }),
       razorpayOfferId: doc.razorpayOfferId,
       validTill: doc.validTill.toISOString(),
       isActive: doc.isActive,
@@ -26,11 +28,13 @@ export class CouponResponseMapper {
     };
   }
 
-  static toCouponResponseDTOList(docs: any[]): CouponResponseDTO[] {
+  static toCouponResponseDTOList(docs: ICouponDocument[]): CouponResponseDTO[] {
     return docs.map((doc) => this.toCouponResponseDTO(doc));
   }
 
-  static toAvailableCouponsDTO(data: any): AvailableCouponsResponseDTO {
+  static toAvailableCouponsDTO(
+    data: AvailalbleCouponsMapperInput,
+  ): AvailableCouponsResponseDTO {
     return {
       bankOffers: this.toCouponResponseDTOList(data?.bankOffers),
       generalCoupons: this.toCouponResponseDTOList(data?.generalCoupons),

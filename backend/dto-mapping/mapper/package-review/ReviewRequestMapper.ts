@@ -1,11 +1,12 @@
 import {
+  ReviewRequestBody,
   CreateReviewRequestDTO,
   UpdateReviewRequestDTO,
 } from "../../dto/package-review/packageReviewRequestDTO";
 
 export class ReviewRequestMapper {
   static toCreateReviewReqDTO(
-    body: any,
+    body:ReviewRequestBody,
     packageId: string,
     userId: string,
   ): CreateReviewRequestDTO {
@@ -28,7 +29,7 @@ export class ReviewRequestMapper {
     };
   }
 
-  static toUpdateReviewReqDTO(body: any): UpdateReviewRequestDTO {
+  static toUpdateReviewReqDTO(body: ReviewRequestBody): UpdateReviewRequestDTO {
     const payload: UpdateReviewRequestDTO = {};
     if (body.rating !== undefined) {
       payload.rating = Number(body.rating) || 0;

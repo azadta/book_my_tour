@@ -4,7 +4,7 @@ export interface createCouponRequestDTO {
   code: string;
   title: string;
   description: string;
-  type?: CouponType;
+  type: CouponType;
   discountType: "PERCENTAGE" | "FLAT";
   discountValue: number;
   maxDiscountAmount?: number;
@@ -16,9 +16,32 @@ export interface createCouponRequestDTO {
   isActive: boolean;
 }
 
-export type updateCouponRequestDTO = createCouponRequestDTO
+export interface createCouponInput {
+  code: string;
+  title: string;
+  description: string;
+  type: CouponType;
+  discountType: "PERCENTAGE" | "FLAT";
+  discountValue: number | string;
+  maxDiscountAmount?: number | string;
+  minBookingAmount?: number | string;
+  bankName?: string;
+  allowedBins?: string[];
+  razorpayOfferId?: string;
+  validTill: string;
+  isActive: boolean;
+}
+
+export type updateCouponInput=createCouponInput
+
+export type updateCouponRequestDTO = createCouponRequestDTO;
 
 export interface ValidateCouponRequestDTO {
+  code: string;
+  bookingAmount: number;
+  cardBin?: string;
+}
+export interface ValidateCouponBody {
   code: string;
   bookingAmount: number;
   cardBin?: string;

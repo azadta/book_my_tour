@@ -1,9 +1,11 @@
 import { injectable } from "inversify";
-import { IWishlistRepository } from "../interfaces/IWishlistRepository";
-import { IWishlistGroup } from "../interfaces/IWishList";
-import { BaseRepository } from "./baseRepository";
-import WishlistGroup from "../models/WishlistGroup";
+import { PackageWithDestinations } from "../dto-mapping/dto/package/packageResponseDTO";
 import { CreateWishlistGroupRequestDTO } from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
+import { WishlistGroupWithPopulatedPackages } from "../dto-mapping/dto/wishlist/wishlistResponseDTO";
+import { IWishlistGroup } from "../interfaces/IWishList";
+import { IWishlistRepository } from "../interfaces/IWishlistRepository";
+import WishlistGroup from "../models/WishlistGroup";
+import { BaseRepository } from "./baseRepository";
 
 @injectable()
 export class WishlistRepository
@@ -14,8 +16,12 @@ export class WishlistRepository
     super(WishlistGroup);
   }
 
-  async findByUserId(userId: string): Promise<IWishlistGroup[]> {
-    return WishlistGroup.find({ userId }).populate({
+  async findByUserId(
+    userId: string,
+  ): Promise<WishlistGroupWithPopulatedPackages[]> {
+    return WishlistGroup.find({ userId }).populate<{
+      packages: PackageWithDestinations[];
+    }>({
       path: "packages",
       populate: {
         path: "destinations",

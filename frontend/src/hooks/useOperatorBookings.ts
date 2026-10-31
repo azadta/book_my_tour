@@ -24,8 +24,8 @@ export const useOperatorBookings = (
         }),
         axiosInstance.get(APP_ROUTES.DASHBOARD.OPERATOR.STATS),
       ]);
-      setBookings(bookingRes.data.bookings || []);
-      setTotalCount(bookingRes.data.totalCount || 0);
+      setBookings(bookingRes.data.result.bookings || []);
+      setTotalCount(bookingRes.data.result.totalCount || 0);
       setPendingCancelCount(statsRes.data.cancelRequestedBookings || 0);
     } catch (error: any) {
       const message =

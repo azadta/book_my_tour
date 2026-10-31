@@ -1,7 +1,14 @@
 import { inject, injectable } from "inversify";
-import { QueryFilter } from "mongoose";
+import { Types as mongooseTypes, QueryFilter } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import {
+  IUpdatePackageRequestDTO,
+  PackageInput,
+} from "../dto-mapping/dto/package/packageRequestDTO";
+import { IPackageResponseDTO } from "../dto-mapping/dto/package/packageResponseDTO";
+import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
+import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
 import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
 import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
@@ -9,11 +16,6 @@ import { IPackageService } from "../interfaces/IPackageService";
 import { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { Types as mongooseTypes } from "mongoose";
-import {
-  ICreatePackageRequestDTO,
-  IUpdatePackageRequestDTO,
-} from "../dto-mapping/dto/package/packageRequestDTO";
 
 @injectable()
 export class PackageService implements IPackageService {
@@ -34,7 +36,8 @@ export class PackageService implements IPackageService {
     return this._packageRepository.deleteById(packageId);
   }
 
-  async createPackageService(dto: ICreatePackageRequestDTO): Promise<Ipackage> {
+  async createPackageService(operatorId: string, body: PackageInput) {
+    const dto = PackageRequestMapper.toCreatePackageEntity(body, operatorId);
     const existingPackage = await this._packageRepository.getPackageByName(
       dto.name as string,
     );
@@ -45,22 +48,28 @@ export class PackageService implements IPackageService {
       );
     }
 
-    return await this._packageRepository.create(dto);
+    const pkg = await this._packageRepository.create(dto);
+    return PackageResponseMapper.toPackageResponseDTO(pkg);
   }
 
   async updatePackageService(
     packageId: string,
 
-    dto: IUpdatePackageRequestDTO,
-  ): Promise<Ipackage | null> {
-    return await this._packageRepository.updatePackageById(packageId, dto);
+    body: PackageInput,
+  ): Promise<IPackageResponseDTO> {
+    const dto = PackageRequestMapper.toUpdatePackageEntity(body);
+    const updatedPackage = await this._packageRepository.updatePackageById(
+      packageId,
+      dto,
+    );
+    return PackageResponseMapper.toPackageResponseDTO(updatedPackage);
   }
   async updateOperatorPackageService(
     packageId: string,
     operatorId: string,
-    dto: IUpdatePackageRequestDTO,
-  ): Promise<Ipackage | null> {
-
+    body: PackageInput,
+  ): Promise<IPackageResponseDTO> {
+    const dto = PackageRequestMapper.toUpdatePackageEntity(body);
     const existingPackage = await this._packageRepository.getByIdAndOperator(
       packageId,
       operatorId,
@@ -72,7 +81,11 @@ export class PackageService implements IPackageService {
       );
     }
 
-    return await this._packageRepository.updatePackageById(packageId, dto);
+    const updatedPackage = await this._packageRepository.updatePackageById(
+      packageId,
+      dto,
+    );
+    return PackageResponseMapper.toPackageResponseDTO(updatedPackage);
   }
   async deleteOperatorPackageService(
     packageId: string,
@@ -85,8 +98,13 @@ export class PackageService implements IPackageService {
     filter: QueryFilter<Ipackage> = {},
     skip: number,
     limit: number,
-  ): Promise<Ipackage[]> {
-    return this._packageRepository.getFilteredPackages(filter, skip, limit);
+  ): Promise<IPackageResponseDTO[]> {
+    const packages = await this._packageRepository.getFilteredPackages(
+      filter,
+      skip,
+      limit,
+    );
+    return PackageResponseMapper.toPackageListResponseDTO(packages);
   }
 
   getOperatorPackagesCountService(operatorId: string): Promise<number> {
@@ -107,17 +125,23 @@ export class PackageService implements IPackageService {
         StatusCode.NOT_FOUND,
       );
     }
-    return pkg;
+    return PackageResponseMapper.toPackageResponseDTO(pkg);
   }
   async getPaginatedPackagesService(
     skip: number,
     limit: number,
-  ): Promise<Ipackage[]> {
-    return this._packageRepository.getFilteredPackages({}, skip, limit);
+  ): Promise<IPackageResponseDTO[]> {
+    const packages = await this._packageRepository.getFilteredPackages(
+      {},
+      skip,
+      limit,
+    );
+    return PackageResponseMapper.toPackageListResponseDTO(packages);
   }
 
-  getAllPackagesService() {
-    return this._packageRepository.findAllPackages();
+  async getAllPackagesService() {
+    const packages = await this._packageRepository.findAllPackages();
+    return PackageResponseMapper.toPackageListResponseDTO(packages);
   }
 
   async getFilteredPackagesService(query: any) {
@@ -176,14 +200,18 @@ export class PackageService implements IPackageService {
       this._packageRepository.getUniqueCategoryCount(filter),
     ]);
 
-    return { packages, totalCount, uniqueCategoryCount };
+    return {
+      packages: PackageResponseMapper.toPackageListResponseDTO(packages),
+      totalCount,
+      uniqueCategoryCount,
+    };
   }
   async getPackageByIdService(id: string) {
     const pkg = await this._packageRepository.getPackageById(id);
     if (!pkg) {
       throw new CustomError(RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND, 404);
     }
-    return pkg;
+    return PackageResponseMapper.toPackageResponseDTO(pkg);
   }
   async getPackagesByCategoryService(categoryName: string) {
     const category =
@@ -192,8 +220,10 @@ export class PackageService implements IPackageService {
       );
     if (!category) return [];
 
-    return this._packageRepository.findPackageByCategory(
+    const packages=await this._packageRepository.findPackageByCategory(
       category._id.toString(),
     );
+
+   return PackageResponseMapper.toPackageListResponseDTO(packages)
   }
 }

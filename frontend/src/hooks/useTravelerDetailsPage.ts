@@ -32,7 +32,7 @@ export const useTravelerDetailsPage = () => {
         packageDescription,
         offerId,
         isFullyPaidByWallet,
-      } = response.data;
+      } = response.result;
       if (isFullyPaidByWallet) {
         toast.success(FEEDBACK_MESSAGES.BOOKING.SUCCESS.BOOKING);
         setIsSubmitting(false);

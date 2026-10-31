@@ -2,10 +2,11 @@ import { Types } from "mongoose";
 import {
   ICreatePackageRequestDTO,
   IUpdatePackageRequestDTO,
+  PackageInput,
 } from "../../dto/package/packageRequestDTO";
 
 export class PackageRequestMapper {
-  static mapChildPricing(body: any) {
+  static mapChildPricing(body: PackageInput) {
     const enabled =
       body?.["childPricing.enabled"] === true ||
       body?.["childPricing.enabled"] === "true";
@@ -25,12 +26,12 @@ export class PackageRequestMapper {
     };
   }
   static toCreatePackageEntity(
-    body: any,
+    body: PackageInput,
     operatorId: string,
   ): ICreatePackageRequestDTO {
     return {
       name: body?.name,
-      amount: body?.amount,
+      amount: Number(body?.amount),
       childPricing: this.mapChildPricing(body),
       destinations: (body?.destinations || []).map(
         (id: any) => new Types.ObjectId(id),
@@ -39,8 +40,10 @@ export class PackageRequestMapper {
         day: Number(body?.["duration.day"]),
         night: Number(body?.["duration.night"]),
       },
-      specifications: body?.specifications,
-      startDate: body?.startDate,
+      ...(body.specifications !== undefined && {
+        specifications: body.specifications,
+      }),
+      startDate: new Date(body.startDate),
       startPoint: body?.startPoint,
       ...(body?.remark && { remark: body.remark }),
       discount: body?.discount ?? 0,
@@ -52,10 +55,10 @@ export class PackageRequestMapper {
     };
   }
 
-  static toUpdatePackageEntity(body: any): IUpdatePackageRequestDTO {
+  static toUpdatePackageEntity(body: PackageInput): IUpdatePackageRequestDTO {
     return {
       name: body?.name,
-      amount: body?.amount,
+      amount: Number(body?.amount),
       childPricing: this.mapChildPricing(body),
       destinations: (body?.destinations || []).map(
         (id: any) => new Types.ObjectId(id),
@@ -64,8 +67,10 @@ export class PackageRequestMapper {
         day: Number(body?.["duration.day"]),
         night: Number(body?.["duration.night"]),
       },
-      specifications: body?.specifications,
-      startDate: body?.startDate,
+      ...(body.specifications !== undefined && {
+        specifications: body.specifications,
+      }),
+      startDate: new Date(body.startDate),
       startPoint: body?.startPoint,
       ...(body?.remark && { remark: body.remark }),
       discount: body?.discount ?? 0,

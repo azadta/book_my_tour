@@ -1,7 +1,7 @@
-import { ICreateDestinationRequestDTO } from "../../dto/package-destination/packageDestinationRequestDTO";
+import { CreateDestinationRequestInput, ICreateDestinationRequestDTO } from "../../dto/package-destination/packageDestinationRequestDTO";
 
 export class PackageDestinationRequestMapper {
-  static toDestinationEntity(data: any): ICreateDestinationRequestDTO {
+  static toDestinationEntity(data:CreateDestinationRequestInput): ICreateDestinationRequestDTO {
     return {
       name: data?.name?.trim() ?? "",
       location: {

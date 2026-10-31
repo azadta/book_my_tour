@@ -16,7 +16,7 @@ export const useBookingSuccessPage = () => {
         const response = await axiosInstance.get(
           APP_ROUTES.BOOKINGS.USER.BY_ORDER_ID(orderId),
         );
-        setBooking(response.data);
+        setBooking(response.data.result);
       }
     } catch (error: any) {
       const message =

@@ -1,51 +1,46 @@
-import { type } from "node:os";
 import {
+  CancelBookingBody,
   CancelBookingRequestDTO,
+  CreateBookingBody,
   CreateBookingRequestDTO,
+  GetOperatorBookingsQuery,
   GetOperatorBookingsQueryDTO,
   OperatorCancelBookingRequestDTO,
   OperatorRescheduleBookingRequestDTO,
+  ProcessAdminCancellationBody,
   ProcessAdminCancellationRequestDTO,
+  toOperatorReschuduleBookingBody,
   UpdateAttendanceRequestDTO,
+  VerifyBookingPaymentBody,
   VerifyCancellationRequestDTO,
   VerifyPaymentRequestDTO,
 } from "../../dto/booking/bookingRequestDTO";
 
 export class BookingRequestMapper {
-  static toCancelBookingDTO(
-    userId: string,
-    bookingId: string,
-    body: any,
-  ): CancelBookingRequestDTO {
+  static toCancelBookingDTO(body: CancelBookingBody): CancelBookingRequestDTO {
     return {
-      userId,
-      bookingId: bookingId ?? "",
       reason: body?.reason ?? "",
     };
   }
 
-  static toCreateBookingDTO(
-    userId: string,
-    body: any,
-  ): CreateBookingRequestDTO {
+  static toCreateBookingDTO(body: CreateBookingBody): CreateBookingRequestDTO {
     return {
-      userId,
-      packageId: body?.packageId || "",
-      adultCount: Number(body?.adultCount ?? 1),
-      childCount: Number(body?.childCount ?? 0),
+      packageId: body.packageId,
+      adultCount: Number(body.adultCount),
+      childCount: Number(body.childCount ?? 0),
       primaryContact: {
-        name: body?.primaryContact?.name || "",
-        email: body?.primaryContact?.email || "",
-        phone: body?.primaryContact?.phone || "",
+        name: body?.primaryContact.name,
+        email: body?.primaryContact.email,
+        phone: body?.primaryContact.phone,
       },
       members: Array.isArray(body?.members)
         ? body.members.map((member: any) => ({
-            type: member?.type,
-            firstName: member?.firstName || "",
-            lastName: member?.lastName || "",
-            dob: new Date(member?.dob),
-            gender: member?.gender || "",
-            passportNumber: member?.passportNumber || null,
+            type: member.type,
+            firstName: member.firstName,
+            lastName: member.lastName,
+            dob: new Date(member.dob),
+            gender: member.gender,
+            passportNumber: member.passportNumber || null,
           }))
         : [],
 
@@ -55,81 +50,62 @@ export class BookingRequestMapper {
       removedActivityIds: Array.isArray(body.removedActivityIds)
         ? body.removedActivityIds
         : [],
-      generalCouponCode: body?.generalCouponCode,
-      bankCouponCode: body?.bankCouponCode,
-      isWalletApplied: Boolean(body?.isWalletApplied),
+      ...(body.generalCouponCode !== undefined && {
+        generalCouponCode: body.generalCouponCode,
+      }),
+      ...(body.bankCouponCode !== undefined && {
+        bankCouponCode: body.generalCouponCode,
+      }),
+      isWalletApplied:
+        body.isWalletApplied === true || body.isWalletApplied === "true",
     };
   }
   static toVerifyPaymentDTO(
-    userId: string,
-    body: any,
+    body: VerifyBookingPaymentBody,
   ): VerifyPaymentRequestDTO {
     return {
-      userId,
-      razorpayOrderId: body?.razorpayOrderId ?? "",
-      razorpayPaymentId: body?.razorpayPaymentId ?? "",
-      razorpaySignature: body?.razorpaySignature ?? "",
-      packageId: body.packageId ?? "",
+      razorpayOrderId: body.razorpayOrderId,
+      razorpayPaymentId: body.razorpayPaymentId,
+      razorpaySignature: body.razorpaySignature,
+      packageId: body.packageId,
     };
   }
 
-  static toUpdateAttendanceDTO(
-    operatorId: string,
-    params: any,
-    body: any,
-  ): UpdateAttendanceRequestDTO {
+  static toUpdateAttendanceDTO(body: any): UpdateAttendanceRequestDTO {
     return {
-      operatorId,
-      bookingId: params?.bookingId || "",
       attendance: body?.attendance ?? "",
     };
   }
 
   static toOperatorCancelBookingDTO(
-    operatorId: string,
-    params: any,
     body: any,
   ): OperatorCancelBookingRequestDTO {
     return {
-      operatorId,
-      bookingId: params?.bookingId || "",
       reason: body.reason ?? "",
     };
   }
   static toOperatorReschuduleBookingDTO(
-    operatorId: string,
-    params: any,
-    body: any,
+    body: toOperatorReschuduleBookingBody,
   ): OperatorRescheduleBookingRequestDTO {
     return {
-      operatorId,
-      bookingId: params?.bookingId || "",
-      startDate: body?.startDate ?? "",
+      startDate: new Date(body.startDate),
     };
   }
 
-  static toVerifyCancellationDTO(
-    operatorId: string,
-    params: any,
-    body: any,
-  ): VerifyCancellationRequestDTO {
+  static toVerifyCancellationDTO(body: any): VerifyCancellationRequestDTO {
     return {
-      operatorId,
-      bookingId: params?.bookingId ?? "",
       action: body.action === "APPROVE" ? "APPROVE" : "REJECT",
       operatorNotes: body?.operatorNotes ?? "",
     };
   }
 
   static toGetOperatorBookingsQueryDTO(
-    operatorId: string,
-    query: any,
+    query: GetOperatorBookingsQuery,
   ): GetOperatorBookingsQueryDTO {
     const page = Number(query?.page) > 0 ? Number(query.page) : 1;
     const limit = Number(query?.limit) > 0 ? Number(query.limit) : 5;
     const skip = (page - 1) * limit;
     return {
-      operatorId,
       ...(query?.status && { status: String(query.status) }),
       skip,
       limit,
@@ -137,13 +113,11 @@ export class BookingRequestMapper {
   }
 
   static toProcessAdminCancellationDTO(
-    params: any,
-    body: any,
+    body: ProcessAdminCancellationBody,
   ): ProcessAdminCancellationRequestDTO {
     return {
-      bookingId: params?.bookingId ?? "",
-      approve: Boolean(body.approve),
-      adminNotes: body?.adminNotes ?? undefined,
+      approve: body.approve,
+      adminNotes: body.adminNotes,
     };
   }
 }

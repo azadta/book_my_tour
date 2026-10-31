@@ -1,3 +1,5 @@
+import { IDestination } from "../../../models/Destination";
+import { Ipackage } from "../../../models/Package";
 import {
   ICategorySummaryDTO,
   IDestinationSummaryDTO,
@@ -9,11 +11,11 @@ export interface IPackageResponseDTO {
   _id: string;
   name: string;
   amount: number;
-    childPricing: {
+  childPricing: {
     enabled: boolean;
-    minAge?: number|undefined;
-    maxAge?: number|undefined;
-    percentage?: number|undefined;
+    minAge?: number | undefined;
+    maxAge?: number | undefined;
+    percentage?: number | undefined;
   };
   destinations: IDestinationSummaryDTO[] | string[];
   duration: {
@@ -35,3 +37,7 @@ export interface IPackageResponseDTO {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type PackageWithDestinations = Omit<Ipackage, "destinations"> & {
+  destinations: IDestination[];
+};

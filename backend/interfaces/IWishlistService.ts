@@ -1,49 +1,56 @@
 import {
+  AddWishlistNoteInput,
   AddWishlistNoteRequestDTO,
+  CreateWishlistGroupInput,
   CreateWishlistGroupRequestDTO,
+  EditWishlistGroupInput,
   EditWishlistGroupRequestDTO,
+  EditWishlistNoteInput,
   EditWishlistNoteRequestDTO,
+  ToggleWishlistPackageInput,
   ToggleWishlistPackageRequestDTO,
 } from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
+import {
+  ShareLinkResponseDTO,
+  WishlistGroupResponseDTO,
+} from "../dto-mapping/dto/wishlist/wishlistResponseDTO";
 import { IWishlistGroup } from "./IWishList";
 
 export interface IWishlistService {
-  getUserWishlists(userId: string): Promise<IWishlistGroup[]>;
+  getUserWishlists(userId: string): Promise<WishlistGroupResponseDTO[]>;
   createWishlistGroup(
     userId: string,
-    dto: CreateWishlistGroupRequestDTO,
-  ): Promise<IWishlistGroup>;
+    body: CreateWishlistGroupInput,
+  ): Promise<WishlistGroupResponseDTO>;
   togglePackageInWishlistGroup(
     userId: string,
-    dto: ToggleWishlistPackageRequestDTO,
-  ): Promise<IWishlistGroup>;
+    body: ToggleWishlistPackageInput,
+  ): Promise<WishlistGroupResponseDTO>;
   addNoteToWishlistGroup(
     userId: string,
     groupId: string,
-    dto: AddWishlistNoteRequestDTO,
-  ): Promise<IWishlistGroup>;
+    body: AddWishlistNoteInput,
+  ): Promise<WishlistGroupResponseDTO>;
   generateShareableLink(
     userId: string,
     groupId: string,
-  ): Promise<{
-    shareToken: string;
-  }>;
-  getSharedGroup(shareToken: string): Promise<IWishlistGroup>;
+  ): Promise<ShareLinkResponseDTO>;
+  getSharedGroup(shareToken: string): Promise<WishlistGroupResponseDTO>;
   editGroup(
     userId: string,
     groupId: string,
-    dto: EditWishlistGroupRequestDTO,
-  ): Promise<IWishlistGroup>;
+    body: EditWishlistGroupInput,
+  ): Promise<WishlistGroupResponseDTO>;
   deleteGroup(userId: string, groupId: string): Promise<IWishlistGroup | null>;
   deleteNote(
     userId: string,
     groupId: string,
     noteId: string,
-  ): Promise<IWishlistGroup>;
+  ): Promise<WishlistGroupResponseDTO>;
   editNote(
     userId: string,
     groupId: string,
     noteId: string,
-    dto: EditWishlistNoteRequestDTO,
-  ): Promise<IWishlistGroup>;
+    body: EditWishlistNoteInput,
+  ): Promise<WishlistGroupResponseDTO>;
 }

@@ -77,7 +77,7 @@ export const validateCreateBooking: (ValidationChain | RequestHandler)[] = [
     .optional()
     .isArray()
     .withMessage("Added activity IDs must be an array"),
-  body("addedActivityIds.*.")
+  body("addedActivityIds.*")
     .optional()
     .isString()
     .withMessage("Each added activity Ids must be a string"),
@@ -85,7 +85,7 @@ export const validateCreateBooking: (ValidationChain | RequestHandler)[] = [
     .optional()
     .isArray()
     .withMessage("Removed activity IDs must be an array"),
-  body("removedActivityIds.*.")
+  body("removedActivityIds.*")
     .optional()
     .isString()
     .withMessage("Each removed activity Ids must be a string"),

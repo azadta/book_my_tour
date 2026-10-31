@@ -1,20 +1,25 @@
 import { QueryFilter } from "mongoose";
+import { PackageInput } from "../dto-mapping/dto/package/packageRequestDTO";
+import { IPackageResponseDTO } from "../dto-mapping/dto/package/packageResponseDTO";
 import { Ipackage } from "../models/Package";
-import { IUpdatePackageRequestDTO } from "../dto-mapping/dto/package/packageRequestDTO";
 
 export interface IPackageService {
   getTotalPackagesCount(): Promise<number>;
   deletePackageService(packageId: string): Promise<Ipackage | null>;
-  createPackageService(data: Partial<Ipackage>): Promise<Ipackage>;
+  createPackageService(
+    operatorId: string,
+    body: PackageInput,
+  ): Promise<IPackageResponseDTO>;
   updatePackageService(
     packageId: string,
-    dto: IUpdatePackageRequestDTO,
-  ): Promise<Ipackage | null>;
+    body: PackageInput,
+  ): Promise<IPackageResponseDTO>;
   updateOperatorPackageService(
     packageId: string,
     operatorId: string,
-    dto: IUpdatePackageRequestDTO,
-  ): Promise<Ipackage | null>;
+    body: PackageInput,
+  ): Promise<IPackageResponseDTO>;
+
   deleteOperatorPackageService(
     packageId: string,
     operatorId: string,
@@ -23,19 +28,19 @@ export interface IPackageService {
     filter: QueryFilter<Ipackage>,
     skip: number,
     limit: number,
-  ): Promise<Ipackage[]>;
+  ): Promise<IPackageResponseDTO[]>;
   getOperatorPackagesCountService(operatorId: string): Promise<number>;
   getPackageByIdAndOperatorService(
     packageId: string,
     operatorId: string,
-  ): Promise<Ipackage>;
-  getPaginatedPackagesService(skip: number, limit: number): Promise<Ipackage[]>;
-  getAllPackagesService(): Promise<Ipackage[]>;
+  ): Promise<IPackageResponseDTO>;
+  getPaginatedPackagesService(skip: number, limit: number): Promise<IPackageResponseDTO[]>;
+  getAllPackagesService(): Promise<IPackageResponseDTO[]>;
   getFilteredPackagesService(query: any): Promise<{
-    packages: Ipackage[];
+    packages: IPackageResponseDTO[];
     totalCount: number;
     uniqueCategoryCount: number;
   }>;
-  getPackageByIdService(id: string): Promise<Ipackage | null>;
-  getPackagesByCategoryService(categoryName: string): Promise<Ipackage[]>;
+  getPackageByIdService(id: string): Promise<IPackageResponseDTO>;
+  getPackagesByCategoryService(categoryName: string): Promise<IPackageResponseDTO[]>;
 }

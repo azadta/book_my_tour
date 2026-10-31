@@ -33,3 +33,9 @@ export interface TopupOrderResponseDTO {
   currency: string;
   keyId: string;
 }
+export interface TopupOrderResponseInput {
+  orderId: string;
+  amount: number;
+  currency: string;
+  keyId: string;
+}

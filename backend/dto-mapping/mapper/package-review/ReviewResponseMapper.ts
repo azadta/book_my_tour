@@ -1,7 +1,8 @@
 import {
   PackageReviewResponseDTO,
   ReviewResponseDTO,
-  ReviewStatsDTO,
+  ReviewStats,
+  ReviewWithOptionalPopulatedUser,
   UpdateReviewResponseDTO,
   UserPopulatedDTO,
 } from "../../dto/package-review/packageReviewResponseDTO";
@@ -43,7 +44,7 @@ export class ReviewResponseMapper {
     };
   }
 
-  static toReviewStatsDTO(stats: any): ReviewStatsDTO {
+  static toReviewStatsDTO(stats: ReviewStats): ReviewStats {
     return {
       totalReviews: stats.totalReviews ?? 0,
       averageRating: Number((stats.averageRating ?? 0).toFixed(1)),
@@ -60,8 +61,8 @@ export class ReviewResponseMapper {
   }
 
   static toPackageReviewsResponseDTO(
-    reviews: any[],
-    stats: any,
+    reviews: ReviewWithOptionalPopulatedUser[],
+    stats: ReviewStats,
   ): PackageReviewResponseDTO {
     return {
       reviews: Array.isArray(reviews)

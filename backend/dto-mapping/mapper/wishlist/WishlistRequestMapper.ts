@@ -1,36 +1,49 @@
 import {
+  AddWishlistNoteInput,
   AddWishlistNoteRequestDTO,
+  CreateWishlistGroupInput,
   CreateWishlistGroupRequestDTO,
+  EditWishlistGroupInput,
   EditWishlistGroupRequestDTO,
+  EditWishlistNoteInput,
   EditWishlistNoteRequestDTO,
+  ToggleWishlistPackageInput,
   ToggleWishlistPackageRequestDTO,
 } from "../../dto/wishlist/wishlistRequestDTO";
 
 export class WishlistRequestMapper {
-  static toCreateGroupReqDTO(body: any): CreateWishlistGroupRequestDTO {
+  static toCreateGroupReqDTO(
+    body: CreateWishlistGroupInput,
+  ): CreateWishlistGroupRequestDTO {
     return {
       title: body.title,
-      description: body.description,
+      ...(body.description && { description: body.description }),
     };
   }
-  static toEditGroupReqDTO(body: any): EditWishlistGroupRequestDTO {
+  static toEditGroupReqDTO(
+    body: EditWishlistGroupInput,
+  ): EditWishlistGroupRequestDTO {
     return {
-      title: body.title,
-      description: body.description,
+      ...(body.title && { title: body.title }),
+      ...(body.description && { description: body.description }),
     };
   }
-  static toTogglePackageReqDTO(body: any): ToggleWishlistPackageRequestDTO {
+  static toTogglePackageReqDTO(
+    body: ToggleWishlistPackageInput,
+  ): ToggleWishlistPackageRequestDTO {
     return {
       groupId: body.groupId,
       packageId: body.packageId,
     };
   }
-  static toAddNoteReqDTO(body: any): AddWishlistNoteRequestDTO {
+  static toAddNoteReqDTO(
+    body: AddWishlistNoteInput,
+  ): AddWishlistNoteRequestDTO {
     return {
       text: body.text,
     };
   }
-  static toEditNoteReqDTO(body: any): EditWishlistNoteRequestDTO {
+  static toEditNoteReqDTO(body: EditWishlistNoteInput): EditWishlistNoteRequestDTO {
     return {
       text: body.text,
     };

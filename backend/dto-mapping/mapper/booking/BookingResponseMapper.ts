@@ -7,8 +7,7 @@ import {
   CreateBookingOrderResponseDTO,
   OperatorBookingListResponseDTO,
   PendingCancellationItemResponseDTO,
-  ProcessAdminCancellationResponseDTO,
-  VerifyPamentResponseDTO,
+  VerifyPamentResponseDTO
 } from "../../dto/booking/bookingResponseDTO";
 
 export class BookingResponseMapper {
@@ -193,15 +192,15 @@ export class BookingResponseMapper {
     }));
   }
 
-  static toProcessAdminCancellationResponseDTO(
-    updatedBookingEntity: any,
-    approve: boolean,
-    successMessage: string,
-  ): ProcessAdminCancellationResponseDTO {
-    return {
-      success: true,
-      message: successMessage,
-      data: this.toBookingDTO(updatedBookingEntity),
-    };
-  }
+  // static toProcessAdminCancellationResponseDTO(
+  //   updatedBookingEntity: any,
+  //   approve: boolean,
+  //   successMessage: string,
+  // ): ProcessAdminCancellationResponseDTO {
+  //   return {
+  //     success: true,
+  //     message: successMessage,
+  //     data: this.toBookingDTO(updatedBookingEntity),
+  //   };
+  // }
 }

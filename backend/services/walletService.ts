@@ -4,7 +4,9 @@ import mongoose from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import {
+  CreateTopupOrderInput,
   CreateTopupOrderRequestDTO,
+  verifyTopupPaymentInput,
   verifyTopupPaymentRequestDTO,
 } from "../dto-mapping/dto/wallet/walletRequestDTO";
 import type { IPaymentService } from "../interfaces/IPaymentService";
@@ -12,27 +14,19 @@ import type { IWalletRepository } from "../interfaces/IWalletRepository";
 import { IWalletService } from "../interfaces/IWalletService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
+import { WalletResponseMapper } from "../dto-mapping/mapper/wallet/WalletResponseMapper";
+import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestMapper";
 
 @injectable()
 export class WalletService implements IWalletService {
   constructor(
-    @inject(Types.WalletRepository) private _walletRepository: IWalletRepository,
+    @inject(Types.WalletRepository)
+    private _walletRepository: IWalletRepository,
     @inject(Types.PaymentService) private _paymentService: IPaymentService,
   ) {}
 
-  async getWallet(userId: string) {
-    let wallet = await this._walletRepository.findOne({ userId });
-    if (!wallet) {
-      wallet = await this._walletRepository.create({
-        userId: new mongoose.Types.ObjectId(userId),
-        balance: 0,
-        transactions: [],
-      });
-    }
-    return wallet;
-  }
-
-  async createTopupOrder(userId: string, dto: CreateTopupOrderRequestDTO) {
+  async createTopupOrder(userId: string, body: CreateTopupOrderInput) {
+    const dto = WalletRequestMapper.toCreateTopupOrderReqDTO(body);
     if (dto.amount <= 0) {
       throw new CustomError(
         RESPONSE_MESSAGES.WALLET.ERROR.NON_POSITIVE_AMOUNT,
@@ -61,15 +55,17 @@ export class WalletService implements IWalletService {
       description: "Wallet Top-up via Razorpay",
     };
     await this._walletRepository.addPendingTransaction(userId, transaction);
-    return {
+    const result = {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      keyId: process.env.RAZORPAY_KEY_ID,
+      keyId: process.env.RAZORPAY_KEY_ID as string,
     };
+    return WalletResponseMapper.toTopupOrderResponseDTO(result);
   }
 
-  async verifyTopupPayment(userId: string, dto: verifyTopupPaymentRequestDTO) {
+  async verifyTopupPayment(userId: string, body: verifyTopupPaymentInput) {
+    const dto = WalletRequestMapper.toVerifyTopupPaymentReqDTO(body);
     const isValid = this._paymentService.verifySignature(dto);
     const status = isValid ? "SUCCESS" : "FAILED";
     const updatedWallet =
@@ -79,13 +75,19 @@ export class WalletService implements IWalletService {
         dto.razorpayPaymentId,
         status,
       );
+    if (!updatedWallet) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.WALLET.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
     if (!isValid) {
       throw new CustomError(
         RESPONSE_MESSAGES.PAYMENT.ERROR.PAYMETNT_SIGNATURE,
         StatusCode.BAD_REQUEST,
       );
     }
-    return updatedWallet;
+    return WalletResponseMapper.toWalletResponseDTO(updatedWallet);
   }
 
   async getWalletWithPagination(
@@ -103,11 +105,13 @@ export class WalletService implements IWalletService {
       });
       return { balance: 0, transactions: [], totalCount: 0, totalPages: 1 };
     }
-    return {
+    const result = {
       balance: wallet.balance,
       transactions,
       totalCount,
       totalPages: Math.ceil(totalCount / limit) || 1,
     };
+
+    return WalletResponseMapper.toPaginatedWalletResponseDTO(result);
   }
 }

@@ -1,4 +1,4 @@
-import { CouponType } from "../../../models/Coupon";
+import { CouponType, ICouponDocument } from "../../../models/Coupon";
 
 export interface CouponResponseDTO {
   _id: string;
@@ -8,15 +8,15 @@ export interface CouponResponseDTO {
   type: CouponType;
   discountType: "PERCENTAGE" | "FLAT";
   discountValue: number;
-  maxDiscountAmount?: number;
-  minBookingAmount: number;
+  maxDiscountAmount: number;
+  minBookingAmount?: number;
   bankName?: string;
   allowedBins?: string[];
   razorpayOfferId?: string;
   validTill: string;
   isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AvailableCouponsResponseDTO {
@@ -34,3 +34,9 @@ export interface PaginatedCouponResponseDTO {
   coupons: CouponResponseDTO[];
   totalCount: number;
 }
+export interface AvailalbleCouponsMapperInput {
+  bankOffers: ICouponDocument[];
+  generalCoupons: ICouponDocument[];
+}
+
+

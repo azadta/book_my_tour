@@ -5,16 +5,22 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import { IWishlistGroup } from "../interfaces/IWishList";
 import type { IWishlistRepository } from "../interfaces/IWishlistRepository";
 
+import {
+  AddWishlistNoteInput,
+  CreateWishlistGroupInput,
+  EditWishlistGroupInput,
+  EditWishlistNoteInput,
+  ToggleWishlistPackageInput
+} from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
+import {
+  ShareLinkResponseDTO,
+  WishlistGroupResponseDTO,
+} from "../dto-mapping/dto/wishlist/wishlistResponseDTO";
+import { WishlistRequestMapper } from "../dto-mapping/mapper/wishlist/WishlistRequestMapper";
+import { WishlistResponseMapper } from "../dto-mapping/mapper/wishlist/WishlistResponseMapper";
 import { IWishlistService } from "../interfaces/IWishlistService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import {
-  AddWishlistNoteRequestDTO,
-  CreateWishlistGroupRequestDTO,
-  EditWishlistGroupRequestDTO,
-  EditWishlistNoteRequestDTO,
-  ToggleWishlistPackageRequestDTO,
-} from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
 
 @injectable()
 export class WishlistService implements IWishlistService {
@@ -23,19 +29,26 @@ export class WishlistService implements IWishlistService {
     private _wishlistRepository: IWishlistRepository,
   ) {}
 
-  async getUserWishlists(userId: string): Promise<IWishlistGroup[]> {
-    return this._wishlistRepository.findByUserId(userId);
+  async getUserWishlists(userId: string): Promise<WishlistGroupResponseDTO[]> {
+    const wishlistGroups = await this._wishlistRepository.findByUserId(userId);
+    return WishlistResponseMapper.toGroupResponseListDTO(wishlistGroups);
   }
   async createWishlistGroup(
     userId: string,
-    dto: CreateWishlistGroupRequestDTO,
-  ): Promise<IWishlistGroup> {
-    return this._wishlistRepository.createGroup(userId, dto);
+    body: CreateWishlistGroupInput,
+  ): Promise<WishlistGroupResponseDTO> {
+    const dto = WishlistRequestMapper.toCreateGroupReqDTO(body);
+    const wishlistGroup = await this._wishlistRepository.createGroup(
+      userId,
+      dto,
+    );
+    return WishlistResponseMapper.toGroupResponseDTO(wishlistGroup);
   }
   async togglePackageInWishlistGroup(
     userId: string,
-    dto: ToggleWishlistPackageRequestDTO,
-  ): Promise<IWishlistGroup> {
+    body: ToggleWishlistPackageInput,
+  ): Promise<WishlistGroupResponseDTO> {
+    const dto = WishlistRequestMapper.toTogglePackageReqDTO(body);
     const { groupId, packageId } = dto;
     const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group) {
@@ -58,13 +71,14 @@ export class WishlistService implements IWishlistService {
     if (!updatedGroup) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
-    return updatedGroup;
+    return WishlistResponseMapper.toGroupResponseDTO(updatedGroup);
   }
   async addNoteToWishlistGroup(
     userId: string,
     groupId: string,
-    dto: AddWishlistNoteRequestDTO,
-  ): Promise<IWishlistGroup> {
+    body: AddWishlistNoteInput,
+  ): Promise<WishlistGroupResponseDTO> {
+    const dto = WishlistRequestMapper.toAddNoteReqDTO(body);
     const { text } = dto;
     const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
@@ -78,12 +92,12 @@ export class WishlistService implements IWishlistService {
     if (!updatedGroup) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.ADD_NOTE);
     }
-    return updatedGroup;
+    return WishlistResponseMapper.toGroupResponseDTO(updatedGroup);
   }
   async generateShareableLink(
     userId: string,
     groupId: string,
-  ): Promise<{ shareToken: string }> {
+  ): Promise<ShareLinkResponseDTO> {
     const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
@@ -98,24 +112,25 @@ export class WishlistService implements IWishlistService {
 
     const token = randomBytes(12).toString("hex");
     await this._wishlistRepository.updateShareToken(groupId, token, true);
-    return { shareToken: token };
+    return WishlistResponseMapper.toShareLinkDTO({ shareToken: token });
   }
 
-  async getSharedGroup(shareToken: string): Promise<IWishlistGroup> {
+  async getSharedGroup(shareToken: string): Promise<WishlistGroupResponseDTO> {
     const group = await this._wishlistRepository.findByShareToken(shareToken);
     if (!group) {
       throw new CustomError(
         RESPONSE_MESSAGES.WISHLIST.ERROR.LINK_EXPIRE_OR_NOT_FOUND,
       );
     }
-    return group;
+    return WishlistResponseMapper.toGroupResponseDTO(group);
   }
 
   async editGroup(
     userId: string,
     groupId: string,
-    dto: EditWishlistGroupRequestDTO,
-  ): Promise<IWishlistGroup> {
+    body: EditWishlistGroupInput,
+  ): Promise<WishlistGroupResponseDTO> {
+    const dto = WishlistRequestMapper.toEditGroupReqDTO(body);
     const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
       throw new CustomError(
@@ -127,7 +142,7 @@ export class WishlistService implements IWishlistService {
     if (!updated) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
-    return updated;
+    return WishlistResponseMapper.toGroupResponseDTO(updated);
   }
 
   async deleteGroup(
@@ -154,19 +169,23 @@ export class WishlistService implements IWishlistService {
       );
     }
 
-    const updated = await this._wishlistRepository.deleteNote(groupId, noteId);
-    if (!updated) {
+    const updatedGroup = await this._wishlistRepository.deleteNote(
+      groupId,
+      noteId,
+    );
+    if (!updatedGroup) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
-    return updated;
+    return WishlistResponseMapper.toGroupResponseDTO(updatedGroup);
   }
 
   async editNote(
     userId: string,
     groupId: string,
     noteId: string,
-    dto: EditWishlistNoteRequestDTO,
-  ): Promise<IWishlistGroup> {
+    body: EditWishlistNoteInput,
+  ): Promise<WishlistGroupResponseDTO> {
+    const dto = WishlistRequestMapper.toEditNoteReqDTO(body);
     const { text } = dto;
     const group = await this._wishlistRepository.findWishlistGroupById(groupId);
     if (!group || group.userId.toString() !== userId) {
@@ -176,14 +195,14 @@ export class WishlistService implements IWishlistService {
       );
     }
 
-    const updated = await this._wishlistRepository.updateNote(
+    const updatedGroup = await this._wishlistRepository.updateNote(
       groupId,
       noteId,
       text,
     );
-    if (!updated) {
+    if (!updatedGroup) {
       throw new CustomError(RESPONSE_MESSAGES.WISHLIST.ERROR.UPDATE);
     }
-    return updated;
+    return WishlistResponseMapper.toGroupResponseDTO(updatedGroup);
   }
 }

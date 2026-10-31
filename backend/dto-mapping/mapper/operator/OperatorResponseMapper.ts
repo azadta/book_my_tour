@@ -1,28 +1,30 @@
+import { IOperator, IVerificationDetails } from "../../../interfaces/IOperator";
 import { IOperatorVerificationDetailsDTO } from "../../dto/operator/operatorRequestDTO";
 import {
   IOperatorRegisterResponseDTO,
+  IOperatorRegisterResponseInput,
   IOperatorResponseDTO,
 } from "../../dto/operator/operatorResponseDTO";
 import { OperatorRequestMapper } from "./OperatorRequestMapper";
 
 export class OperatorResponseMapper {
   static verificationDetailsResponseMapper(
-    data: any,
+    data: IVerificationDetails,
   ): IOperatorVerificationDetailsDTO {
     return {
       companyName: data.companyName,
       licenseNo: data.licenseNo,
       businessAddress: OperatorRequestMapper.mapAdddress(data.businessAddress),
-      submittedAt: data.submittedAt,
+      ...(data?.submittedAt && { submittedAt: data.submittedAt }),
     };
   }
 
-  static toOperatorResponseDTO(entity: any): IOperatorResponseDTO {
+  static toOperatorResponseDTO(entity: IOperator): IOperatorResponseDTO {
     return {
       _id: entity._id?.toString(),
       name: entity.name,
       email: entity?.email,
-      image: entity?.image,
+      ...(entity.image && { image: entity?.image }),
       mobile: entity.mobile,
       isBlocked: entity.isBlocked,
       isPremium: entity.isPremium,
@@ -45,7 +47,7 @@ export class OperatorResponseMapper {
   }
 
   static toOperatorRegisterRespsonseDTO(
-    data: any,
+    data: IOperatorRegisterResponseInput,
   ): IOperatorRegisterResponseDTO {
     return {
       operatorId: data?.operatorId?.toString(),

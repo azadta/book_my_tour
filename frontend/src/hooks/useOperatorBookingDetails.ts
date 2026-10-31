@@ -19,7 +19,7 @@ export const useOperatorBookingDetails = () => {
         APP_ROUTES.BOOKINGS.OPERATOR.DETAILS(bookingId),
       );
 
-      setBooking(res.data);
+      setBooking(res.data.result);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||

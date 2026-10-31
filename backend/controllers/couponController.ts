@@ -1,40 +1,44 @@
-import { inject, injectable } from "inversify";
-import { ICouponController } from "../interfaces/ICouponController";
-import { Types } from "../types/types";
-import type{ ICouponService } from "../interfaces/ICouponService";
 import { NextFunction, Request, Response } from "express";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestMapper";
+import { StatusCode } from "../constants/statusCodeConstants";
+import { ICouponController } from "../interfaces/ICouponController";
+import type { ICouponService } from "../interfaces/ICouponService";
+import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
+import { CustomError } from "../utils/customError";
 
 @injectable()
-export class CouponController implements ICouponController{
-  constructor(@inject(Types.CouponService) private _couponService:ICouponService ){
+export class CouponController implements ICouponController {
+  constructor(
+    @inject(Types.CouponService) private _couponService: ICouponService,
+  ) {}
 
-  }
-    //operator
-      getCoupons = async (req: Request, res: Response, next: NextFunction) => {
+  getCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await this._couponService.getAllAvailableCoupons();
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toAvailableCouponsDTO(data));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.FETCH_AVAILABLE_COUPONS,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
-
 
   getAllCoupons = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
       const result = await this._couponService.getAllCoupons(page, limit);
-      res.status(StatusCode.OK).json({
-        coupons: CouponResponseMapper.toCouponResponseDTOList(result.coupons),
-        totalCount: result.totalCount,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.FETCH_COUPONS,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -44,9 +48,12 @@ export class CouponController implements ICouponController{
     try {
       const { id } = req.params;
       const coupon = await this._couponService.getCouponById(id as string);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toCouponResponseDTO(coupon));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.FETCH_COUPON,
+        coupon,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -54,12 +61,13 @@ export class CouponController implements ICouponController{
 
   createCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto = CouponRequestMapper.toCreateCouponDTO(req.body);
-      const rawCoupon = await this._couponService.createCoupon(dto);
-      res.status(StatusCode.CREATED).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED,
-        coupon: CouponResponseMapper.toCouponResponseDTO(rawCoupon),
-      });
+      const coupon = await this._couponService.createCoupon(req.body);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.CREATED,
+        coupon,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -68,17 +76,17 @@ export class CouponController implements ICouponController{
   updateCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const dto = CouponRequestMapper.toUpdateCouponDTO(req.body);
 
-      const rawUpdatedCoupon = await this._couponService.updateCoupon(
+      const updatedCoupon = await this._couponService.updateCoupon(
         id as string,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.UPDATE,
-        updatedCoupon:
-          CouponResponseMapper.toCouponResponseDTO(rawUpdatedCoupon),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.UPDATE,
+        updatedCoupon,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -96,38 +104,37 @@ export class CouponController implements ICouponController{
         id as string,
         isActive,
       );
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
-        coupon: CouponResponseMapper.toCouponResponseDTO(updatedCoupon),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.TOGGLE_STATUS(isActive),
+        updatedCoupon,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
 
-  //user
-    validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
+  validateCoupon = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { code, bookingAmount } = req.body;
       if (!code || !bookingAmount) {
-        res
-          .status(StatusCode.BAD_REQUEST)
-          .json(RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING);
-          return
+        throw new CustomError(
+          RESPONSE_MESSAGES.COUPON.ERROR.CODE_AND_BOOKING_AMOUNT_MISSING,
+          StatusCode.BAD_REQUEST,
+        );
       }
-      const dto = CouponRequestMapper.toValidateCouponDTO(req.body);
+
       const result =
-        await this._couponService.validateAndCalculateCouponDiscount(dto);
-      res
-        .status(StatusCode.OK)
-        .json(CouponResponseMapper.toValidateCouponResponseDTO(result));
+        await this._couponService.validateAndCalculateCouponDiscount(req.body);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COUPON.SUCCESS.VALIDATE,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
-
-
-
-
-
 }

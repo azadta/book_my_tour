@@ -2,12 +2,15 @@ import { IWalletDocument, IWalletTransaction } from "../../../models/Wallet";
 import {
   PaginatedWalletResponseDTO,
   TopupOrderResponseDTO,
+  TopupOrderResponseInput,
   WalletResponseDTO,
   WalletTransactionResponseDTO,
 } from "../../dto/wallet/walletResponseDTO";
 
 export class WalletResponseMapper {
-  static toTransactionResponseDTO(txn: any): WalletTransactionResponseDTO {
+  static toTransactionResponseDTO(
+    txn: IWalletTransaction,
+  ): WalletTransactionResponseDTO {
     return {
       _id: txn._id.toString(),
       transactionId: txn.transactionId,
@@ -18,11 +21,11 @@ export class WalletResponseMapper {
       amount: txn.amount,
       status: txn.status,
       description: txn.description,
-      createdAt: txn.createdAt,
+      createdAt: txn.createdAt.toString(),
     };
   }
 
-  static toWalletResponseDTO(wallet: any): WalletResponseDTO {
+  static toWalletResponseDTO(wallet: IWalletDocument): WalletResponseDTO {
     return {
       _id: wallet._id.toString(),
       userId: wallet.userId.toString(),
@@ -53,7 +56,9 @@ export class WalletResponseMapper {
     };
   }
 
-  static toTopupOrderResponseDTO(data: any): TopupOrderResponseDTO {
+  static toTopupOrderResponseDTO(
+    data: TopupOrderResponseInput,
+  ): TopupOrderResponseDTO {
     return {
       orderId: data.orderId,
       amount: data.amount,

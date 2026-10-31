@@ -5,11 +5,11 @@ import { CustomError } from "../utils/customError";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
-import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
+import { AdminResponseDTO } from "../dto-mapping/dto/admin/adminResponseDTO";
 import { IAdminController } from "../interfaces/IAdminController";
 import type { IAdminService } from "../interfaces/IAdminService";
 import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
 import { logger } from "../utils/logger";
 
 @injectable()
@@ -19,8 +19,6 @@ export class AdminController implements IAdminController {
   ) {}
 
   loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    const dto = AdminRequestMapper.toLoginRequestDTO(req.body);
-
     try {
       logger.info(`Admin login attempt`, {
         layer: "CONTROLLER",
@@ -29,7 +27,7 @@ export class AdminController implements IAdminController {
         email: req.body.email,
       });
       const { accessToken, refreshToken, adminData } =
-        await this._adminService.loginAdminService(dto);
+        await this._adminService.loginAdminService(req.body);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -38,9 +36,13 @@ export class AdminController implements IAdminController {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
       });
-      res
-        .status(StatusCode.OK)
-        .json(AdminResponseMapper.toAdminResponseDTO(adminData));
+
+      sendSuccessResponse<AdminResponseDTO>(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.LOGIN,
+        adminData,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -49,9 +51,12 @@ export class AdminController implements IAdminController {
   logoutAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
-      res
-        .status(StatusCode.OK)
-        .json({ message: RESPONSE_MESSAGES.AUTH.SUCCESS.ADMIN_LOGOUT });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.AUTH.SUCCESS.ADMIN_LOGOUT,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -68,23 +73,19 @@ export class AdminController implements IAdminController {
     }
 
     try {
-      const dto = AdminRequestMapper.toUpdateAdminRequestDTO(req.body);
       const updatedAdmin = await this._adminService.updateAdminService(
         req.params.id as string,
-        dto,
+        req.body,
       );
-      if (!updatedAdmin)
-        return next(
-          new CustomError(
-            RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
-            StatusCode.NOT_FOUND,
-          ),
-        );
+
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-      res
-        .status(StatusCode.OK)
-        .json(AdminResponseMapper.toAdminResponseDTO(updatedAdmin));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.UPDATE,
+        updatedAdmin,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -96,17 +97,18 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const dto = AdminRequestMapper.toUpdateProfileImageRequestDTO(req.body);
-
       const admin = await this._adminService.updateProfieImageService(
         req.user!.id,
-        dto,
+        req.body,
       );
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-      res
-        .status(StatusCode.OK)
-        .json(AdminResponseMapper.toAdminResponseDTO(admin));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.UPDATE_IMAGE,
+        admin,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -117,14 +119,16 @@ export class AdminController implements IAdminController {
     next: NextFunction,
   ) => {
     try {
-      const dto = AdminRequestMapper.toResetPasswordAuthenticatedRequestDTO(
+      await this._adminService.resetPasswordAuthenticatedService(
+        req.user!.id,
         req.body,
       );
-      const data = await this._adminService.resetPasswordAuthenticatedService(
-        req.user!.id,
-        dto,
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.UPDATE_PASSWORD,
+        undefined,
+        StatusCode.OK,
       );
-      res.status(StatusCode.OK).json(data);
     } catch (error) {
       next(error);
     }

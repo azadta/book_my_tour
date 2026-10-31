@@ -10,6 +10,7 @@ import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorR
 import { IOperatorController } from "../interfaces/IOperatorController";
 import type { IOperatorService } from "../interfaces/IOperatorService";
 import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
 import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
 @injectable()
@@ -29,13 +30,16 @@ export class OperatorController implements IOperatorController {
         module: "OPERATOR",
         action: "REGISTER",
       });
-      const dto = OperatorRequestMapper.toOperatorRegisterRequestDTO(req.body);
-      const result = await this._operatorService.operatorRegisterService(dto);
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
-        ...OperatorResponseMapper.toOperatorRegisterRespsonseDTO(result),
-      });
+
+      const result = await this._operatorService.operatorRegisterService(
+        req.body,
+      );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.OPERATOR.SUCCESS.REGISTRATION_PROCESSING,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -47,12 +51,13 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const dto = OperatorRequestMapper.toVerityOperatorOtpDTO(req.body);
-      await this._operatorService.operatorVerifyOtpService(dto);
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
-      });
+      await this._operatorService.operatorVerifyOtpService(req.body);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -67,19 +72,18 @@ export class OperatorController implements IOperatorController {
     try {
       const { otpExpire } =
         await this._operatorService.operatorResendOtpService(operatorId);
-      res.status(StatusCode.OK).json({
-        succuss: true,
-        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
         otpExpire,
-      });
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
 
   loginOperator = async (req: Request, res: Response, next: NextFunction) => {
-    const dto = OperatorRequestMapper.toOperatorLoginRequestDTO(req.body);
-
     try {
       logger.info(`Operator login attempt`, {
         layer: "CONTROLLER",
@@ -88,7 +92,7 @@ export class OperatorController implements IOperatorController {
         email: req.body.email,
       });
       const { accessToken, refreshToken, operatorData } =
-        await this._operatorService.operatorLoginService(dto);
+        await this._operatorService.operatorLoginService(req.body);
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
@@ -97,9 +101,12 @@ export class OperatorController implements IOperatorController {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
       });
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(operatorData));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.OPERATOR.SUCCESS.LOGGED_IN,
+        operatorData,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -111,10 +118,11 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const data = await this._operatorService.operatorForgotPasswordService(
-        req.body.email,
-      );
-      res.status(StatusCode.OK).json(data);
+      const { message } =
+        await this._operatorService.operatorForgotPasswordService(
+          req.body.email,
+        );
+      sendSuccessResponse(res, message, undefined, StatusCode.OK);
     } catch (error) {
       next(error);
     }
@@ -126,11 +134,12 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const data = await this._operatorService.operatorResetPasswordService(
-        req.params.token as string,
-        req.body.newPassword,
-      );
-      res.status(StatusCode.OK).json(data);
+      const { message } =
+        await this._operatorService.operatorResetPasswordService(
+          req.params.token as string,
+          req.body.newPassword,
+        );
+      sendSuccessResponse(res, message, undefined, StatusCode.OK);
     } catch (error) {
       next(error);
     }
@@ -139,40 +148,33 @@ export class OperatorController implements IOperatorController {
   operatorLogout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
-      const result = this._operatorService.operatorLogoutService();
-      res.status(StatusCode.OK).json(result);
+      const { message } = this._operatorService.operatorLogoutService();
+      sendSuccessResponse(res, message, undefined, StatusCode.OK);
     } catch (error) {
       next(error);
     }
   };
 
   updateOperator = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return next(
-        new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
-      );
-    }
+    const operatorId = req.user?.id as string;
 
-    if (req.user.id !== req.params.id) {
+    if (operatorId !== req.params.id) {
       return next(
         new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED, 401),
       );
     }
     try {
-      const dto = OperatorRequestMapper.toUpdateOperatorProfileDTO(req.body);
       const updatedOperator = await this._operatorService.updateOperatorService(
         req.params.id as string,
-        dto,
+        req.body,
       );
-      if (!updatedOperator) {
-        return next(
-          new CustomError(RESPONSE_MESSAGES.USER.ERROR.NOT_FOUND, 404),
-        );
-      }
 
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(updatedOperator));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.OPERATOR.SUCCESS.UPDATED,
+        updatedOperator,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -190,9 +192,12 @@ export class OperatorController implements IOperatorController {
           req.user!.id,
           image,
         );
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(operator));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.OPERATOR.SUCCESS.IMAGE_UPDATED,
+        operator,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -203,21 +208,17 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const dto =
-        OperatorRequestMapper.toOperatorResetPasswordAuthenticatedRequestDTO(
+      const { message } =
+        await this._operatorService.resetPasswordAuthenticatedService(
+          req.user!.id,
           req.body,
         );
-      const data = await this._operatorService.resetPasswordAuthenticatedService(
-        req.user!.id,
-        dto,
-      );
-      res.status(StatusCode.OK).json(data);
+      sendSuccessResponse(res, message, undefined, StatusCode.OK);
     } catch (error) {
       next(error);
     }
   };
 
-  //admin
   getOperatorVerificationRequests = async (
     req: Request,
     res: Response,
@@ -226,9 +227,12 @@ export class OperatorController implements IOperatorController {
     try {
       const data =
         await this._operatorService.getOperatorVerificationRequestsService();
-      res
-        .status(StatusCode.OK)
-        .json(AdminResponseMapper.toAdminOperatorListResponseDTO(data));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.FETCH_OPERATOR_VERIFICATION_REQS,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -237,13 +241,12 @@ export class OperatorController implements IOperatorController {
   verifyOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const dto = AdminRequestMapper.toVerifyOperatorPayload(req.body);
 
-      const data = await this._operatorService.verifyOperatorService(
+      const { message } = await this._operatorService.verifyOperatorService(
         id as string,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.OK).json(data);
+      sendSuccessResponse(res, message, undefined, StatusCode.OK);
     } catch (error) {
       next(error);
     }
@@ -258,15 +261,16 @@ export class OperatorController implements IOperatorController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 6;
       const skip = (page - 1) * limit;
-      const [rawOperators, totalCount] = await Promise.all([
+      const [operators, totalCount] = await Promise.all([
         this._operatorService.getPaginatedOperatorsService(skip, limit),
         this._operatorService.getTotalOperatorsCount(),
       ]);
-      res.status(StatusCode.OK).json({
-        operators:
-          AdminResponseMapper.toAdminOperatorListResponseDTO(rawOperators),
-        totalCount,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.FETCH_OPERATORS,
+        { operators, totalCount },
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -282,9 +286,12 @@ export class OperatorController implements IOperatorController {
         req.params.id as string,
       );
 
-      res
-        .status(StatusCode.OK)
-        .json(AdminResponseMapper.toAdminOperatorResponseDTO(operator));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.ADMIN.SUCCESS.FETCH_OPERATOR_DETAILS,
+        operator,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -296,15 +303,18 @@ export class OperatorController implements IOperatorController {
     next: NextFunction,
   ) => {
     try {
-      const dto = AdminRequestMapper.toAdminUpdateOperatorRequestDTO(req.body);
-      const updated = await this._operatorService.adminUpdateOperatorService(
-        req.params.id as string,
-        dto,
-      );
+      const updatedOperator =
+        await this._operatorService.adminUpdateOperatorService(
+          req.params.id as string,
+          req.body,
+        );
 
-      res
-        .status(StatusCode.OK)
-        .json(OperatorResponseMapper.toOperatorResponseDTO(updated));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.OPERATOR.SUCCESS.UPDATED,
+        updatedOperator,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -312,17 +322,15 @@ export class OperatorController implements IOperatorController {
 
   blockOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto = AdminRequestMapper.toBlockOperatorPayload(req.body);
-      const blocked = await this._operatorService.blockOperatorService(
+      const blockedOperator = await this._operatorService.blockOperatorService(
         req.params.id as string,
-        dto,
+        req.body,
       );
-      res.status(StatusCode.OK).json({
-        message: req.body.isBlocked
-          ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED
-          : RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED,
-        operator: AdminResponseMapper.toAdminOperatorResponseDTO(blocked),
-      });
+      const message = req.body.isBlocked
+        ? RESPONSE_MESSAGES.OPERATOR.SUCCESS.BLOCKED
+        : RESPONSE_MESSAGES.OPERATOR.SUCCESS.UNBLOCKED;
+
+      sendSuccessResponse(res, message, blockedOperator, StatusCode.OK);
     } catch (error) {
       next(error);
     }
@@ -330,10 +338,15 @@ export class OperatorController implements IOperatorController {
 
   deleteOperator = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await this._operatorService.deleteOperatorService(req.params.id as string);
-      res
-        .status(StatusCode.OK)
-        .json({ message: RESPONSE_MESSAGES.OPERATOR.SUCCESS.DELETED });
+      await this._operatorService.deleteOperatorService(
+        req.params.id as string,
+      );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.OPERATOR.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

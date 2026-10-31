@@ -1,12 +1,11 @@
-import { inject, injectable } from "inversify";
-import { IPackageCategoryController } from "../interfaces/IPackageCategoryController";
-import { Types } from "../types/types";
-import type { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
 import { NextFunction, Request, Response } from "express";
-import { PackageCategoryRequestMapper } from "../dto-mapping/mapper/package-category/PackageCategoryRequestMapper";
-import { StatusCode } from "../constants/statusCodeConstants";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import { CategoryResponseMapper } from "../dto-mapping/mapper/package-category/PackageCategoryResponseMapper";
+import { StatusCode } from "../constants/statusCodeConstants";
+import { IPackageCategoryController } from "../interfaces/IPackageCategoryController";
+import type { IPackageCategoryService } from "../interfaces/IPackageCategoryService";
+import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class PackageCategoryController implements IPackageCategoryController {
@@ -15,30 +14,26 @@ export class PackageCategoryController implements IPackageCategoryController {
     private _packageCategoryService: IPackageCategoryService,
   ) {}
 
-  //admin
   createPackageCategory = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const dto = PackageCategoryRequestMapper.toCreatePackageCategory(
+      const category = await this._packageCategoryService.createCategoryService(
         req.body,
       );
-      const rawCategory =
-        await this._packageCategoryService.createCategoryService(dto);
-      res.status(StatusCode.CREATED).json({
-        message: RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED,
-        category: CategoryResponseMapper.toCategoryResponseDTO(rawCategory),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CATEGORY.SUCCESS.CREATED,
+        category,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
   };
 
-
-
-  //user
   getAllPackageCategories = async (
     req: Request,
     res: Response,
@@ -46,7 +41,12 @@ export class PackageCategoryController implements IPackageCategoryController {
   ) => {
     try {
       const categories = await this._packageCategoryService.getAllCategories();
-      res.json(CategoryResponseMapper.toCategoryListResponseDTO(categories));
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CATEGORY.SUCCESS.FETCH_ALL,
+        categories,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -57,12 +57,14 @@ export class PackageCategoryController implements IPackageCategoryController {
     next: NextFunction,
   ) => {
     try {
-      const rawCategories =
+      const categories =
         await this._packageCategoryService.getActiveCategoryService();
-      res.status(200).json({
-        categories:
-          CategoryResponseMapper.toCategoryListResponseDTO(rawCategories),
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CATEGORY.SUCCESS.FETCH_ACTIVE,
+        categories,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

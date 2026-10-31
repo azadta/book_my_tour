@@ -1,30 +1,35 @@
 import {
+  IAdminUpdateOperatorinput,
   IAdminUpdateOperatorRequestDTO,
   IBlockOperatorRequestDTO,
   IVerifyOperatorRequestDTO,
 } from "../dto-mapping/dto/admin/adminRequestDTO";
+
 import {
-  IOperatorLoginRequestDTO,
-  IOperatorRegisterRequestDTO,
-  IResetOperatorPasswordAuthenticatedRequestDTO,
-  IUpdateOperatorProfileRequestDTO,
-  IVerifyOperatorOtpRequestDTO,
+  IOperatorLoginInput,
+  IOperatorRegisterInput,
+  IResetOperatorPasswordAuthenticatedInput,
+  IUpdateOperatorProfileInput,
+  IVerifyOperatorOtpInput,
 } from "../dto-mapping/dto/operator/operatorRequestDTO";
-import { IOperator, IOperatorResponse } from "./IOperator";
+import {
+  IOperatorRegisterResponseDTO,
+  IOperatorResponseDTO,
+} from "../dto-mapping/dto/operator/operatorResponseDTO";
+import { IOperator } from "./IOperator";
 
 export interface IOperatorService {
-  operatorRegisterService(dto: IOperatorRegisterRequestDTO): Promise<{
-    operatorId: string;
-    otpExpire: number | undefined;
-  }>;
-  operatorVerifyOtpService(dto: IVerifyOperatorOtpRequestDTO): Promise<void>;
+  operatorRegisterService(
+    body: IOperatorRegisterInput,
+  ): Promise<IOperatorRegisterResponseDTO>;
+  operatorVerifyOtpService(body: IVerifyOperatorOtpInput): Promise<void>;
   operatorResendOtpService(operatorId: string): Promise<{
     otpExpire: number;
   }>;
-  operatorLoginService(dto: IOperatorLoginRequestDTO): Promise<{
+  operatorLoginService(body: IOperatorLoginInput): Promise<{
     accessToken: string;
     refreshToken: string;
-    operatorData: IOperatorResponse;
+    operatorData: IOperatorResponseDTO;
   }>;
   operatorForgotPasswordService(email: string): Promise<{
     message: string;
@@ -37,39 +42,46 @@ export interface IOperatorService {
   }>;
   updateOperatorService(
     id: string,
-    dto: IUpdateOperatorProfileRequestDTO,
-  ): Promise<IOperator | null>;
+    body: IUpdateOperatorProfileInput,
+  ): Promise<IOperatorResponseDTO>;
   updateOperatorProfileImageService(
     id: string,
     image: string,
-  ): Promise<IOperator | null>;
+  ): Promise<IOperatorResponseDTO>;
   operatorLogoutService(): {
     message: string;
   };
 
   resetPasswordAuthenticatedService(
     operatorId: string,
-    dto: IResetOperatorPasswordAuthenticatedRequestDTO,
+    body: IResetOperatorPasswordAuthenticatedInput,
   ): Promise<{
     message: string;
   }>;
   getTotalOperatorsCount(): Promise<number>;
-  getOperatorVerificationRequestsService(): Promise<IOperator[]>;
+  getOperatorVerificationRequestsService(): Promise<IOperatorResponseDTO[]>;
   verifyOperatorService(
     id: string,
-    dto: IVerifyOperatorRequestDTO,
+    body: {
+      isVerified: boolean;
+    },
   ): Promise<{
     message: string;
   }>;
   getPaginatedOperatorsService(
     skip: number,
     limit: number,
-  ): Promise<IOperator[]>;
-  getOperatorDetailsService(id: string): Promise<any>;
-  blockOperatorService(id: string, dto: IBlockOperatorRequestDTO): Promise<any>;
+  ): Promise<IOperatorResponseDTO[]>;
+  getOperatorDetailsService(id: string): Promise<IOperatorResponseDTO>;
+  blockOperatorService(
+    id: string,
+    body: {
+      isBlocked: boolean;
+    },
+  ): Promise<IOperatorResponseDTO>;
   deleteOperatorService(id: string): Promise<any>;
   adminUpdateOperatorService(
     id: string,
-    dto: IAdminUpdateOperatorRequestDTO,
-  ): Promise<any>;
+    body: IAdminUpdateOperatorinput,
+  ): Promise<IOperatorResponseDTO>;
 }

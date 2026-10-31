@@ -1,12 +1,15 @@
 import { body } from "express-validator";
 import {
+  createCouponInput,
   createCouponRequestDTO,
+  updateCouponInput,
   updateCouponRequestDTO,
+  ValidateCouponBody,
   ValidateCouponRequestDTO,
 } from "../../dto/coupon/couponRequestDTO";
 
 export class CouponRequestMapper {
-  static toValidateCouponDTO(body: any): ValidateCouponRequestDTO {
+  static toValidateCouponDTO(body: ValidateCouponBody): ValidateCouponRequestDTO {
     return {
       code: body?.code ? String(body.code).trim().toUpperCase() : "",
       bookingAmount: Number(body.bookingAmount) || 0,
@@ -16,7 +19,9 @@ export class CouponRequestMapper {
     };
   }
 
-  static toCreateCouponDTO(dto: any): createCouponRequestDTO {
+  static toCouponRequestDTO(
+    dto: createCouponInput | updateCouponInput,
+  ): createCouponRequestDTO | updateCouponRequestDTO {
     return {
       code: dto?.code?.trim().toUpperCase(),
       title: dto?.title?.trim(),
@@ -34,28 +39,6 @@ export class CouponRequestMapper {
       ...(dto?.razorpayOfferId !== undefined && {
         razorpayOfferId: dto.razorpayOfferId.trim(),
       }),
-      validTill: new Date(dto?.validTill),
-      isActive: dto?.isActive ?? true,
-    };
-  }
-
-  static toUpdateCouponDTO(dto: any): updateCouponRequestDTO {
-    return {
-      code: dto?.code?.trim().toUpperCase(),
-      title: dto?.title?.trim(),
-      description: dto?.description?.trim(),
-      type: dto.type,
-      discountType: dto?.discountType,
-      discountValue: Number(dto?.discountValue),
-      ...(dto?.maxDiscountAmount && {
-        maxDiscountAmount: Number(dto.maxDiscountAmount),
-      }),
-      minBookingAmount: dto?.minBookingAmount
-        ? Number(dto.minBookingAmount)
-        : 0,
-      bankName: dto?.bankName?.trim(),
-      allowedBins: dto?.allowedBins,
-      razorpayOfferId: dto?.razorpayOfferId?.trim(),
       validTill: new Date(dto?.validTill),
       isActive: dto?.isActive ?? true,
     };

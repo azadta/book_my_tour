@@ -1,28 +1,34 @@
 import { inject, injectable } from "inversify";
-import { ObjectId, UpdateQuery } from "mongoose";
+import { UpdateQuery } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import {
+  CancelBookingBody,
   CancelBookingRequestDTO,
+  CreateBookingBody,
   CreateBookingRequestDTO,
-  OperatorCancelBookingRequestDTO,
-  OperatorRescheduleBookingRequestDTO,
-  ProcessAdminCancellationRequestDTO,
-  UpdateAttendanceRequestDTO,
-  VerifyCancellationRequestDTO,
+  GetOperatorBookingsQuery,
+  OperatorCancelBookingBody,
+  ProcessAdminCancellationBody,
+  toOperatorReschuduleBookingBody,
+  toVerifyCancellationBody,
+  UpdateAttendanceBody,
+  VerifyBookingPaymentBody,
   VerifyPaymentRequestDTO,
 } from "../dto-mapping/dto/booking/bookingRequestDTO";
+import { OperatorBookingListResponseDTO } from "../dto-mapping/dto/booking/bookingResponseDTO";
+import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
+import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
+import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
 import { IOperatorBookingFilter } from "../interfaces/IBooking";
 import { IBookingPricing } from "../interfaces/IBookingPricing";
-import type {
-  IBooking,
-  IBookingRepository,
-} from "../interfaces/IBookingRepository";
+import type { IBookingRepository } from "../interfaces/IBookingRepository";
 import { IBookingService } from "../interfaces/IBookingService";
 import type { ICouponRepository } from "../interfaces/ICouponRepository";
 import type { IMailService } from "../interfaces/IMailService";
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import type { IPaymentService } from "../interfaces/IPaymentService";
+import type { IPayoutRepository } from "../interfaces/IPayoutRepository";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
 import { IBookingDocument } from "../models/Booking";
@@ -30,7 +36,6 @@ import { CouponType, ICouponDocument } from "../models/Coupon";
 import { Types } from "../types/types";
 import { bookingConfirmationMessage } from "../utils/bookingConfirmationMessage";
 import { CustomError } from "../utils/customError";
-import type { IPayoutRepository } from "../interfaces/IPayoutRepository";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -54,8 +59,12 @@ export class BookingService implements IBookingService {
     private _payoutRepository: IPayoutRepository,
   ) {}
 
-  async processAdminCancellation(dto: ProcessAdminCancellationRequestDTO) {
-    const { approve, bookingId, adminNotes } = dto;
+  async processAdminCancellation(
+    body: ProcessAdminCancellationBody,
+    bookingId: string,
+  ) {
+    const dto = BookingRequestMapper.toProcessAdminCancellationDTO(body);
+    const { approve, adminNotes } = dto;
     const booking = await this._bookingRepository.findByBookingId(bookingId);
     if (!booking || booking.status !== "CANCEL_REQUESTED") {
       throw new CustomError(
@@ -77,35 +86,53 @@ export class BookingService implements IBookingService {
           description: `50% refund approved for cancelled tour: ${booking.packageId.name}`,
         },
       );
-      return await this._bookingRepository.updateById(bookingId, {
-        status: "CANCELLED",
-        "cancellation.processedAt": now,
-        "cancellation.adminNotes": adminNotes || "Approved by admin",
-      } as UpdateQuery<IBookingDocument>);
+      const updatedBooking = await this._bookingRepository.updateById(
+        bookingId,
+        {
+          status: "CANCELLED",
+          "cancellation.processedAt": now,
+          "cancellation.adminNotes": adminNotes || "Approved by admin",
+        } as UpdateQuery<IBookingDocument>,
+      );
+      return BookingResponseMapper.toBookingDTO(updatedBooking);
     } else {
-      return await this._bookingRepository.updateById(bookingId, {
-        status: "CONFIRMED",
-        "cancellation.adminNotes": adminNotes || "Rejected by Admin",
-      } as UpdateQuery<IBookingDocument>);
+      const updatedBooking = await this._bookingRepository.updateById(
+        bookingId,
+        {
+          status: "CONFIRMED",
+          "cancellation.adminNotes": adminNotes || "Rejected by Admin",
+        } as UpdateQuery<IBookingDocument>,
+      );
+      return BookingResponseMapper.toBookingDTO(updatedBooking);
     }
   }
 
-  async getPendingCancelationRequests(): Promise<IBooking[]> {
-    return await this._bookingRepository.getPendingCancellationRequests();
+  async getPendingCancelationRequests() {
+    const requests =
+      await this._bookingRepository.getPendingCancellationRequests();
+    return BookingResponseMapper.toPendingCancellationListDTO(requests);
   }
 
   async getOperatorBookingsService(
     operatorId: string,
-    status: string | undefined,
-    skip: number,
-    limit: number,
-  ) {
-    const filter: IOperatorBookingFilter = { operatorId, status };
+    query: GetOperatorBookingsQuery,
+  ): Promise<OperatorBookingListResponseDTO> {
+    const queryDTO = BookingRequestMapper.toGetOperatorBookingsQueryDTO(query);
+    const { status, skip, limit } = queryDTO;
+    const filter: IOperatorBookingFilter = {
+      operatorId,
+      ...(status && { status }),
+    };
     const [bookings, totalCount] = await Promise.all([
       this._bookingRepository.getOperatorBookings(filter, skip, limit),
       this._bookingRepository.getOperatorBookingsCount(filter),
     ]);
-    return { bookings, totalCount };
+    const currentPage = Math.floor(skip / limit) + 1;
+    return BookingResponseMapper.toOperatorBookingListResponseDTO(
+      { bookings, totalCount },
+      currentPage,
+      limit,
+    );
   }
 
   async getOperatorBookingDetailsService(
@@ -122,11 +149,23 @@ export class BookingService implements IBookingService {
         StatusCode.NOT_FOUND,
       );
     }
-    return booking;
+
+    return BookingResponseMapper.toBookingDTO(booking);
   }
 
-  async operatorCancelBookingService(dto: OperatorCancelBookingRequestDTO) {
-    const { bookingId, operatorId, reason } = dto;
+  async operatorCancelBookingService(
+    bookingId: string,
+    operatorId: string,
+    body: OperatorCancelBookingBody,
+  ) {
+    const dto = BookingRequestMapper.toOperatorCancelBookingDTO(body);
+
+    const { reason } = dto;
+    if (!reason || reason.trim() === "") {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.CANCEL_REASON_MISSING,
+      );
+    }
     const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -151,19 +190,30 @@ export class BookingService implements IBookingService {
       },
     );
 
-    return await this._bookingRepository.updateById(bookingId, {
+    const updatedBooking = await this._bookingRepository.updateById(bookingId, {
       status: "CANCELLED",
       "cancellation.requestedAt": new Date(),
       "cancellation.processedAt": new Date(),
       "cancellation.refundAmount": totalPaid,
       "cancellation.reason": `Operator Cancelled: ${reason}`,
     } as UpdateQuery<IBookingDocument>);
+
+    return BookingResponseMapper.toBookingDTO(updatedBooking);
   }
 
   async operatorRescheduleBookingService(
-    dto: OperatorRescheduleBookingRequestDTO,
+    bookingId: string,
+    operatorId: string,
+    body: toOperatorReschuduleBookingBody,
   ) {
-    const { bookingId, operatorId, startDate } = dto;
+    if (!body.startDate) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.START_DATE_MISSING,
+        StatusCode.BAD_REQUEST,
+      );
+    }
+    const dto = BookingRequestMapper.toOperatorReschuduleBookingDTO(body);
+    const { startDate } = dto;
     const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -175,16 +225,22 @@ export class BookingService implements IBookingService {
       );
     }
 
-    return await this._packageRepository.updatePackageById(
+    const udpatedPackage = await this._packageRepository.updatePackageById(
       booking.packageId._id.toString(),
       {
-        startDate: new Date(startDate),
+        startDate,
       },
     );
+    return PackageResponseMapper.toPackageResponseDTO(udpatedPackage);
   }
 
-  async updateAttendanceService(dto: UpdateAttendanceRequestDTO) {
-    const { attendance, bookingId, operatorId } = dto;
+  async updateAttendanceService(
+    operatorId: string,
+    bookingId: string,
+    body: UpdateAttendanceBody,
+  ) {
+    const dto = BookingRequestMapper.toUpdateAttendanceDTO(body);
+    const { attendance } = dto;
     const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -205,10 +261,19 @@ export class BookingService implements IBookingService {
     if (attendance === "CHECKED_IN" || attendance === "COMPLETED") {
       updateData.checkInTime = new Date();
     }
-    return await this._bookingRepository.updateById(bookingId, updateData);
+    const updatedBooking = await this._bookingRepository.updateById(
+      bookingId,
+      updateData,
+    );
+    return BookingResponseMapper.toBookingDTO(updatedBooking);
   }
-  async verifyCancellationService(dto: VerifyCancellationRequestDTO) {
-    const { action, bookingId, operatorId, operatorNotes } = dto;
+  async verifyCancellationService(
+    bookingId: string,
+    operatorId: string,
+    body: toVerifyCancellationBody,
+  ) {
+    const dto = BookingRequestMapper.toVerifyCancellationDTO(body);
+    const { action, operatorNotes } = dto;
     const booking = await this._bookingRepository.getOperatorBookingDetails(
       bookingId,
       operatorId,
@@ -242,21 +307,30 @@ export class BookingService implements IBookingService {
         },
       );
 
-      return await this._bookingRepository.updateById(bookingId, {
-        status: "CANCELLED",
-        "cancellation.processedAt": new Date(),
-        "cancellation.refundAmount": refundAmount,
-        "cancellation.reason": `Approved by Operator: ${operatorNotes || "50% refund issued"}`,
-      } as UpdateQuery<IBookingDocument>);
+      const updatedBooking = await this._bookingRepository.updateById(
+        bookingId,
+        {
+          status: "CANCELLED",
+          "cancellation.processedAt": new Date(),
+          "cancellation.refundAmount": refundAmount,
+          "cancellation.reason": `Approved by Operator: ${operatorNotes || "50% refund issued"}`,
+        } as UpdateQuery<IBookingDocument>,
+      );
+      return BookingResponseMapper.toBookingDTO(updatedBooking);
     } else {
-      return await this._bookingRepository.updateById(bookingId, {
-        status: "CONFIRMED",
-        "cancellation.processedAt": Date.now(),
-        "cancellation.reason": `Rejected by Operator: ${operatorNotes || "Request denied."}`,
-      } as UpdateQuery<IBookingDocument>);
+      const updatedBooking = await this._bookingRepository.updateById(
+        bookingId,
+        {
+          status: "CONFIRMED",
+          "cancellation.processedAt": Date.now(),
+          "cancellation.reason": `Rejected by Operator: ${operatorNotes || "Request denied."}`,
+        } as UpdateQuery<IBookingDocument>,
+      );
+      return BookingResponseMapper.toBookingDTO(updatedBooking);
     }
   }
-  async createBookingOrder(dto: CreateBookingRequestDTO) {
+  async createBookingOrder(userId: string, body: CreateBookingBody) {
+    const dto = BookingRequestMapper.toCreateBookingDTO(body);
     const {
       addedActivityIds = [],
       packageId,
@@ -264,7 +338,6 @@ export class BookingService implements IBookingService {
       generalCouponCode,
       bankCouponCode,
       isWalletApplied,
-      userId,
       adultCount = 1,
       childCount = 0,
       primaryContact,
@@ -529,11 +602,12 @@ export class BookingService implements IBookingService {
           packageName: pkg.name,
         }),
       );
-      return {
+      const result = {
         isFullyPaidByWallet: true,
         bookingId: booking._id,
         orderId: internalOrderId,
       };
+      return BookingResponseMapper.toCreateBookingOrderResposeDTO(result);
     }
 
     const order = await this._paymentService.createOrder({
@@ -584,7 +658,7 @@ export class BookingService implements IBookingService {
       payoutStatus: "PENDING",
     });
 
-    return {
+    const result = {
       isFullyPaidByWallet: false,
       orderId: order.id,
       amount: order.amount,
@@ -594,9 +668,16 @@ export class BookingService implements IBookingService {
       packageDescription: `${pkg.duration.day}D / ${pkg.duration.night}N Tour Package`,
       offerId: bankCoupon?.razorpayOfferId || null,
     };
+
+    return BookingResponseMapper.toCreateBookingOrderResposeDTO(result);
   }
 
-  async verifyAndConfirmBooking(dto: VerifyPaymentRequestDTO) {
+  async verifyAndConfirmBooking(
+    userId: string,
+    body: VerifyBookingPaymentBody,
+  ) {
+    const dto = BookingRequestMapper.toVerifyPaymentDTO(body);
+
     const isValid = this._paymentService.verifySignature({
       razorpayOrderId: dto.razorpayOrderId,
       razorpayPaymentId: dto.razorpayPaymentId,
@@ -624,7 +705,7 @@ export class BookingService implements IBookingService {
     }
     if (booking.pricing.walletApplied && booking.pricing.walletApplied > 0) {
       await this._walletRepository.deductBalance(
-        dto.userId,
+        userId,
         booking.pricing.walletApplied,
         {
           transactionId: `TXN_${Date.now()}`,
@@ -644,7 +725,7 @@ export class BookingService implements IBookingService {
         razorpayPaymentId: dto.razorpayPaymentId,
       },
     );
-    const user = await this._userRepository.findById(dto.userId);
+    const user = await this._userRepository.findById(userId);
 
     if (!user) {
       throw new CustomError(
@@ -673,10 +754,7 @@ export class BookingService implements IBookingService {
       }),
     );
 
-    return {
-      message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CONFIRM,
-      booking: updatedBooking,
-    };
+    return BookingResponseMapper.toVerifyPayementResponseDTO(updatedBooking);
   }
 
   async findBookingByOrderId(razorpayOrderId: string) {
@@ -688,7 +766,7 @@ export class BookingService implements IBookingService {
         StatusCode.BAD_REQUEST,
       );
     }
-    return booking;
+    return BookingResponseMapper.toBookingDTO(booking);
   }
 
   async getUserBookings(userId: string, page: number = 1, limit: number = 5) {
@@ -699,16 +777,23 @@ export class BookingService implements IBookingService {
       );
     }
     const skip = (page - 1) * limit;
-    const bookings = await this._bookingRepository.getUserBookings(
+    const result = await this._bookingRepository.getUserBookings(
       userId,
       skip,
       limit,
     );
-
-    return bookings;
+    return {
+      bookings: BookingResponseMapper.toBookingListDTO(result.bookings),
+      totalCount: result.totalCount,
+    };
   }
-  async cancelBooking(dto: CancelBookingRequestDTO) {
-    const { bookingId, reason, userId } = dto;
+  async cancelBooking(
+    userId: string,
+    bookingId: string,
+    body: CancelBookingBody,
+  ) {
+    const dto = BookingRequestMapper.toCancelBookingDTO(body);
+    const { reason } = dto;
     const booking = await this._bookingRepository.findByBookingId(bookingId);
     if (!booking) {
       throw new CustomError(
@@ -761,12 +846,14 @@ export class BookingService implements IBookingService {
           "cancellation.reason": reason || "User cancelled (>7 days prior)",
         } as UpdateQuery<IBookingDocument>,
       );
-      return {
+      const result = {
         requiresAdminApproval: false,
         message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_WITH_FULL_REFUND,
         refundAmount,
         booking: updatedBooking,
       };
+
+      return BookingResponseMapper.toCancelBookingResponseDTO(result);
     }
 
     const estimatedRefund = Math.round(totalPaid * 0.5);
@@ -779,11 +866,12 @@ export class BookingService implements IBookingService {
         reason || "User requested cancellation (<=7 days prior)",
     } as UpdateQuery<IBookingDocument>);
 
-    return {
+    const result = {
       requiresAdminApproval: true,
       message: RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_SUBMITTED,
       estimatedRefund,
       booking: updatedBooking,
     };
+    return BookingResponseMapper.toCancelBookingResponseDTO(result);
   }
 }

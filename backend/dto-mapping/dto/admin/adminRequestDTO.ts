@@ -1,8 +1,8 @@
-import { IOperatorVerificationDetailsDTO } from "../operator/operatorRequestDTO";
+import { IOperatorVerificationDetailsDTO, IOperatorVerificationDetailsInput } from "../operator/operatorRequestDTO";
 
 export interface AddressDTO {
   houseNo?: string;
-  landMark?: string;
+  landmark?: string;
   city?: string;
   state?: string;
   country?: string;
@@ -44,10 +44,40 @@ export interface IGetOperatorQueryDTO {
 }
 
 export interface IAdminUpdateOperatorRequestDTO {
+  name: string;
+  mobile: number;
+  isVerified: boolean;
+  isEmailVerified:boolean
+  isPremium: boolean;
+  verificationDetails: IOperatorVerificationDetailsDTO;
+}
+export interface IAdminUpdateOperatorinput {
+  name: string;
+  mobile: number|string;
+  isVerified: boolean|string;
+  isEmailVerified:boolean|string
+  isPremium: boolean|string;
+  verificationDetails: IOperatorVerificationDetailsInput;
+}
+
+export interface LoginAdminBody {
+  email: string;
+  password: string;
+}
+
+export interface ResetAdminPasswordAuthenticatedBody {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface UpdateAdminBody {
   name?: string;
+  password?: string;
   mobile?: string;
-  isVerified?: boolean;
-  isEmailVerified?:boolean
-  isPremium?: boolean;
-  verificationDetails?: IOperatorVerificationDetailsDTO;
+  address?: AddressDTO;
+}
+
+export interface UpdateAdminProfileImageBody {
+  image: string;
 }

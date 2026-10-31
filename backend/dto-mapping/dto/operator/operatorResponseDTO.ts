@@ -31,3 +31,7 @@ export interface IOperatorRegisterResponseDTO {
   operatorId: string;
   otpExpire: string;
 }
+export interface IOperatorRegisterResponseInput {
+  operatorId: string;
+  otpExpire: string;
+}

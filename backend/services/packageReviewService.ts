@@ -2,9 +2,11 @@ import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import {
-  CreateReviewRequestDTO,
+  ReviewRequestBody,
   UpdateReviewRequestDTO,
 } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
+import { ReviewRequestMapper } from "../dto-mapping/mapper/package-review/ReviewRequestMapper";
+import { ReviewResponseMapper } from "../dto-mapping/mapper/package-review/ReviewResponseMapper";
 import { IPackageReviewService } from "../interfaces/IPackageReviewService";
 import type { IReviewRepository } from "../interfaces/IReviewRepository";
 import { Types } from "../types/types";
@@ -23,14 +25,23 @@ export class PackageReviewService implements IPackageReviewService {
       this._reviewRepository.getReviewsByPackageId(packageId, skip, limit),
       this._reviewRepository.getReviewStatsByPackageId(packageId),
     ]);
-
-    return { reviews, stats };
+    return ReviewResponseMapper.toPackageReviewsResponseDTO(reviews, stats);
   }
-  async createPackageReviewService(reviewData: CreateReviewRequestDTO) {
-    const existingReview = await this._reviewRepository.findUserReviewForPackage(
-      reviewData.userId,
-      reviewData.packageId,
+  async createPackageReviewService(
+    packageId: string,
+    userId: string,
+    body: ReviewRequestBody,
+  ) {
+    const dto = ReviewRequestMapper.toCreateReviewReqDTO(
+      body,
+      packageId as string,
+      userId,
     );
+    const existingReview =
+      await this._reviewRepository.findUserReviewForPackage(
+        dto.userId,
+        dto.packageId,
+      );
     if (existingReview) {
       throw new CustomError(
         RESPONSE_MESSAGES.REVIEW.ERROR.ALREADY_EXIST,
@@ -38,15 +49,17 @@ export class PackageReviewService implements IPackageReviewService {
       );
     }
 
-    return this._reviewRepository.createReview(reviewData);
+    const data = await this._reviewRepository.createReview(dto);
+    return ReviewResponseMapper.toReviewResponseDTO(data);
   }
 
   async updatePackageReviewService(
     userId: string,
     reviewId: string,
     packageId: string,
-    dto: UpdateReviewRequestDTO,
+    body: ReviewRequestBody,
   ) {
+    const dto = ReviewRequestMapper.toUpdateReviewReqDTO(body);
     const review = await this._reviewRepository.findById(reviewId);
     if (!review) {
       throw new CustomError(
@@ -66,7 +79,7 @@ export class PackageReviewService implements IPackageReviewService {
     );
     const stats =
       await this._reviewRepository.getReviewStatsByPackageId(packageId);
-    return { review: updatedReview, stats };
+    return ReviewResponseMapper.toUpdateReviewResponseDTO(updatedReview, stats);
   }
 
   async deletePackageReviewService(
@@ -88,10 +101,9 @@ export class PackageReviewService implements IPackageReviewService {
         StatusCode.FORBIDDEN,
       );
     }
-
     await this._reviewRepository.deleteById(reviewId);
     const stats =
       await this._reviewRepository.getReviewStatsByPackageId(packageId);
-    return { stats };
+    return ReviewResponseMapper.toReviewStatsDTO(stats);
   }
 }

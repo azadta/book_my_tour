@@ -51,8 +51,8 @@ export const useMyBookings = (
         `${APP_ROUTES.BOOKINGS.USER.MY_BOOKINGS}?page=${currentPage}&limit=${resultPerPage}`,
       );
 
-      setBookings(response.data.bookings);
-      setTotalCount(response.data.totalCount);
+      setBookings(response.data.result.bookings);
+      setTotalCount(response.data.result.totalCount);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||

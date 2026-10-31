@@ -1,7 +1,13 @@
 import {
-  CreateReviewRequestDTO,
+  ReviewRequestBody,
   UpdateReviewRequestDTO,
 } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
+import {
+  PackageReviewResponseDTO,
+  ReviewResponseDTO,
+  ReviewStats,
+  UpdateReviewResponseDTO,
+} from "../dto-mapping/dto/package-review/packageReviewResponseDTO";
 import { IReview } from "./IReview";
 
 export interface IPackageReviewService {
@@ -9,27 +15,21 @@ export interface IPackageReviewService {
     packageId: string,
     page?: number,
     limit?: number,
-  ): Promise<{
-    reviews: IReview[];
-    stats: any;
-  }>;
+  ): Promise<PackageReviewResponseDTO>;
   createPackageReviewService(
-    reviewData: CreateReviewRequestDTO,
-  ): Promise<IReview>;
+    packageId: string,
+    userId: string,
+    body: ReviewRequestBody,
+  ): Promise<ReviewResponseDTO>;
   updatePackageReviewService(
     userId: string,
     reviewId: string,
     packageId: string,
-    dto: UpdateReviewRequestDTO,
-  ): Promise<{
-    review: IReview | null;
-    stats: any;
-  }>;
+    body: ReviewRequestBody,
+  ): Promise<UpdateReviewResponseDTO>;
   deletePackageReviewService(
     userId: string,
     reviewId: string,
     packageId: string,
-  ): Promise<{
-    stats: any;
-  }>;
+  ): Promise<ReviewStats>;
 }

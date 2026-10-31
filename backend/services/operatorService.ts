@@ -15,17 +15,28 @@ import type { ITokenService } from "../interfaces/ITokenService";
 import { Types } from "../types/types";
 
 import {
+  IAdminUpdateOperatorinput,
   IAdminUpdateOperatorRequestDTO,
   IBlockOperatorRequestDTO,
   IVerifyOperatorRequestDTO,
 } from "../dto-mapping/dto/admin/adminRequestDTO";
 import {
+  IOperatorLoginInput,
   IOperatorLoginRequestDTO,
+  IOperatorRegisterInput,
   IOperatorRegisterRequestDTO,
+  IResetOperatorPasswordAuthenticatedInput,
   IResetOperatorPasswordAuthenticatedRequestDTO,
+  IUpdateOperatorProfileInput,
   IUpdateOperatorProfileRequestDTO,
+  IVerifyOperatorOtpInput,
   IVerifyOperatorOtpRequestDTO,
 } from "../dto-mapping/dto/operator/operatorRequestDTO";
+import { OperatorRequestMapper } from "../dto-mapping/mapper/operator/OperatorRequestMapper";
+import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorResponseMapper";
+import { IOperatorResponseDTO } from "../dto-mapping/dto/operator/operatorResponseDTO";
+import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
+import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
 
 @injectable()
 export class OperatorService implements IOperatorService {
@@ -38,7 +49,8 @@ export class OperatorService implements IOperatorService {
     @inject(Types.TokenService) private _tokenService: ITokenService,
     @inject(Types.CryptoHashService) private _resetTokenHasher: IHashGenerator,
   ) {}
-  async operatorRegisterService(dto: IOperatorRegisterRequestDTO) {
+  async operatorRegisterService(body: IOperatorRegisterInput) {
+    const dto = OperatorRequestMapper.toOperatorRegisterRequestDTO(body);
     const existing = await this._operatorRepository.findByEmail(
       dto.email as string,
     );
@@ -64,13 +76,15 @@ export class OperatorService implements IOperatorService {
       `Your otp is ${otp} .It expires in 10 minutes`,
     );
 
-    return {
+    const result = {
       operatorId: (newOperator._id as mongooseType.ObjectId).toString(),
-      otpExpire: newOperator.otpExpire,
+      otpExpire: newOperator.otpExpire as unknown as string,
     };
+    return OperatorResponseMapper.toOperatorRegisterRespsonseDTO(result);
   }
 
-  async operatorVerifyOtpService(dto: IVerifyOperatorOtpRequestDTO) {
+  async operatorVerifyOtpService(body: IVerifyOperatorOtpInput) {
+    const dto = OperatorRequestMapper.toVerityOperatorOtpDTO(body);
     const { operatorId, otp } = dto;
     const operator = await this._operatorRepository.findById(operatorId);
     if (!operator)
@@ -117,11 +131,12 @@ export class OperatorService implements IOperatorService {
     return { otpExpire };
   }
 
-  async operatorLoginService(dto: IOperatorLoginRequestDTO): Promise<{
+  async operatorLoginService(body: IOperatorLoginInput): Promise<{
     accessToken: string;
     refreshToken: string;
-    operatorData: IOperatorResponse;
+    operatorData: IOperatorResponseDTO;
   }> {
+    const dto = OperatorRequestMapper.toOperatorLoginRequestDTO(body);
     const { email, password } = dto;
     const operator = await this._operatorRepository.findByEmail(email);
     if (!operator)
@@ -155,7 +170,11 @@ export class OperatorService implements IOperatorService {
     });
     //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: pass, ...operatorData } = operator.toObject();
-    return { accessToken, refreshToken, operatorData };
+    return {
+      accessToken,
+      refreshToken,
+      operatorData: OperatorResponseMapper.toOperatorResponseDTO(operator),
+    };
   }
 
   async operatorForgotPasswordService(email: string) {
@@ -199,15 +218,24 @@ export class OperatorService implements IOperatorService {
     return { message: RESPONSE_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE };
   }
 
-  async updateOperatorService(
-    id: string,
-    dto: IUpdateOperatorProfileRequestDTO,
-  ) {
-    return await this._operatorRepository.updateById(id, dto);
+  async updateOperatorService(id: string, body: IUpdateOperatorProfileInput) {
+    const dto = OperatorRequestMapper.toUpdateOperatorProfileDTO(body);
+    const updatedOperator = await this._operatorRepository.updateById(id, dto);
+    if (!updatedOperator) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    return OperatorResponseMapper.toOperatorResponseDTO(updatedOperator);
   }
 
   async updateOperatorProfileImageService(id: string, image: string) {
-    return await this._operatorRepository.updateOperatorProfileImage(id, image);
+    const operator= await this._operatorRepository.updateOperatorProfileImage(id, image);
+    if(!operator){
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,StatusCode.NOT_FOUND)
+    }
+   return OperatorResponseMapper.toOperatorResponseDTO(operator)
   }
 
   operatorLogoutService(): { message: string } {
@@ -216,8 +244,12 @@ export class OperatorService implements IOperatorService {
 
   async resetPasswordAuthenticatedService(
     operatorId: string,
-    dto: IResetOperatorPasswordAuthenticatedRequestDTO,
+    body: IResetOperatorPasswordAuthenticatedInput,
   ) {
+     const dto =
+        OperatorRequestMapper.toOperatorResetPasswordAuthenticatedRequestDTO(
+          body,
+        );
     const { confirmPassword, newPassword, oldPassword } = dto;
     const operator = await this._operatorRepository.findById(operatorId);
     if (!operator)
@@ -245,9 +277,13 @@ export class OperatorService implements IOperatorService {
   }
 
   async getOperatorVerificationRequestsService() {
-    return await this._operatorRepository.getPendingOperator();
+    const pendingOperators= await this._operatorRepository.getPendingOperator();
+   return AdminResponseMapper.toAdminOperatorListResponseDTO(pendingOperators)
   }
-  async verifyOperatorService(id: string, dto: IVerifyOperatorRequestDTO) {
+  async verifyOperatorService(id: string,body: {
+    isVerified: boolean;
+  }) {
+       const dto = AdminRequestMapper.toVerifyOperatorPayload(body);
     const { isVerified } = dto;
     const updated = await this._operatorRepository.updateOperatorStatus(
       id,
@@ -272,16 +308,28 @@ export class OperatorService implements IOperatorService {
   }
 
   async getPaginatedOperatorsService(skip: number, limit: number) {
-    return this._operatorRepository.getPaginatedOperators(skip, limit);
+    const operators=await this._operatorRepository.getPaginatedOperators(skip, limit);
+    return AdminResponseMapper.toAdminOperatorListResponseDTO(operators)
   }
 
   async getOperatorDetailsService(id: string) {
-    return this._operatorRepository.findById(id);
+    const operator=await this._operatorRepository.findById(id);
+    if(!operator){
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,StatusCode.NOT_FOUND)
+    }
+   return AdminResponseMapper.toAdminOperatorResponseDTO(operator)
   }
 
-  async blockOperatorService(id: string, dto: IBlockOperatorRequestDTO) {
+  async blockOperatorService(id: string, body:{
+    isBlocked: boolean;
+  }) {
+       const dto = AdminRequestMapper.toBlockOperatorPayload(body);
     const { isBlocked } = dto;
-    return this._operatorRepository.updateOperatorBlockStatus(id, isBlocked);
+    const blockedOperator=await this._operatorRepository.updateOperatorBlockStatus(id, isBlocked);
+    if(!blockedOperator){
+      throw new  CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,StatusCode.NOT_FOUND)
+    }
+   return AdminResponseMapper.toAdminOperatorResponseDTO(blockedOperator)
   }
 
   async deleteOperatorService(id: string) {
@@ -289,8 +337,13 @@ export class OperatorService implements IOperatorService {
   }
   async adminUpdateOperatorService(
     id: string,
-    dto: IAdminUpdateOperatorRequestDTO,
+    body: IAdminUpdateOperatorinput,
   ) {
-    return await this._operatorRepository.updateById(id, dto);
+     const dto = AdminRequestMapper.toAdminUpdateOperatorRequestDTO(body);
+    const updatedOperator= await this._operatorRepository.updateById(id, dto);
+    if(!updatedOperator){
+      throw new CustomError(RESPONSE_MESSAGES.OPERATOR.ERROR.NOT_FOUND,StatusCode.NOT_FOUND)
+    }
+   return OperatorResponseMapper.toOperatorResponseDTO(updatedOperator)
   }
 }

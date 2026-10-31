@@ -1,25 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { adminProfileFields } from "../../formConfig/fields";
 
 import {
-  updateAdminStart,
-  updateAdminSuccess,
-  updateAdminFailure,
+  adminLogoutFailure,
   adminLogoutStart,
   adminLogoutSuccess,
-  adminLogoutFailure,
+  updateAdminFailure,
+  updateAdminStart,
+  updateAdminSuccess,
 } from "../../redux/admin/adminSlice.js";
 
-import { useApi } from "../../hooks/useApi.js";
-import { ProfileForm } from "../../components/forms/ProfileForm.js";
-import type { RootState } from "../../redux/store.js";
-import { toast } from "react-toastify";
-import BackToDashboard from "../../components/BackToDashboard.js";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.js";
 import { APP_ROUTES } from "@/constants/AppRoutes.js";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.js";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.js";
+import { toast } from "react-toastify";
+import { ProfileForm } from "../../components/forms/ProfileForm.js";
+import { useApi } from "../../hooks/useApi.js";
+import type { RootState } from "../../redux/store.js";
 
 interface FormDataType {
   [key: string]: any;
@@ -109,12 +108,12 @@ const AdminProfile = () => {
   const handleSubmit = async () => {
     try {
       dispatch(updateAdminStart());
-      const updatedAdmin = await post(
+      const data = await post(
         APP_ROUTES.ADMINS.UPDATE(currentAdmin?._id as string),
         formData,
       );
 
-      dispatch(updateAdminSuccess(updatedAdmin));
+      dispatch(updateAdminSuccess(data.result));
       toast.success(FEEDBACK_MESSAGES.ADMIN.SUCCESS.UPDATE);
     } catch (error: any) {
       dispatch(

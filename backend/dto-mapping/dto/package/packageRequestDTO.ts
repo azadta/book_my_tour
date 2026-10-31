@@ -58,18 +58,18 @@ export interface ICreatePackageRequestDTO {
     day: number;
     night: number;
   };
-    childPricing: {
+  childPricing: {
     enabled: boolean;
-    minAge?: number|undefined;
-    maxAge?: number|undefined;
-    percentage?: number|undefined;
+    minAge?: number | undefined;
+    maxAge?: number | undefined;
+    percentage?: number | undefined;
   };
   specifications?: string;
   startDate: Date;
-  startPoint:string,
+  startPoint: string;
   remark?: string;
   discount?: number;
-  availableSlots?: string;
+  availableSlots: string;
   images: string[];
   category: Types.ObjectId;
   itinerary: IItineraryDayDTO[];
@@ -92,3 +92,28 @@ export interface IPackageFilterQueryDTO {
   sortBy?: "createdAt" | "price" | "rating";
   sortOrder?: "asc" | "desc";
 }
+
+export interface PackageInput {
+  name: string;
+  amount: number | string;
+
+  destinations: string[];
+  "duration.day": number | string;
+  "duration.night": number | string;
+  "childPricing.enabled"?: boolean | string;
+  "childPricing.minAge"?: number | string;
+  "childPricing.maxAge"?: number | string;
+  "childPricing.percentage"?: number | string;
+
+  specifications?: string;
+  startDate:string;
+  startPoint: string;
+  remark?: string;
+  discount?: number;
+  availableSlots: string;
+  images: string[];
+  category: string;
+  itinerary: IItineraryDayDTO[];
+}
+
+

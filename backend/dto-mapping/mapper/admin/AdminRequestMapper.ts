@@ -1,39 +1,55 @@
 import {
+  IAdminUpdateOperatorinput,
   IAdminUpdateOperatorRequestDTO,
   IBlockOperatorRequestDTO,
   IVerifyOperatorRequestDTO,
+  LoginAdminBody,
   LoginAdminRequestDTO,
+  ResetAdminPasswordAuthenticatedBody,
   ResetAdminPasswordAuthenticatedRequestDTO,
+  UpdateAdminBody,
+  UpdateAdminProfileImageBody,
   UpdateAdminProfileImageRequestDTO,
   UpdateAdminRequestDTO,
 } from "../../dto/admin/adminRequestDTO";
 import { OperatorRequestMapper } from "../operator/OperatorRequestMapper";
 
 export class AdminRequestMapper {
-  static toLoginRequestDTO(body: any): LoginAdminRequestDTO {
+  static toLoginRequestDTO(body: LoginAdminBody): LoginAdminRequestDTO {
     return {
       email: (body.email || "").trim().toLowerCase(),
       password: body.password || "",
     };
   }
 
-  static toUpdateAdminRequestDTO(body: any): UpdateAdminRequestDTO {
+  static toUpdateAdminRequestDTO(body: UpdateAdminBody): UpdateAdminRequestDTO {
+    const address = body.address;
     return {
-      name: body?.name?.trim(),
-      mobile: body?.mobile,
-      address: {
-        houseNo: body?.address?.houseNo?.trim(),
-        landMark: body?.address?.landmark?.trim(),
-        city: body?.address?.city?.trim(),
-        state: body?.address?.state?.trim(),
-        country: body?.address?.country?.trim(),
-        postalCode: body?.address?.postalCode?.trim(),
-      },
+      ...(body.name !== undefined && { name: body.name.trim() }),
+      ...(body.mobile !== undefined && { mobile: body.mobile.trim() }),
+      ...(address !== undefined && {
+        address: {
+          ...(address.houseNo !== undefined && {
+            houseNo: address.houseNo.trim(),
+          }),
+          ...(address.landmark !== undefined && {
+            landmark: address.landmark.trim(),
+          }),
+          ...(address.city !== undefined && { city: address.city.trim() }),
+          ...(address.state !== undefined && { state: address.state.trim() }),
+          ...(address.country !== undefined && {
+            country: address.country.trim(),
+          }),
+          ...(address.postalCode !== undefined && {
+            postalCode: address.postalCode.trim(),
+          }),
+        },
+      }),
     };
   }
 
   static toUpdateProfileImageRequestDTO(
-    body: any,
+    body: UpdateAdminProfileImageBody,
   ): UpdateAdminProfileImageRequestDTO {
     return {
       image: (body.image || "").trim(),
@@ -41,7 +57,7 @@ export class AdminRequestMapper {
   }
 
   static toResetPasswordAuthenticatedRequestDTO(
-    body: any,
+    body: ResetAdminPasswordAuthenticatedBody,
   ): ResetAdminPasswordAuthenticatedRequestDTO {
     return {
       oldPassword: body.oldPassword || "",
@@ -57,21 +73,24 @@ export class AdminRequestMapper {
       isVerified: Boolean(dto.isVerified),
     };
   }
-  static toBlockOperatorPayload(dto: IBlockOperatorRequestDTO): {
+  static toBlockOperatorPayload(data:{
     isBlocked: boolean;
-  } {
+  }):IBlockOperatorRequestDTO {
     return {
-      isBlocked: Boolean(dto.isBlocked),
+      isBlocked: Boolean(data.isBlocked),
     };
   }
 
-  static toAdminUpdateOperatorRequestDTO(data: any): IAdminUpdateOperatorRequestDTO {
+  static toAdminUpdateOperatorRequestDTO(
+    data: IAdminUpdateOperatorinput,
+  ): IAdminUpdateOperatorRequestDTO {
     return {
       name: data?.name,
-      isPremium: data?.isPremium,
-      isVerified: data?.isVerified,
-      isEmailVerified:data?.isEmailVerified,
-      mobile: data?.mobile,
+      isPremium: data.isPremium === true || data.isPremium === "true",
+      isVerified: data.isVerified === true || data.isVerified === "true",
+      isEmailVerified:
+        data.isEmailVerified === true || data.isEmailVerified === "true",
+      mobile: Number(data?.mobile),
       ...(data?.verificationDetails && {
         verificationDetails:
           OperatorRequestMapper.verificationDetailsRequestMapper(

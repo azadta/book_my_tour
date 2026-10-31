@@ -1,10 +1,11 @@
+import { CreateWalletTransactionDTO } from "../dto-mapping/dto/wallet/walletRequestDTO";
 import { IWalletDocument, IWalletTransaction } from "../models/Wallet";
 import { IBaseRepository } from "./IBaseRepository";
 
 export interface IWalletRepository extends IBaseRepository<IWalletDocument> {
   addPendingTransaction(
     userId: string,
-    transaction: IWalletTransaction,
+    transaction: CreateWalletTransactionDTO,
   ): Promise<IWalletDocument | null>;
   updatePendingTransactionAndBalance(
     userId: string,

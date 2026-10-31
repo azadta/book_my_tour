@@ -1,10 +1,11 @@
+import { IPackageCategory } from "../../../models/PackageCategory";
 import {
   ICategoryResponseDTO,
   ICategorySummaryDTO,
 } from "../../dto/package-category/packageCategoryResponseDTO";
 
 export class CategoryResponseMapper {
-  static toCategoryResponseDTO(doc: any): ICategoryResponseDTO {
+  static toCategoryResponseDTO(doc: IPackageCategory): ICategoryResponseDTO {
     if (!doc) return {} as ICategoryResponseDTO;
     const raw = doc.toObject ? doc.toObject() : doc;
     return {
@@ -15,7 +16,7 @@ export class CategoryResponseMapper {
     };
   }
 
-  static toCategoryListResponseDTO(docs: any): ICategoryResponseDTO[] {
+  static toCategoryListResponseDTO(docs:IPackageCategory[]): ICategoryResponseDTO[] {
     if (!Array.isArray(docs)) return [];
     return docs.map((doc) => this.toCategoryResponseDTO(doc));
   }

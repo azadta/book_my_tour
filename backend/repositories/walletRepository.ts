@@ -3,6 +3,7 @@ import { BaseRepository } from "./baseRepository";
 import { IWalletDocument, IWalletTransaction, Wallet } from "../models/Wallet";
 import { IWalletRepository } from "../interfaces/IWalletRepository";
 import mongoose from "mongoose";
+import { CreateWalletTransactionDTO } from "../dto-mapping/dto/wallet/walletRequestDTO";
 
 @injectable()
 export class WalletRepository
@@ -29,7 +30,7 @@ export class WalletRepository
 
   async addPendingTransaction(
     userId: string,
-    transaction: IWalletTransaction,
+    transaction: CreateWalletTransactionDTO,
   ): Promise<IWalletDocument | null> {
     return await Wallet.findOneAndUpdate(
       { userId },

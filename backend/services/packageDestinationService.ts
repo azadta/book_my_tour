@@ -8,7 +8,13 @@ import type { IPackageRepository } from "../interfaces/IPackageRepository";
 import { IDestination } from "../models/Destination";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { ICreateDestinationRequestDTO } from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
+import {
+  CreateDestinationRequestInput,
+  ICreateDestinationRequestDTO,
+} from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
+import { PackageDestinationRequestMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationRequestMapper";
+import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
+import { IDestinationResponseDTO } from "../dto-mapping/dto/package-destination/packageDestinationResponseDTO";
 
 @injectable()
 export class PackageDestinationService implements IPackageDestinationService {
@@ -22,8 +28,9 @@ export class PackageDestinationService implements IPackageDestinationService {
   ) {}
 
   async createDestinationService(
-    dto: ICreateDestinationRequestDTO,
-  ): Promise<IDestination> {
+    body: CreateDestinationRequestInput,
+  ): Promise<IDestinationResponseDTO> {
+    const dto = PackageDestinationRequestMapper.toDestinationEntity(body);
     const existing = await this._destinationRepository.findDestinationByName(
       dto.name as string,
     );
@@ -33,7 +40,7 @@ export class PackageDestinationService implements IPackageDestinationService {
         StatusCode.BAD_REQUEST,
       );
 
-    return this._destinationRepository.create({
+    const destination = await this._destinationRepository.create({
       name: (dto.name as string).trim(),
       location: {
         latitude: dto.location.latitude,
@@ -41,11 +48,19 @@ export class PackageDestinationService implements IPackageDestinationService {
       },
       images: Array.isArray(dto.images) ? dto.images : [],
     });
+    return PackageDestinationResponseMapper.toDestinationResponseDTO(
+      destination,
+    );
   }
-  getAllDestinationsService(): Promise<IDestination[]> {
-    return this._destinationRepository.findAll();
+  async getAllDestinationsService(): Promise<IDestinationResponseDTO[]> {
+    const destinations = await this._destinationRepository.findAll();
+    return PackageDestinationResponseMapper.toDestinationListResponseDTO(
+      destinations,
+    );
   }
-  async getDestinationByIdService(id: string): Promise<IDestination> {
+  async getDestinationByIdService(
+    id: string,
+  ): Promise<IDestinationResponseDTO> {
     const destination = await this._destinationRepository.findById(id);
     if (!destination) {
       throw new CustomError(
@@ -53,7 +68,9 @@ export class PackageDestinationService implements IPackageDestinationService {
         StatusCode.NOT_FOUND,
       );
     }
-    return destination;
+    return PackageDestinationResponseMapper.toDestinationResponseDTO(
+      destination,
+    );
   }
   async deleteDestinationByIdService(id: string): Promise<void> {
     const deleted = await this._destinationRepository.deleteById(id);
@@ -80,6 +97,9 @@ export class PackageDestinationService implements IPackageDestinationService {
         destinationMap.set(destination._id.toString(), destination);
       });
     });
-    return [...destinationMap.values()];
+    const destinations = [...destinationMap.values()];
+    return PackageDestinationResponseMapper.toDestinationListResponseDTO(
+      destinations,
+    );
   }
 }

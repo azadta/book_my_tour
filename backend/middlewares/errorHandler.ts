@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/customError";
 import { logger } from "../utils/logger";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { sendErrorResponse } from "../utils/apiResponse";
 
 const errorHandler = (
   err: unknown,
@@ -19,12 +20,7 @@ const errorHandler = (
       user: req.user,
     });
     console.error("💥 Stack Trace:", err.stack);
-    return res.status(err.statusCode).json({
-      success: false,
-      statusCode: err.statusCode,
-      message: err.message,
-      errors: err.errors,
-    });
+    return sendErrorResponse(res, err.message, err.statusCode, err.errors);
   }
   if (err instanceof Error) {
     logger.error(err.message, {
@@ -46,11 +42,7 @@ const errorHandler = (
     console.error("💥 Unknown error:", err);
   }
 
-  return res.status(500).json({
-    success: false,
-    statusCode: 500,
-    message: RESPONSE_MESSAGES.AUTH.ERROR.SERVER_ERROR,
-  });
+  return sendErrorResponse(res, RESPONSE_MESSAGES.AUTH.ERROR.SERVER_ERROR, 500);
 };
 
 export default errorHandler;

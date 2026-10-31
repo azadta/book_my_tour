@@ -1,8 +1,9 @@
+import { IDestination } from "../../../models/Destination";
 import { IDestinationResponseDTO } from "../../dto/package-destination/packageDestinationResponseDTO";
 import { IDestinationSummaryDTO } from "../../dto/package/packageRequestDTO";
 
 export class PackageDestinationResponseMapper {
-  static toDestinationResponseDTO(doc: any): IDestinationResponseDTO {
+  static toDestinationResponseDTO(doc: IDestination|null): IDestinationResponseDTO {
     if (!doc) return {} as IDestinationResponseDTO;
     const raw = doc.toObject ? doc.toObject() : doc;
     return {
@@ -17,7 +18,7 @@ export class PackageDestinationResponseMapper {
     };
   }
 
-  static toDestinationListResponseDTO(docs: any[]): IDestinationResponseDTO[] {
+  static toDestinationListResponseDTO(docs: IDestination[]): IDestinationResponseDTO[] {
     if (!Array.isArray(docs)) return [];
     return docs.map((doc) => this.toDestinationResponseDTO(doc));
   }

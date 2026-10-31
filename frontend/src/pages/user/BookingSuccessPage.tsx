@@ -18,7 +18,7 @@ const BookingSuccessPage = () => {
   const orderId = searchParams.get("order_id");
 
   const { booking, fetchBookingDetails, isLoading } = useBookingSuccessPage();
-  const packageName = booking?.packageId.name;
+  const packageName = booking?.packageId?.name;
   const pricing = booking?.pricing;
   const totalPaid = (pricing?.walletApplied || 0) + (pricing?.finalAmount || 0);
 

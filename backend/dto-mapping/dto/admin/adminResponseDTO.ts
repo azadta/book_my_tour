@@ -1,4 +1,5 @@
 import { IOperatorVerificationDetailsDTO } from "../operator/operatorRequestDTO";
+import { IOperatorResponseDTO } from "../operator/operatorResponseDTO";
 import { AddressDTO } from "./adminRequestDTO";
 export interface AdminResponseDTO {
   _id: string;
@@ -18,25 +19,9 @@ export interface LoginAdminResponseDTO {
   adminData: AdminResponseDTO;
 }
 
-export interface IAdminOperatorResponseDTO {
-  _id: string;
-  name: string;
-  email: string;
-  image?: string;
-  mobile?: number;
-  isBlocked: boolean;
-  isPremium: boolean;
-  isVerified: boolean;
-  isEmailVerified: boolean;
-  referralCode?: string;
-  referredBy?: string;
-  verificationDetails: IOperatorVerificationDetailsDTO;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
+
 
 export interface IBlockOperatorResponseDTO {
   message: string;
-  operator: IAdminOperatorResponseDTO;
+  operator: IOperatorResponseDTO;
 }

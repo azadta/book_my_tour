@@ -1,32 +1,28 @@
 import {
+  CreateTopupOrderInput,
   CreateTopupOrderRequestDTO,
+  verifyTopupPaymentInput,
   verifyTopupPaymentRequestDTO,
 } from "../dto-mapping/dto/wallet/walletRequestDTO";
+import {
+  PaginatedWalletResponseDTO,
+  TopupOrderResponseDTO,
+  WalletResponseDTO,
+} from "../dto-mapping/dto/wallet/walletResponseDTO";
 import { IWalletDocument, IWalletTransaction } from "../models/Wallet";
 
 export interface IWalletService {
-  getWallet(userId: string): Promise<IWalletDocument>;
   createTopupOrder(
     userId: string,
-    dto: CreateTopupOrderRequestDTO,
-  ): Promise<{
-    orderId: string;
-    amount: number;
-    currency: string;
-    keyId: string | undefined;
-  }>;
+    body: CreateTopupOrderInput,
+  ): Promise<TopupOrderResponseDTO>;
   verifyTopupPayment(
     userId: string,
-    dto: verifyTopupPaymentRequestDTO,
-  ): Promise<IWalletDocument | null>;
+    body: verifyTopupPaymentInput,
+  ): Promise<WalletResponseDTO>;
   getWalletWithPagination(
     userId: string,
     page?: number,
     limit?: number,
-  ): Promise<{
-    balance: number;
-    transactions: IWalletTransaction[];
-    totalCount: number;
-    totalPages: number;
-  }>;
+  ): Promise<PaginatedWalletResponseDTO>;
 }

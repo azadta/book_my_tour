@@ -113,7 +113,7 @@ export const ROUTES = {
     LOGOUT: "/logout",
     UPDATE_IMAGE: "/profile-image",
     UPDATE: "/:id",
-    RESET_PASSWORD_AUTH: "/reset-password-authenticated",
+    RESET_PASSWORD_AUTH: "/reset-password-authenticated/:id",
   },
 
   COUPONS: {

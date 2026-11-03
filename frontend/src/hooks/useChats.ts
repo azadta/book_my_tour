@@ -41,24 +41,24 @@ export const useChat = () => {
       participientModel: "User" | "Operator" | "Admin" = "Operator",
     ) => {
       try {
-        const response = await axiosInstance.post<IChat>(
+        const response = await axiosInstance.post<{result:IChat}>(
           APP_ROUTES.CHATS.ANY.ACCESS_CHAT,
           { targetId: participientId, targetModel: participientModel },
         );
-        const chat = response.data;
+        const chat = response.data.result;
         dispatch(setChats([...chats.filter((c) => c._id !== chat._id), chat]));
 
         dispatch(setActiveChat(chat));
         const socket = getSocket();
         socket.emit("join_chat", chat._id);
-        const msgResponse = await axiosInstance.get<IMessageResponse>(
+        const msgResponse = await axiosInstance.get<{result:IMessageResponse}>(
           APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id),
         );
         if (activeChatRef.current) {
           socket.emit("join_chat", activeChatRef.current._id);
         }
 
-        dispatch(setMessages(msgResponse.data.messages || []));
+        dispatch(setMessages(msgResponse.data.result.messages || []));
       } catch (error: any) {
         const message =
           error.response?.data?.message ||
@@ -184,10 +184,10 @@ export const useChat = () => {
 
   const fetchChats = useCallback(async () => {
     try {
-      const response = await axiosInstance.get<IChat[]>(
+      const response = await axiosInstance.get<{result:IChat[]}>(
         APP_ROUTES.CHATS.ANY.MY_CHATS,
       );
-      dispatch(setChats(response.data));
+      dispatch(setChats(response.data.result));
     } catch (error: any) {
       const message =
         error.response?.data?.message ||
@@ -224,10 +224,10 @@ export const useChat = () => {
       socket.emit("join_chat", chat._id);
 
       try {
-        const response = await axiosInstance.get<IMessageResponse>(
+        const response = await axiosInstance.get<{result:IMessageResponse}>(
           APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id),
         );
-        const fetchedMessages = response.data.messages || [];
+        const fetchedMessages = response.data.result.messages || [];
         dispatch(setMessages(fetchedMessages));
         if (currentUser) {
           const unreadMessageIds = fetchedMessages
@@ -280,11 +280,11 @@ export const useChat = () => {
       participantModel: "User" | "Operator" | "Admin" = "Operator",
     ) => {
       try {
-        const response = await axiosInstance.post<IChat>(
+        const response = await axiosInstance.post<{result:IChat}>(
           APP_ROUTES.CHATS.ANY.ACCESS_CHAT,
           { targetId: participantId, targetModel: participantModel },
         );
-        const chat = response.data;
+        const chat = response.data.result;
         dispatch(setChats([...chats.filter((c) => c._id !== chat._id), chat]));
       } catch (error: any) {
         const message =

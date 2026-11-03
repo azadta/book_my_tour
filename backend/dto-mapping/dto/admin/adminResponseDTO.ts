@@ -1,4 +1,3 @@
-import { IOperatorVerificationDetailsDTO } from "../operator/operatorRequestDTO";
 import { IOperatorResponseDTO } from "../operator/operatorResponseDTO";
 import { AddressDTO } from "./adminRequestDTO";
 export interface AdminResponseDTO {

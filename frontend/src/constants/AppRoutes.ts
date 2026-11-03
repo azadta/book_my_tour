@@ -117,7 +117,7 @@ export const APP_ROUTES = {
     LOGOUT: "/admin/logout",
     UPDATE_IMAGE: "/admin/profile-image",
     UPDATE: (id: string) => `/admin/${id}`,
-    RESET_PASSWORD_AUTH: "/admin/reset-password-authenticated",
+    RESET_PASSWORD_AUTH:(id:string)=> `/admin/reset-password-authenticated/${id}`,
   },
 
   COUPONS: {

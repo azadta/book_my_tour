@@ -26,7 +26,7 @@ export const useGoogleLogin = (
         name: result.user.displayName,
         email: result.user.email,
       });
-      dispatch(logInSuccess(res.data));
+      dispatch(logInSuccess(res.data.result));
       navigate("/", { replace: true });
     } catch (error: any) {
       const errorMessage =

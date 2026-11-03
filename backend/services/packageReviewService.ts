@@ -1,10 +1,7 @@
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import {
-  ReviewRequestBody,
-  UpdateReviewRequestDTO,
-} from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
+import { ReviewRequestBody } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
 import { ReviewRequestMapper } from "../dto-mapping/mapper/package-review/ReviewRequestMapper";
 import { ReviewResponseMapper } from "../dto-mapping/mapper/package-review/ReviewResponseMapper";
 import { IPackageReviewService } from "../interfaces/IPackageReviewService";
@@ -77,6 +74,12 @@ export class PackageReviewService implements IPackageReviewService {
       reviewId,
       dto,
     );
+    if (!updatedReview) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.REVIEW.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
     const stats =
       await this._reviewRepository.getReviewStatsByPackageId(packageId);
     return ReviewResponseMapper.toUpdateReviewResponseDTO(updatedReview, stats);

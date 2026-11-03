@@ -16,8 +16,8 @@ export const useAdminOperatorManagement = (page: number, limit: number) => {
       const res = await axiosInstance.get(APP_ROUTES.OPERATORS.ADMIN.LIST, {
         params: { page, limit },
       });
-      setOperators(res.data.operators || []);
-      setTotalCount(res.data.totalCount || 0);
+      setOperators(res.data.result.operators || []);
+      setTotalCount(res.data.result.totalCount || 0);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.OPERATOR.ERROR.FETCH, error);
     } finally {

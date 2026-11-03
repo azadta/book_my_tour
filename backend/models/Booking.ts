@@ -1,15 +1,15 @@
-import { model, Schema } from "mongoose";
+import { HydratedDocument, model, Schema, Types } from "mongoose";
+import { IAppliedCoupon, IBookingPricing } from "../interfaces/IBookingPricing";
 import {
-  IBooking,
+
+  IBookingCancellation,
   ILeadContact,
   ITourMember,
 } from "../interfaces/IBookingRepository";
-import { IBookingPricing } from "../interfaces/IBookingPricing";
 import { Ipackage } from "./Package";
 
-export interface IBookingDocument extends Omit<IBooking, "_id">, Document {}
-export interface IPopulatedBooking extends Omit<IBooking, "packageId"> {
-  packageId: Ipackage;
+export interface IPopulatedBooking extends Omit<IBookingDocument, "packageId"> {
+  packageId: HydratedDocument<Ipackage>;
 }
 
 export type AttendanceStatus =
@@ -18,11 +18,22 @@ export type AttendanceStatus =
   | "NOT_SHOW"
   | "COMPLETED";
 
-const AppliedCoupnSchema = new Schema(
+export const BOOKING_STATUS = [
+  "PENDING",
+  "CONFIRMED",
+  "CANCEL_REQUESTED",
+  "FAILED",
+  "CANCELED",
+] as const;
+
+export type BookingStatus = (typeof BOOKING_STATUS)[number];
+
+const AppliedCoupnSchema = new Schema<IAppliedCoupon>(
   {
     couponId: {
       type: Schema.Types.ObjectId,
       ref: "Coupon",
+      required: true,
     },
     code: {
       type: String,
@@ -140,6 +151,25 @@ const pricingSchema = new Schema<IBookingPricing>(
     _id: false,
   },
 );
+export interface IBookingDocument {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  packageId: Types.ObjectId;
+  razorpayOrderId: string;
+  razorpayPaymentId: string | null;
+
+  addedActivityIds: string[];
+  removedActivityIds: string[];
+  primaryContact: ILeadContact;
+  members: ITourMember[];
+  status: BookingStatus;
+  attendance: "PENDING" | "CHECKED_IN" | "NOT_SHOW" | "COMPLETED";
+  checkInTime: Date;
+  pricing: IBookingPricing;
+  cancellation: IBookingCancellation;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const bookingSchema = new Schema<IBookingDocument>(
   {
@@ -172,7 +202,7 @@ const bookingSchema = new Schema<IBookingDocument>(
     members: [tourMemberSchema],
     status: {
       type: String,
-      enum: ["PENDING", "CONFIRMED", "CANCEL_REQUESTED", "FAILED", "CANCELLED"],
+      enum: BOOKING_STATUS,
       default: "PENDING",
     },
     attendance: {

@@ -27,7 +27,8 @@ export const useHome = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGE_DESTINATIONS.PUBLIC.BY_PACKAGE_CATEGORY(category),
       );
-      setDestinationsByCategory((prev) => ({ ...prev, [category]: data }));
+      console.log('data from fetchDestination:',data)
+      setDestinationsByCategory((prev) => ({ ...prev, [category]: data.result }));
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
@@ -42,8 +43,9 @@ export const useHome = () => {
     setLoadingPackages(true);
     try {
       const { data } = await axiosInstance.get(APP_ROUTES.PACKAGES.USER.LIST);
-
-      setPackages(data.packages || []);
+      
+         console.log('data from home packages',data)
+      setPackages(data.result || []);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
@@ -57,7 +59,7 @@ export const useHome = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGES.USER.BY_CATEGORY(category),
       );
-      setPackagesByCategory((prev) => ({ ...prev, [category]: data }));
+      setPackagesByCategory((prev) => ({ ...prev, [category]: data.result }));
     } catch (error: any) {
       toast.error(
         error.response?.data?.message || FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH,
@@ -67,9 +69,6 @@ export const useHome = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPackages();
-  }, []);
 
   return {
     fetchDestinationsByCategory,
@@ -80,5 +79,6 @@ export const useHome = () => {
     loadingDestinationsByCategory,
     loadingPackagesByCategory,
     loadingPackages,
+    fetchPackages
   };
 };

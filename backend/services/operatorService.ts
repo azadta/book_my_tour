@@ -9,34 +9,25 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import type { IHashGenerator } from "../interfaces/IHashGenerator";
 import type { IHashService } from "../interfaces/IHashService";
 import type { IMailService } from "../interfaces/IMailService";
-import { IOperatorResponse } from "../interfaces/IOperator";
 import type { ISecurityService } from "../interfaces/ISecurityService";
 import type { ITokenService } from "../interfaces/ITokenService";
 import { Types } from "../types/types";
 
 import {
-  IAdminUpdateOperatorinput,
-  IAdminUpdateOperatorRequestDTO,
-  IBlockOperatorRequestDTO,
-  IVerifyOperatorRequestDTO,
+  IAdminUpdateOperatorinput
 } from "../dto-mapping/dto/admin/adminRequestDTO";
 import {
   IOperatorLoginInput,
-  IOperatorLoginRequestDTO,
   IOperatorRegisterInput,
-  IOperatorRegisterRequestDTO,
   IResetOperatorPasswordAuthenticatedInput,
-  IResetOperatorPasswordAuthenticatedRequestDTO,
   IUpdateOperatorProfileInput,
-  IUpdateOperatorProfileRequestDTO,
-  IVerifyOperatorOtpInput,
-  IVerifyOperatorOtpRequestDTO,
+  IVerifyOperatorOtpInput
 } from "../dto-mapping/dto/operator/operatorRequestDTO";
+import { IOperatorResponseDTO } from "../dto-mapping/dto/operator/operatorResponseDTO";
+import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
+import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
 import { OperatorRequestMapper } from "../dto-mapping/mapper/operator/OperatorRequestMapper";
 import { OperatorResponseMapper } from "../dto-mapping/mapper/operator/OperatorResponseMapper";
-import { IOperatorResponseDTO } from "../dto-mapping/dto/operator/operatorResponseDTO";
-import { AdminResponseMapper } from "../dto-mapping/mapper/admin/AdminResponseMapper";
-import { AdminRequestMapper } from "../dto-mapping/mapper/admin/AdminRequestMapper";
 
 @injectable()
 export class OperatorService implements IOperatorService {

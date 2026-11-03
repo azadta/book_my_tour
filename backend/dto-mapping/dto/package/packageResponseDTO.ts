@@ -1,10 +1,13 @@
-import { IDestination } from "../../../models/Destination";
+import { Types } from "mongoose";
 import { Ipackage } from "../../../models/Package";
 import {
   ICategorySummaryDTO,
+  ICategorySummaryInput,
   IDestinationSummaryDTO,
+  IDestinationSummaryInput,
   IItineraryDayDTO,
   IOperatorSummaryDTO,
+  IOperatorSummaryInput,
 } from "./packageRequestDTO";
 
 export interface IPackageResponseDTO {
@@ -39,5 +42,16 @@ export interface IPackageResponseDTO {
 }
 
 export type PackageWithDestinations = Omit<Ipackage, "destinations"> & {
-  destinations: IDestination[];
+  destinations: IDestinationSummaryInput[]|Types.ObjectId[];
+};
+
+export type PackageResponseInput = Omit<
+  Ipackage,
+  "destinations" | "category" | "operatorId"
+> & {
+  destinations: IDestinationSummaryInput[] | Types.ObjectId[];
+  category: ICategorySummaryInput | Types.ObjectId;
+  operatorId: IOperatorSummaryInput | Types.ObjectId;
+  reviewCount?: number;
+  averageRating?: number;
 };

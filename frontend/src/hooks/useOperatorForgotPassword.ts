@@ -14,7 +14,7 @@ export const useOperatorForgotPassword = () => {
           email,
         },
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

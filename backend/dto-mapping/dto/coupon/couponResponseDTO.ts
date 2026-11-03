@@ -29,6 +29,11 @@ export interface ValidateCouponResponseDTO {
   finalPrice: number;
   coupon: CouponResponseDTO;
 }
+export interface ValidateCouponResponseInput {
+  discountAmount: number;
+  finalPrice: number;
+  coupon:ICouponDocument;
+}
 
 export interface PaginatedCouponResponseDTO {
   coupons: CouponResponseDTO[];

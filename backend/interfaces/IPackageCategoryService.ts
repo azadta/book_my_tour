@@ -1,6 +1,5 @@
-import { CreateCategoryInput, ICreateCategoryRequestDTO } from "../dto-mapping/dto/package-category/packageCategoryRequestDTO";
+import { CreateCategoryInput } from "../dto-mapping/dto/package-category/packageCategoryRequestDTO";
 import { ICategoryResponseDTO } from "../dto-mapping/dto/package-category/packageCategoryResponseDTO";
-import { IPackageCategory } from "../models/PackageCategory";
 
 export interface IPackageCategoryService {
   createCategoryService(

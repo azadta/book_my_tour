@@ -1,7 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface IParticipant {
-  participantId: Types.ObjectId | string;
+  participantId: Types.ObjectId ;
   participantModel: "User" | "Operator" | "Admin";
 }
 

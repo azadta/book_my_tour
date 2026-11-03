@@ -34,7 +34,7 @@ export class PackageRequestMapper {
       amount: Number(body?.amount),
       childPricing: this.mapChildPricing(body),
       destinations: (body?.destinations || []).map(
-        (id: any) => new Types.ObjectId(id),
+        (id: string) => new Types.ObjectId(id),
       ),
       duration: {
         day: Number(body?.["duration.day"]),
@@ -61,7 +61,7 @@ export class PackageRequestMapper {
       amount: Number(body?.amount),
       childPricing: this.mapChildPricing(body),
       destinations: (body?.destinations || []).map(
-        (id: any) => new Types.ObjectId(id),
+        (id: string) => new Types.ObjectId(id),
       ),
       duration: {
         day: Number(body?.["duration.day"]),

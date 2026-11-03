@@ -19,7 +19,7 @@ export const useRegister = () => {
       const res = await axiosInstance.post( APP_ROUTES.USERS.USER.REGISTER, userData);
       const data = res.data;
 
-      onSuccess(data.userId, data.otpExpire);
+      onSuccess(data.result.userId, data.result.otpExpire);
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);

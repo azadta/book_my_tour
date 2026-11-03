@@ -1,6 +1,5 @@
 import { injectable } from "inversify";
 import {
-  IBooking,
   IBookingRepository,
   ICreateBookingDTO,
   IUpdateBookingStatusDTO,
@@ -19,6 +18,7 @@ import {
 } from "../interfaces/IBooking";
 import mongoose, { HydratedDocument, PipelineStage } from "mongoose";
 import { IUser } from "../interfaces/IUser";
+import { PendingCancellationInput } from "../dto-mapping/dto/booking/bookingResponseDTO";
 
 @injectable()
 export class BookingRepository
@@ -29,7 +29,7 @@ export class BookingRepository
     super(Booking);
   }
 
-  async createBooking(dto: ICreateBookingDTO): Promise<IBooking> {
+  async createBooking(dto: ICreateBookingDTO): Promise<IBookingDocument> {
     const newBooking = await Booking.create({
       userId: dto.userId,
       packageId: dto.packageId,
@@ -46,23 +46,27 @@ export class BookingRepository
     return newBooking.toObject();
   }
 
-  async findByOrderId(razorpayOrderId: string): Promise<IBooking | null> {
+  async findByOrderId(
+    razorpayOrderId: string,
+  ): Promise<IBookingDocument | null> {
     return await Booking.findOne({ razorpayOrderId })
       .populate("packageId")
       .lean();
   }
 
   async findByBookingId(bookingId: string): Promise<IPopulatedBooking | null> {
-    return await Booking.findById(bookingId)
-      .populate<{ packageId: Ipackage }>("packageId")
-      .lean();
+    return await Booking.findById(bookingId).populate<{
+      packageId: HydratedDocument<Ipackage>;
+    }>("packageId");
   }
 
   async updateStatusByOrderId(
     razorpayOrderId: string,
     dto: IUpdateBookingStatusDTO,
-  ): Promise<IBooking | null> {
-    const updateData: Record<string, any> = { status: dto.status };
+  ): Promise<IBookingDocument | null> {
+    const updateData: Partial<
+      Pick<IBookingDocument, "status" | "razorpayPaymentId">
+    > = { status: dto.status };
     if (dto.razorpayPaymentId) {
       updateData.razorpayPaymentId = dto.razorpayPaymentId;
     }
@@ -78,7 +82,7 @@ export class BookingRepository
     userId: string,
     skip: number,
     limit: number,
-  ): Promise<{ bookings: IBooking[]; totalCount: number }> {
+  ): Promise<{ bookings: IBookingDocument[]; totalCount: number }> {
     const [bookings, totalCount] = await Promise.all([
       Booking.find({ userId })
         .populate({
@@ -98,13 +102,13 @@ export class BookingRepository
     return { bookings, totalCount };
   }
 
-  async getPendingCancellationRequests(): Promise<IBooking[]> {
+  async getPendingCancellationRequests(): Promise<PendingCancellationInput[]> {
     return Booking.find({ status: "CANCEL_REQUESTED" })
-      .populate({
+      .populate<{ packageId: Ipackage }>({
         path: "packageId",
         select: "name destinations duration images amount startDate",
       })
-      .populate({
+      .populate<{ userId: IUser }>({
         path: "userId",
         select: "name email phone",
       })
@@ -117,7 +121,7 @@ export class BookingRepository
     skip: number,
     limit: number,
   ): Promise<IPopulatedBooking[]> {
-    const pipeline: any[] = [
+    const pipeline: PipelineStage[] = [
       {
         $lookup: {
           from: "packages",
@@ -155,7 +159,7 @@ export class BookingRepository
   async getOperatorBookingsCount(
     filter: IOperatorBookingFilter,
   ): Promise<number> {
-    const pipeline: any[] = [
+    const pipeline: PipelineStage[] = [
       {
         $lookup: {
           from: "packages",
@@ -292,7 +296,7 @@ export class BookingRepository
   }
 
   async getBookingStatusBreakDown(operatorId: string) {
-    const pipeline = [
+    const pipeline: PipelineStage[] = [
       {
         $lookup: {
           from: "packages",

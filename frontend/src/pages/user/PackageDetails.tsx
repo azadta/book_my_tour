@@ -213,7 +213,7 @@ const PackageDetails = () => {
 
   const handleStartChat = () => {
     navigate(
-      `${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${data?.operatorId?._id}`,
+      `${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${data?.operatorId}`,
     );
   };
 

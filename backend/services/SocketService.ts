@@ -10,6 +10,8 @@ import type { ISecurityService } from "../interfaces/ISecurityService";
 import { ISocketService } from "../interfaces/ISocketService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
+import { IParticipant } from "../interfaces/IChat";
+import { INotification } from "../models/Notification";
 
 export interface AuthenticatedSocket extends Socket {
   user?: {
@@ -51,12 +53,12 @@ export class SocketService implements ISocketService {
           role: decoded.role,
         };
         next();
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(
           "socketAuthentication middleware error:",
-          error?.message || error,
+          error instanceof Error ? error.message : error,
         );
-        if (error?.name === "TokenExpiredError") {
+        if (error instanceof Error && error?.name === "TokenExpiredError") {
           return next(
             new CustomError("TOKEN_EXPIRED", StatusCode.UNAUTHORIZED),
           );
@@ -117,7 +119,7 @@ export class SocketService implements ISocketService {
         async (data: {
           chatId: string;
           text: string;
-          image?:string;
+          image?: string;
           recipientId: string;
           recipientModel: "User" | "Operator" | "Admin";
           senderModel: "User" | "Operator" | "Admin";
@@ -128,7 +130,7 @@ export class SocketService implements ISocketService {
             senderId: userId,
             senderModel: data.senderModel,
             text: data.text,
-            image:data.image||null,
+            image: data.image || null,
             status: isReciepentOnline ? "DELIVERED" : "SENT",
           });
           await this._chatRepository.incrementUnreadCount(
@@ -170,7 +172,10 @@ export class SocketService implements ISocketService {
               userId,
             );
           } else {
-            await this._messageRepository.markMessagesAsRead(messageIds, chatId);
+            await this._messageRepository.markMessagesAsRead(
+              messageIds,
+              chatId,
+            );
           }
 
           await this._chatRepository.resetUnreadCount(chatId, userId);
@@ -179,15 +184,17 @@ export class SocketService implements ISocketService {
             .emit("message_read", { chatId, messageIds, readBy: userId });
         },
       );
-      socket.on("clear_chat", async({ chatId }: { chatId: string }) => {
-        const chat=await this._chatRepository.findById(chatId)
-        if(chat&&chat.participants){
-          chat.participants.forEach((p:any)=>{
-            const participantId=p.participantId?._id?.toString()||p.participantId?.toString()
-            if(participantId){
-              this.io.to(`user:${participantId}`).emit('chat_cleared',{chatId})
+      socket.on("clear_chat", async ({ chatId }: { chatId: string }) => {
+        const chat = await this._chatRepository.findById(chatId);
+        if (chat && chat.participants) {
+          chat.participants.forEach((p: IParticipant) => {
+            const participantId = p.participantId?.toString();
+            if (participantId) {
+              this.io
+                .to(`user:${participantId}`)
+                .emit("chat_cleared", { chatId });
             }
-          })
+          });
         }
         this.io.to(`chat:${chatId}`).emit("chat_cleared", { chatId });
       });
@@ -198,16 +205,19 @@ export class SocketService implements ISocketService {
     });
   }
 
-  public emitNotificationToUser(recipientId: string, notificationData: any) {
+  public emitNotificationToUser(
+    recipientId: string,
+    notificationData: INotification,
+  ) {
     if (this.io) {
       this.io
         .to(`user:${recipientId.toString()}`)
         .emit("new_notification", notificationData);
     }
   }
-  public emitToUser(userId:string,event:string,data:any){
-    if(this.io){
-      this.io.to(`user:${userId.toString()}`).emit(event,data)
+  public emitToUser<T>(userId: string, event: string, data: T) {
+    if (this.io) {
+      this.io.to(`user:${userId.toString()}`).emit(event, data);
     }
   }
 }

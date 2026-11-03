@@ -1,9 +1,7 @@
 import {
-  CreateDestinationRequestInput,
-  ICreateDestinationRequestDTO,
+  CreateDestinationRequestInput
 } from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
 import { IDestinationResponseDTO } from "../dto-mapping/dto/package-destination/packageDestinationResponseDTO";
-import { IDestination } from "../models/Destination";
 
 export interface IPackageDestinationService {
   createDestinationService(

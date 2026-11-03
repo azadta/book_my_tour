@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
-import { BaseRepository } from "./baseRepository";
-import { IWalletDocument, IWalletTransaction, Wallet } from "../models/Wallet";
-import { IWalletRepository } from "../interfaces/IWalletRepository";
-import mongoose from "mongoose";
+import mongoose, { UpdateQuery } from "mongoose";
 import { CreateWalletTransactionDTO } from "../dto-mapping/dto/wallet/walletRequestDTO";
+import { IWalletRepository } from "../interfaces/IWalletRepository";
+import { IWalletDocument, IWalletTransaction, Wallet } from "../models/Wallet";
+import { BaseRepository } from "./baseRepository";
 
 @injectable()
 export class WalletRepository
@@ -15,9 +15,9 @@ export class WalletRepository
   }
   async addCreditTransaction(
     userId: string,
-    transaction: IWalletTransaction,
+    transaction: CreateWalletTransactionDTO,
   ): Promise<IWalletDocument | null> {
-    const updatedQuery: any = { $push: { transactions: transaction } };
+    const updatedQuery:UpdateQuery<IWalletDocument> = { $push: { transactions: transaction } };
     if (transaction.type === "CREDIT" && transaction.status === "SUCCESS") {
       updatedQuery.$inc = { balance: transaction.amount };
     }
@@ -65,7 +65,7 @@ export class WalletRepository
   async deductBalance(
     userId: string,
     amount: number,
-    transaction: IWalletTransaction,
+    transaction: CreateWalletTransactionDTO,
   ): Promise<IWalletDocument | null> {
     return await Wallet.findOneAndUpdate(
       { userId, balance: { $gte: amount } },

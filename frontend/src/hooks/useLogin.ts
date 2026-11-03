@@ -17,7 +17,7 @@ export const useLogin = (dispatch: AppDispatch, navigate: NavigateFunction) => {
     try {
       dispatch(logInStart());
       const res = await axiosInstance.post(APP_ROUTES.USERS.USER.LOGIN, formData);
-      dispatch(logInSuccess(res.data));
+      dispatch(logInSuccess(res.data.result));
       navigate("/", { replace: true });
     } catch (error: any) {
       if (error.response?.data?.errors) {

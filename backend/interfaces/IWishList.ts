@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export interface INote {
-  _id?: Types.ObjectId;
+  _id: Types.ObjectId;
   text: string;
   createdAt: Date;
 }

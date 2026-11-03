@@ -1,9 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { body, ValidationChain, validationResult } from "express-validator";
-import { error } from "node:console";
-import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { CustomError } from "../utils/customError";
 
 export const validateCreateBooking: (ValidationChain | RequestHandler)[] = [
   body("packageId")

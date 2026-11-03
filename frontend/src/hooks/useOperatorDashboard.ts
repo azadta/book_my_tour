@@ -38,7 +38,7 @@ export const useOperatorDashboard = () => {
         APP_ROUTES.DASHBOARD.OPERATOR.STATS,
       );
 
-      setDashboardData(data);
+      setDashboardData(data.result);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||

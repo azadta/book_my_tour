@@ -1,15 +1,12 @@
 import {
   CreateTopupOrderInput,
-  CreateTopupOrderRequestDTO,
-  verifyTopupPaymentInput,
-  verifyTopupPaymentRequestDTO,
+  verifyTopupPaymentInput
 } from "../dto-mapping/dto/wallet/walletRequestDTO";
 import {
   PaginatedWalletResponseDTO,
-  TopupOrderResponseDTO,
+  TopupOrderResponseDTO, 
   WalletResponseDTO,
 } from "../dto-mapping/dto/wallet/walletResponseDTO";
-import { IWalletDocument, IWalletTransaction } from "../models/Wallet";
 
 export interface IWalletService {
   createTopupOrder(

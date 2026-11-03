@@ -18,7 +18,7 @@ export const useCreatePackageCategory = () => {
         payload,
       );
       toast.success(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.SUCCESS.CREATE);
-      return data;
+      return data.result;
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);

@@ -1,17 +1,31 @@
+import { Types } from "mongoose";
+import {
+  IAppliedCoupon,
+  IBookingPricing,
+} from "../../../interfaces/IBookingPricing";
+import { IBookingCancellation } from "../../../interfaces/IBookingRepository";
+import { IBookingDocument } from "../../../models/Booking";
 import {
   BookingCancellationDTO,
   BookingCouponDTO,
   BookingPricingDTO,
   BookingResponseDTO,
+  BookingResponseInput,
   cancelBookingResponseDTO,
+  cancelBookingResponseinput,
   CreateBookingOrderResponseDTO,
+  CreateBookingOrderResponseInput,
   OperatorBookingListResponseDTO,
+  PendingCancellationInput,
   PendingCancellationItemResponseDTO,
-  VerifyPamentResponseDTO
+  VerifyPamentResponseDTO,
+  VerifyPamentResponseInput,
 } from "../../dto/booking/bookingResponseDTO";
 
 export class BookingResponseMapper {
-  private static mapCoupon(coupon: any): BookingCouponDTO | null {
+  private static mapCoupon(
+    coupon: IAppliedCoupon | null,
+  ): BookingCouponDTO | null {
     if (!coupon) return null;
     return {
       couponId: coupon.couponId?.toString() ?? "",
@@ -21,9 +35,9 @@ export class BookingResponseMapper {
       discountAmount: Number(coupon.discountAmount ?? 0),
     };
   }
-  private static mapPricing(pricing: any): BookingPricingDTO {
+  private static mapPricing(pricing: IBookingPricing): BookingPricingDTO {
     return {
-      baseAmount:Number(pricing.baseAmount),
+      baseAmount: Number(pricing.baseAmount),
       adultCount: Number(pricing.adultCount),
       childCount: Number(pricing.childCount),
       adultUnitPrice: Number(pricing.adultUnitPrice),
@@ -41,7 +55,9 @@ export class BookingResponseMapper {
     };
   }
 
-  private static mapCancellation(cancellation: any): BookingCancellationDTO {
+  private static mapCancellation(
+    cancellation: IBookingCancellation,
+  ): BookingCancellationDTO {
     return {
       requestedAt: cancellation?.requestedAt
         ? new Date(cancellation.requestedAt).toISOString()
@@ -54,20 +70,22 @@ export class BookingResponseMapper {
       adminNotes: cancellation?.adminNotes ?? "",
     };
   }
-  static toBookingDTO(entity: any): BookingResponseDTO {
+  static toBookingDTO(entity: BookingResponseInput): BookingResponseDTO {
     return {
       _id: entity?._id.toString() ?? "",
       userId:
-        typeof entity?.userId === "object" && entity?.userId !== null
-          ? {
+        entity.userId instanceof Types.ObjectId
+          ? entity.userId.toString()
+          : {
               _id: entity?.userId?._id.toString() ?? "",
               name: entity.userId?.name ?? "",
               email: entity.userId?.email ?? "",
-            }
-          : (entity?.userId.toString() ?? ""),
+            },
+
       packageId:
-        typeof entity?.packageId === "object" && entity?.packageId !== null
-          ? {
+        entity.packageId instanceof Types.ObjectId
+          ? entity.packageId.toString()
+          : {
               _id: entity?.packageId?._id.toString() ?? "",
               name: entity.packageId?.name ?? "",
               startDate: new Date(
@@ -76,15 +94,15 @@ export class BookingResponseMapper {
               images: Array.isArray(entity?.packageId?.images)
                 ? entity.packageId.images
                 : [],
-            }
-          : (entity?.packageId.toString() ?? ""),
+            },
+
       razorpayOrderId: entity.razorpayOrderId ?? "",
       razorpayPaymentId: entity.razorpayPaymentId ?? null,
       addedActivityIds: Array.isArray(entity?.addedActivityIds)
-        ? entity.addedActivityIds.map((id: any) => id.toString())
+        ? entity.addedActivityIds
         : [],
       removedActivityIds: Array.isArray(entity?.removedActivityIds)
-        ? entity.removedActivityIds.map((id: any) => id.toString())
+        ? entity.removedActivityIds
         : [],
 
       status: entity?.status ?? "PENDING",
@@ -103,29 +121,30 @@ export class BookingResponseMapper {
         : new Date().toISOString(),
     };
   }
-  static toBookingListDTO(entities: any[]): BookingResponseDTO[] {
+  static toBookingListDTO(
+    entities: BookingResponseInput[] | IBookingDocument[],
+  ): BookingResponseDTO[] {
     if (!Array.isArray(entities)) return [];
     return entities.map((entity) => this.toBookingDTO(entity));
   }
 
   static toCancelBookingResponseDTO(
-    serviceResult: any,
+    serviceResult: cancelBookingResponseinput,
   ): cancelBookingResponseDTO {
     return {
       requiresAdminApproval: Boolean(serviceResult?.requiresAdminApproval),
-      refundAmount: Number(
-        serviceResult?.refundAmount ?? serviceResult?.estimatedRefund ?? 0,
-      ),
+      refundAmount: Number(serviceResult?.refundAmount ?? 0),
       message: serviceResult.message ?? "",
       booking: this.toBookingDTO(serviceResult?.booking),
     };
   }
 
   static toCreateBookingOrderResposeDTO(
-    serviceResult: any,
+    serviceResult: CreateBookingOrderResponseInput,
   ): CreateBookingOrderResponseDTO {
     return {
       isFullyPaidByWallet: serviceResult.isFullyPaidByWallet,
+      bookingId: serviceResult.bookingId.toString(),
       keyId: serviceResult.keyId ?? "",
       packageDescription: serviceResult.packageDescription ?? "",
       packageName: serviceResult.packageName ?? "",
@@ -136,27 +155,24 @@ export class BookingResponseMapper {
   }
 
   static toVerifyPayementResponseDTO(
-    serviceResult: any,
+    serviceResult: VerifyPamentResponseInput,
   ): VerifyPamentResponseDTO {
     return {
       message: serviceResult?.message ?? "",
-      bookingId: serviceResult?.bookingId,
+      ...(serviceResult.bookingId && {
+        bookingId: serviceResult?.bookingId.toString(),
+      }),
     };
   }
 
   static toOperatorBookingListResponseDTO(
-    data: any,
+    data: { bookings: BookingResponseInput[]; totalCount: number },
     page: number,
     limit: number,
   ): OperatorBookingListResponseDTO {
-    const rawBookings = Array.isArray(data?.bookings)
-      ? data.bookings
-      : Array.isArray(data)
-        ? data
-        : [];
-    const totalCount = Number(data?.totalCount ?? rawBookings.length);
+    const totalCount = Number(data?.totalCount ?? data.bookings.length);
     return {
-      bookings: this.toBookingListDTO(rawBookings),
+      bookings: this.toBookingListDTO(data.bookings),
       totalCount,
       page,
       limit,
@@ -164,16 +180,16 @@ export class BookingResponseMapper {
   }
 
   static toPendingCancellationListDTO(
-    entities: any[],
+    entities: PendingCancellationInput[],
   ): PendingCancellationItemResponseDTO[] {
     if (!Array.isArray(entities)) return [];
     return entities.map((entity) => ({
       _id: entity._id?.toString() ?? "",
       user: {
-        _id: entity?.userId?._id.toString ?? "",
+        _id: entity?.userId?._id.toString() ?? "",
         name: entity?.userId?.name ?? "",
         email: entity?.userId?.email ?? "",
-        phone: entity?.userId?.phone,
+        ...(entity.userId.phone && { phone: entity?.userId?.phone }),
       },
       package: {
         _id: entity?.packageId?._id.toString() ?? "",
@@ -182,8 +198,7 @@ export class BookingResponseMapper {
           startDate: new Date(entity.packageId.startDate).toISOString(),
         }),
       },
-      cancellationReason:
-        entity?.cancellation?.reason ?? entity?.cancellationReason,
+      cancellationReason: entity?.cancellation?.reason ?? "",
       ...(entity?.cancellation?.requestedAt && {
         requestedAt: new Date(entity.cancellation.requestedAt).toISOString(),
       }),
@@ -191,16 +206,4 @@ export class BookingResponseMapper {
       refundAmount: Number(entity?.cancellation?.refundAmount ?? 0),
     }));
   }
-
-  // static toProcessAdminCancellationResponseDTO(
-  //   updatedBookingEntity: any,
-  //   approve: boolean,
-  //   successMessage: string,
-  // ): ProcessAdminCancellationResponseDTO {
-  //   return {
-  //     success: true,
-  //     message: successMessage,
-  //     data: this.toBookingDTO(updatedBookingEntity),
-  //   };
-  // }
 }

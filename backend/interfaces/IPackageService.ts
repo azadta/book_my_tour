@@ -1,5 +1,5 @@
 import { QueryFilter } from "mongoose";
-import { PackageInput } from "../dto-mapping/dto/package/packageRequestDTO";
+import { GetFilteredPackagesQueryDTO, PackageInput } from "../dto-mapping/dto/package/packageRequestDTO";
 import { IPackageResponseDTO } from "../dto-mapping/dto/package/packageResponseDTO";
 import { Ipackage } from "../models/Package";
 
@@ -36,7 +36,7 @@ export interface IPackageService {
   ): Promise<IPackageResponseDTO>;
   getPaginatedPackagesService(skip: number, limit: number): Promise<IPackageResponseDTO[]>;
   getAllPackagesService(): Promise<IPackageResponseDTO[]>;
-  getFilteredPackagesService(query: any): Promise<{
+  getFilteredPackagesService(query: GetFilteredPackagesQueryDTO): Promise<{
     packages: IPackageResponseDTO[];
     totalCount: number;
     uniqueCategoryCount: number;

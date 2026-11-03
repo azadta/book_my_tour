@@ -5,27 +5,38 @@ import { IOperatorResponseDTO } from "../../dto/operator/operatorResponseDTO";
 import { OperatorResponseMapper } from "../operator/OperatorResponseMapper";
 
 export class AdminResponseMapper {
-  static toAdminResponseDTO(admin:IAdmin): AdminResponseDTO {
-    const rawAdmin = admin.toObject ? admin.toObject() : admin;
+  static toAdminResponseDTO(admin: IAdmin): AdminResponseDTO {
     return {
-      _id: rawAdmin._id?.toString(),
-      name: rawAdmin.name,
-      email: rawAdmin.email,
-      image: rawAdmin?.image,
-      mobile: rawAdmin?.mobile,
-      role: rawAdmin.role,
-      ...(rawAdmin?.address !== undefined && {
+      _id: admin._id?.toString(),
+      name: admin.name,
+      email: admin.email,
+      image: admin.image,
+      ...(admin.mobile !== undefined && { mobile: admin.mobile }),
+      role: admin.role,
+      ...(admin?.address !== undefined && {
         address: {
-          houseNo: rawAdmin.address?.houseNo,
-          landmark: rawAdmin.address?.landmark,
-          city: rawAdmin.address?.city,
-          state: rawAdmin.address?.state,
-          country: rawAdmin.address?.country,
-          postalCode: rawAdmin.address?.postalCode,
+          ...(admin.address.houseNo !== undefined && {
+            houseNo: admin.address?.houseNo,
+          }),
+          ...(admin.address.landmark !== undefined && {
+            landmark: admin.address?.landmark,
+          }),
+          ...(admin.address.city !== undefined && {
+            city: admin.address?.city,
+          }),
+          ...(admin.address.state !== undefined && {
+            state: admin.address?.state,
+          }),
+          ...(admin.address.country !== undefined && {
+            country: admin.address?.country,
+          }),
+          ...(admin.address.postalCode !== undefined && {
+            postalCode: admin.address?.postalCode,
+          }),
         },
       }),
-      createdAt: rawAdmin.createdAt?.toISOString(),
-      updatedAt: rawAdmin.updatedAt?.toISOString(),
+      createdAt: admin.createdAt?.toISOString(),
+      updatedAt: admin.updatedAt?.toISOString(),
     };
   }
 

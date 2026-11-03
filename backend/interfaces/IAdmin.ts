@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 interface Address {
   houseNo?: string;
@@ -10,15 +10,16 @@ interface Address {
 }
 
 export interface IAdmin extends Document {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
-  image?: string;
-  mobile?: string;
+  image: string;
+  mobile?: number;
   address?: Address;
   role: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type IAdminResponse=Omit<IAdmin,'password'>
+export type IAdminResponse = Omit<IAdmin, "password">;

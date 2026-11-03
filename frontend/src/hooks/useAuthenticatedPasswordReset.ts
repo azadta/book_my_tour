@@ -15,7 +15,7 @@ export const useAuthenticatedPasswordReset = (endPoint: string) => {
         newPassword,
         confirmPassword,
       });
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

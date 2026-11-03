@@ -33,9 +33,9 @@ export const usePackageList = () => {
         `${APP_ROUTES.PACKAGES.USER.FILTER}?${query}`,
       );
 
-      setPackages(data.packages || []);
-      setTotalPackagesCount(data.totalCount || 0);
-      setUniqueCategoryCount(data.uniqueCategoryCount || 0);
+      setPackages(data.result.packages || []);
+      setTotalPackagesCount(data.result.totalCount || 0);
+      setUniqueCategoryCount(data.result.uniqueCategoryCount || 0);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
@@ -49,8 +49,9 @@ export const usePackageList = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ACTIVE,
       );
+      
 
-      setActiveCategories(data.categories || []);
+      setActiveCategories(data.result || []);
     } catch (error) {
       console.error(
         FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.FETCH_ACTIVE,
@@ -65,7 +66,7 @@ export const usePackageList = () => {
     try {
       const { data } = await axiosInstance.get(APP_ROUTES.WISHLISTS.USER.LIST);
 
-      setWishlistGroups(data.wishlistGroups);
+      setWishlistGroups(data.result);
     } catch (error: any) {
       const message =
         error?.response?.data?.message ||
@@ -100,8 +101,9 @@ export const usePackageList = () => {
         { title },
       );
 
+
       if (data.success && selectedPackageForWishList) {
-        await handleToggleWishlistGroup(data.wishlistGroup._id);
+        await handleToggleWishlistGroup(data.result._id);
       }
     } catch (error: any) {
       const message =

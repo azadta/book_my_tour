@@ -1,11 +1,12 @@
 import {
   CancelBookingBody,
   CreateBookingBody,
+  GetOperatorBookingsQuery,
   OperatorCancelBookingBody,
   toOperatorReschuduleBookingBody,
   toVerifyCancellationBody,
   UpdateAttendanceBody,
-  VerifyBookingPaymentBody
+  VerifyBookingPaymentBody,
 } from "../dto-mapping/dto/booking/bookingRequestDTO";
 import {
   BookingResponseDTO,
@@ -23,12 +24,12 @@ export interface IBookingService {
   >;
   processAdminCancellation(
     body: unknown,
-    params: any,
+    bookingId: string,
   ): Promise<BookingResponseDTO>;
 
   getOperatorBookingsService(
     operatorId: string,
-    query: any,
+    query:  GetOperatorBookingsQuery,
   ): Promise<OperatorBookingListResponseDTO>;
   getOperatorBookingDetailsService(
     bookingId: string,

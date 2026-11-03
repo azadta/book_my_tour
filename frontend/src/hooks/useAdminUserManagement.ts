@@ -18,8 +18,8 @@ export const useAdminUserManagement = (page: number, limit: number) => {
           limit,
         },
       });
-      setUsers(res.data.users || []);
-      setTotalCount(res.data.totalCount || 0);
+      setUsers(res.data.result.users || []);
+      setTotalCount(res.data.result.totalCount || 0);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.USER.ERROR.FETCH_USERS, error);
     } finally {

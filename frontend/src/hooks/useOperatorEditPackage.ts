@@ -12,7 +12,7 @@ export const useOperatorEditPackage = () => {
       const res = await axiosInstance.get(
         APP_ROUTES.PACKAGES.OPERATOR.DETAIL(id),
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

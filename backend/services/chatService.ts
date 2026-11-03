@@ -6,7 +6,8 @@ import type { IMessageRepository } from "../interfaces/IMessageRepository";
 import { IChat, IMessage } from "../interfaces/IChat";
 import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import type{ ISocketService } from "../interfaces/ISocketService";
+import type { ISocketService } from "../interfaces/ISocketService";
+import { Types as mongooseTypes } from "mongoose";
 
 @injectable()
 export class ChatService implements IChatService {
@@ -29,13 +30,19 @@ export class ChatService implements IChatService {
       targetId,
       targetModel,
     );
-    let isNewChat=false
+    let isNewChat = false;
     if (!chat) {
-      isNewChat=true
+      isNewChat = true;
       const createdChat = await this._chatRepository.create({
         participants: [
-          { participantId: currentUserId, participantModel: currentUserRole },
-          { participantId: targetId, participantModel: targetModel },
+          {
+            participantId: new mongooseTypes.ObjectId(currentUserId),
+            participantModel: currentUserRole,
+          },
+          {
+            participantId: new mongooseTypes.ObjectId(targetId),
+            participantModel: targetModel,
+          },
         ],
       });
 
@@ -46,8 +53,8 @@ export class ChatService implements IChatService {
         );
       }
     }
-    if(isNewChat&&chat){
-      this._socketService.emitToUser(targetId,'new_chat',chat)
+    if (isNewChat && chat) {
+      this._socketService.emitToUser(targetId, "new_chat", chat);
     }
     return chat;
   }
@@ -67,11 +74,8 @@ export class ChatService implements IChatService {
     hasMore: boolean;
   }> {
     const skip = (page - 1) * limit;
-    const [messages, total] = await this._messageRepository.getPaginatedMessages(
-      chatId,
-      skip,
-      limit,
-    );
+    const [messages, total] =
+      await this._messageRepository.getPaginatedMessages(chatId, skip, limit);
     return { messages, total, page, hasMore: skip + messages.length < total };
   }
   async saveMessageService(data: {
@@ -79,14 +83,14 @@ export class ChatService implements IChatService {
     senderId: string;
     senderModel: "User" | "Operator" | "Admin";
     text: string;
-    image?:string;
+    image?: string;
     status: "SENT" | "DELIVERED";
   }): Promise<IMessage> {
     const message = await this._messageRepository.create(data);
     return message;
   }
- async clearChatService(chatId:string,userId:string):Promise<void>{
-    await this._messageRepository.deleteMessageByChatId(chatId)
-    await this._chatRepository.clearChatLastMessage(chatId)
+  async clearChatService(chatId: string): Promise<void> {
+    await this._messageRepository.deleteMessageByChatId(chatId);
+    await this._chatRepository.clearChatLastMessage(chatId);
   }
 }

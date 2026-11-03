@@ -13,7 +13,7 @@ export const useResetPassword = () => {
           newPassword,
         },
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

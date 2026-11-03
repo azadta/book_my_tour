@@ -1,9 +1,4 @@
-import {
-  IAdminUpdateOperatorinput,
-  IAdminUpdateOperatorRequestDTO,
-  IBlockOperatorRequestDTO,
-  IVerifyOperatorRequestDTO,
-} from "../dto-mapping/dto/admin/adminRequestDTO";
+import { IAdminUpdateOperatorinput } from "../dto-mapping/dto/admin/adminRequestDTO";
 
 import {
   IOperatorLoginInput,
@@ -79,7 +74,7 @@ export interface IOperatorService {
       isBlocked: boolean;
     },
   ): Promise<IOperatorResponseDTO>;
-  deleteOperatorService(id: string): Promise<any>;
+  deleteOperatorService(id: string): Promise<IOperator | null>;
   adminUpdateOperatorService(
     id: string,
     body: IAdminUpdateOperatorinput,

@@ -1,7 +1,8 @@
 import { IPayoutDocument } from "../models/Payout";
+import { PayoutWithPopulatedDetails } from "./IPayout";
 
 export interface IPayoutService {
-  sincAndFetchEligiblePayouts(): Promise<IPayoutDocument[]>;
+  sincAndFetchEligiblePayouts(): Promise<PayoutWithPopulatedDetails[]>;
   createPayoutOrder(payoutId: string): Promise<{
     orderId: string;
     amount: number;

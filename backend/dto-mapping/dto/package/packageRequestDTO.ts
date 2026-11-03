@@ -36,13 +36,27 @@ export interface IDestinationSummaryDTO {
   _id: string;
   name: string;
 }
+export interface IDestinationSummaryInput {
+  _id: string;
+  name: string;
+}
 
 export interface ICategorySummaryDTO {
   _id: string;
   name: string;
 }
+export interface ICategorySummaryInput {
+  _id: string;
+  name: string;
+}
 
 export interface IOperatorSummaryDTO {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+export interface IOperatorSummaryInput {
   _id: string;
   name: string;
   email: string;
@@ -106,7 +120,7 @@ export interface PackageInput {
   "childPricing.percentage"?: number | string;
 
   specifications?: string;
-  startDate:string;
+  startDate: string;
   startPoint: string;
   remark?: string;
   discount?: number;
@@ -116,4 +130,15 @@ export interface PackageInput {
   itinerary: IItineraryDayDTO[];
 }
 
-
+export interface GetFilteredPackagesQueryDTO {
+  page?: string;
+  limit?: string;
+  category?: string;
+  destination?: string;
+  startDate?: string;
+  maxBudget?: string;
+  search?: string;
+  maxDuration?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}

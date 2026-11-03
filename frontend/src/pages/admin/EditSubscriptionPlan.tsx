@@ -1,6 +1,6 @@
 import { useSubscriptionPlan } from "@/hooks/useSubscriptionPlan";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { subscriptionPlanFields } from "../../formConfig/fields";
@@ -12,6 +12,7 @@ const EditSubscriptionPlan = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const { id } = useParams<{ id: string }>();
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const navigate = useNavigate();
 
   const { updatePlan, fetchPlanDetails, plan, loading, submitting } =
     useSubscriptionPlan();
@@ -28,6 +29,7 @@ const EditSubscriptionPlan = () => {
       const nestedData = unFlattenObject(data);
 
       await updatePlan(id, nestedData);
+      navigate("/admin/subscription-plans");
     } catch (error: any) {
       if (error.response?.data?.errors) {
         setFieldError(error.response?.data?.errors);

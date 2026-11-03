@@ -22,7 +22,7 @@ const ChatSchema = new Schema<IChat>(
     participants: {
       type: [participantSchema],
       validate: [
-        (val: any[]) => val.length === 2,
+        (val: IParticipant[]) => val.length === 2,
         "Chat must have exactly two participants",
       ],
     },

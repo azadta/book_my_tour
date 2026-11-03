@@ -8,11 +8,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import HomeTopSlideCard from "./homeTopSlideCard/HomeTopSlideCard";
 import Loading from "../Loading";
 
+
 const HomeSlideTop = () => {
   const swiperRef = useRef<swiperType | null>(null);
-  const { fetchDestinationsByCategory, packages,loadingPackages,loadingDestinationsByCategory } = useHome();
+  const { packages,loadingPackages,loadingDestinationsByCategory,fetchPackages } = useHome();
   useEffect(() => {
-    fetchDestinationsByCategory("Family Vacation Packages");
+    fetchPackages();
   }, []);
   return (
     <div className="w-full relative">

@@ -4,6 +4,8 @@ import { Types } from "../types/types";
 import type { IPayoutService } from "../interfaces/IPayoutService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { sendSuccessResponse } from "../utils/apiResponse";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class PayoutController implements IPayoutController {
@@ -18,7 +20,12 @@ export class PayoutController implements IPayoutController {
   ) => {
     try {
       const payouts = await this._payoutService.sincAndFetchEligiblePayouts();
-      res.status(StatusCode.OK).json({ data: payouts });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PAYOUT.SUCCESS.FETCH_ELIGIBLE,
+        payouts,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -29,7 +36,12 @@ export class PayoutController implements IPayoutController {
       const { payoutId } = req.body;
       const orderResponse =
         await this._payoutService.createPayoutOrder(payoutId);
-      res.status(StatusCode.OK).json({ data: orderResponse });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PAYOUT.SUCCESS.CREATE_ORDER,
+        orderResponse,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -49,7 +61,12 @@ export class PayoutController implements IPayoutController {
         razorpayPaymentId,
         razorpaySignature,
       });
-      res.status(StatusCode.OK).json(result);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.PAYOUT.SUCCESS.VERIFY,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

@@ -1,7 +1,8 @@
+import { Types } from "mongoose";
 import { CouponType } from "../models/Coupon";
 
 export interface IAppliedCoupon {
-  couponId: string;
+  couponId: Types.ObjectId;
   code: string;
   title: string;
   type: CouponType;
@@ -19,8 +20,8 @@ export interface IBookingPricing {
   addedActivitiesAmount: number;
   removedActivitiesAmount: number;
   subtotal: number;
-  generalCoupon?: IAppliedCoupon;
-  bankCoupon?: IAppliedCoupon;
+  generalCoupon: IAppliedCoupon|null;
+  bankCoupon: IAppliedCoupon|null;
   totalDiscount: number;
   finalAmount: number;
   walletApplied: number;

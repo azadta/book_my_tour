@@ -9,7 +9,7 @@ export const useAdminOperatorActions = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(APP_ROUTES.OPERATORS.ADMIN.DETAILS(id));
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

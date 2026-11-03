@@ -3,8 +3,8 @@ import { Types as mongooseTypes, QueryFilter } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import {
-  IUpdatePackageRequestDTO,
-  PackageInput,
+  GetFilteredPackagesQueryDTO,
+  PackageInput
 } from "../dto-mapping/dto/package/packageRequestDTO";
 import { IPackageResponseDTO } from "../dto-mapping/dto/package/packageResponseDTO";
 import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
@@ -62,6 +62,12 @@ export class PackageService implements IPackageService {
       packageId,
       dto,
     );
+    if (!updatedPackage) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
     return PackageResponseMapper.toPackageResponseDTO(updatedPackage);
   }
   async updateOperatorPackageService(
@@ -85,6 +91,12 @@ export class PackageService implements IPackageService {
       packageId,
       dto,
     );
+    if (!updatedPackage) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.PACKAGE.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
     return PackageResponseMapper.toPackageResponseDTO(updatedPackage);
   }
   async deleteOperatorPackageService(
@@ -144,7 +156,7 @@ export class PackageService implements IPackageService {
     return PackageResponseMapper.toPackageListResponseDTO(packages);
   }
 
-  async getFilteredPackagesService(query: any) {
+  async getFilteredPackagesService(query: GetFilteredPackagesQueryDTO) {
     const {
       page = 1,
       limit = 6,
@@ -159,8 +171,8 @@ export class PackageService implements IPackageService {
       sortOrder = "desc",
     } = query;
 
-    const skip = page > 1 ? (Number(page) - 1) * Number(limit) : 0;
-    const filter: any = {};
+    const skip = Number(page) > 1 ? (Number(page) - 1) * Number(limit) : 0;
+    const filter: QueryFilter<Ipackage> = {};
     if (category && mongooseTypes.ObjectId.isValid(category)) {
       filter.category = new mongooseTypes.ObjectId(category);
     }
@@ -220,10 +232,10 @@ export class PackageService implements IPackageService {
       );
     if (!category) return [];
 
-    const packages=await this._packageRepository.findPackageByCategory(
+    const packages = await this._packageRepository.findPackageByCategory(
       category._id.toString(),
     );
 
-   return PackageResponseMapper.toPackageListResponseDTO(packages)
+    return PackageResponseMapper.toPackageListResponseDTO(packages);
   }
 }

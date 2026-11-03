@@ -60,6 +60,8 @@ export interface Ipackage {
   };
 
   itinerary: IItineraryDay[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const ActivitySchema = new Schema<IActivity>(

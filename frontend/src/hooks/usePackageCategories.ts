@@ -18,7 +18,7 @@ export const usePackageCategories = () => {
       try {
         setLoading(true);
         const res = await axiosInstance.get(APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ALL);
-        setCategories(res.data);
+        setCategories(res.data.result);
       } catch (error: any) {
         setError(
           error.response?.data?.message ||

@@ -1,8 +1,10 @@
+import { Types } from "mongoose";
 import { IPackageCategory } from "../../../models/PackageCategory";
 import {
   ICategoryResponseDTO,
   ICategorySummaryDTO,
 } from "../../dto/package-category/packageCategoryResponseDTO";
+import { ICategorySummaryInput } from "../../dto/package/packageRequestDTO";
 
 export class CategoryResponseMapper {
   static toCategoryResponseDTO(doc: IPackageCategory): ICategoryResponseDTO {
@@ -16,19 +18,22 @@ export class CategoryResponseMapper {
     };
   }
 
-  static toCategoryListResponseDTO(docs:IPackageCategory[]): ICategoryResponseDTO[] {
+  static toCategoryListResponseDTO(
+    docs: IPackageCategory[],
+  ): ICategoryResponseDTO[] {
     if (!Array.isArray(docs)) return [];
     return docs.map((doc) => this.toCategoryResponseDTO(doc));
   }
 
-  static toCategorySummaryDTO(category: any): ICategorySummaryDTO | string {
+  static toCategorySummaryDTO(
+    category: ICategorySummaryInput | Types.ObjectId,
+  ): ICategorySummaryDTO | string {
     if (!category) return "";
-    if (typeof category === "object" && category.name !== undefined) {
-      return {
-        _id: category?._id?.toString() ?? "",
-        name: category.name || "",
-      };
-    }
-    return category?.toString();
+    if (category instanceof Types.ObjectId) return category.toString();
+
+    return {
+      _id: category?._id?.toString() ?? "",
+      name: category.name || "",
+    };
   }
 }

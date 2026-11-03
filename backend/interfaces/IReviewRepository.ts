@@ -1,6 +1,7 @@
 import { CreateReviewRequestDTO } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
+import { ReviewStats } from "../dto-mapping/dto/package-review/packageReviewResponseDTO";
 import { IBaseRepository } from "./IBaseRepository";
-import { CreateReviewDto, IReview } from "./IReview";
+import { IReview } from "./IReview";
 
 export interface IReviewRepository extends IBaseRepository<IReview> {
   getReviewsByPackageId(
@@ -8,7 +9,7 @@ export interface IReviewRepository extends IBaseRepository<IReview> {
     skip?: number,
     limit?: number,
   ): Promise<IReview[]>;
-  getReviewStatsByPackageId(packageId: string): Promise<any>;
+  getReviewStatsByPackageId(packageId: string): Promise<ReviewStats>;
   createReview(review: CreateReviewRequestDTO): Promise<IReview>;
   findUserReviewForPackage(
     userId: string,

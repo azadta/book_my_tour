@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { HydratedDocument, Types } from "mongoose";
+import { HydratedDocument, QueryFilter, Types } from "mongoose";
 import { IPackageRepository } from "../interfaces/IPackageRepository";
 import Package, { Ipackage } from "../models/Package";
 import { BaseRepository } from "./baseRepository";
@@ -34,7 +34,7 @@ export class PackageRepository
   }
 
   async getFilteredPackages(
-    filter: any,
+    filter: QueryFilter<Ipackage>,
     skip: number,
     limit: number,
     sortBy: string = "createdAt",
@@ -124,7 +124,7 @@ export class PackageRepository
     ]);
   }
 
-  async getFilteredPackagesCount(filter: any) {
+  async getFilteredPackagesCount(filter: QueryFilter<Ipackage>) {
     return Package.countDocuments(filter);
   }
 
@@ -132,7 +132,7 @@ export class PackageRepository
     return Package.distinct("category");
   }
 
-  async getUniqueCategoryCount(filter: any): Promise<number> {
+  async getUniqueCategoryCount(filter:QueryFilter<Ipackage>): Promise<number> {
     const categories = await Package.distinct("category", filter);
     return categories.length;
   }

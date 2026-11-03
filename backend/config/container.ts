@@ -4,7 +4,7 @@ import { AdminController } from "../controllers/adminController";
 import { CommonAuthController } from "../controllers/commonAuthController";
 import { OperatorController } from "../controllers/operatorController";
 import { UserController } from "../controllers/userController";
-import { WebhookController } from "../controllers/webhookController";
+
 import { IAdminController } from "../interfaces/IAdminController";
 import { IAdminRepository } from "../interfaces/IAdminRepository";
 import { IAdminService } from "../interfaces/IAdminService";
@@ -29,7 +29,6 @@ import { ITokenService } from "../interfaces/ITokenService";
 import { IUserController } from "../interfaces/IUserController";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUserService } from "../interfaces/IUserService";
-import { IWebhookController } from "../interfaces/IWebhookController";
 import { IWishlistRepository } from "../interfaces/IWishlistRepository";
 import { AuthMiddleware } from "../middlewares/authMiddleware";
 import { AdminRepository } from "../repositories/adminRepository";
@@ -96,6 +95,9 @@ import { PackageCategoryController } from "../controllers/packageCategoryControl
 import { PackageController } from "../controllers/packageController";
 import { PackageDestinationController } from "../controllers/packageDestinationController";
 import { PackageReviewController } from "../controllers/packageReviewController";
+import { PayoutController } from "../controllers/payoutController";
+import { SubscriptionController } from "../controllers/subscriptionController";
+import { SubscriptionPlanController } from "../controllers/subscriptionPlanController";
 import { WalletController } from "../controllers/walletController";
 import { WishlistController } from "../controllers/wishlistController";
 import { IBookingController } from "../interfaces/IBookingController";
@@ -106,29 +108,26 @@ import { IPackageCategoryController } from "../interfaces/IPackageCategoryContro
 import { IPackageController } from "../interfaces/IPackageController";
 import { IPackageDestinationController } from "../interfaces/IPackageDestinationController";
 import { IPackageReviewController } from "../interfaces/IPackageReviewController";
+import { IPayoutController } from "../interfaces/IPayoutController";
+import { IPayoutRepository } from "../interfaces/IPayoutRepository";
+import { IPayoutService } from "../interfaces/IPayoutService";
+import { ISubscriptionController } from "../interfaces/ISubscriptionController";
 import { ISubscriptionPlanController } from "../interfaces/ISubscriptionPlanController";
 import { ISubscriptionPlanRepository } from "../interfaces/ISubscriptionPlanRepository";
 import { ISubscriptionPlanService } from "../interfaces/ISubscriptionPlanService";
+import { ISubscriptionService } from "../interfaces/ISubscriptionService";
 import { IWalletController } from "../interfaces/IWalletController";
 import { IWishlistController } from "../interfaces/IWishlistController";
 import { IWishlistService } from "../interfaces/IWishlistService";
+import { PayoutRepository } from "../repositories/payoutRepository";
 import { SubscriptionPlanRepository } from "../repositories/subscriptionPlanRepository";
 import { DashboardService } from "../services/dashboardService";
 import { OperatorService } from "../services/operatorService";
+import { PayoutService } from "../services/payoutService";
 import { SubscriptionPlanService } from "../services/subscriptionPlanService";
+import { SubscriptionService } from "../services/SubscriptionService";
 import { UserService } from "../services/userService";
 import { WishlistService } from "../services/wishlistService";
-import { SubscriptionPlanController } from "../controllers/subscriptionPlanController";
-import { ISubscriptionService } from "../interfaces/ISubscriptionService";
-import { SubscriptionService } from "../services/SubscriptionService";
-import { ISubscriptionController } from "../interfaces/ISubscriptionController";
-import { SubscriptionController } from "../controllers/subscriptionController";
-import { IPayoutRepository } from "../interfaces/IPayoutRepository";
-import { PayoutRepository } from "../repositories/payoutRepository";
-import { IPayoutService } from "../interfaces/IPayoutService";
-import { PayoutService } from "../services/payoutService";
-import { IPayoutController } from "../interfaces/IPayoutController";
-import { PayoutController } from "../controllers/payoutController";
 
 const container = new Container();
 
@@ -231,10 +230,6 @@ container
 container
   .bind<IBookingRepository>(Types.BookingRepository)
   .to(BookingRepository)
-  .inSingletonScope();
-container
-  .bind<IWebhookController>(Types.WebhookController)
-  .to(WebhookController)
   .inSingletonScope();
 container
   .bind<ICouponRepository>(Types.CouponRepository)
@@ -398,10 +393,6 @@ export const authMiddleware = container.get<IAuthMiddleware>(
 );
 export const commonAuthController = container.get<ICommonAuthController>(
   Types.CommonAuthController,
-);
-
-export const webhookController = container.get<IWebhookController>(
-  Types.WebhookController,
 );
 
 export const chatController = container.get<IChatController>(

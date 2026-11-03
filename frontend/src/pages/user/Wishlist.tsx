@@ -30,6 +30,7 @@ const Wishlist = () => {
     groups,
     loading,
   } = useWishlist();
+
   const navigate = useNavigate();
   const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
   const [groupTitleInput, setGroupTitleInput] = useState("");
@@ -63,16 +64,14 @@ const Wishlist = () => {
   return (
     <div className="min-h-[calc(100vh-6rem)] bg-gray-50 p-6 ">
       <div className="max-w-7xl mx-auto space-y-8">
-     
-          <div>
-            <h1 className="text-2xl font-black text-gray-900 ">
-              Saved <span className="text-sky-600"> Wishlists</span>
-            </h1>
-            <p className="text-gray-500 text-sm mt-1">
-              Organize travel bundles, take notes, and share with trip partners.
-            </p>
-          </div>
-     
+        <div>
+          <h1 className="text-2xl font-black text-gray-900 ">
+            Saved <span className="text-sky-600"> Wishlists</span>
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Organize travel bundles, take notes, and share with trip partners.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="space-y-3">

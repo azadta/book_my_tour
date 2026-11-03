@@ -1,6 +1,5 @@
 import {
-  ReviewRequestBody,
-  UpdateReviewRequestDTO,
+  ReviewRequestBody
 } from "../dto-mapping/dto/package-review/packageReviewRequestDTO";
 import {
   PackageReviewResponseDTO,
@@ -8,7 +7,6 @@ import {
   ReviewStats,
   UpdateReviewResponseDTO,
 } from "../dto-mapping/dto/package-review/packageReviewResponseDTO";
-import { IReview } from "./IReview";
 
 export interface IPackageReviewService {
   getPackageReviewService(

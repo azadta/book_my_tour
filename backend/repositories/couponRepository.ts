@@ -54,7 +54,10 @@ export class CouponRepository
 
   async updateCouponById(
     id: string,
-    updatePayload: any,
+    updatePayload: {
+      $set: Partial<ICouponDocument>;
+      $unset: Record<string, string>;
+    },
   ): Promise<ICouponDocument | null> {
     return Coupon.findByIdAndUpdate(id, updatePayload, {
       new: true,

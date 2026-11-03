@@ -10,7 +10,7 @@ export const useForgotPassword = () => {
       const res = await axiosInstance.post(APP_ROUTES.USERS.USER.FORGOT_PASSWORD, {
         email,
       });
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

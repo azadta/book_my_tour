@@ -26,7 +26,7 @@ export class AdminRequestMapper {
     const address = body.address;
     return {
       ...(body.name !== undefined && { name: body.name.trim() }),
-      ...(body.mobile !== undefined && { mobile: body.mobile.trim() }),
+      ...(body.mobile !== undefined && { mobile: body.mobile}),
       ...(address !== undefined && {
         address: {
           ...(address.houseNo !== undefined && {

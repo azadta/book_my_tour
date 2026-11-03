@@ -10,7 +10,7 @@ export const useAdminEditPackage = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(APP_ROUTES.PACKAGES.ADMIN.DETAIL(id));
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

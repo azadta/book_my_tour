@@ -17,14 +17,14 @@ export const useCreatePackage = () => {
         await axiosInstance.get(APP_ROUTES.PACKAGE_DESTINATIONS.PUBLIC.ALL),
       ]);
       setCategories(
-        catRes.data.map((cat: any) => ({
+        catRes.data.result.map((cat: any) => ({
           label: cat.name,
           value: cat._id,
         })),
       );
 
       setDestinations(
-        destRes.data.map((dest: any) => ({
+        destRes.data.result.map((dest: any) => ({
           label: dest.name,
           value: dest._id,
         })),

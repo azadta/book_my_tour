@@ -21,7 +21,7 @@ const MessageSchema = new Schema<IMessage>(
     },
     text: {
       type: String,
-      required: function (this: any) {
+      required: function (this: IMessage) {
         return !this.image;
       },
       default: "",

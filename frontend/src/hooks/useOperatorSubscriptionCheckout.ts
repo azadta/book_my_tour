@@ -20,7 +20,7 @@ export const useOperatorSubscriptionCheckOut = () => {
         { planId },
       );
       const { orderId, amount, currency, keyId, planName, planDescription } =
-        response.data;
+        response.result;
 
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {
@@ -51,7 +51,7 @@ export const useOperatorSubscriptionCheckOut = () => {
                 planId,
               },
             );
-            dispatch(updateOperatorSuccess(data.operator));
+            dispatch(updateOperatorSuccess(data.result.operator));
             toast.success(FEEDBACK_MESSAGES.SUBSCRIPTION.SUCCESS.ACTIVATE);
           } catch (error: any) {
             toast.error(

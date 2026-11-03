@@ -19,14 +19,7 @@ export class WishlistController implements IWishlistController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: RESPONSE_MESSAGES.AUTH.ERROR.UNAUTHORIZED,
-        });
-        return;
-      }
+      const userId = req.user?.id as string;
 
       const wishlistGroups =
         await this._wishlistService.getUserWishlists(userId);
@@ -36,7 +29,7 @@ export class WishlistController implements IWishlistController {
         wishlistGroups,
         StatusCode.OK,
       );
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   };
@@ -59,7 +52,7 @@ export class WishlistController implements IWishlistController {
         wishlistGroup,
         StatusCode.CREATED,
       );
-    } catch (error: any) {
+    } catch (error) {
       next(error);
     }
   };

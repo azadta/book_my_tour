@@ -1,5 +1,6 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -19,4 +20,4 @@ export interface IUser extends Document {
   resetPasswordExpire: number | undefined;
 }
 
-export type IUserResponse=Omit<IUser,'password'>
+export type IUserResponse = Omit<IUser, "password">;

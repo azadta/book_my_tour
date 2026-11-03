@@ -20,7 +20,6 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
       "react-hooks/set-state-in-effect": "off",
     },
   },

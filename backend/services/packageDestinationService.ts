@@ -1,20 +1,18 @@
 import { inject, injectable } from "inversify";
+import { Types as mongooseType } from "mongoose";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { CreateDestinationRequestInput } from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
+import { IDestinationResponseDTO } from "../dto-mapping/dto/package-destination/packageDestinationResponseDTO";
+import { PackageDestinationRequestMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationRequestMapper";
+import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
 import type { IDestinationRepository } from "../interfaces/IDestinationRepository";
 import type { IPackageCategoryRepository } from "../interfaces/IPackageCategoryRepository";
 import { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
 import type { IPackageRepository } from "../interfaces/IPackageRepository";
-import { IDestination } from "../models/Destination";
+import { Ipackage } from "../models/Package";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import {
-  CreateDestinationRequestInput,
-  ICreateDestinationRequestDTO,
-} from "../dto-mapping/dto/package-destination/packageDestinationRequestDTO";
-import { PackageDestinationRequestMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationRequestMapper";
-import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
-import { IDestinationResponseDTO } from "../dto-mapping/dto/package-destination/packageDestinationResponseDTO";
 
 @injectable()
 export class PackageDestinationService implements IPackageDestinationService {
@@ -92,8 +90,8 @@ export class PackageDestinationService implements IPackageDestinationService {
       category._id.toString(),
     );
     const destinationMap = new Map();
-    packages.forEach((pkg: any) => {
-      pkg.destinations.forEach((destination: any) => {
+    packages.forEach((pkg: Ipackage) => {
+      pkg.destinations.forEach((destination: mongooseType.ObjectId) => {
         destinationMap.set(destination._id.toString(), destination);
       });
     });

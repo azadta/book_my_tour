@@ -5,6 +5,7 @@ import type { ISubscriptionPlanService } from "../interfaces/ISubscriptionPlanSe
 import { NextFunction, Request, Response } from "express";
 import { StatusCode } from "../constants/statusCodeConstants";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class SubscriptionPlanController implements ISubscriptionPlanController {
@@ -16,7 +17,12 @@ export class SubscriptionPlanController implements ISubscriptionPlanController {
   createPlan = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const plan = await this._subscriptionPlanService.createPlan(req.body);
-      res.status(StatusCode.CREATED).json(plan);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.SUBSCRIPTION_PLAN.SUCCESS.CREATE,
+        plan,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -25,7 +31,12 @@ export class SubscriptionPlanController implements ISubscriptionPlanController {
   getAllPlans = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const plans = await this._subscriptionPlanService.getAllPlans();
-      res.status(StatusCode.OK).json(plans);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.SUBSCRIPTION_PLAN.SUCCESS.FETCH_ALL,
+        plans,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -37,7 +48,12 @@ export class SubscriptionPlanController implements ISubscriptionPlanController {
         req.params.id as string,
         req.body,
       );
-      res.status(StatusCode.OK).json(updated);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.SUBSCRIPTION_PLAN.SUCCESS.UPDATE,
+        updated,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -46,9 +62,12 @@ export class SubscriptionPlanController implements ISubscriptionPlanController {
   deletePlan = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this._subscriptionPlanService.deletePlan(req.params.id as string);
-      res
-        .status(StatusCode.OK)
-        .json({ message: RESPONSE_MESSAGES.SUBSCRIPTION_PLAN.SUCCESS.DELETED });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.SUBSCRIPTION_PLAN.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -58,7 +77,12 @@ export class SubscriptionPlanController implements ISubscriptionPlanController {
       const plan = await this._subscriptionPlanService.getPlanDetail(
         req.params.id as string,
       );
-      res.status(StatusCode.OK).json(plan);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.SUBSCRIPTION_PLAN.SUCCESS.FETCH,
+        plan,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

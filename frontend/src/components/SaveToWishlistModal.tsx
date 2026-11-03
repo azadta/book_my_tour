@@ -55,8 +55,8 @@ const SaveToWishlistModal: React.FC<SaveToWishlistModalProps> = ({
         </div>
 
         <div className="py-4 px-1 space-y-3 max-h-60 overflow-y-auto">
-          {groups.map((group) => {
-            const isSaved = group.packages.some(
+          {groups?.map((group) => {
+            const isSaved = group.packages?.some(
               (p) => (typeof p === "string" ? p : p._id) === packageId,
             );
             return (

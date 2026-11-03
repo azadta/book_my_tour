@@ -11,7 +11,7 @@ export const useOperatorResetPassword = () => {
         APP_ROUTES.OPERATORS.OPERATOR.RESET_PASSWORD(token),
         { newPassword },
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

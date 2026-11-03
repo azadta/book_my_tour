@@ -5,6 +5,7 @@ import type { IChatService } from "../interfaces/IChatService";
 import { NextFunction, Request, Response } from "express";
 import { StatusCode } from "../constants/statusCodeConstants";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class ChatController implements IChatController {
@@ -28,7 +29,12 @@ export class ChatController implements IChatController {
         targetId,
         formattedTargetModel,
       );
-      res.status(StatusCode.OK).json(chat);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CHAT.SUCCESS.ACCESS_CHAT,
+        chat,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -38,7 +44,12 @@ export class ChatController implements IChatController {
       const chats = await this._chatService.getMyChatsService(
         req.user?.id as string,
       );
-      res.status(StatusCode.OK).json(chats);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CHAT.SUCCESS.FETCH_USER_CHATS,
+        chats,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -54,7 +65,12 @@ export class ChatController implements IChatController {
         page,
         limit,
       );
-      res.status(StatusCode.OK).json(result);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CHAT.SUCCESS.FETCH_MESSAGES,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -63,11 +79,14 @@ export class ChatController implements IChatController {
   clearChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { chatId } = req.params;
-      const userId = req.user?.id as string;
-      await this._chatService.clearChatService(chatId as string, userId);
-      res
-        .status(StatusCode.OK)
-        .json({ message: RESPONSE_MESSAGES.CHAT.SUCCESS.CLEARED });
+
+      await this._chatService.clearChatService(chatId as string);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.CHAT.SUCCESS.CLEARED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

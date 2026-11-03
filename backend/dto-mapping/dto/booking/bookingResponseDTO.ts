@@ -1,4 +1,8 @@
+import { HydratedDocument, Types } from "mongoose";
+
+import { IUser } from "../../../interfaces/IUser";
 import { Ipackage } from "../../../models/Package";
+import { IBookingDocument } from "../../../models/Booking";
 
 export interface BookingCouponDTO {
   couponId: string;
@@ -35,13 +39,15 @@ export interface BookingCancellationDTO {
 
 export interface BookingResponseDTO {
   _id: string;
-  userId: { _id: string; name: string; email: string };
-  packageId: {
-    _id: string;
-    name: string;
-    startDate: string;
-    images: string[];
-  };
+  userId: { _id: string; name: string; email: string } | string;
+  packageId:
+    | {
+        _id: string;
+        name: string;
+        startDate: string;
+        images: string[];
+      }
+    | string;
   razorpayOrderId: string;
   razorpayPaymentId: string | null;
   addedActivityIds: string[];
@@ -55,15 +61,30 @@ export interface BookingResponseDTO {
   updatedAt: string;
 }
 
+export type BookingResponseInput = Omit<
+  IBookingDocument,
+  "packageId" | "userId"
+> & {
+  packageId: Types.ObjectId | HydratedDocument<Ipackage>;
+  userId: Types.ObjectId | HydratedDocument<IUser>;
+};
+
 export interface cancelBookingResponseDTO {
   requiresAdminApproval: boolean;
   refundAmount: number;
   message: string;
   booking: BookingResponseDTO;
 }
+export interface cancelBookingResponseinput {
+  requiresAdminApproval: boolean;
+  refundAmount: number;
+  message: string;
+  booking: BookingResponseInput;
+}
 
 export interface CreateBookingOrderResponseDTO {
   orderId: string;
+  bookingId: string;
   amount: number;
   currency: string;
   isFullyPaidByWallet: boolean;
@@ -71,10 +92,24 @@ export interface CreateBookingOrderResponseDTO {
   packageName: string;
   packageDescription: string;
 }
+export interface CreateBookingOrderResponseInput {
+  orderId: string;
+  bookingId: Types.ObjectId;
+  amount?: number;
+  currency?: string;
+  isFullyPaidByWallet: boolean;
+  keyId?: string;
+  packageName?: string;
+  packageDescription?: string;
+}
 
 export interface VerifyPamentResponseDTO {
   message: string;
   bookingId?: string;
+}
+export interface VerifyPamentResponseInput {
+  message: string;
+  bookingId?: Types.ObjectId;
 }
 
 export interface OperatorBookingListResponseDTO {
@@ -102,3 +137,19 @@ export interface PendingCancellationItemResponseDTO {
   refundAmount: number;
 }
 
+export type PendingCancellationInput = Omit<
+  IBookingDocument,
+  "packageId" | "userId"
+> & {
+  packageId: {
+    _id: Types.ObjectId;
+    name: string;
+    startDate?: Date;
+  };
+  userId: {
+    _id: Types.ObjectId;
+    name: string;
+    email: string;
+    phone?: string;
+  };
+};

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import {
   PackageReviewResponseDTO,
   ReviewResponseDTO,
@@ -5,22 +6,24 @@ import {
   ReviewWithOptionalPopulatedUser,
   UpdateReviewResponseDTO,
   UserPopulatedDTO,
+  UserSummaryInput
 } from "../../dto/package-review/packageReviewResponseDTO";
 
 export class ReviewResponseMapper {
-  private static mapUser(userId: any): string | UserPopulatedDTO {
+  private static mapUser(
+    userId: UserSummaryInput | Types.ObjectId,
+  ): string | UserPopulatedDTO {
     if (!userId) return "";
-    if (typeof userId === "object" && userId._id) {
-      return {
-        _id: userId._id.toString(),
-        name: userId.name || "",
-        image: userId.image || "",
-      };
-    }
-    return userId.toString();
+    if (userId instanceof Types.ObjectId) return userId.toString();
+
+    return {
+      _id: userId._id.toString(),
+      name: userId.name || "",
+      image: userId.image || "",
+    };
   }
 
-  static toReviewResponseDTO(review: any): ReviewResponseDTO {
+  static toReviewResponseDTO(review:ReviewWithOptionalPopulatedUser): ReviewResponseDTO {
     return {
       _id: review._id ? review._id.toString() : "",
       packageId: review.packageId ? review.packageId.toString() : "",
@@ -72,8 +75,8 @@ export class ReviewResponseMapper {
     };
   }
   static toUpdateReviewResponseDTO(
-    review: any,
-    stats: any,
+    review: ReviewWithOptionalPopulatedUser,
+    stats: ReviewStats,
   ): UpdateReviewResponseDTO {
     return {
       review: review ? this.toReviewResponseDTO(review) : null,

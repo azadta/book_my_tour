@@ -31,7 +31,7 @@ export class WalletResponseMapper {
       userId: wallet.userId.toString(),
       balance: wallet.balance,
       transactions: wallet.transactions
-        ? wallet.transactions.map((txn: any) =>
+        ? wallet.transactions.map((txn: IWalletTransaction) =>
             this.toTransactionResponseDTO(txn),
           )
         : [],

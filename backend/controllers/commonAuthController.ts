@@ -6,6 +6,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../types/types";
 import { ICommonAuthController } from "../interfaces/ICommonAuthController";
 import { RESPONSE_MESSAGES } from "../constants/messages";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class CommonAuthController implements ICommonAuthController {
@@ -18,7 +19,10 @@ export class CommonAuthController implements ICommonAuthController {
       const refreshToken = req.cookies.refresh_token;
       if (!refreshToken) {
         return next(
-          new CustomError(RESPONSE_MESSAGES.AUTH.ERROR.NO_REFRESH_TOKEN, StatusCode.UNAUTHORIZED),
+          new CustomError(
+            RESPONSE_MESSAGES.AUTH.ERROR.NO_REFRESH_TOKEN,
+            StatusCode.UNAUTHORIZED,
+          ),
         );
       }
       const { newAccessToken } =
@@ -26,9 +30,14 @@ export class CommonAuthController implements ICommonAuthController {
       res.cookie("access_token", newAccessToken, {
         httpOnly: true,
 
-        maxAge:Number(process.env.MAX_AGE)
+        maxAge: Number(process.env.MAX_AGE),
       });
-      res.status(StatusCode.OK).json({ success: true });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.COMMON_AUTH.SUCCESS.VERIFY_REFRESH,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

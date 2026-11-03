@@ -7,6 +7,7 @@ import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import type { ISocketService } from "../interfaces/ISocketService";
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class NotificationController implements INotificationController {
@@ -40,10 +41,12 @@ export class NotificationController implements INotificationController {
       });
       this.socketService.emitNotificationToUser(recipientId, notification);
 
-      res.status(201).json({
-        message: RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.SEND,
-        data: notification,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.SEND,
+        notification,
+        StatusCode.CREATED,
+      );
     } catch (error) {
       next(error);
     }
@@ -55,8 +58,14 @@ export class NotificationController implements INotificationController {
   ) => {
     try {
       const userId = req.user?.id as string;
-      const result = await this._notificationService.getUserNotification(userId);
-      res.status(200).json(result);
+      const result =
+        await this._notificationService.getUserNotification(userId);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.FETCH_USER_NOTIFICATIONS,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -70,10 +79,12 @@ export class NotificationController implements INotificationController {
         notificationId as string,
         userId,
       );
-      res.status(200).json({
-        message: RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.MARKED_AS_READ,
-        data: result,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.MARKED_AS_READ,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -82,10 +93,12 @@ export class NotificationController implements INotificationController {
     try {
       const userId = req.user?.id as string;
       const result = await this._notificationService.markAllAsRead(userId);
-      res.status(StatusCode.OK).json({
-        message: RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.MARKED_ALL_AS_READ,
-        data: result,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.MARKED_ALL_AS_READ,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -100,12 +113,12 @@ export class NotificationController implements INotificationController {
       const userId = req.user?.id as string;
       const result =
         await this._notificationService.clearAllNotifications(userId);
-      res
-        .status(StatusCode.OK)
-        .json({
-          message: RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.CLEARED_ALL,
-          data: result,
-        });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.NOTIFICATION.SUCCESS.CLEARED_ALL,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

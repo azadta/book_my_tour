@@ -112,8 +112,7 @@ const AdminProfile = () => {
         APP_ROUTES.ADMINS.UPDATE(currentAdmin?._id as string),
         formData,
       );
-
-      dispatch(updateAdminSuccess(data.result));
+      dispatch(updateAdminSuccess(data));
       toast.success(FEEDBACK_MESSAGES.ADMIN.SUCCESS.UPDATE);
     } catch (error: any) {
       dispatch(
@@ -169,24 +168,20 @@ const AdminProfile = () => {
 
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] gap-2  items-end py-10 ">
-     
-        <div className=" flex flex-col gap-5  w-38 justify-self-end">
-          <button
-            onClick={() => navigate(FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH)}
-            className="profile-sidebar-button"
-          >
-            Reset Password
-          </button>
+      <div className=" flex flex-col gap-5  w-38 justify-self-end">
+        <button
+          onClick={() => navigate(FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH)}
+          className="profile-sidebar-button"
+        >
+          Reset Password
+        </button>
 
-          <button onClick={handleLogOut} className="profile-sidebar-button">
-            Log Out
-          </button>
-        </div>
-   
+        <button onClick={handleLogOut} className="profile-sidebar-button">
+          Log Out
+        </button>
+      </div>
 
       <div className="max-w-lg sm:max-w-2xl ">
-   
-
         <ProfileForm
           currentUser={currentAdmin}
           formData={formData}

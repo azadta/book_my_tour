@@ -1,75 +1,60 @@
+import { Types } from "mongoose";
 import {
-  ICategorySummaryDTO,
-  IDestinationSummaryDTO,
   IOperatorSummaryDTO,
+  IOperatorSummaryInput,
 } from "../../dto/package/packageRequestDTO";
-import { IPackageResponseDTO } from "../../dto/package/packageResponseDTO";
+import {
+  IPackageResponseDTO,
+  PackageResponseInput,
+} from "../../dto/package/packageResponseDTO";
+import { CategoryResponseMapper } from "../package-category/PackageCategoryResponseMapper";
+import { PackageDestinationResponseMapper } from "../package-destination/PackageDestinationResponseMapper";
 
 export class PackageResponseMapper {
-  private static mapDestinations(
-    destinations: any,
-  ): IDestinationSummaryDTO[] | string[] {
-    if (!Array.isArray(destinations)) return [];
-    return destinations.map((dest) => {
-      if (!dest) return "";
-      if (typeof dest === "object" && dest?.name !== undefined) {
-        return { _id: dest?._id.toString(), name: dest?.name || "" };
-      }
-      return dest.toString();
-    });
-  }
-
-  private static mapCategory(category: any): ICategorySummaryDTO | string {
-    if (!category) return "";
-    if (typeof category === "object" && category?.name !== undefined) {
-      return {
-        _id: category?._id.toString(),
-        name: category?.name || "",
-      };
-    }
-    return category.toString();
-  }
-
-  private static mapOperator(operator: any): IOperatorSummaryDTO | string {
+  private static mapOperator(
+    operator: IOperatorSummaryInput | Types.ObjectId,
+  ): IOperatorSummaryDTO | string {
     if (!operator) return "";
-    if (typeof operator === "object" && operator !== null) {
-      return {
-        _id: operator?._id.toString() ?? "",
-        name: operator?.name ?? "",
-        email: operator?.email ?? "",
-        phone: operator?.phone,
-      };
-    }
-    return operator.toString();
-  }
+    if (operator instanceof Types.ObjectId) return operator.toString();
 
-  static toPackageResponseDTO(doc: any): IPackageResponseDTO {
-    const raw = doc.toObject ? doc.toObject() : doc;
     return {
-      _id: raw?._id.toString(),
-      name: raw?.name,
-      amount: raw?.amount,
-      childPricing: raw?.childPricing,
-      destinations: PackageResponseMapper.mapDestinations(raw.destinations),
-      duration: raw?.duration,
-      specifications: raw.specifications,
-      startDate: raw.startDate,
-      startPoint: raw.startPoint,
-      remark: raw.remark,
-      discount: raw.discount,
-      availableSlots: raw.availableSlots,
-      images: raw.images || [],
-      category: PackageResponseMapper.mapCategory(raw.category),
-      operatorId: PackageResponseMapper.mapOperator(raw.operatorId),
-      itinerary: raw.itinerary || [],
-      reviewCount: raw.reviewCount ?? 0,
-      averageRating: raw.averageRating ?? 0,
-      createdAt: raw.createdAt,
-      updatedAt: raw.updatedAt,
+      _id: operator?._id.toString() ?? "",
+      name: operator?.name ?? "",
+      email: operator?.email ?? "",
+      ...(operator.phone && { phone: operator?.phone }),
     };
   }
 
-  static toPackageListResponseDTO(docs: any[]): IPackageResponseDTO[] {
+  static toPackageResponseDTO(doc: PackageResponseInput): IPackageResponseDTO {
+    return {
+      _id: doc?._id.toString(),
+      name: doc?.name,
+      amount: doc?.amount,
+      childPricing: doc?.childPricing,
+      destinations: PackageDestinationResponseMapper.toSummaryDTOList(
+        doc.destinations,
+      ),
+      duration: doc?.duration,
+      specifications: doc.specifications,
+      startDate: doc.startDate,
+      startPoint: doc.startPoint,
+      remark: doc.remark,
+      discount: doc.discount,
+      availableSlots: doc.availableSlots,
+      images: doc.images || [],
+      category: CategoryResponseMapper.toCategorySummaryDTO(doc.category),
+      operatorId: PackageResponseMapper.mapOperator(doc.operatorId),
+      itinerary: doc.itinerary || [],
+      reviewCount: doc.reviewCount ?? 0,
+      averageRating: doc.averageRating ?? 0,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
+  }
+
+  static toPackageListResponseDTO(
+    docs: PackageResponseInput[],
+  ): IPackageResponseDTO[] {
     return docs.map((doc) => PackageResponseMapper.toPackageResponseDTO(doc));
   }
 }

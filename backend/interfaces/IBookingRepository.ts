@@ -1,19 +1,18 @@
-import { Types } from "mongoose";
-import { IBaseRepository } from "./IBaseRepository";
-import { IBookingDocument, IPopulatedBooking } from "../models/Booking";
-import { IBookingPricing } from "./IBookingPricing";
+import { PendingCancellationInput } from "../dto-mapping/dto/booking/bookingResponseDTO";
 import {
+  BookingStatus,
+  IBookingDocument,
+  IPopulatedBooking,
+} from "../models/Booking";
+import { IBaseRepository } from "./IBaseRepository";
+import {
+  IBookingStatusBreakDown,
+  IMonthlyRevenue,
   IOperatorBookingDetails,
   IOperatorBookingFilter,
   IOperatorBookingStats,
 } from "./IBooking";
-
-export type BookingStatus =
-  | "PENDING"
-  | "CONFIRMED"
-  | "CANCEL_REQUESTED"
-  | "FAILED"
-  | "CANCELLED";
+import { IBookingPricing } from "./IBookingPricing";
 
 export interface ITourMember {
   type: "adult" | "child";
@@ -29,31 +28,12 @@ export interface ILeadContact {
   email: string;
   phone: string;
 }
-
-export interface IBooking {
-  _id: string | Types.ObjectId;
-  userId: Types.ObjectId | string;
-  packageId: Types.ObjectId | string;
-  razorpayOrderId: string;
-  razorpayPaymentId: string | null;
-
-  addedActivityIds: string[];
-  removedActivityIds: string[];
-  primaryContact: ILeadContact;
-  members: ITourMember[];
-  status: BookingStatus;
-  attendance: string;
-  checkInTime: Date;
-  pricing: IBookingPricing;
-  cancellation: {
-    requestedAt: Date;
-    processedAt: Date;
-    refundAmount: number;
-    reason: string;
-    adminNotes: string;
-  };
-  createdAt: Date;
-  updatedAt: Date;
+export interface IBookingCancellation {
+  requestedAt: Date | null;
+  processedAt: Date | null;
+  refundAmount: number;
+  reason: string;
+  adminNotes: string;
 }
 
 export interface ICreateBookingDTO {
@@ -75,19 +55,19 @@ export interface IUpdateBookingStatusDTO {
 }
 
 export interface IBookingRepository extends IBaseRepository<IBookingDocument> {
-  createBooking(dto: ICreateBookingDTO): Promise<IBooking>;
-  findByOrderId(razorpayOrderId: string): Promise<IBooking | null>;
+  createBooking(dto: ICreateBookingDTO): Promise<IBookingDocument>;
+  findByOrderId(razorpayOrderId: string): Promise<IBookingDocument | null>;
   updateStatusByOrderId(
     razorpayOrderID: string,
     dto: IUpdateBookingStatusDTO,
-  ): Promise<IBooking | null>;
+  ): Promise<IBookingDocument | null>;
   getUserBookings(
     userId: string,
     skip: number,
     limit: number,
-  ): Promise<{ bookings: IBooking[]; totalCount: number }>;
+  ): Promise<{ bookings: IBookingDocument[]; totalCount: number }>;
   findByBookingId(bookingId: string): Promise<IPopulatedBooking | null>;
-  getPendingCancellationRequests(): Promise<IBooking[]>;
+  getPendingCancellationRequests(): Promise<PendingCancellationInput[]>;
   getOperatorBookings(
     filter: IOperatorBookingFilter,
     skip: number,
@@ -99,6 +79,8 @@ export interface IBookingRepository extends IBaseRepository<IBookingDocument> {
     operatorId: string,
   ): Promise<IOperatorBookingDetails | null>;
   getOperatorStats(operatorId: string): Promise<IOperatorBookingStats>;
-  getMonthlyRevenue(operatorId: string): Promise<any[]>;
-  getBookingStatusBreakDown(operatorId: string): Promise<any[]>;
+  getMonthlyRevenue(operatorId: string): Promise<IMonthlyRevenue[]>;
+  getBookingStatusBreakDown(
+    operatorId: string,
+  ): Promise<IBookingStatusBreakDown[]>;
 }

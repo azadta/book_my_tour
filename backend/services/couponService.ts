@@ -1,22 +1,18 @@
 import { inject, injectable } from "inversify";
-import { ICouponService } from "../interfaces/ICouponService";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import { CustomError } from "../utils/customError";
-import { CouponType, ICouponDocument } from "../models/Coupon";
 import { StatusCode } from "../constants/statusCodeConstants";
-import type { ICouponRepository } from "../interfaces/ICouponRepository";
-import { Types } from "../types/types";
 import {
   createCouponInput,
-  createCouponRequestDTO,
   updateCouponInput,
-  updateCouponRequestDTO,
   ValidateCouponBody,
-  ValidateCouponRequestDTO,
 } from "../dto-mapping/dto/coupon/couponRequestDTO";
-import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
 import { CouponRequestMapper } from "../dto-mapping/mapper/coupon/CouponRequestMapper";
-import { STATUS_CODES } from "node:http";
+import { CouponResponseMapper } from "../dto-mapping/mapper/coupon/CouponResponseMapper";
+import type { ICouponRepository } from "../interfaces/ICouponRepository";
+import { ICouponService } from "../interfaces/ICouponService";
+import { CouponType, ICouponDocument } from "../models/Coupon";
+import { Types } from "../types/types";
+import { CustomError } from "../utils/customError";
 
 @injectable()
 export class CouponService implements ICouponService {
@@ -103,9 +99,9 @@ export class CouponService implements ICouponService {
     };
 
     if (dto.type === CouponType.GENERAL) {
-      ((updatedPayload.$unset.bankName = ""),
-        (updatedPayload.$unset.allowedBins = ""),
-        delete updatedPayload.$set.bankName);
+      updatedPayload.$unset.bankName = "";
+      updatedPayload.$unset.allowedBins = "";
+      delete updatedPayload.$set.bankName;
       delete updatedPayload.$set.allowedBins;
     }
 
@@ -151,9 +147,7 @@ export class CouponService implements ICouponService {
     return CouponResponseMapper.toAvailableCouponsDTO(data);
   }
 
-  async validateAndCalculateCouponDiscount(
-    body:ValidateCouponBody,
-  ) {
+  async validateAndCalculateCouponDiscount(body: ValidateCouponBody) {
     const dto = CouponRequestMapper.toValidateCouponDTO(body);
     const { bookingAmount, code, cardBin } = dto;
     const coupon = await this._couponRepository.findByCode(code);
@@ -196,7 +190,7 @@ export class CouponService implements ICouponService {
       discountAmount = coupon.discountValue;
     }
     const finalPrice = Math.max(0, bookingAmount - discountAmount);
-    const result= { discountAmount, finalPrice, coupon }
-   return CouponResponseMapper.toValidateCouponResponseDTO(result)
+    const result = { discountAmount, finalPrice, coupon };
+    return CouponResponseMapper.toValidateCouponResponseDTO(result);
   }
 }

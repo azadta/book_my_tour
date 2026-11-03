@@ -4,7 +4,12 @@ import { IReview } from "../../../interfaces/IReview";
 export interface UserPopulatedDTO {
   _id: string;
   name: string;
-  image?: string;
+  image: string;
+}
+export interface UserSummaryInput {
+  _id: string;
+  name: string;
+  image: string;
 }
 
 export interface CategoryRatingsDTO {
@@ -26,6 +31,7 @@ export interface ReviewResponseDTO {
   createdAt: string;
   updatedAt: string;
 }
+
 
 export interface ReviewStats {
   totalReviews: number;
@@ -51,5 +57,5 @@ export interface UpdateReviewResponseDTO {
 }
 
 export type ReviewWithOptionalPopulatedUser=Omit<IReview,'userId'>&{
-  userId:Types.ObjectId|UserPopulatedDTO
+  userId:Types.ObjectId|UserSummaryInput
 }

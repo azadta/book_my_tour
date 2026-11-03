@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import { PackageRequestMapper } from "../dto-mapping/mapper/package/PackageRequestMapper";
-import { PackageResponseMapper } from "../dto-mapping/mapper/package/PackageResponseMapper";
 import { IPackageController } from "../interfaces/IPackageController";
 import type { IPackageService } from "../interfaces/IPackageService";
 import { Types } from "../types/types";

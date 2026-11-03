@@ -24,8 +24,8 @@ export const useAdminPackageManagement = (page: number, limit: number) => {
           },
         );
 
-        setPackages(data.packages || []);
-        setTotalCount(data.totalCount || 0);
+        setPackages(data.result.packages || []);
+        setTotalCount(data.result.totalCount || 0);
       } catch (error) {
         console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
       } finally {

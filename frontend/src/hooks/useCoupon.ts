@@ -14,8 +14,8 @@ export const useCoupon = () => {
     setLoading(true);
     try {
       const { data } = await axiosInstance(APP_ROUTES.COUPONS.USER.LIST);
-      setBankOffers(data.bankOffers || []);
-      setGeneralCoupons(data.generalCoupons || []);
+      setBankOffers(data.result.bankOffers || []);
+      setGeneralCoupons(data.result.generalCoupons || []);
     } catch (error: any) {
       const message =
         error.response?.data?.message || FEEDBACK_MESSAGES.COUPON.ERROR.FETCH;

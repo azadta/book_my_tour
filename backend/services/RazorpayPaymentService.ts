@@ -35,7 +35,7 @@ export class RazorpayPaymentService implements IPaymentService {
         currency: order.currency,
         amount: Number(order.amount),
       };
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
     }
   }

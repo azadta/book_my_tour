@@ -1,7 +1,6 @@
-import { Types } from "mongoose";
+import { QueryFilter, Types } from "mongoose";
 import { Ipackage } from "../models/Package";
 import { IBaseRepository } from "./IBaseRepository";
-import { IUpdatePackageRequestDTO } from "../dto-mapping/dto/package/packageRequestDTO";
 
 export interface IPackageRepository extends IBaseRepository<Ipackage> {
   countPackagesByOperatorId(operatorId: string): Promise<number>;
@@ -10,15 +9,15 @@ export interface IPackageRepository extends IBaseRepository<Ipackage> {
   save(item: Ipackage): Promise<Ipackage>;
   findAllPackages(): Promise<Ipackage[]>;
   getFilteredPackages(
-    filter: any,
+    filter:QueryFilter<Ipackage>,
     skip: number,
     limit: number,
     sortBy?: string,
     sortOrder?: string,
   ): Promise<Ipackage[]>;
-  getFilteredPackagesCount(filter: any): Promise<number>;
+  getFilteredPackagesCount(filter:QueryFilter<Ipackage>): Promise<number>;
   getUsedCategoryIds(): Promise<Types.ObjectId[]>;
-  getUniqueCategoryCount(filter: any): Promise<number>;
+  getUniqueCategoryCount(filter:QueryFilter<Ipackage>): Promise<number>;
   deleteByIdAndOperator(
     packageId: string,
     operatorId: string,

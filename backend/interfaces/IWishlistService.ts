@@ -1,14 +1,9 @@
 import {
   AddWishlistNoteInput,
-  AddWishlistNoteRequestDTO,
   CreateWishlistGroupInput,
-  CreateWishlistGroupRequestDTO,
   EditWishlistGroupInput,
-  EditWishlistGroupRequestDTO,
   EditWishlistNoteInput,
-  EditWishlistNoteRequestDTO,
-  ToggleWishlistPackageInput,
-  ToggleWishlistPackageRequestDTO,
+  ToggleWishlistPackageInput
 } from "../dto-mapping/dto/wishlist/wishlistRequestDTO";
 import {
   ShareLinkResponseDTO,

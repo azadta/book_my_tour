@@ -27,10 +27,10 @@ export const useAdminDashboard = () => {
         axiosInstance.get(APP_ROUTES.DASHBOARD.ADMIN.SIGNUP_TODAY),
         axiosInstance.get(APP_ROUTES.DASHBOARD.ADMIN.OPERATORS_PENDING_COUNT),
       ]);
-      setUsersCount(usersCount.data.usersCount);
-      setOperatorsCount(operatorsCount.data.operatorsCount);
-      setTodaySignups(todaySignups.data.todaySignupCount);
-      setPendingVerificationsCount(pendingVerificationsCount.data.count);
+      setUsersCount(usersCount.data.result.usersCount);
+      setOperatorsCount(operatorsCount.data.result.operatorsCount);
+      setTodaySignups(todaySignups.data.result.todaySignupCount);
+      setPendingVerificationsCount(pendingVerificationsCount.data.result.count);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||

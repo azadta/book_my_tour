@@ -15,7 +15,8 @@ export const useWishlist = () => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(APP_ROUTES.WISHLISTS.USER.LIST);
-      const fetchedGroups = data.wishlistGroups || [];
+
+      const fetchedGroups = data.result || [];
 
       setGroups(fetchedGroups);
       if (activeGroup) {
@@ -119,7 +120,7 @@ export const useWishlist = () => {
         APP_ROUTES.WISHLISTS.USER.SHARE_LINK(activeGroup._id),
       );
   
-      const shareURL = `${window.location.origin}/shared-wishlist/${data.data.shareToken}`;
+      const shareURL = `${window.location.origin}/shared-wishlist/${data.result.shareToken}`;
       navigator.clipboard.writeText(shareURL);
       setCopiedToken(true);
       setTimeout(() => setCopiedToken(false), 3000);

@@ -62,7 +62,7 @@ export class WishlistService implements IWishlistService {
     }
 
     const hasPackage = group.packages.some(
-      (pkg: any) =>
+      (pkg) =>
         (pkg._id ? pkg._id.toString() : pkg.toString()) === packageId,
     );
     const updatedGroup = hasPackage

@@ -41,7 +41,7 @@ export const useOtp = ({
         userId,
       });
       setOtp("");
-      setOtpExpire(Number(data.otpExpire));
+      setOtpExpire(Number(data.result.otpExpire));
       setError(null);
       toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_RESENT);
     } catch (error: any) {

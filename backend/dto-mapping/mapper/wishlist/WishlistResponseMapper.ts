@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { INote } from "../../../interfaces/IWishList";
 import { PackageWithDestinations } from "../../dto/package/packageResponseDTO";
 import {
   ShareLinkResponseDTO,
@@ -7,9 +8,10 @@ import {
   WishlistNoteResponseDTO,
   WishlistPackageResponseDTO,
 } from "../../dto/wishlist/wishlistResponseDTO";
+import { PackageDestinationResponseMapper } from "../package-destination/PackageDestinationResponseMapper";
 
 export class WishlistResponseMapper {
-  static toNoteResponseDTO(note: any): WishlistNoteResponseDTO {
+  static toNoteResponseDTO(note: INote): WishlistNoteResponseDTO {
     return {
       _id: note._id.toString(),
       text: note.text || "",
@@ -29,10 +31,8 @@ export class WishlistResponseMapper {
       duration: pkg.duration,
       images: pkg.images,
       category: pkg.category.toString(),
-      destinations: pkg.destinations?.map((dest: any) =>
-        typeof dest === "object" && dest !== null
-          ? { _id: dest._id.toString(), name: dest.name }
-          : dest.toString(),
+      destinations: PackageDestinationResponseMapper.toSummaryDTOList(
+        pkg.destinations,
       ),
       availableSlots: pkg.availableSlots,
     };

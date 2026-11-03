@@ -31,10 +31,10 @@ export const useGlobalChatSocket = () => {
     if (!currentUser) return;
     const fetchInitialChats = async () => {
       try {
-        const response = await axiosInstance.get<IChat[]>(
+        const response = await axiosInstance.get<{result:IChat[]}>(
           APP_ROUTES.CHATS.ANY.MY_CHATS,
         );
-        dispatch(setChats(response.data));
+        dispatch(setChats(response.data.result));
       } catch (error) {
         console.error(FEEDBACK_MESSAGES.CHATS.ERROR.FETCH_CHATS, error);
       }
@@ -57,7 +57,7 @@ export const useGlobalChatSocket = () => {
         );
       }
       dispatch(updateChatLastMessage({ chatId: chatId, message }));
-      toast.info('New message is arrived')
+     
     };
     const handleChatCleared = ({ chatId }: { chatId: string }) => {
       dispatch(clearChatMessages(chatId));

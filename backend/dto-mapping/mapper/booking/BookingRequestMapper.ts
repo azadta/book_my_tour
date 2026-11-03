@@ -1,3 +1,4 @@
+import { ITourMember } from "../../../interfaces/IBookingRepository";
 import {
   CancelBookingBody,
   CancelBookingRequestDTO,
@@ -11,8 +12,10 @@ import {
   ProcessAdminCancellationRequestDTO,
   toOperatorReschuduleBookingBody,
   UpdateAttendanceRequestDTO,
+  UpdateAttendanceRequestInput,
   VerifyBookingPaymentBody,
   VerifyCancellationRequestDTO,
+  VerifyCancellationRequestInput,
   VerifyPaymentRequestDTO,
 } from "../../dto/booking/bookingRequestDTO";
 
@@ -34,7 +37,7 @@ export class BookingRequestMapper {
         phone: body?.primaryContact.phone,
       },
       members: Array.isArray(body?.members)
-        ? body.members.map((member: any) => ({
+        ? body.members.map((member: ITourMember) => ({
             type: member.type,
             firstName: member.firstName,
             lastName: member.lastName,
@@ -71,15 +74,17 @@ export class BookingRequestMapper {
     };
   }
 
-  static toUpdateAttendanceDTO(body: any): UpdateAttendanceRequestDTO {
+  static toUpdateAttendanceDTO(
+    body: UpdateAttendanceRequestInput,
+  ): UpdateAttendanceRequestDTO {
     return {
       attendance: body?.attendance ?? "",
     };
   }
 
-  static toOperatorCancelBookingDTO(
-    body: any,
-  ): OperatorCancelBookingRequestDTO {
+  static toOperatorCancelBookingDTO(body: {
+    reason: string;
+  }): OperatorCancelBookingRequestDTO {
     return {
       reason: body.reason ?? "",
     };
@@ -92,7 +97,9 @@ export class BookingRequestMapper {
     };
   }
 
-  static toVerifyCancellationDTO(body: any): VerifyCancellationRequestDTO {
+  static toVerifyCancellationDTO(
+    body: VerifyCancellationRequestInput,
+  ): VerifyCancellationRequestDTO {
     return {
       action: body.action === "APPROVE" ? "APPROVE" : "REJECT",
       operatorNotes: body?.operatorNotes ?? "",

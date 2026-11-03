@@ -6,13 +6,18 @@ import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 const AdminResetPasswordAuthenticated: React.FC = () => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const endPoint: string = APP_ROUTES.ADMINS.RESET_PASSWORD_AUTH;
+  const { currentAdmin } = useSelector((state: RootState) => state.admin);
+  const endPoint: string = APP_ROUTES.ADMINS.RESET_PASSWORD_AUTH(
+    currentAdmin?._id!,
+  );
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 

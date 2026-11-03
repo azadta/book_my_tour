@@ -1,5 +1,3 @@
-import { StatusCode } from "./statusCodeConstants";
-
 export const RESPONSE_MESSAGES = {
   AUTH: {
     SUCCESS: {
@@ -50,6 +48,14 @@ export const RESPONSE_MESSAGES = {
       BLOCKED: "user is blocked",
       UNBLOCKED: "user unblocked",
       DELETED: "User deleted successfully",
+      LOGGED_IN:'User logged in successfully',
+      OTP_SENT:'Password reset OTP sent to user mail',
+      RESET_PASSWORD:'Password reset successfully',
+      LOGGED_OUT:'User logged out successfully',
+      UPDATE:'User updated successfully',
+      UPDATE_PROFILE_IMAGE:'User profile image updated successfully',
+      FETCH_ALL:'Users fetched successfully',
+      FETCH:'User fetched successfully',
     },
     ERROR: {
       NOT_FOUND: "User not found",
@@ -223,7 +229,7 @@ export const RESPONSE_MESSAGES = {
     },
     ERROR: {
       INVALID_CODE: "Invalid or expired coupon code",
-      MINIMUM_AMOUNT: (minAmount: Number) =>
+      MINIMUM_AMOUNT: (minAmount: number) =>
         `Minimum booking amount of Rs ${minAmount} required for this coupon`,
       CARD_BIN_MISSING:
         "Card Bin (first 6 digits) required to validate bank offer",
@@ -251,6 +257,9 @@ export const RESPONSE_MESSAGES = {
   CHAT: {
     SUCCESS: {
       CLEARED: "Chat cleared successfully",
+      ACCESS_CHAT: "Chats accessed successfully",
+      FETCH_USER_CHATS: "User chats fetched successfully",
+      FETCH_MESSAGES: "Chat messages fetched successfully",
     },
     ERROR: {
       RETRIEVE_AFTER_CREATION: "Failed to retrieve chat after creation",
@@ -261,12 +270,19 @@ export const RESPONSE_MESSAGES = {
       MISSING_REQUIRED_FIELDS: "Missing required fields",
     },
   },
+  COMMON_AUTH: {
+    SUCCESS: {
+      VERIFY_REFRESH:
+        "Refresh token verified and new access token generated successfully",
+    },
+  },
   NOTIFICATION: {
     SUCCESS: {
-      SEND: "Notification send successfully",
+      SEND: "Notification created and send successfully",
       MARKED_AS_READ: "Notification marked as read ",
       MARKED_ALL_AS_READ: "All notifications marked as read ",
       CLEARED_ALL: "All notifications cleared",
+      FETCH_USER_NOTIFICATIONS:'User notifications fetched successfully'
     },
     ERROR: {
       SEND: "Socket send_notification error",
@@ -275,6 +291,10 @@ export const RESPONSE_MESSAGES = {
   SUBSCRIPTION_PLAN: {
     SUCCESS: {
       DELETED: "Subscription plan deleted successfully",
+      CREATE:'Subscription plan created successfully',
+      FETCH_ALL:'Subscription plans fetched successfully',
+      UPDATE:'Subscription plan updated successfully',
+      FETCH:'Subscription plan fetched successfully'
     },
     ERROR: {
       NOT_FOUND: "Subscription plan not found",
@@ -284,6 +304,7 @@ export const RESPONSE_MESSAGES = {
     SUCCESS: {
       CREATE_ORDER: "Subscription order created successfully",
       ACTIVATE: "Your subscription has been successfully activated",
+      VERIFY_PAYMENT:'Subscription payment verified successfully'
     },
     ERROR: {
       UPDATE: "Failed to update subscription",
@@ -294,6 +315,9 @@ export const RESPONSE_MESSAGES = {
   PAYOUT: {
     SUCCESS: {
       TRANSFERRED: "Payout transferred and recorded successfully",
+      FETCH_ELIGIBLE:'Eligible payouts are fetched successfully',
+      CREATE_ORDER:'Payout order created successfully',
+      VERIFY:'Payment verified successfully'
     },
     ERROR: {
       NOT_FOUND: "Payout item not found",
@@ -302,6 +326,15 @@ export const RESPONSE_MESSAGES = {
       INVALID_SIGNATURE:
         "Payment verification failed. Invalid transaction signature.",
       UPDATE: "Failed to update payout report details",
+    },
+  },
+  DASHBOARD: {
+    SUCCESS: {
+      FETCH_USERS_COUNT: "Users count fetched successfully",
+      FETCH_OPERATORS_COUNT: "Operators count fetched successfully",
+      FETCH_TODAY_SIGNUP_COUNT: "Today signup count fetched successfully",
+      FETCH_PENDING_OPERATORS_COUNT:'Pending operators count fetched successfully',
+      FETCH_OPERATORS_DATA:'Operators dashboard data fetched successfully'
     },
   },
 } as const;

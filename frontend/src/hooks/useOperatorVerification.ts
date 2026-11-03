@@ -19,7 +19,7 @@ export const useOperatorVerification = () => {
       const res = await axiosInstance.get(
         APP_ROUTES.OPERATORS.ADMIN.VERIFICATION_RQS,
       );
-      setOperators(res.data);
+      setOperators(res.data.result);
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||

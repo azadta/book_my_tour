@@ -14,7 +14,7 @@ export const useCouponManagement = () => {
         APP_ROUTES.COUPONS.OPERATOR.CREATE,
         payload,
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }
@@ -26,7 +26,7 @@ export const useCouponManagement = () => {
       const res = await axiosInstance.get(
         APP_ROUTES.COUPONS.OPERATOR.DETAIL(id),
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ export const useCouponManagement = () => {
         APP_ROUTES.COUPONS.OPERATOR.UPDATE(id),
         payload,
       );
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import express from "express";
+import { authMiddleware, payoutController } from "../../config/container";
 import { ROUTES } from "../../constants/routesConstants";
-import { authMiddleware, payoutController, subscriptionController } from "../../config/container";
 
 const router = express.Router();
 router.get(

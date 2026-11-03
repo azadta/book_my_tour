@@ -15,8 +15,8 @@ export const useOperatorPackageManagement = (page: number, limit: number) => {
       const res = await axiosInstance.get(APP_ROUTES.PACKAGES.OPERATOR.LIST, {
         params: { page, limit },
       });
-      setPackages(res.data.packages || []);
-      setTotalCount(res.data.totalCount || 0);
+      setPackages(res.data.result.packages || []);
+      setTotalCount(res.data.result.totalCount || 0);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {

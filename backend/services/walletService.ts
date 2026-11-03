@@ -5,17 +5,15 @@ import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
 import {
   CreateTopupOrderInput,
-  CreateTopupOrderRequestDTO,
   verifyTopupPaymentInput,
-  verifyTopupPaymentRequestDTO,
 } from "../dto-mapping/dto/wallet/walletRequestDTO";
+import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestMapper";
+import { WalletResponseMapper } from "../dto-mapping/mapper/wallet/WalletResponseMapper";
 import type { IPaymentService } from "../interfaces/IPaymentService";
 import type { IWalletRepository } from "../interfaces/IWalletRepository";
 import { IWalletService } from "../interfaces/IWalletService";
 import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { WalletResponseMapper } from "../dto-mapping/mapper/wallet/WalletResponseMapper";
-import { WalletRequestMapper } from "../dto-mapping/mapper/wallet/WalletRequestMapper";
 
 @injectable()
 export class WalletService implements IWalletService {
@@ -95,10 +93,10 @@ export class WalletService implements IWalletService {
     page: number = 1,
     limit: number = 5,
   ) {
-    let { wallet, totalCount, transactions } =
+  const { wallet, totalCount, transactions } =
       await this._walletRepository.getPaginatedWallet(userId, page, limit);
     if (!wallet) {
-      const newWallet = await this._walletRepository.create({
+      await this._walletRepository.create({
         userId: new mongoose.Types.ObjectId(userId),
         balance: 0,
         transactions: [],

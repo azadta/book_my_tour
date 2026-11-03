@@ -22,6 +22,7 @@ const ChatPage = () => {
   const [searchParams] = useSearchParams();
   const userIdParam = searchParams.get("userId");
   const currentUser = useCurrentUser();
+  console.log('userIdparam:',userIdParam)
 
   const accessedUserRef = useRef<string | null>(null);
 

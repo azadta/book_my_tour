@@ -18,7 +18,7 @@ export const useSubscriptionPlan = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.SUBSCRIPTION_PLANS.ADMIN.LIST,
       );
-      setPlans(data);
+      setPlans(data.result);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||
@@ -49,7 +49,7 @@ export const useSubscriptionPlan = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.SUBSCRIPTION_PLANS.ADMIN.DETAIL(id),
       );
-      setPlan(data);
+      setPlan(data.result);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||

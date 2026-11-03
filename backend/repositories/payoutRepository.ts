@@ -4,6 +4,7 @@ import { BaseRepository } from "./baseRepository";
 import { IPayoutDocument, PayoutStatusType } from "../models/Payout";
 import { Payout } from "../models/Payout";
 import { HydratedDocument } from "mongoose";
+import { PayoutWithPopulatedDetails, PopulatedBooking, PopulatedOperator } from "../interfaces/IPayout";
 
 @injectable()
 export class PayoutRepository
@@ -16,9 +17,9 @@ export class PayoutRepository
 
   async fetchPayoutsByStatus(
     status: PayoutStatusType,
-  ): Promise<HydratedDocument<IPayoutDocument>[]> {
+  ): Promise<PayoutWithPopulatedDetails[]> {
     return Payout.find({ payoutStatus: status })
-      .populate({
+      .populate<{bookingId:PopulatedBooking}>({
         path: "bookingId",
         select: "status attendance",
         populate: {
@@ -26,7 +27,7 @@ export class PayoutRepository
           select: "name startDate duration amount",
         },
       })
-      .populate("operatorId", "name email mobile")
+      .populate<{operatorId:PopulatedOperator}>("operatorId", "name email mobile")
       .sort({ createdAt: -1 });
   }
 

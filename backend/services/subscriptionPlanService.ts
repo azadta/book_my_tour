@@ -1,12 +1,12 @@
 import { inject, injectable } from "inversify";
-import { ISubscriptionPlanService } from "../interfaces/ISubscriptionPlanService";
-import { Types } from "../types/types";
-import type { ISubscriptionPlanRepository } from "../interfaces/ISubscriptionPlanRepository";
-import { HydratedDocument } from "mongoose";
-import { ISubscriptionPlan } from "../models/SubscriptionPlan";
-import { CustomError } from "../utils/customError";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import { subscriptionPlanRequestDTO } from "../dto-mapping/dto/subscriptionPlan/SubscriptionPlanRequestDTO";
+import type { ISubscriptionPlanRepository } from "../interfaces/ISubscriptionPlanRepository";
+import { ISubscriptionPlanService } from "../interfaces/ISubscriptionPlanService";
+import { ISubscriptionPlan } from "../models/SubscriptionPlan";
+import { Types } from "../types/types";
+import { CustomError } from "../utils/customError";
 
 @injectable()
 export class SubscriptionPlanService implements ISubscriptionPlanService {
@@ -15,7 +15,7 @@ export class SubscriptionPlanService implements ISubscriptionPlanService {
     private _subscriptionPlanRepository: ISubscriptionPlanRepository,
   ) {}
 
-  async createPlan(dto: any): Promise<ISubscriptionPlan> {
+  async createPlan(dto: subscriptionPlanRequestDTO): Promise<ISubscriptionPlan> {
     return await this._subscriptionPlanRepository.create(dto);
   }
 
@@ -23,7 +23,7 @@ export class SubscriptionPlanService implements ISubscriptionPlanService {
     return await this._subscriptionPlanRepository.findAll();
   }
 
-  async updatePlan(id: string, dto: any): Promise<ISubscriptionPlan | null> {
+  async updatePlan(id: string, dto: subscriptionPlanRequestDTO): Promise<ISubscriptionPlan | null> {
     const plan = await this._subscriptionPlanRepository.updateById(id, dto);
     if (!plan) {
       throw new CustomError(

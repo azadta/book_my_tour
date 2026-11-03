@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware, commonAuthController } from "../../config/container";
+import { commonAuthController } from "../../config/container";
 import { ROUTES } from "../../constants/routesConstants";
 
 const router = express.Router();

@@ -14,6 +14,7 @@ export interface IReview extends Document {
   images?: string[];
   travelerType?: "Couple" | "Solo" | "Family" | "Friends";
   createdAt: Date;
+  updatedAt:Date;
 }
 
 export interface CreateReviewDto {

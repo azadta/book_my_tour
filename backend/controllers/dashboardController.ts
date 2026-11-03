@@ -5,12 +5,15 @@ import { StatusCode } from "../constants/statusCodeConstants";
 import type { IDashboardService } from "../interfaces/IDashboardService";
 import { Types } from "../types/types";
 import { IDashboardController } from "../interfaces/IDashboardController";
+import { sendSuccessResponse } from "../utils/apiResponse";
+import { RESPONSE_MESSAGES } from "../constants/messages";
 
 @injectable()
 export class DashboardController implements IDashboardController {
-  constructor(@inject(Types.DashboardService) private _dashboardService:IDashboardService){
-
-  }
+  constructor(
+    @inject(Types.DashboardService)
+    private _dashboardService: IDashboardService,
+  ) {}
   //admin
   getTotalUsersCount = async (
     req: Request,
@@ -18,13 +21,19 @@ export class DashboardController implements IDashboardController {
     next: NextFunction,
   ) => {
     try {
-      const usersCount = await this._dashboardService.getTotalUsersCountService();
-      res.status(StatusCode.OK).json({ success: true, usersCount });
+      const usersCount =
+        await this._dashboardService.getTotalUsersCountService();
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DASHBOARD.SUCCESS.FETCH_USERS_COUNT,
+        usersCount,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
-    getTotalOperatorsCount = async (
+  getTotalOperatorsCount = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -32,7 +41,12 @@ export class DashboardController implements IDashboardController {
     try {
       const operatorsCount =
         await this._dashboardService.getTotalOperatorsCountService();
-      res.status(StatusCode.OK).json({ success: true, operatorsCount });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DASHBOARD.SUCCESS.FETCH_OPERATORS_COUNT,
+        operatorsCount,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -46,7 +60,12 @@ export class DashboardController implements IDashboardController {
     try {
       const todaySignupCount =
         await this._dashboardService.getSignupCountTodayService();
-      res.status(StatusCode.OK).json({ success: true, todaySignupCount });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DASHBOARD.SUCCESS.FETCH_TODAY_SIGNUP_COUNT,
+        todaySignupCount,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -60,14 +79,19 @@ export class DashboardController implements IDashboardController {
     try {
       const count =
         await this._dashboardService.getPendingOperatorsCountService();
-      res.status(StatusCode.OK).json({ success: true, count });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DASHBOARD.SUCCESS.FETCH_PENDING_OPERATORS_COUNT,
+        count,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
 
   //operator
-   getOperatorDashboardData = async (
+  getOperatorDashboardData = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -78,10 +102,14 @@ export class DashboardController implements IDashboardController {
         await this._dashboardService.getOperatorDashboardStatsService(
           operatorId,
         );
-      res.status(StatusCode.OK).json(dashboardData);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.DASHBOARD.SUCCESS.FETCH_OPERATORS_DATA,
+        dashboardData,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
-
 }

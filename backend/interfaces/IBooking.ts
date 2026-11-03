@@ -1,7 +1,7 @@
+import { HydratedDocument, Types } from "mongoose";
+import { BookingStatus, IBookingDocument } from "../models/Booking";
 import { Ipackage } from "../models/Package";
-import { IBooking } from "./IBookingRepository";
 import { IUser } from "./IUser";
-import { HydratedDocument } from "mongoose";
 
 export interface IOperatorBookingFilter {
   operatorId: string;
@@ -17,9 +17,21 @@ export interface IOperatorBookingStats {
 }
 
 export interface IOperatorBookingDetails extends Omit<
-  IBooking,
+  IBookingDocument,
   "packageId" | "userId"
 > {
-  packageId: HydratedDocument<Ipackage>;
-  userId: HydratedDocument<IUser>;
+  packageId: HydratedDocument<Ipackage> | Types.ObjectId;
+  userId: HydratedDocument<IUser> | Types.ObjectId;
+}
+
+export interface IBookingStatusBreakDown {
+  status: BookingStatus;
+  count: number;
+}
+
+export interface IMonthlyRevenue {
+  year: number;
+  month: number;
+  totalRevenue: number;
+  totalBookings: number;
 }

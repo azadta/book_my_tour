@@ -4,6 +4,7 @@ import {
   AvailalbleCouponsMapperInput,
   CouponResponseDTO,
   ValidateCouponResponseDTO,
+  ValidateCouponResponseInput,
 } from "../../dto/coupon/couponResponseDTO";
 
 export class CouponResponseMapper {
@@ -41,7 +42,7 @@ export class CouponResponseMapper {
     };
   }
 
-  static toValidateCouponResponseDTO(data: any): ValidateCouponResponseDTO {
+  static toValidateCouponResponseDTO(data: ValidateCouponResponseInput): ValidateCouponResponseDTO {
     return {
       discountAmount: data?.discountAmount,
       finalPrice: data?.finalPrice,

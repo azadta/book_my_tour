@@ -1,4 +1,5 @@
 import { IWishlistGroup } from "../../../interfaces/IWishList";
+import { IDestinationSummaryDTO } from "../package/packageRequestDTO";
 import { PackageWithDestinations } from "../package/packageResponseDTO";
 
 export interface WishlistPackageResponseDTO {
@@ -9,7 +10,7 @@ export interface WishlistPackageResponseDTO {
   duration?: { day: number; night: number };
   images: string[];
   category?: string;
-  destinations?: any[];
+  destinations?: IDestinationSummaryDTO[]|string[];
 
   availableSlots: string;
 }

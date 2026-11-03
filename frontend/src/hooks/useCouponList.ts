@@ -14,8 +14,8 @@ export const useCouponList = (page: number, limit: number) => {
       const res = await axiosInstance.get(
         `${APP_ROUTES.COUPONS.OPERATOR.LIST}?page=${page}&limit=${limit}`,
       );
-      setCoupons(res.data.coupons || []);
-      setTotalCount(res.data.totalCount || 0);
+      setCoupons(res.data.result.coupons || []);
+      setTotalCount(res.data.result.totalCount || 0);
     } finally {
       setLoading(false);
     }

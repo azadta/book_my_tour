@@ -1,15 +1,13 @@
 import { inject, injectable } from "inversify";
-import { IPayoutService } from "../interfaces/IPayoutService";
-import { Types } from "../types/types";
-import type { IPayoutRepository } from "../interfaces/IPayoutRepository";
-import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
-import type { IPaymentService } from "../interfaces/IPaymentService";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
+import type { IOperatorRepository } from "../interfaces/IOperatorRepository";
+import type { IPaymentService } from "../interfaces/IPaymentService";
+import { PayoutWithPopulatedDetails } from "../interfaces/IPayout";
+import type { IPayoutRepository } from "../interfaces/IPayoutRepository";
+import { IPayoutService } from "../interfaces/IPayoutService";
+import { Types } from "../types/types";
 import { CustomError } from "../utils/customError";
-import { PayoutRepository } from "../repositories/payoutRepository";
-import { HydratedDocument } from "mongoose";
-import { IPayoutDocument } from "../models/Payout";
 
 @injectable()
 export class PayoutService implements IPayoutService {
@@ -20,14 +18,14 @@ export class PayoutService implements IPayoutService {
     private _operatorRepository: IOperatorRepository,
     @inject(Types.PaymentService) private _paymentService: IPaymentService,
   ) {}
-  async sincAndFetchEligiblePayouts(): Promise<IPayoutDocument[]> {
+  async sincAndFetchEligiblePayouts(): Promise<PayoutWithPopulatedDetails[]> {
     const pendingPayouts =
       await this._payoutRepository.fetchPayoutsByStatus("PENDING");
 
     const now = new Date();
     const eligibleIds: string[] = [];
     for (const payout of pendingPayouts) {
-      const booking: any = payout.bookingId;
+      const booking = payout.bookingId;
       const pkg = booking?.packageId;
       if (
         booking &&

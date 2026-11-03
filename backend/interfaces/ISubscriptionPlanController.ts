@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { ISubscriptionPlan } from "../models/SubscriptionPlan";
 
 export interface ISubscriptionPlanController {
   createPlan: (

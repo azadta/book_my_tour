@@ -1,12 +1,10 @@
-import { inject, injectable } from "inversify";
-import { IPackageDestinationController } from "../interfaces/IPackageDestinationController";
-import { Types } from "../types/types";
-import type { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
 import { NextFunction, Request, Response } from "express";
-import { PackageDestinationRequestMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationRequestMapper";
-import { StatusCode } from "../constants/statusCodeConstants";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import { PackageDestinationResponseMapper } from "../dto-mapping/mapper/package-destination/PackageDestinationResponseMapper";
+import { StatusCode } from "../constants/statusCodeConstants";
+import { IPackageDestinationController } from "../interfaces/IPackageDestinationController";
+import type { IPackageDestinationService } from "../interfaces/IPackageDestinationService";
+import { Types } from "../types/types";
 import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()

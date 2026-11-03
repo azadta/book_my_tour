@@ -16,7 +16,7 @@ export const useAdminPayout = () => {
     try {
       setLoading(true);
       const { data } = await axiosInstance.get(APP_ROUTES.PAYOUT.LIST);
-      setPayouts(data.data);
+      setPayouts(data.result);
     } catch (error: any) {
       const message =
         error.response?.data?.message || FEEDBACK_MESSAGES.PAYOUT.ERROR.FETCH;
@@ -41,7 +41,7 @@ export const useAdminPayout = () => {
         keyId,
         operatorName,
         payoutDescription,
-      } = response.data;
+      } = response.result;
 
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {

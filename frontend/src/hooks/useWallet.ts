@@ -23,9 +23,9 @@ export const useWallet = (limit: number = 5) => {
         `${APP_ROUTES.WALLETS.USER.LIST}?page=${page}&limit=${limit}`,
       );
 
-      setBalance(data.balance);
-      setTransactions(data.transactions);
-      setTotalPages(data.totalPages);
+      setBalance(data.result.balance);
+      setTransactions(data.result.transactions);
+      setTotalPages(data.result.totalPages);
     } catch (error: any) {
       const message =
         error.response?.data?.message || FEEDBACK_MESSAGES.WALLET.ERROR.FETCH;
@@ -50,7 +50,7 @@ export const useWallet = (limit: number = 5) => {
       const { data } = await axiosInstance.post(APP_ROUTES.WALLETS.USER.TOPUP, {
         amount: amountToTopup,
       });
-      const { orderId, amount, currency, keyId } = data;
+      const { orderId, amount, currency, keyId } = data.result;
       const options = {
         key: keyId,
         amount,

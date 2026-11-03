@@ -1,12 +1,7 @@
-import { HydratedDocument } from "mongoose";
 
 import {
-  LoginAdminRequestDTO,
-  ResetAdminPasswordAuthenticatedRequestDTO,
-  UpdateAdminProfileImageRequestDTO,
-  UpdateAdminRequestDTO,
+  ResetAdminPasswordAuthenticatedRequestDTO
 } from "../dto-mapping/dto/admin/adminRequestDTO";
-import { IAdmin, IAdminResponse } from "./IAdmin";
 import { AdminResponseDTO } from "../dto-mapping/dto/admin/adminResponseDTO";
 
 export interface IAdminService {

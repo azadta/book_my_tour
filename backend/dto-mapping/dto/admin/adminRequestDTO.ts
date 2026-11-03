@@ -16,7 +16,7 @@ export interface LoginAdminRequestDTO {
 export interface UpdateAdminRequestDTO {
   name?: string;
   password?: string;
-  mobile?: string;
+  mobile?:number;
   address?: AddressDTO;
 }
 
@@ -74,7 +74,7 @@ export interface ResetAdminPasswordAuthenticatedBody {
 export interface UpdateAdminBody {
   name?: string;
   password?: string;
-  mobile?: string;
+  mobile?: number;
   address?: AddressDTO;
 }
 

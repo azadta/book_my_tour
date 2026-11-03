@@ -331,8 +331,8 @@ const PackagesList = () => {
           {packages.length > 0 ? (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 px-1 relative  ">
               {(loadingCategories || loadingPackages) && <Loading />}
-              {packages.map((pkg) => {
-                const isSavedAnywhere = wishlistGroups.some((g) =>
+              {packages?.map((pkg) => {
+                const isSavedAnywhere = wishlistGroups?.some((g) =>
                   g.packages.some((p: any) => {
                     const id = typeof p === "string" ? p : p._id;
                     return id === pkg._id;

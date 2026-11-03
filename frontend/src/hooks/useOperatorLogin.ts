@@ -24,12 +24,12 @@ export const useOperatorLogin = (
         withCredentials: true,
       });
 
-      if (!res.data.isVerified) {
+      if (!res.data.result.isVerified) {
         toast.warning(FEEDBACK_MESSAGES.OPERATOR.ERROR.NOT_VERIFIED);
         dispatch(operatorLoginFailure("Not verified"));
         return;
       }
-      dispatch(operatorLoginSuccess(res.data));
+      dispatch(operatorLoginSuccess(res.data.result));
 
       navigate("/operator/dashboard", { replace: true });
     } catch (error: any) {

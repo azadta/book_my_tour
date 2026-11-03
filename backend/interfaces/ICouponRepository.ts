@@ -7,8 +7,14 @@ export interface ICouponRepository extends IBaseRepository<ICouponDocument> {
   findBankOffersByBin(bin: string): Promise<ICouponDocument[]>;
   findAllCoupons(
     page: number,
-    limit:number
+    limit: number,
   ): Promise<{ coupons: ICouponDocument[]; totalCount: number }>;
   toggleStatus(id: string, isActive: boolean): Promise<ICouponDocument | null>;
-  updateCouponById(id: string, updatePayload: any): Promise<ICouponDocument | null>
+  updateCouponById(
+    id: string,
+    updatePayload: {
+      $set: Partial<ICouponDocument>;
+      $unset: Record<string, string>;
+    },
+  ): Promise<ICouponDocument | null>;
 }

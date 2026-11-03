@@ -9,7 +9,7 @@ import { IUserController } from "../interfaces/IUserController";
 import type { IUserService } from "../interfaces/IUserService";
 import { Types } from "../types/types";
 import { logger } from "../utils/logger";
-
+import { sendSuccessResponse } from "../utils/apiResponse";
 
 @injectable()
 export class UserController implements IUserController {
@@ -22,11 +22,12 @@ export class UserController implements IUserController {
         action: "REGISTER",
       });
       const result = await this._userService.registerUser(req.body);
-      res.status(StatusCode.CREATED).json({
-        success: true,
-        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
-        ...result,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_SENT_EMAIL,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -36,10 +37,12 @@ export class UserController implements IUserController {
     try {
       const { userId, otp } = req.body;
       await this._userService.verifyUserOtp({ userId, otp });
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_VERIFIED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -49,11 +52,12 @@ export class UserController implements IUserController {
     try {
       const { userId } = req.body;
       const data = await this._userService.resendUserOtp(userId);
-      res.status(StatusCode.OK).json({
-        success: true,
-        message: RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_RESENT_EMAIL,
-        ...data,
-      });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.AUTH.SUCCESS.OTP_RESENT_EMAIL,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -79,7 +83,12 @@ export class UserController implements IUserController {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
       });
-      res.status(StatusCode.OK).json(userData);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.LOGGED_IN,
+        userData,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -98,7 +107,12 @@ export class UserController implements IUserController {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE),
       });
-      res.status(StatusCode.OK).json(user);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.LOGGED_IN,
+        user,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -106,8 +120,15 @@ export class UserController implements IUserController {
 
   forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await this._userService.forgotPasswordService(req.body.email);
-      res.status(StatusCode.OK).json(data);
+      const data = await this._userService.forgotPasswordService(
+        req.body.email,
+      );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.OTP_SENT,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -119,7 +140,12 @@ export class UserController implements IUserController {
         req.params.token as string,
         req.body.newPassword,
       );
-      res.status(StatusCode.OK).json(data);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.RESET_PASSWORD,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -129,7 +155,12 @@ export class UserController implements IUserController {
     try {
       res.clearCookie("access_token").clearCookie("refresh_token");
       const result = this._userService.userLogoutService();
-      res.status(StatusCode.OK).json(result);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.LOGGED_OUT,
+        result,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -159,7 +190,12 @@ export class UserController implements IUserController {
       }
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = updatedUser.toObject();
-      res.status(StatusCode.OK).json(rest);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.UPDATE,
+        rest,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -174,9 +210,12 @@ export class UserController implements IUserController {
     try {
       await this._userService.deleteUserService(req.params.id as string);
       res.clearCookie("access_token");
-      res
-        .status(StatusCode.OK)
-        .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -193,7 +232,12 @@ export class UserController implements IUserController {
         req.user!.id,
         image,
       );
-      res.status(StatusCode.OK).json(user);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.UPDATE_PROFILE_IMAGE,
+        user,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -210,13 +254,17 @@ export class UserController implements IUserController {
         req.body.newPassword,
         req.body.confirmPassword,
       );
-      res.status(StatusCode.OK).json(data);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.RESET_PASSWORD,
+        data,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
   };
 
-  //admin
   getPaginatedUsers = async (
     req: Request,
     res: Response,
@@ -230,7 +278,12 @@ export class UserController implements IUserController {
         this._userService.getPaginatedUsersService(skip, limit),
         this._userService.getTotalUsersCount(),
       ]);
-      res.status(StatusCode.OK).json({ users, totalCount });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.FETCH_ALL,
+        { users, totalCount },
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -242,7 +295,12 @@ export class UserController implements IUserController {
         req.params.id as string,
       );
 
-      res.status(StatusCode.OK).json(user);
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.FETCH,
+        user,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }
@@ -255,7 +313,7 @@ export class UserController implements IUserController {
         req.body,
       );
 
-      res.status(StatusCode.OK).json(updated);
+      sendSuccessResponse(res, RESPONSE_MESSAGES.USER.SUCCESS.UPDATE,updated,StatusCode.OK);
     } catch (error) {
       next(error);
     }
@@ -269,16 +327,14 @@ export class UserController implements IUserController {
         targetUserId: req.params.id,
         adminId: req.user?.id,
       });
-      const blocked = await this._userService.blockUserService(
+      const blockedUser = await this._userService.blockUserService(
         req.params.id as string,
         req.body.isBlocked,
       );
-      res.status(StatusCode.OK).json({
-        message: req.body.isBlocked
-          ? RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED
-          : RESPONSE_MESSAGES.USER.SUCCESS.UNBLOCKED,
-        user: blocked,
-      });
+      const message = req.body.isBlocked
+        ? RESPONSE_MESSAGES.USER.SUCCESS.BLOCKED
+        : RESPONSE_MESSAGES.USER.SUCCESS.UNBLOCKED;
+      sendSuccessResponse(res, message, blockedUser, StatusCode.OK);
     } catch (error) {
       next(error);
     }
@@ -287,9 +343,12 @@ export class UserController implements IUserController {
   adminDeleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await this._userService.deleteUserService(req.params.id as string);
-      res
-        .status(StatusCode.OK)
-        .json({ message: RESPONSE_MESSAGES.USER.SUCCESS.DELETED });
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.USER.SUCCESS.DELETED,
+        undefined,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

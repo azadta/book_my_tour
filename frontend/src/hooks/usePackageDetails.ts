@@ -30,8 +30,8 @@ export const usePackageDetails = (packageId: string) => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGES.USER.DETAIL(packageId),
       );
-
-      setPkg(data);
+     console.log('packageData:',data.result)
+      setPkg(data.result);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
     } finally {
@@ -46,8 +46,8 @@ export const usePackageDetails = (packageId: string) => {
         APP_ROUTES.PACKAGE_REVIEWS.PUBLIC.LIST_BY_PACKAGE_ID(packageId),
       );
 
-      setReviews(data.reviews);
-      setReviewStats(data.stats);
+      setReviews(data.result.reviews);
+      setReviewStats(data.result.stats);
     } catch (error) {
       console.error(FEEDBACK_MESSAGES.REVIEWS.ERROR, error);
     } finally {

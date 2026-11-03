@@ -38,7 +38,7 @@ export const useOperatorOtp = ({
         operatorId,
       });
       setOtp("");
-      setOtpExpire(Number(data.otpExpire));
+      setOtpExpire(Number(data.result.otpExpire));
       setError(null);
     } catch (error: any) {
       setError(error.response?.data?.message || error.message);

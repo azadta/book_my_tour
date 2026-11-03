@@ -8,7 +8,7 @@ export const useAdminUserActions = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get(APP_ROUTES.USERS.ADMIN.DETAIL(id));
-      return res.data;
+      return res.data.result;
     } finally {
       setLoading(false);
     }

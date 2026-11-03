@@ -78,8 +78,6 @@ export class AdminController implements IAdminController {
         req.body,
       );
 
-      //eslint-disable-next-line @typescript-eslint/no-unused-vars
-
       sendSuccessResponse(
         res,
         RESPONSE_MESSAGES.ADMIN.SUCCESS.UPDATE,
@@ -101,7 +99,6 @@ export class AdminController implements IAdminController {
         req.user!.id,
         req.body,
       );
-      //eslint-disable-next-line @typescript-eslint/no-unused-vars
 
       sendSuccessResponse(
         res,

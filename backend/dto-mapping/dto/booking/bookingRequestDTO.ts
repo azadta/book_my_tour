@@ -1,3 +1,5 @@
+import { AttendanceStatus } from "../../../models/Booking";
+
 export interface CancelBookingRequestDTO {
   reason: string;
 }
@@ -34,7 +36,10 @@ export interface VerifyPaymentRequestDTO {
 }
 
 export interface UpdateAttendanceRequestDTO {
-  attendance: string;
+  attendance: AttendanceStatus;
+}
+export interface UpdateAttendanceRequestInput {
+  attendance: AttendanceStatus;
 }
 
 export interface OperatorCancelBookingRequestDTO {
@@ -46,6 +51,10 @@ export interface OperatorRescheduleBookingRequestDTO {
 }
 
 export interface VerifyCancellationRequestDTO {
+  action: "APPROVE" | "REJECT";
+  operatorNotes?: string;
+}
+export interface VerifyCancellationRequestInput {
   action: "APPROVE" | "REJECT";
   operatorNotes?: string;
 }
@@ -80,7 +89,7 @@ export interface toOperatorReschuduleBookingBody {
 }
 
 export interface UpdateAttendanceBody {
-  attendance: string;
+  attendance: AttendanceStatus;
 }
 
 export interface toVerifyCancellationBody {

@@ -17,7 +17,7 @@ export const useSharedWishlist = ({ shareToken }: { shareToken: string }) => {
         APP_ROUTES.WISHLISTS.PUBLIC.SHARED(shareToken),
       );
     
-      setWishlistGroup(data.data);
+      setWishlistGroup(data.result);
     } catch (error: any) {
       setError(
         error.response?.data?.message ||

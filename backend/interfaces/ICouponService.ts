@@ -1,16 +1,12 @@
 import {
   createCouponInput,
-  createCouponRequestDTO,
-  updateCouponRequestDTO,
-  ValidateCouponBody,
-  ValidateCouponRequestDTO,
+  ValidateCouponBody
 } from "../dto-mapping/dto/coupon/couponRequestDTO";
 import {
   AvailableCouponsResponseDTO,
   CouponResponseDTO,
   ValidateCouponResponseDTO,
 } from "../dto-mapping/dto/coupon/couponResponseDTO";
-import { ICouponDocument } from "../models/Coupon";
 
 export interface ICouponService {
   getCouponById(id: string): Promise<CouponResponseDTO>;

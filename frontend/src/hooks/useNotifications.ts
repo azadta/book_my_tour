@@ -30,13 +30,12 @@ export const useNotifications = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get<{
-        notifications: INotification[];
-        unreadCount: number;
+        result: { notifications: INotification[]; unreadCount: number };
       }>(APP_ROUTES.NOTIFICATIONS.ANY.USER_NOTIFICATIONS);
       dispatch(
         setNotifications({
-          notifications: response.data.notifications || [],
-          unreadCount: response.data.unreadCount || 0,
+          notifications: response.data.result.notifications || [],
+          unreadCount: response.data.result.unreadCount || 0,
         }),
       );
     } catch (error: any) {
@@ -76,11 +75,11 @@ export const useNotifications = () => {
       try {
         const response = await axiosInstance.post<{
           message: string;
-          data: INotification;
+          result: INotification;
         }>(APP_ROUTES.NOTIFICATIONS.ANY.CREATE, data);
         toast.success(FEEDBACK_MESSAGES.NOTIFICATIONS.SUCCESS.SEND);
 
-        return response.data.data;
+        return response.data.result;
       } catch (error: any) {
         const message =
           error.response?.data?.message ||
@@ -124,7 +123,6 @@ export const useNotifications = () => {
     const socket = getSocket();
     const handleNewNotification = (notification: INotification) => {
       dispatch(addNotification(notification));
-   
     };
     socket.on("new_notification", handleNewNotification);
     return () => {

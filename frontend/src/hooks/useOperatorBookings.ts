@@ -26,7 +26,7 @@ export const useOperatorBookings = (
       ]);
       setBookings(bookingRes.data.result.bookings || []);
       setTotalCount(bookingRes.data.result.totalCount || 0);
-      setPendingCancelCount(statsRes.data.cancelRequestedBookings || 0);
+      setPendingCancelCount(statsRes.data.result.cancelRequestedBookings || 0);
     } catch (error: any) {
       const message =
         error.response?.data?.message ||

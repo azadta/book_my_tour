@@ -1,18 +1,16 @@
-import { inject, injectable } from "inversify";
-import { IBookingController } from "../interfaces/IBookingController";
-import { Types } from "../types/types";
-import type { IBookingService } from "../interfaces/IBookingService";
 import { NextFunction, Request, Response } from "express";
-import { StatusCode } from "../constants/statusCodeConstants";
-import { BookingResponseMapper } from "../dto-mapping/mapper/booking/BookingResponseMapper";
-import { BookingRequestMapper } from "../dto-mapping/mapper/booking/BookingRequestMapper";
+import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
-import { CustomError } from "../utils/customError";
-import { sendSuccessResponse } from "../utils/apiResponse";
+import { StatusCode } from "../constants/statusCodeConstants";
 import {
   BookingResponseDTO,
   OperatorBookingListResponseDTO,
 } from "../dto-mapping/dto/booking/bookingResponseDTO";
+import { IBookingController } from "../interfaces/IBookingController";
+import type { IBookingService } from "../interfaces/IBookingService";
+import { Types } from "../types/types";
+import { sendSuccessResponse } from "../utils/apiResponse";
+import { CustomError } from "../utils/customError";
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -259,17 +257,10 @@ export class BookingController implements IBookingController {
     try {
       const userId = req.user?.id as string;
 
-      const result = await this._bookingService.verifyAndConfirmBooking(
-        userId,
-        req.body,
-      );
+      const { message, bookingId } =
+        await this._bookingService.verifyAndConfirmBooking(userId, req.body);
 
-      sendSuccessResponse(
-        res,
-        RESPONSE_MESSAGES.BOOKING.SUCCESS.CONFIRM,
-        result,
-        StatusCode.OK,
-      );
+      sendSuccessResponse(res, message, bookingId, StatusCode.OK);
     } catch (error) {
       next(error);
     }

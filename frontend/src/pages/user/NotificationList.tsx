@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { RootState } from "@/redux/store";
 import { Bell, CheckCheck, CheckCircle2, Clock, Inbox, Trash2 } from "lucide-react";
@@ -22,7 +23,7 @@ const NotificationList = () => {
   useEffect(() => {
     fetchNotifications();
   }, []);
-  if (loading) return <div>Loading notifications...</div>;
+  if (loading) return <Loading/>
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row  sm:items-center justify-between gap-4  mb-8">

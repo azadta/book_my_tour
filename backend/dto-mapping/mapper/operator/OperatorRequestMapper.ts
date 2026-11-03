@@ -5,7 +5,6 @@ import {
   IOperatorLoginRequestDTO,
   IOperatorRegisterInput,
   IOperatorRegisterRequestDTO,
-  IOperatorResetPasswordRequestDTO,
   IOperatorVerificationDetailsDTO,
   IOperatorVerificationDetailsInput,
   IResetOperatorPasswordAuthenticatedInput,
@@ -13,7 +12,7 @@ import {
   IUpdateOperatorProfileInput,
   IUpdateOperatorProfileRequestDTO,
   IVerifyOperatorOtpInput,
-  IVerifyOperatorOtpRequestDTO,
+  IVerifyOperatorOtpRequestDTO
 } from "../../dto/operator/operatorRequestDTO";
 
 export class OperatorRequestMapper {

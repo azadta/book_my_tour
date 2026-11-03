@@ -16,7 +16,7 @@ export interface IWalletRepository extends IBaseRepository<IWalletDocument> {
   deductBalance(
     userId: string,
     amount: number,
-    transaction: IWalletTransaction,
+    transaction: CreateWalletTransactionDTO,
   ): Promise<IWalletDocument | null>;
   getPaginatedWallet(
     userId: string,
@@ -29,6 +29,6 @@ export interface IWalletRepository extends IBaseRepository<IWalletDocument> {
   }>;
   addCreditTransaction(
     userId: string,
-    transaction: IWalletTransaction,
+    transaction: CreateWalletTransactionDTO,
   ): Promise<IWalletDocument | null>;
 }

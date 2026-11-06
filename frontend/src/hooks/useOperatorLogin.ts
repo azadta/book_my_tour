@@ -11,18 +11,23 @@ import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 export const useOperatorLogin = (
   dispatch: AppDispatch,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
 ) => {
-    const [fieldError, setFieldError] = useState<Record<string, string>>({});
-  const login= async (formData: { email: string; password: string }) => {
+  const [fieldError, setFieldError] = useState<Record<string, string>>({});
+  const login = async (formData: { email: string; password: string }) => {
     try {
       dispatch(operatorLoginStart());
-      const res = await axiosInstance.post(APP_ROUTES.OPERATORS.OPERATOR.LOGIN, formData, {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.post(
+        APP_ROUTES.OPERATORS.OPERATOR.LOGIN,
+        formData,
+        {
+          withCredentials: true,
+        },
+      );
 
       if (!res.data.result.isVerified) {
         toast.warning(FEEDBACK_MESSAGES.OPERATOR.ERROR.NOT_VERIFIED);
@@ -32,17 +37,11 @@ export const useOperatorLogin = (
       dispatch(operatorLoginSuccess(res.data.result));
 
       navigate("/operator/dashboard", { replace: true });
-    } catch (error: any) {
-         if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
-      }
-      const errmsg =
-        error.response?.data?.message || FEEDBACK_MESSAGES.AUTH.ERROR.LOGIN;
-      toast.error(errmsg);
-      dispatch(operatorLoginFailure(errmsg));
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(operatorLoginFailure(errorMessage));
     }
   };
 
-  return {login,fieldError,setFieldError}
+  return { login, fieldError, setFieldError };
 };

@@ -1,10 +1,11 @@
+import type { IPopulatedBooking } from "@/interfaces/interfaces";
 import { Bell, Send, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ISendNotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedBooking: any;
+  selectedBooking: IPopulatedBooking | null;
   onSend: (title: string, message: string) => Promise<boolean>;
 }
 

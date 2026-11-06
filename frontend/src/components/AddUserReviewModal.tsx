@@ -1,13 +1,14 @@
 import { reviewFields } from "@/formConfig/fields";
-import type { IReviewItem } from "@/interfaces/interfaces";
+
 import { Star, X } from "lucide-react";
 import { useState } from "react";
 import ReUsableForm from "./forms/ReUsableForm";
+import type { IReviewItem, ReviewFormData } from "@/interfaces/IReview";
 
 interface AddReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: any) => Promise<void>;
+  onSubmit: (formData: ReviewFormData) => Promise<void>;
   loading: boolean;
   initialData: IReviewItem | undefined;
 }
@@ -19,7 +20,7 @@ const AddUserReviewModal: React.FC<AddReviewModalProps> = ({
   onSubmit,
   initialData,
 }) => {
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<ReviewFormData>({
     rating: 5,
     "categoryRatings.guide": 5,
     "categoryRatings.value": 5,
@@ -46,7 +47,7 @@ const AddUserReviewModal: React.FC<AddReviewModalProps> = ({
               type="button"
               key={star}
               onClick={() =>
-                setFormData((prev: any) => ({ ...prev, rating: star }))
+                setFormData((prev) => ({ ...prev, rating: star }))
               }
               className="p-1 transition-transform cursor-pointer active:scale-90"
             >
@@ -102,7 +103,7 @@ const AddUserReviewModal: React.FC<AddReviewModalProps> = ({
                     type="button"
                     key={val}
                     onClick={() =>
-                      setFormData((prev: any) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         [`categoryRatings.${key}`]: val,
                       }))

@@ -1,32 +1,35 @@
 import { Country, State, type IState } from "country-state-city";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { flattenObjects } from "../../../../backend/utils/flattenObject";
 import type {
+  BaseFormData,
   FormField,
   IActivity,
   IOptionalActivity,
 } from "../../interfaces/interfaces";
 import type { ItineraryDay } from "../itinerary/types";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
 
-interface ReUsableFormProps {
+interface ReUsableFormProps<T extends BaseFormData, TInitialData = T> {
   heading: string;
-  formData: FormData;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  formData: T;
+  setFormData: React.Dispatch<React.SetStateAction<T>>;
   fields: FormField[];
-  onSubmit: (formData: any) => void;
+  onSubmit: (formData: T) => void;
   loading: boolean;
   buttonText: string;
-  initialData?: FormData;
+  initialData?: TInitialData;
   fieldError: Record<string, string>;
   setFieldError: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   renderAfterFields?: React.ReactNode;
 }
-interface FormData {
-  [key: string]: any;
+
+
+interface InitialDataWithImages {
+  images: string[];
 }
 
-const ReUsableForm = ({
+const ReUsableForm = <T extends BaseFormData, TInitialData = T>({
   heading,
   formData,
   setFormData,
@@ -38,8 +41,7 @@ const ReUsableForm = ({
   fieldError,
   setFieldError,
   renderAfterFields,
-}: ReUsableFormProps) => {
-
+}: ReUsableFormProps<T, TInitialData>) => {
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
   const [showPasswordMap, setShowPasswordMap] = useState<
@@ -51,22 +53,36 @@ const ReUsableForm = ({
   const togglePasswordVisibility = (fieldId: string) => {
     setShowPasswordMap((prev) => ({ ...prev, [fieldId]: !prev[fieldId] }));
   };
-  const formatDateForInput = (val: any) => {
+  const formatDateForInput = (val: unknown) => {
     if (!val) return "";
-    const date = new Date(val);
-    if (isNaN(date.getTime())) return "";
-    return date.toISOString().split("T")[0];
+    if (
+      typeof val === "string" ||
+      typeof val === "number" ||
+      val instanceof Date
+    ) {
+      const date = new Date(val);
+      if (isNaN(date.getTime())) return "";
+      return date.toISOString().split("T")[0];
+    }
+    return "";
   };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { id, type, value, files, multiple, checked } = e.target as any;
+    const target = e.target;
+    const id = target.id;
+    const type = target.type;
+    const isInput = target instanceof HTMLInputElement;
+    const files = isInput ? target.files : null;
+    const multiple = isInput ? target.multiple : false;
+    const checked = isInput ? target.checked : false;
+    const value = target.value;
     if (type === "file") {
       const selectedFiles = files ? [...files] : [];
       setFormData((prev) => ({
         ...prev,
         [id]: multiple
-          ? [...(prev[id] || []), ...selectedFiles]
+          ? [...(Array.isArray(prev[id]) ? prev[id] : []), ...selectedFiles]
           : selectedFiles?.[0],
       }));
 
@@ -90,17 +106,15 @@ const ReUsableForm = ({
     const newErrors: Record<string, string> = {};
     fields.map((field) => {
       if (field.required) {
-        if (
-          !formData[field.id] ||
-          (Array.isArray(formData[field.id]) && formData[field.id].length === 0)
-        ) {
+        const value = formData[field.id];
+        if (!value || (Array.isArray(value) && value.length === 0)) {
           newErrors[field.id] = `${field.label || field.id} is required`;
         }
       }
     });
 
-    const itineraryData: ItineraryDay[] = formData.itinerary || [];
-    if (itineraryData) {
+    const itineraryData = formData.itinerary;
+    if (Array.isArray(itineraryData)) {
       itineraryData.forEach((day: ItineraryDay, dayIndex: number) => {
         if (!day.gallery || day.gallery.length < 4) {
           newErrors[`itinerary.${dayIndex}.gallery`] =
@@ -258,7 +272,7 @@ const ReUsableForm = ({
 
   useEffect(() => {
     if (initialData) {
-      setFormData(flattenObjects(initialData));
+      setFormData(flattenObjects(initialData) as T);
     }
   }, [initialData, setFormData]);
   useEffect(() => {
@@ -279,9 +293,17 @@ const ReUsableForm = ({
       setStates(State.getStatesOfCountry(country.isoCode));
     }
   }, [formData, fields]);
+  const hasImages = (data: unknown): data is InitialDataWithImages => {
+    return (
+      typeof data === "object" &&
+      data !== null &&
+      "images" in data &&
+      Array.isArray(data.images)
+    );
+  };
 
   useEffect(() => {
-    if (initialData?.images)
+    if (hasImages(initialData))
       setImagePreviews((prev) => ({ ...prev, images: initialData.images }));
   }, [initialData]);
 
@@ -336,7 +358,7 @@ const ReUsableForm = ({
                         [field.id]: e.target.value,
                       }))
                     }
-                    value={formData[field.id] ?? ""}
+                    value={String(formData[field.id] ?? "")}
                     className={`w-full bg-white px-5 py-4 rounded-[20px] shadow-[0px_10px_10px_5px_#cff0ff] border-none focus:outline-none `}
                     disabled={!countryCode}
                   >
@@ -372,8 +394,8 @@ const ReUsableForm = ({
                     }}
                     value={
                       field.multiple
-                        ? (formData[field.id] ?? [])
-                        : (formData[field.id] ?? "")
+                        ? String(formData[field.id] ?? [])
+                        : String(formData[field.id] ?? "")
                     }
                     className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${field.multiple ? "min-h-[100px]" : ""}`}
                     disabled={field.disabled}
@@ -405,7 +427,7 @@ const ReUsableForm = ({
                 <input
                   id={field.id}
                   type="checkbox"
-                  checked={formData[field.id] || false}
+                  checked={Boolean(formData[field.id]) || false}
                   onChange={handleChange}
                 />
                 <label htmlFor={field.id}>
@@ -430,7 +452,7 @@ const ReUsableForm = ({
                   key={field.id}
                   id={field.id}
                   placeholder={field.placeholder || field.label}
-                  value={formData[field.id] || ""}
+                  value={String(formData[field.id]) || ""}
                   onChange={(e) => {
                     setFormData((prev) => ({
                       ...prev,
@@ -462,7 +484,7 @@ const ReUsableForm = ({
           const inputValue =
             field.type === "date"
               ? formatDateForInput(formData[field.id])
-              : formData[field.id] || "";
+              : String(formData[field.id] ?? "");
 
           return (
             <div key={field.id} className="flex flex-col ">

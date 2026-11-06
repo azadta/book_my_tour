@@ -1,17 +1,21 @@
 import { useState } from "react";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createPackageCategoryFields } from "../../formConfig/fields";
-import { useCreatePackageCategory } from "../../hooks/useCreatePackageCategory";
+import { useCreatePackageCategory, type ICategoryForm } from "../../hooks/useCreatePackageCategory";
 
+ const initialCategory ={
+  name: '',
+  description: ''
+}
 const CreatePackageCategory = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<ICategoryForm>(initialCategory);
   const { createPackageCategory, fieldError, setFieldError } =
     useCreatePackageCategory();
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: ICategoryForm) => {
     try {
       await createPackageCategory(formData);
-      setFormData({});
+      setFormData(initialCategory);
     } catch (error) {
       console.error(error);
     }

@@ -1,23 +1,25 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useAdminUserActions } from "../../hooks/useAdminUserActions";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
-import ReUsableForm from "../../components/forms/ReUsableForm";
-import { adminUpdateUserFields } from "../../formConfig/fields";
-import ConfirmationModel from "../../components/ConfirmationModal";
-import BackToDashboard from "../../components/BackToDashboard";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
+import ConfirmationModel from "../../components/ConfirmationModal";
+import ReUsableForm from "../../components/forms/ReUsableForm";
+import { adminUpdateUserFields } from "../../formConfig/fields";
+import { useAdminUserActions } from "../../hooks/useAdminUserActions";
+
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { IUser } from "@/interfaces/IUser";
 
 const EditUser = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { fetchUser, blockUser, deleteUser, loading, updateUser } =
     useAdminUserActions();
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<IUser|null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => void>(() => () => {});
@@ -27,14 +29,14 @@ const EditUser = () => {
       try {
         const data = await fetchUser(id);
         setData(data);
-      } catch (error: any) {
-        toast.error(error.response?.data?.message || error.message);
+      } catch (error:unknown) {
+        handleApiError(error,{setFieldError})
       }
     };
     getUser();
   }, [id, fetchUser]);
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: Record<string,unknown>) => {
     if (!id) return;
     try {
       const booleanFields = [
@@ -52,12 +54,8 @@ const EditUser = () => {
       await updateUser(id, nestedData);
 
       toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.UPDATE);
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
-      }
-      toast.error(error.response?.data?.message || error.message);
+    } catch (error:unknown) {
+      handleApiError(error,{setFieldError})
     }
   };
 
@@ -65,16 +63,16 @@ const EditUser = () => {
     if (!id) return;
     try {
       setModalMessage(
-        data.isBlocked ? "Unblock this user?" : "Block this user?",
+        data?.isBlocked ? "Unblock this user?" : "Block this user?",
       );
       setModalAction(() => async () => {
-        await blockUser(id, !data.isBlocked);
+        await blockUser(id, !data?.isBlocked);
 
         navigate(FRONTEND_ROUTES.ADMIN.USERS);
       });
       setModalOpen(true);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || error.message);
+    } catch (error:unknown) {
+     handleApiError(error,{setFieldError})
     }
   };
 
@@ -88,8 +86,8 @@ const EditUser = () => {
         navigate(FRONTEND_ROUTES.ADMIN.USERS);
       });
       setModalOpen(true);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || error.message);
+    } catch (error:unknown) {
+       handleApiError(error,{setFieldError})
     }
   };
 
@@ -110,9 +108,9 @@ const EditUser = () => {
       <div className="flex gap-4 mt-4 justify-end">
         <button
           onClick={handleBlockToggle}
-          className={`px-4 py-2 text-white rounded ${data.isBlocked ? "bg-green-500" : "bg-yellow-500"}`}
+          className={`px-4 py-2 text-white rounded ${data?.isBlocked ? "bg-green-500" : "bg-yellow-500"}`}
         >
-          {data.isBlocked ? "unblock" : "block"}
+          {data?.isBlocked ? "unblock" : "block"}
         </button>
         <button
           onClick={handleDelete}

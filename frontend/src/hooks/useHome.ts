@@ -1,10 +1,10 @@
-import type { IPackage } from "@/redux/package/packageSlice";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { axiosInstance } from "../api/axiosInstance";
-import type { Destination } from "@/interfaces/interfaces";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import type { Destination } from "@/interfaces/interfaces";
+
+import type { IPackage } from "@/interfaces/IPackage";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { useCallback, useState } from "react";
+import { axiosInstance } from "../api/axiosInstance";
 
 export const useHome = () => {
   const [packages, setPackages] = useState<IPackage[]>([]);
@@ -21,54 +21,49 @@ export const useHome = () => {
   const [loadingDestinationsByCategory, setLoadingDestinationsByCategory] =
     useState(false);
 
-  const fetchDestinationsByCategory = async (category: string) => {
+  const fetchDestinationsByCategory = useCallback(async (category: string) => {
     setLoadingDestinationsByCategory(true);
     try {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGE_DESTINATIONS.PUBLIC.BY_PACKAGE_CATEGORY(category),
       );
-      console.log('data from fetchDestination:',data)
-      setDestinationsByCategory((prev) => ({ ...prev, [category]: data.result }));
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.DESTINATON.ERROR.FETCH,
-      );
+      console.log("data from fetchDestination:", data);
+      setDestinationsByCategory((prev) => ({
+        ...prev,
+        [category]: data.result,
+      }));
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoadingDestinationsByCategory(false);
     }
-  };
+  }, []);
 
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     setLoadingPackages(true);
     try {
       const { data } = await axiosInstance.get(APP_ROUTES.PACKAGES.USER.LIST);
-      
-         console.log('data from home packages',data)
+
       setPackages(data.result || []);
     } catch (error) {
-      console.error(FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH, error);
+      handleApiError(error);
     } finally {
       setLoadingPackages(false);
     }
-  };
-
-  const fetchPackagesByCategory = async (category: string) => {
+  }, []);
+  const fetchPackagesByCategory = useCallback(async (category: string) => {
     setLoadingPackagesByCategory(true);
     try {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGES.USER.BY_CATEGORY(category),
       );
       setPackagesByCategory((prev) => ({ ...prev, [category]: data.result }));
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH,
-      );
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoadingPackagesByCategory(false);
     }
-  };
-
+  }, []);
 
   return {
     fetchDestinationsByCategory,
@@ -79,6 +74,6 @@ export const useHome = () => {
     loadingDestinationsByCategory,
     loadingPackagesByCategory,
     loadingPackages,
-    fetchPackages
+    fetchPackages,
   };
 };

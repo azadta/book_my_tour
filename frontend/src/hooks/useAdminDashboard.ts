@@ -1,8 +1,7 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
-import { toast } from "react-toastify";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminDashboard = () => {
   const [usersCount, setUsersCount] = useState<number | null>(null);
@@ -31,12 +30,8 @@ export const useAdminDashboard = () => {
       setOperatorsCount(operatorsCount.data.result.operatorsCount);
       setTodaySignups(todaySignups.data.result.todaySignupCount);
       setPendingVerificationsCount(pendingVerificationsCount.data.result.count);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        error.message ||
-        FEEDBACK_MESSAGES.GLOBAL.ERROR.DASHBOARD_FETCH;
-      toast.error(message);
+    } catch (error: unknown) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }

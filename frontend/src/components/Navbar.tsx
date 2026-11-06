@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 
+import { useHome } from "@/hooks/useHome";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,9 +11,8 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "../components/ui/navigation-menu";
-import { useHome } from "@/hooks/useHome";
+import { navigationMenuTriggerStyle } from "./ui/navigation-menu-style";
 
 export function Navigation() {
   const { packages } = useHome();

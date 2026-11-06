@@ -97,25 +97,25 @@ const PackagesList = () => {
 
   useEffect(() => {
     fetchPackages(searchParams.toString());
-  }, [searchParams]);
+  }, [searchParams,fetchPackages]);
 
   useEffect(() => {
     const value = debouncedMaxBudget === 100000 ? null : debouncedMaxBudget;
     setSearchParams((prev) => {
       return updateSearchParams(prev, { maxBudget: value });
     });
-  }, [debouncedMaxBudget]);
+  }, [debouncedMaxBudget,setSearchParams]);
 
   useEffect(() => {
     const value = debouncedMaxDuration === 15 ? null : debouncedMaxDuration;
     setSearchParams((prev) => updateSearchParams(prev, { maxDuration: value }));
-  }, [debouncedMaxDuration]);
+  }, [debouncedMaxDuration,setSearchParams]);
   useEffect(() => {
     const value = debouncedSearch === "" ? null : debouncedSearch;
     setSearchParams((prev) => {
       return updateSearchParams(prev, { search: value });
     });
-  }, [debouncedSearch]);
+  }, [debouncedSearch,setSearchParams]);
   if (loadingPackages || loadingCategories) return <Loading />;
 
   return (
@@ -333,7 +333,7 @@ const PackagesList = () => {
               {(loadingCategories || loadingPackages) && <Loading />}
               {packages?.map((pkg) => {
                 const isSavedAnywhere = wishlistGroups?.some((g) =>
-                  g.packages.some((p: any) => {
+                  g.packages.some((p) => {
                     const id = typeof p === "string" ? p : p._id;
                     return id === pkg._id;
                   }),
@@ -461,7 +461,7 @@ const PackagesList = () => {
                         ) : (
                           <div className="flex items-baseline gap-1">
                             <span className="text-2xl font-black text-gray-900">
-                              Rs {(pkg?.amount).toLocaleString("en-IN")}
+                              Rs {(pkg?.amount ?? 0).toLocaleString("en-IN")}
                             </span>
                             <span className="text-xs text-gray-500 font-medium">
                               / person

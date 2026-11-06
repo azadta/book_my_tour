@@ -113,36 +113,6 @@ export interface IWishlistGroup {
   updatedAt: string;
 }
 
-export interface IReviewItem {
-  _id: string;
-  userId: { _id: string; name: string; image?: string };
-  rating: number;
-  categoryRatings: {
-    guide: number;
-    value: number;
-    itinerary: number;
-    transport: number;
-  };
-  comment: string;
-  travelerType: string;
-  createdAt: string;
-  images?: string[];
-}
-
-export interface IReviewStats {
-  totalReviews: number;
-  averageRating: number;
-  avgGuide: number;
-  avgValue: number;
-  avgItinerary: number;
-  avgTransport: number;
-  fiveStar: number;
-  fourStar: number;
-  threeStar: number;
-  twoStar: number;
-  oneStar: number;
-}
-
 export interface IAppliedCoupon {
   couponId: string;
   code: string;
@@ -295,6 +265,8 @@ export interface ISubscriptionPlan {
   packageLimit: number;
   durationDays: number;
 }
+export type SubscritptionPlanForm = Omit<ISubscriptionPlan, "_id"> &
+  BaseFormData;
 
 export interface ISubscriptionDetails {
   planId?: ISubscriptionPlan;
@@ -325,3 +297,16 @@ export interface IPopulatedPayout {
   createdAt: string;
   updatedAt: string;
 }
+export interface BaseFormData {
+  [key: string]: unknown;
+}
+
+export interface IResetPasswordForm extends BaseFormData {
+  newPassword: string;
+  confirmPassword: string;
+}
+export interface IResetPasswordAuthenticatedForm extends BaseFormData {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }

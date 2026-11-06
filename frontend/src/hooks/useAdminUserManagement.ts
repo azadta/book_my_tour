@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import type { IUser } from "../redux/user/userSlice";
+
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import type { IUser } from "@/interfaces/IUser";
 
 export const useAdminUserManagement = (page: number, limit: number) => {
   const [users, setUsers] = useState<IUser[]>([]);

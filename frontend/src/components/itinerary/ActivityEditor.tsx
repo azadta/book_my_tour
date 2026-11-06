@@ -32,10 +32,10 @@ const ActivityEditor = ({
     ]);
   };
 
-  const updateActivity = (
+  const updateActivity = <K extends keyof Activity>(
     index: number,
-    field: keyof Activity,
-    fieldValue: any,
+    field: K,
+    fieldValue: Activity[K],
   ) => {
     const updated = [...value];
     updated[index] = { ...updated[index], [field]: fieldValue };
@@ -162,7 +162,7 @@ const ActivityEditor = ({
                   }
                 }}
               />
-            
+
               <label
                 htmlFor={imageInputId}
                 className="bg-white flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-[20px] p-4 cursor-pointer hover:border-cyan-500 shadow-[0px_10px_10px_5px_#cff0ff] transition"
@@ -172,7 +172,7 @@ const ActivityEditor = ({
                   Upload Activity Image
                 </span>
               </label>
-                {fieldError[
+              {fieldError[
                 `itinerary.${dayIndex}.activities.${index}.image`
               ] && (
                 <p className="text-red-500 text-sm mt-1">

@@ -17,7 +17,7 @@ const HomeSlideTwo = () => {
   const { destinationsByCategory, fetchDestinationsByCategory,loadingDestinationsByCategory } = useHome();
   useEffect(() => {
     fetchDestinationsByCategory("Family Vacation Packages");
-  }, []);
+  }, [fetchDestinationsByCategory]);
   return (
     <div className="w-full relative">
       {loadingDestinationsByCategory&&<Loading/>}

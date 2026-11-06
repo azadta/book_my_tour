@@ -3,11 +3,17 @@ import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IWalletTransaction } from "@/interfaces/interfaces";
 import type { RootState } from "@/redux/store";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { loadRazorpayScript } from "@/utils/loadRazorpay";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
+interface RazorpayResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
 export const useWallet = (limit: number = 5) => {
   const [balance, setBalance] = useState<number>(0);
   const [transactions, setTransactions] = useState<IWalletTransaction[]>([]);
@@ -17,7 +23,7 @@ export const useWallet = (limit: number = 5) => {
   const [totalPages, setTotalPages] = useState(1);
   const { currentUser } = useSelector((state: RootState) => state.user);
 
-  const fetchWallet = async (page: number = currentPage) => {
+  const fetchWallet = useCallback(async (page: number = currentPage) => {
     try {
       const { data } = await axiosInstance.get(
         `${APP_ROUTES.WALLETS.USER.LIST}?page=${page}&limit=${limit}`,
@@ -26,13 +32,10 @@ export const useWallet = (limit: number = 5) => {
       setBalance(data.result.balance);
       setTransactions(data.result.transactions);
       setTotalPages(data.result.totalPages);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || FEEDBACK_MESSAGES.WALLET.ERROR.FETCH;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
-  };
+  },[currentPage,limit])
 
   const handleTopup = async (amountToTopup: number) => {
     if (!amountToTopup || amountToTopup <= 0) {
@@ -58,7 +61,7 @@ export const useWallet = (limit: number = 5) => {
         name: "Book My Tour",
         description: "wallet Top-up",
         order_id: orderId,
-        handler: async (response: any) => {
+        handler: async (response: RazorpayResponse) => {
           try {
             await axiosInstance.post(APP_ROUTES.WALLETS.USER.VERIFY_TOPUP, {
               razorpayOrderId: response.razorpay_order_id,
@@ -69,12 +72,8 @@ export const useWallet = (limit: number = 5) => {
             setTopupAmount("");
             setCurrentPage(1);
             fetchWallet(1);
-          } catch (error: any) {
-            const message =
-              error.response?.data?.message ||
-              FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_VERIFICATION;
-            toast.error(message);
-            console.error(message, error);
+          } catch (error) {
+            handleApiError(error);
           } finally {
             setIsLoading(false);
           }
@@ -85,14 +84,11 @@ export const useWallet = (limit: number = 5) => {
         },
         theme: { color: "#2563eb" },
       };
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const razorpayObj = new (window as any).Razorpay(options);
       razorpayObj.open();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.WALLET.ERROR.INITIATE_TOPUP;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
       setIsLoading(false);
     }
   };
@@ -100,7 +96,7 @@ export const useWallet = (limit: number = 5) => {
     if (currentUser) {
       fetchWallet(currentPage);
     }
-  }, [currentUser,currentPage]);
+  }, [currentUser,fetchWallet,currentPage]);
 
   return {
     handleTopup,

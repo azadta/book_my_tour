@@ -36,7 +36,6 @@ const PackageDetails = () => {
   const {
     pkg: data,
     packageLoading,
-    reviewLoading,
     reviewStats,
     reviews,
     closeModal,
@@ -89,7 +88,7 @@ const PackageDetails = () => {
 
   const removedCost =
     data?.itinerary.reduce((acc, day) => {
-      const dayDeductions = day.activities.reduce((sum, act: any) => {
+      const dayDeductions = day.activities.reduce((sum, act) => {
         return (
           sum +
           (act.customizable && removedActivityIds.includes(act.id)
@@ -237,7 +236,7 @@ const PackageDetails = () => {
       }
       const scrollPosition = window.scrollY + 180;
       if (!data) return;
-      for (let dayPlan of data.itinerary) {
+      for (const dayPlan of data.itinerary) {
         const el = dayRefs.current[dayPlan.day];
         if (el) {
           const top = el.offsetTop;
@@ -252,7 +251,7 @@ const PackageDetails = () => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [data?.itinerary]);
+  }, [data]);
 
   const activeDayData =
     data?.itinerary.find((day) => day.day === activeDay) ?? data?.itinerary[0];
@@ -685,14 +684,17 @@ const PackageDetails = () => {
                     </div>
                   </div>
 
-
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
                     <div className="font-bold text-[16px] text-gray-800">
                       Total booking Amount
                     </div>
                     <div className="text-right">
                       <span className="text-xl font-black text-blue-600">
-                        Rs {grandSubtotal.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+                        Rs{" "}
+                        {grandSubtotal.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </span>
                       {totalDiscountApplied > 0 && (
                         <span className="block text-[11px] text-emerald-600 font-bold">

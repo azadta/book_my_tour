@@ -9,6 +9,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useNavigate } from "react-router-dom";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import Loading from "../Loading";
+import type { IPackage } from "@/interfaces/IPackage";
+
 
 const HomeSlideThree = () => {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ const HomeSlideThree = () => {
   const { packagesByCategory, fetchPackagesByCategory,loadingPackagesByCategory } = useHome();
   useEffect(() => {
     fetchPackagesByCategory("Adventure Packages");
-  }, []);
+  }, [fetchPackagesByCategory]);
   return (
     <div className="w-full relative">
       {loadingPackagesByCategory&&<Loading/>}
@@ -53,7 +55,7 @@ const HomeSlideThree = () => {
               1280: { slidesPerView: 8 },
             }}
           >
-            {packagesByCategory["Adventure Packages"]?.map((pkg: any) => (
+            {packagesByCategory["Adventure Packages"]?.map((pkg: IPackage) => (
               <SwiperSlide key={pkg?._id}>
                 <div
                   onClick={() => navigate(FRONTEND_ROUTES.USER.PACKAGE_DETAILS(pkg?._id))}

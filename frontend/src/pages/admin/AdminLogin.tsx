@@ -10,7 +10,9 @@ import { useAdminLogin } from "../../hooks/useAdminLogin.js";
 import { useState } from "react";
 
 const AdminLogin = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<{ email: string; password: string }>(
+    { email: "", password: "" },
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.admin);

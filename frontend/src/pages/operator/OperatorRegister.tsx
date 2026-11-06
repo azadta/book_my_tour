@@ -8,14 +8,14 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.ts";
 
 const OperatorRegister = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
   const navigate = useNavigate();
   const { registerOperator, loading, error, fieldError, setFieldError } =
     useOperatorRegister();
   if (error) {
     toast.error(error);
   }
-  const handleSubmit = (formData: any) => {
+  const handleSubmit = (formData:Record<string,unknown>) => {
     if (formData.password !== formData.confirmPassword) {
       toast.error(FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_DONT_MATCH);
       return;

@@ -1,4 +1,8 @@
-export const formatCouponPayload = (data: any) => {
+import type { CouponFormData } from "@/interfaces/ICoupon";
+
+
+
+export const formatCouponPayload = (data:CouponFormData) => {
   return {
     ...data,
     code: data.code ? data.code.toUpperCase().trim() : "",

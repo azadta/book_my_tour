@@ -1,9 +1,8 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPopulatedBooking } from "@/interfaces/interfaces";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 export const useOperatorBookings = (
   page: number,
@@ -27,11 +26,8 @@ export const useOperatorBookings = (
       setBookings(bookingRes.data.result.bookings || []);
       setTotalCount(bookingRes.data.result.totalCount || 0);
       setPendingCancelCount(statsRes.data.result.cancelRequestedBookings || 0);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.BOOKING.ERROR.FETCH_OPERATOR_BOOKINGS;
-      (toast.error(message), console.error(message, error));
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }

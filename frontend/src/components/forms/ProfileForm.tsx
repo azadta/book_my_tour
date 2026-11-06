@@ -1,15 +1,20 @@
+import { Country, State, type IState } from "country-state-city";
 import { useEffect, useState } from "react";
 import type { FormField } from "../../interfaces/interfaces";
-import { Country, State, type IState } from "country-state-city";
 
 interface FormDataType {
-  [key: string]: any;
+  [key: string]: unknown;
+}
+interface UserProfile {
+  image: string;
+  name: string;
+  email: string;
 }
 
-interface ProfileFormProps {
-  formData: FormDataType;
-  setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
-  currentUser: any;
+interface ProfileFormProps<T extends FormDataType, TUser extends UserProfile> {
+  formData: T;
+  setFormData: React.Dispatch<React.SetStateAction<T>>;
+  currentUser: TUser;
   fields: FormField[];
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -23,7 +28,7 @@ interface ProfileFormProps {
   setFieldError: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
-export const ProfileForm = ({
+export const ProfileForm = <T extends FormDataType, TUser extends UserProfile>({
   formData,
   setFormData,
   currentUser,
@@ -33,14 +38,16 @@ export const ProfileForm = ({
   handleSubmit,
   loading,
   fileRef,
-  imageUploading,
-  fieldError,
   setFieldError,
-}: ProfileFormProps) => {
+}: ProfileFormProps<T, TUser>) => {
   const [countryCode, setCountryCode] = useState("");
   const [states, setStates] = useState<IState[]>([]);
-  const getNestedValue = (obj: any, path: string) => {
-    return path.split(".").reduce((acc, key) => acc[key], obj);
+  const getNestedValue = (obj: Record<string, unknown>, path: string) => {
+    return path.split(".").reduce((acc: unknown, key) => {
+      if (acc && typeof acc === "object" && acc !== null) {
+        return (acc as Record<string, unknown>)[key];
+      }
+    }, obj);
   };
 
   const formSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -86,21 +93,29 @@ export const ProfileForm = ({
   const setNestedFormData = (id: string, value: string) => {
     setFormData((prevForm) => {
       const keys = id.split(".");
-      const newForm = { ...prevForm };
-      let prevNested = prevForm;
+      const newForm: Record<string, unknown> = {
+        ...(prevForm as Record<string, unknown>),
+      };
+
+      let prevNested = prevForm as Record<string, unknown>;
 
       let nested = newForm;
       for (let i = 0; i < keys.length - 1; i++) {
         const key = keys[i];
 
-        nested[key] = { ...(prevNested?.[key] || {}) };
-        nested = nested[key];
-        prevNested = prevNested?.[key] || {};
+        const nextVal = prevNested?.[key];
+
+        nested[key] =
+          typeof nextVal === "object" && nextVal !== null
+            ? { ...(nextVal as Record<string, unknown>) }
+            : {};
+        nested = nested[key] as Record<string, unknown>;
+        prevNested = (prevNested?.[key] as Record<string, unknown>) || {};
       }
 
       nested[keys[keys.length - 1]] = value;
 
-      return { ...newForm };
+      return newForm as T;
     });
   };
 
@@ -161,9 +176,10 @@ export const ProfileForm = ({
             >
               <img
                 src={
-                  formData?.image ||
-                  currentUser?.image ||
-                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  typeof formData?.image === "string"
+                    ? formData.image
+                    : currentUser?.image ||
+                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 }
                 alt="Profile"
                 className="w-full h-full object-cover"
@@ -179,7 +195,6 @@ export const ProfileForm = ({
 
           <div className="text-center sm:text-left">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-100/80 text-emerald-800 text-xs font-semibold mb-2 shadow-sm">
-   
               Verifiied Profile
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -207,9 +222,14 @@ export const ProfileForm = ({
           {fields.map((field) => {
             if (field.type === "file") return null;
             const isSelect = field.type === "select";
-            const fieldValue = field.id.includes(".")
+
+            const rawValue = field.id.includes(".")
               ? getNestedValue(formData, field.id)
               : formData[field.id];
+            const fieldValue =
+              typeof rawValue === "string" || typeof rawValue === "number"
+                ? rawValue
+                : "";
             return (
               <div key={field.id} className="flex flex-col">
                 <label

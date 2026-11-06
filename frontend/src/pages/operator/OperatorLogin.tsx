@@ -9,7 +9,9 @@ import { useState } from "react";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const OperatorLogin = () => {
-    const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<{ email: string; password: string }>(
+    { email: "", password: "" },
+  );
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { login, fieldError, setFieldError } = useOperatorLogin(
@@ -19,12 +21,11 @@ const OperatorLogin = () => {
   const { loading } = useSelector((state: RootState) => state.operator);
 
   return (
-    
     <div className="w-full mx-auto max-w-lg">
-       <ReusableForm
-      heading="Operator Login"
-          formData={formData}
-       setFormData={setFormData}
+      <ReusableForm
+        heading="Operator Login"
+        formData={formData}
+        setFormData={setFormData}
         fields={operatorLoginFields}
         onSubmit={login}
         loading={loading}
@@ -42,14 +43,15 @@ const OperatorLogin = () => {
         </a>
         <p>
           New Operator?
-          <a href={FRONTEND_ROUTES.OPERATOR.REGISTER} className="text-sky-700 ml-3">
+          <a
+            href={FRONTEND_ROUTES.OPERATOR.REGISTER}
+            className="text-sky-700 ml-3"
+          >
             Register
           </a>
         </p>
       </div>
     </div>
-     
-  
   );
 };
 export default OperatorLogin;

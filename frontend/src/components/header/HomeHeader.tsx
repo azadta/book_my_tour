@@ -39,7 +39,7 @@ const HomeHeader = () => {
     const value = debouncedSearch.trim();
     if (!value) return;
     navigate(`/user/packages-list?search=${encodeURIComponent(value)}`);
-  }, [debouncedSearch]);
+  }, [debouncedSearch,navigate]);
 
   return (
     <>

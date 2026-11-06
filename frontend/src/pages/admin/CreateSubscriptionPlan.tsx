@@ -1,29 +1,28 @@
 import { useSubscriptionPlan } from "@/hooks/useSubscriptionPlan";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useState } from "react";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { subscriptionPlanFields } from "../../formConfig/fields";
-import { toast } from "react-toastify";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import type { SubscritptionPlanForm } from "@/interfaces/interfaces";
+
+const initialPlan: SubscritptionPlanForm = {
+  name: "",
+  price: 0,
+  packageLimit: 0,
+  durationDays: 0,
+};
 
 const CreateSubscriptionPlan = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<SubscritptionPlanForm>(initialPlan);
 
   const { createPlan, submitting } = useSubscriptionPlan();
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: SubscritptionPlanForm) => {
     try {
       await createPlan(formData);
-      setFormData({});
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
-      }
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.ERROR.CREATE,
-      );
-      console.error(error.message);
+      setFormData(initialPlan);
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
   return (

@@ -15,7 +15,7 @@ interface IAdmin {
   name: string;
   email: string;
   password: string;
-  image?: string;
+  image: string;
   mobile?: string;
   address: AdminAddress;
   cretedAt: string;

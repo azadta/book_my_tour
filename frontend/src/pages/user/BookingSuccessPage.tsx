@@ -26,7 +26,7 @@ const BookingSuccessPage = () => {
     if (orderId) {
       fetchBookingDetails(orderId);
     }
-  }, [orderId]);
+  }, [orderId,fetchBookingDetails]);
   if (isLoading) return <Loading />;
 
   return (

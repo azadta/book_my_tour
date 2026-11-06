@@ -1,36 +1,6 @@
-import type { ISubscriptionDetails } from "@/interfaces/interfaces";
+import type { IOperator } from "@/interfaces/IOperator";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface IBusinessAddress {
-  buildingNo?: string;
-  landmark?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  postalCode?: string;
-}
-
-interface IVerificationDetails {
-  companyName?: string;
-  licenseNo?: string;
-  businessAddress?: IBusinessAddress;
-  submittedAt?: Date;
-}
-
-export interface IOperator {
-  _id: string;
-  name: string;
-  email: string;
-  image?: string;
-  mobile?: string;
-  isVerified: boolean;
-  isBlocked: boolean;
-  isPremium: boolean;
-  verificationDetails?: IVerificationDetails;
-  subscriptionDetails?:ISubscriptionDetails;
-  referralCode?: string;
-  referredBy?: string;
-}
 interface OperatorState {
   currentOperator: IOperator | null;
   loading: boolean;

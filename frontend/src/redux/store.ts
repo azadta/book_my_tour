@@ -1,22 +1,18 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import userReducer from "./user/userSlice";
-import operatorReducer from "./operator/operatorSlice";
 import adminReducer from "./admin/adminSlice";
-import packageReducer from "./package/packageSlice";
 import chatReducer from "./chatSlice";
 import notificationReducer from "./notificationSlice";
+import operatorReducer from "./operator/operatorSlice";
+import userReducer from "./user/userSlice";
 
 import storageImport from "redux-persist/lib/storage";
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const storage = (storageImport as any).default || storageImport;
 
-import { persistReducer, persistStore } from "redux-persist";
 import {
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
+  FLUSH, PAUSE,
+  PERSIST, persistReducer, persistStore, PURGE,
+  REGISTER, REHYDRATE
 } from "redux-persist";
 
 const persistConfig = {
@@ -30,7 +26,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   operator: operatorReducer,
   admin: adminReducer,
-  package: packageReducer,
+
   chat: chatReducer,
   notification: notificationReducer,
 });

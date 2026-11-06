@@ -1,17 +1,27 @@
 import { useState } from "react";
 import ReUsableForm from "../../components/forms/ReUsableForm";
 import { createDestinationFields } from "../../formConfig/fields";
-import { useCreateDestination } from "../../hooks/useCreateDestination";
+import {
+  useCreateDestination,
+  type CreateDestinationFormData,
+} from "../../hooks/useCreateDestination";
 
+const initialFormData = {
+  name: "",
+  latitude: "",
+  longitude: "",
+  images: [],
+};
 const CreateDestination = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] =
+    useState<CreateDestinationFormData>(initialFormData);
 
   const { createDestination, loading, fieldError, setFieldError } =
     useCreateDestination();
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: CreateDestinationFormData) => {
     try {
       await createDestination(formData);
-      setFormData({});
+      setFormData(initialFormData);
     } catch (error) {
       console.error(error);
     }

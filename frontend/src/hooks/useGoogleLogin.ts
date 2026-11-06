@@ -1,15 +1,15 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { type NavigateFunction } from "react-router-dom";
+import { app } from "../../src/config/firebase";
+import { axiosInstance } from "../api/axiosInstance";
 import type { AppDispatch } from "../redux/store";
 import {
   logInFailure,
   logInStart,
   logInSuccess,
 } from "../redux/user/userSlice";
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import { app } from "../../src/config/firebase";
-import { axiosInstance } from "../api/axiosInstance";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useGoogleLogin = (
   dispatch: AppDispatch,
@@ -28,11 +28,9 @@ export const useGoogleLogin = (
       });
       dispatch(logInSuccess(res.data.result));
       navigate("/", { replace: true });
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.AUTH.ERROR.GOOGLE_LOGIN_FAILED;
-      dispatch(logInFailure(errorMessage));
+    } catch (error: unknown) {
+      const errorMessage = handleApiError(error);
+      if (errorMessage) dispatch(logInFailure(errorMessage));
     }
   };
 };

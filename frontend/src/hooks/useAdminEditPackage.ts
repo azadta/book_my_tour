@@ -1,8 +1,6 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
 import { useCallback, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
-import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
-import type { ItineraryDay } from "@/components/itinerary/types";
-import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export const useAdminEditPackage = () => {
   const [loading, setLoading] = useState(false);

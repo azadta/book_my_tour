@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import "./homeTopSlideCard.css";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import type { IPackage } from "@/interfaces/IPackage";
 
-const HomeTopSlideCard = ({ pkg }: { pkg: any }) => {
+
+const HomeTopSlideCard = ({ pkg }: { pkg: IPackage }) => {
   const navigate = useNavigate();
 
   return (

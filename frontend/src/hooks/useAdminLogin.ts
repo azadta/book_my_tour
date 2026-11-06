@@ -1,14 +1,14 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { useState } from "react";
 import type { NavigateFunction } from "react-router-dom";
-import type { AppDispatch } from "../redux/store";
+import { axiosInstance } from "../api/axiosInstance";
 import {
   adminLoginFailure,
   adminLoginStart,
   adminLoginSuccess,
 } from "../redux/admin/adminSlice";
-import { axiosInstance } from "../api/axiosInstance";
-import { useState } from "react";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
+import type { AppDispatch } from "../redux/store";
 
 export const useAdminLogin = (
   dispatch: AppDispatch,
@@ -21,15 +21,11 @@ export const useAdminLogin = (
       const res = await axiosInstance.post(APP_ROUTES.ADMINS.LOGIN, formData);
       dispatch(adminLoginSuccess(res.data.result));
       navigate(`/admin/dashboard`, { replace: true });
-    } catch (error: any) {
-      const errMsg =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.GLOBAL.ERROR.SOMETHINK_WENT_WRONG;
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
+    } catch (error: unknown) {
+      const errMsg = handleApiError(error, { setFieldError });
+      if (errMsg) {
+        dispatch(adminLoginFailure(errMsg));
       }
-      dispatch(adminLoginFailure(errMsg));
     }
   };
 

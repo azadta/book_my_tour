@@ -4,6 +4,7 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import type { FinalBookingPayload } from "@/pages/user/TravelerDetailsPage";
 import type { RootState } from "@/redux/store";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { loadRazorpayScript } from "@/utils/loadRazorpay";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -70,11 +71,8 @@ export const useTravelerDetailsPage = () => {
             navigate(
               FRONTEND_ROUTES.USER.BOOKING_SUCCESS(response.razorpay_order_id),
             );
-          } catch (error: any) {
-            toast.error(
-              error.response?.data?.message ||
-                FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_VERIFICATION,
-            );
+          } catch (error) {
+            handleApiError(error, { setFieldError });
           } finally {
             setIsSubmitting(false);
           }
@@ -98,16 +96,8 @@ export const useTravelerDetailsPage = () => {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        setIsSubmitting(false);
-        return;
-      }
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.BOOKING.ERROR.INITIATE,
-      );
+    } catch (error) {
+      handleApiError(error, { setFieldError });
       setIsSubmitting(false);
     }
   };

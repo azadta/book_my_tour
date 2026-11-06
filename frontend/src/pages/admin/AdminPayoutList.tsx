@@ -33,8 +33,9 @@ const AdminPayoutList = () => {
     {
       label: "Net Payout",
       render: (p: IPopulatedPayout) =>
-        `Rs ${p.netPayoutAmount?.toLocaleString("en-IN", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}` ||
-        "N/A",
+        p.netPayoutAmount !== null
+          ? `Rs ${p.netPayoutAmount?.toLocaleString("en-IN", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`
+          : "N/A",
     },
     {
       label: "Status",

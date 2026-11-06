@@ -19,9 +19,10 @@ import { toast } from "react-toastify";
 import { ProfileForm } from "../../components/forms/ProfileForm.js";
 import { useApi } from "../../hooks/useApi.js";
 import type { RootState } from "../../redux/store.js";
+import { handleApiError } from "@/utils/axiosErrorHandler.js";
 
 interface FormDataType {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const AdminProfile = () => {
@@ -93,14 +94,9 @@ const AdminProfile = () => {
         updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url }),
       );
       toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
-    } catch (error: any) {
-      console.error(FEEDBACK_MESSAGES.MEDIA.ERROR.CLOUDINARY, error);
-      dispatch(
-        updateAdminFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(updateAdminFailure(errorMessage));
     } finally {
       setImageUploading(false);
     }
@@ -114,18 +110,9 @@ const AdminProfile = () => {
       );
       dispatch(updateAdminSuccess(data));
       toast.success(FEEDBACK_MESSAGES.ADMIN.SUCCESS.UPDATE);
-    } catch (error: any) {
-      dispatch(
-        updateAdminFailure(error.response?.data?.message || error.message),
-      );
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-
-        return;
-      }
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.UPDATE,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(updateAdminFailure(errorMessage));
     }
   };
 
@@ -135,13 +122,9 @@ const AdminProfile = () => {
       await del(APP_ROUTES.ADMINS.LOGOUT);
       dispatch(adminLogoutSuccess());
       navigate(FRONTEND_ROUTES.ADMIN.LOGIN, { replace: true });
-    } catch (error: any) {
-      dispatch(
-        adminLogoutFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.ADMIN.ERROR.LOGOUT,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(adminLogoutFailure(errorMessage));
     }
   };
 
@@ -165,6 +148,7 @@ const AdminProfile = () => {
       });
     }
   }, [currentAdmin]);
+  if (!currentAdmin) return;
 
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] gap-2  items-end py-10 ">

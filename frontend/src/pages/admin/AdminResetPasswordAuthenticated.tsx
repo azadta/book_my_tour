@@ -8,33 +8,42 @@ import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 const AdminResetPasswordAuthenticated: React.FC = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<{
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }>({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const { currentAdmin } = useSelector((state: RootState) => state.admin);
-  const endPoint: string = APP_ROUTES.ADMINS.RESET_PASSWORD_AUTH(
-    currentAdmin?._id!,
-  );
+  const adminId = currentAdmin?._id ?? "";
+  const endPoint: string = APP_ROUTES.ADMINS.RESET_PASSWORD_AUTH(adminId);
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
     setError(null);
     setMessage(null);
-    const { oldPassword, newPassword, confirmPassword } = formData;
+
     try {
-      await resetPassword(oldPassword, newPassword, confirmPassword);
+      await resetPassword(formData);
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
       setTimeout(() => navigate(FRONTEND_ROUTES.ADMIN.PROFILE), 2000);
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
-      }
-      setError(error.response?.data?.message || error.message);
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) setError(errorMessage);
     }
   };
 

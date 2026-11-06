@@ -23,7 +23,7 @@ const OperatorPackagesList = () => {
     () => async () => {},
   );
 
-  const { deletePackage, fetchPackages, loading, packages, totalCount } =
+  const { deletePackage,  loading, packages, totalCount } =
     useOperatorPackageManagement(currentPage, resultPerpage);
   const totalPages = Math.ceil(totalCount / resultPerpage);
   const handlePageChange = (page: number) => {

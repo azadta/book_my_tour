@@ -22,7 +22,7 @@ const NotificationList = () => {
   };
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [fetchNotifications]);
   if (loading) return <Loading/>
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -72,7 +72,7 @@ const NotificationList = () => {
             </p>
           </div>
         ) : (
-          notifications.map((item:any) => (
+          notifications.map((item) => (
             <div
               key={item._id}
               className={`group relative p-5 rounded-2xl border transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${!item.isRead ? "bg-linear-r from-sky-50/80 to-indigo-50/30 border-sky-200/80 shadow-sm" : "bg-white border-slate-100 hover:border-slate-200"}`}

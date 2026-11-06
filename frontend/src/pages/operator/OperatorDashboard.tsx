@@ -1,5 +1,5 @@
 import BookingsBarChart from "@/components/Charts/operator/BookingsBarChart";
-import BookingStatusDonutChart from "@/components/Charts/operator/BookingStatusDonutChat";
+import BookingStatusDonutChart from "@/components/Charts/operator/BookingStatusDonutChart";
 import RevenueLineChart from "@/components/Charts/operator/RevenueLineChart";
 import { useState } from "react";
 import { BsBoxSeamFill } from "react-icons/bs";

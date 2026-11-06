@@ -1,38 +1,38 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { useEffect, useState } from "react";
+import type { IWishlistGroup } from "@/interfaces/IWishlistGroup";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { useCallback, useEffect, useState } from "react";
 
 export const useSharedWishlist = ({ shareToken }: { shareToken: string }) => {
-  const [wishlistGroup, setWishlistGroup] = useState<any>(null);
+  const [wishlistGroup, setWishlistGroup] = useState<IWishlistGroup | null>(
+    null,
+  );
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchSharedWishlist = async () => {
+  const fetchSharedWishlist = useCallback(async () => {
     try {
       setLoading(true);
 
-      const { data } = await axiosInstance.get(
+      const { data } = await axiosInstance.get<{ result: IWishlistGroup }>(
         APP_ROUTES.WISHLISTS.PUBLIC.SHARED(shareToken),
       );
-    
+
       setWishlistGroup(data.result);
-    } catch (error: any) {
-      setError(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.WISHLIST.ERROR.SHARED_GROUP,
-      );
-      console.error(FEEDBACK_MESSAGES.WISHLIST.ERROR.SHARED_GROUP, error);
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      if (errorMessage) setError(errorMessage);
     } finally {
       setLoading(false);
     }
-  };
+  }, [shareToken]);
   useEffect(() => {
     if (shareToken) {
       fetchSharedWishlist();
     }
-  }, [shareToken]);
+  }, [shareToken, fetchSharedWishlist]);
 
   return { error, loading, wishlistGroup };
 };

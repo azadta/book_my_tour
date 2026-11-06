@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
@@ -9,8 +9,8 @@ import type {
   IWishlistGroup,
 } from "@/interfaces/interfaces";
 import type { RootState } from "@/redux/store";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
 export const usePackageList = () => {
   const [packages, setPackages] = useState<IPackageItem[]>([]);
@@ -26,7 +26,7 @@ export const usePackageList = () => {
 
   const { currentUser } = useSelector((state: RootState) => state.user);
 
-  const fetchPackages = async (query: string) => {
+  const fetchPackages = useCallback(async (query: string) => {
     setLoadingPackages(true);
     try {
       const { data } = await axiosInstance.get(
@@ -41,7 +41,7 @@ export const usePackageList = () => {
     } finally {
       setLoadingPackages(false);
     }
-  };
+  },[])
 
   const fetchActiveCategories = async () => {
     setLoadingCategories(true);
@@ -49,7 +49,6 @@ export const usePackageList = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ACTIVE,
       );
-      
 
       setActiveCategories(data.result || []);
     } catch (error) {
@@ -67,13 +66,8 @@ export const usePackageList = () => {
       const { data } = await axiosInstance.get(APP_ROUTES.WISHLISTS.USER.LIST);
 
       setWishlistGroups(data.result);
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        FEEDBACK_MESSAGES.WISHLIST.ERROR.FETCH;
-      toast.error(message);
-
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
   };
 
@@ -85,12 +79,8 @@ export const usePackageList = () => {
         packageId: selectedPackageForWishList,
       });
       await fetchWishlists();
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        FEEDBACK_MESSAGES.WISHLIST.ERROR.TOGGLE;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
   };
 
@@ -101,16 +91,11 @@ export const usePackageList = () => {
         { title },
       );
 
-
       if (data.success && selectedPackageForWishList) {
         await handleToggleWishlistGroup(data.result._id);
       }
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        FEEDBACK_MESSAGES.WISHLIST.ERROR.CREATE_GROUP;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

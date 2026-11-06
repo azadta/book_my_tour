@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForgotPassword } from "../../hooks/useForgotPassword";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -13,11 +14,8 @@ const ForgotPassword = () => {
     try {
       await sendResetEmail(email);
       toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.FORGOT_PASSWORD_SENT);
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.AUTH.ERROR.FORGOT_PASSWORD,
-      );
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

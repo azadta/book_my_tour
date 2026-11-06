@@ -1,3 +1,4 @@
+import type { FormPackage } from "@/interfaces/IPackage";
 import type { FormField } from "../interfaces/interfaces";
 
 export interface Option {
@@ -439,7 +440,7 @@ export const OperatorResetPasswordFields: FormField[] = [
 ];
 
 export const getCreatePackageFields = (
-  formData: Record<string, any>,
+  formData:FormPackage,
 ): FormField[] => {
   const isChildPricingEnabled = formData["childPricing.enabled"] === true;
   const baseFields: FormField[] = [
@@ -1000,7 +1001,9 @@ export const reviewFields = [
   },
 ];
 
-export const getCouponFields = (formData: Record<string, any>): FormField[] => {
+
+
+export const getCouponFields = (formData: Record<string, unknown>): FormField[] => {
   const isBankOffer = formData?.type === "BANK";
   const baseFields = [
     {

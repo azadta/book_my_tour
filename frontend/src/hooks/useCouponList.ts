@@ -39,7 +39,7 @@ export const useCouponList = (page: number, limit: number) => {
 
   useEffect(() => {
     fetchCoupons();
-  }, []);
+  }, [fetchCoupons]);
 
   return { coupons, totalCount, loading, toggleCouponStatus };
 };

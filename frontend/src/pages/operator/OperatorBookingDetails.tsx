@@ -1,7 +1,5 @@
 import AttendanceSelector from "@/components/AttendanceSelector";
-import BackToDashboard from "@/components/BackToDashboard";
 import Loading from "@/components/Loading";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { useOperatorBookingDetails } from "@/hooks/useOperatorBookingDetails";
 import { Tag, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -33,7 +31,7 @@ const OperatorBookingDetails = () => {
 
   useEffect(() => {
     fetchDetails(bookingId as string);
-  }, [bookingId]);
+  }, [bookingId,fetchDetails]);
 
   if (loading) return <Loading />;
   if (!booking)

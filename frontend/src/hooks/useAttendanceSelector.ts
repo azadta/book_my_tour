@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -24,12 +25,8 @@ export const useAttendanceSelector = (
         FEEDBACK_MESSAGES.BOOKING.SUCCESS.UPDATE_GUEST_STATUS(newStatus),
       );
       if (onUpdate) onUpdate();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.BOOKING.ERROR.UPDATE_ATTENDANCE;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error: unknown) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }

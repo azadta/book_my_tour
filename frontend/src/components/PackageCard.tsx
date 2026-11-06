@@ -1,4 +1,5 @@
-import { type IPackage } from "../redux/package/packageSlice";
+import type { IPackage } from "@/interfaces/IPackage";
+
 interface packageCardProps {
   pkg: IPackage;
 }

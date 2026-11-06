@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useOperatorVerification } from "../../hooks/useOperatorVerification";
+import type { IOperator } from "@/interfaces/IOperator";
+
 
 const AdminOperatorVerification = () => {
   const {
@@ -12,37 +14,37 @@ const AdminOperatorVerification = () => {
   } = useOperatorVerification();
 
   const columns = [
-    { label: "Name", render: (op: any) => op.name },
-    { label: "Email", render: (op: any) => op.email },
-    { label: "Mobile", render: (op: any) => op.mobile },
+    { label: "Name", render: (op:IOperator) => op.name },
+    { label: "Email", render: (op: IOperator) => op.email },
+    { label: "Mobile", render: (op: IOperator) => op.mobile },
     {
       label: "Company",
-      render: (op: any) => op.verificationDetails?.companyName || "-",
+      render: (op: IOperator) => op.verificationDetails?.companyName || "-",
     },
     {
       label: "License No",
-      render: (op: any) => op.verificationDetails?.licenseNo || "-",
+      render: (op: IOperator) => op.verificationDetails?.licenseNo || "-",
     },
   ];
 
   const actions = [
     {
       label: () => "Verify",
-      onClick: (op: any) => verifyOperator(op._id, true),
+      onClick: (op: IOperator) => verifyOperator(op._id, true),
       className: `bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700`,
-      disabled: (op: any) =>
+      disabled: (op: IOperator) =>
         actionLoading.id === op._id && actionLoading.type === "verify",
-      isLoading: (op: any) =>
+      isLoading: (op:IOperator) =>
         actionLoading.id === op._id && actionLoading.type === "verify",
       loadingText: "verifying...",
     },
     {
       label: () => "Reject",
-      onClick: (op: any) => verifyOperator(op._id, false),
+      onClick: (op: IOperator) => verifyOperator(op._id, false),
       className: `bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700`,
-      disabled: (op: any) =>
+      disabled: (op: IOperator) =>
         actionLoading.id === op._id && actionLoading.type === "reject",
-      isLoading: (op: any) =>
+      isLoading: (op: IOperator) =>
         actionLoading.id === op._id && actionLoading.type === "reject",
       loadingText: "rejecting...",
     },

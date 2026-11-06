@@ -4,9 +4,10 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
+  type CellContext,
   type SortingState,
 } from "@tanstack/react-table";
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import Loading from "../components/Loading";
 
 export interface Column<T> {
@@ -40,20 +41,25 @@ const ReUsableTable = <T,>({
   loading,
   noDataText = "No data available",
 }: ReUsableTableProps<T>) => {
+  "use no memo";
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const tanstackColumns = columns.map((column) => ({
-    id: column.label.toLowerCase(),
-    header: column.label,
+  const tanstackColumns = useMemo(() => {
+    return columns.map((column) => ({
+      id: column.label.toLowerCase(),
+      header: column.label,
 
-    accessorFn: column.filterValue
-      ? (row: T) => column.filterValue!(row)
-      : column.sortValue
-        ? (row: T) => column.sortValue!(row)
-        : (row: T) => column.render(row),
-    cell: ({ row }: any) => column.render(row.original),
-  }));
+      accessorFn: column.filterValue
+        ? (row: T) => column.filterValue!(row)
+        : column.sortValue
+          ? (row: T) => column.sortValue!(row)
+          : (row: T) => column.render(row),
+      cell: ({ row }: CellContext<T, unknown>) => column.render(row.original),
+    }));
+  }, [columns]);
+  //eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns: tanstackColumns,
@@ -135,8 +141,9 @@ const ReUsableTable = <T,>({
                         <button
                           key={actionIdx}
                           className={
-                            `w-[90px] inline-flex items-center justify-center  ${action.className}` ||
-                            "px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 "
+                            action.className
+                              ? `w-[90px] inline-flex items-center justify-center  ${action.className}`
+                              : "w-[90px] px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 "
                           }
                           onClick={() => action.onClick(item)}
                           disabled={disabled}

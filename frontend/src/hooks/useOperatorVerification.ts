@@ -1,9 +1,10 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useCallback, useState } from "react";
-import type { IOperator } from "../redux/operator/operatorSlice";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
+import type { IOperator } from "@/interfaces/IOperator";
+
 
 export const useOperatorVerification = () => {
   const [operators, setOperators] = useState<IOperator[]>([]);
@@ -20,11 +21,8 @@ export const useOperatorVerification = () => {
         APP_ROUTES.OPERATORS.ADMIN.VERIFICATION_RQS,
       );
       setOperators(res.data.result);
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.ADMIN.ERROR.VERIFICATION_REQUESTS,
-      );
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }
@@ -41,11 +39,8 @@ export const useOperatorVerification = () => {
         `Operator is ${isVerified ? "verified" : "rejected"} successfully`,
       );
       getVerificationRequests();
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.ADMIN.ERROR.VERIFICATION_STATUS,
-      );
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setActionLoading({ id: null, type: null });
     }

@@ -1,7 +1,7 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
 
 export interface Category {
   _id: string;
@@ -17,13 +17,13 @@ export const usePackageCategories = () => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const res = await axiosInstance.get(APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ALL);
-        setCategories(res.data.result);
-      } catch (error: any) {
-        setError(
-          error.response?.data?.message ||
-            FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.FETCH,
+        const res = await axiosInstance.get(
+          APP_ROUTES.PACKAGE_CATEGORIES.PUBLIC.ALL,
         );
+        setCategories(res.data.result);
+      } catch (error) {
+        const errorMessage = handleApiError(error);
+        if (errorMessage) setError(errorMessage);
       } finally {
         setLoading(false);
       }

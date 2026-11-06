@@ -21,13 +21,8 @@ const DayEditor = ({
   fieldError,
   setFieldError,
 }: Props) => {
-
   const [previews, setPreviews] = useState<string[]>([]);
   const inputId = `gallery-${dayIndex}`;
-
-  const handleInput = (field: keyof ItineraryDay, fieldValue: any) => {
-    onChange({ ...value, [field]: fieldValue });
-  };
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {

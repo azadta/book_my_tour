@@ -7,8 +7,9 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import Pagination from "../../components/Pagination";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useAdminOperatorManagement } from "../../hooks/useAdminOperatorManagement";
-import type { IOperator } from "../../redux/operator/operatorSlice";
+
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import type { IOperator } from "@/interfaces/IOperator";
 
 const AdminOperatorDetails: React.FC = () => {
   const [open, setOpen] = useState(false);

@@ -4,8 +4,11 @@ import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { BaseFormData } from "@/interfaces/interfaces";
 
-export interface CreateDestinationFormData {
+
+export interface CreateDestinationFormData extends BaseFormData {
   name: string;
   latitude: string | number;
   longitude: string | number;
@@ -56,21 +59,14 @@ export const useCreateDestination = (onSuccess?: () => void) => {
         images: uploadedImages,
       };
 
-      await axiosInstance.post( APP_ROUTES.PACKAGE_DESTINATIONS.ADMIN.CREATE, payload);
+      await axiosInstance.post(
+        APP_ROUTES.PACKAGE_DESTINATIONS.ADMIN.CREATE,
+        payload,
+      );
       toast.success(FEEDBACK_MESSAGES.DESTINATON.SUCCESS.CREATE);
       onSuccess?.();
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        throw error;
-      }
-      const message =
-        error?.response?.data?.message ||
-        error.response?.data?.error?.message ||
-        error.message ||
-        FEEDBACK_MESSAGES.DESTINATON.ERROR.CREATE;
-      toast.error(message);
-      throw error;
+    } catch (error: unknown) {
+      handleApiError(error, { setFieldError });
     } finally {
       setLoading(false);
     }

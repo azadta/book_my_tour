@@ -1,15 +1,14 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IBookingResponse } from "@/interfaces/interfaces";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { useCallback, useState } from "react";
 
 export const useBookingSuccessPage = () => {
   const [booking, setBooking] = useState<IBookingResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchBookingDetails = async (orderId:string) => {
+  const fetchBookingDetails = useCallback(async (orderId: string) => {
     try {
       if (orderId) {
         setIsLoading(true);
@@ -18,15 +17,12 @@ export const useBookingSuccessPage = () => {
         );
         setBooking(response.data.result);
       }
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || FEEDBACK_MESSAGES.BOOKING.ERROR.FETCH;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error: unknown) {
+      handleApiError(error);
     } finally {
       setIsLoading(false);
     }
-  };
+  },[])
 
   return { fetchBookingDetails, isLoading, booking };
 };

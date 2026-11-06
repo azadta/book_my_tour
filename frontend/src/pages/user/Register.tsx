@@ -8,21 +8,20 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const Register = () => {
-    const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
   const { registerUser, loading, fieldError, setFieldError } = useRegister();
   const navigate = useNavigate();
 
-  const handleSubmit = (formData: {
-    password: string;
-    confirmPassword: string;
-  }) => {
+  const handleSubmit = (formData: Record<string, unknown>) => {
     if (formData.password !== formData.confirmPassword) {
       toast.error(FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_DONT_MATCH);
       return;
     }
 
     registerUser(formData, (userId, otpExpire) => {
-      navigate(`${FRONTEND_ROUTES.USER.VERIFY_OTP(userId)}?otpExpire=${otpExpire}`)
+      navigate(
+        `${FRONTEND_ROUTES.USER.VERIFY_OTP(userId)}?otpExpire=${otpExpire}`,
+      );
       toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_SENT);
     });
   };
@@ -36,11 +35,10 @@ const Register = () => {
 
   return (
     <div className="p-3 max-w-lg mx-auto pb-10 pt-10">
-
       <ReUsableForm
-       heading="Register"
-           formData={formData}
-          setFormData={setFormData}
+        heading="Register"
+        formData={formData}
+        setFormData={setFormData}
         fields={userRegisterfields}
         onSubmit={handleSubmit}
         loading={loading}
@@ -50,7 +48,10 @@ const Register = () => {
       />
       <p className="mt-2 font-semibold">
         Already have an account?{" "}
-        <a href={FRONTEND_ROUTES.USER.LOGIN} className=" text-md ml-3 font-bold">
+        <a
+          href={FRONTEND_ROUTES.USER.LOGIN}
+          className=" text-md ml-3 font-bold"
+        >
           Login
         </a>
       </p>

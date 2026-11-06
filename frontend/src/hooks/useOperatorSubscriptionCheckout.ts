@@ -3,6 +3,7 @@ import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { updateOperatorSuccess } from "@/redux/operator/operatorSlice";
 import type { RootState } from "@/redux/store";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { loadRazorpayScript } from "@/utils/loadRazorpay";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,11 +54,8 @@ export const useOperatorSubscriptionCheckOut = () => {
             );
             dispatch(updateOperatorSuccess(data.result.operator));
             toast.success(FEEDBACK_MESSAGES.SUBSCRIPTION.SUCCESS.ACTIVATE);
-          } catch (error: any) {
-            toast.error(
-              error.response?.data?.message ||
-                FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_VERIFICATION,
-            );
+          } catch (error) {
+            handleApiError(error);
           } finally {
             setIsSubmitting(false);
           }
@@ -81,11 +79,8 @@ export const useOperatorSubscriptionCheckOut = () => {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.SUBSCRIPTION.ERROR.INITIATE_PAYMENT,
-      );
+    } catch (error) {
+      handleApiError(error);
       setIsSubmitting(false);
     }
   };

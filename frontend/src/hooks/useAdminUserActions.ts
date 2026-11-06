@@ -14,7 +14,7 @@ export const useAdminUserActions = () => {
     }
   }, []);
 
-  const updateUser = useCallback(async (id: string, data: any) => {
+  const updateUser = useCallback(async (id: string, data:unknown) => {
     setLoading(true);
     try {
       await axiosInstance.put(APP_ROUTES.USERS.ADMIN.UPDATE(id), data);

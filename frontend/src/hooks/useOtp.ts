@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../api/axiosInstance";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 interface UseOtpProps {
   userId: string;
@@ -24,28 +25,33 @@ export const useOtp = ({
 
   const verifyOtp = async () => {
     try {
-      await axiosInstance.post( APP_ROUTES.USERS.USER.VERIFY_OTP, {
+      await axiosInstance.post(APP_ROUTES.USERS.USER.VERIFY_OTP, {
         userId,
         otp,
       });
       onSuccess();
-    } catch (error: any) {
-      setError(error.response?.data?.message || error.message);
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      if (errorMessage) setError(errorMessage);
     }
   };
 
   const resendOtp = async () => {
     setResendLoading(true);
     try {
-      const { data } = await axiosInstance.post( APP_ROUTES.USERS.USER.RESEND_OTP, {
-        userId,
-      });
+      const { data } = await axiosInstance.post(
+        APP_ROUTES.USERS.USER.RESEND_OTP,
+        {
+          userId,
+        },
+      );
       setOtp("");
       setOtpExpire(Number(data.result.otpExpire));
       setError(null);
       toast.info(FEEDBACK_MESSAGES.AUTH.SUCCESS.OTP_RESENT);
-    } catch (error: any) {
-      setError(error.response?.data?.message || error.message);
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      if (errorMessage) setError(errorMessage);
     } finally {
       setResendLoading(false);
     }

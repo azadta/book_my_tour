@@ -1,19 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useCurrentUser } from "./useCurrentUser";
-import type { RootState } from "@/redux/store";
-import { useEffect, useRef } from "react";
-import { connectSocket, getSocket } from "@/socket/socket";
+import { axiosInstance } from "@/api/axiosInstance";
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import type { IChat, IMessage } from "@/interfaces/IChat";
 import {
   clearChatMessages,
   incrementUnreadBadge,
   setChats,
   updateChatLastMessage,
 } from "@/redux/chatSlice";
-import { axiosInstance } from "@/api/axiosInstance";
-import type { IChat, IMessage } from "@/interfaces/IChat";
-import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { toast } from "react-toastify";
+import type { RootState } from "@/redux/store";
+import { connectSocket, getSocket } from "@/socket/socket";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useCurrentUser } from "./useCurrentUser";
 
 export const useGlobalChatSocket = () => {
   const dispatch = useDispatch();
@@ -27,8 +26,9 @@ export const useGlobalChatSocket = () => {
   useEffect(() => {
     chatsRef.current = chats;
   }, [chats]);
+  const userId=currentUser?.id
   useEffect(() => {
-    if (!currentUser) return;
+    if (!userId) return;
     const fetchInitialChats = async () => {
       try {
         const response = await axiosInstance.get<{result:IChat[]}>(
@@ -52,7 +52,7 @@ export const useGlobalChatSocket = () => {
         dispatch(
           incrementUnreadBadge({
             chatId: message.chatId,
-            userId: currentUser.id,
+            userId,
           }),
         );
       }
@@ -76,5 +76,5 @@ export const useGlobalChatSocket = () => {
       socket.off("chat_cleared", handleChatCleared);
       socket.off("new_chat", handleNewChat);
     };
-  }, [currentUser?.id, dispatch]);
+  }, [userId, dispatch]);
 };

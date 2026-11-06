@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IChat, IMessage, IMessageResponse } from "@/interfaces/IChat";
 import {
   addMessage,
@@ -18,9 +17,9 @@ import {
 } from "@/redux/chatSlice";
 import type { RootState } from "@/redux/store";
 import { connectSocket, disconnectSocket, getSocket } from "@/socket/socket";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { useCurrentUser } from "./useCurrentUser";
 
 export const useChat = () => {
@@ -41,7 +40,7 @@ export const useChat = () => {
       participientModel: "User" | "Operator" | "Admin" = "Operator",
     ) => {
       try {
-        const response = await axiosInstance.post<{result:IChat}>(
+        const response = await axiosInstance.post<{ result: IChat }>(
           APP_ROUTES.CHATS.ANY.ACCESS_CHAT,
           { targetId: participientId, targetModel: participientModel },
         );
@@ -51,20 +50,16 @@ export const useChat = () => {
         dispatch(setActiveChat(chat));
         const socket = getSocket();
         socket.emit("join_chat", chat._id);
-        const msgResponse = await axiosInstance.get<{result:IMessageResponse}>(
-          APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id),
-        );
+        const msgResponse = await axiosInstance.get<{
+          result: IMessageResponse;
+        }>(APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id));
         if (activeChatRef.current) {
           socket.emit("join_chat", activeChatRef.current._id);
         }
 
         dispatch(setMessages(msgResponse.data.result.messages || []));
-      } catch (error: any) {
-        const message =
-          error.response?.data?.message ||
-          FEEDBACK_MESSAGES.CHATS.ERROR.START_CHAT;
-        toast.error(message);
-        console.error(message, error);
+      } catch (error: unknown) {
+        handleApiError(error);
       }
     },
     [dispatch, chats],
@@ -77,12 +72,8 @@ export const useChat = () => {
         dispatch(clearChatMessages(chatId));
         const socket = getSocket();
         socket.emit("clear_chat", { chatId });
-      } catch (error: any) {
-        const message =
-          error.response?.data?.message ||
-          FEEDBACK_MESSAGES.CHATS.ERROR.CLEAR_CHAT;
-        toast.error(message);
-        console.error(message, error);
+      } catch (error: unknown) {
+        handleApiError(error);
       }
     },
     [dispatch],
@@ -180,20 +171,16 @@ export const useChat = () => {
 
       socket.off("online_users_list", handleOnlineUsersList);
     };
-  }, [currentUser, dispatch]);
+  }, [currentUser, dispatch,activeChat?._id]);
 
   const fetchChats = useCallback(async () => {
     try {
-      const response = await axiosInstance.get<{result:IChat[]}>(
+      const response = await axiosInstance.get<{ result: IChat[] }>(
         APP_ROUTES.CHATS.ANY.MY_CHATS,
       );
       dispatch(setChats(response.data.result));
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.CHATS.ERROR.FETCH_CHATS;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error: unknown) {
+      handleApiError(error);
     }
   }, [dispatch]);
 
@@ -224,7 +211,7 @@ export const useChat = () => {
       socket.emit("join_chat", chat._id);
 
       try {
-        const response = await axiosInstance.get<{result:IMessageResponse}>(
+        const response = await axiosInstance.get<{ result: IMessageResponse }>(
           APP_ROUTES.CHATS.ANY.CHAT_MESSAGES(chat._id),
         );
         const fetchedMessages = response.data.result.messages || [];
@@ -241,12 +228,8 @@ export const useChat = () => {
             });
           }
         }
-      } catch (error: any) {
-        const message =
-          error.response?.data?.message ||
-          FEEDBACK_MESSAGES.CHATS.ERROR.FETCH_MESSAGES;
-        toast.error(message);
-        console.error(message, error);
+      } catch (error: unknown) {
+        handleApiError(error);
       }
     },
     [dispatch, currentUser],
@@ -259,7 +242,7 @@ export const useChat = () => {
       recipientIdModel: "User" | "Operator" | "Admin",
       image?: string,
     ) => {
-      if (!activeChat || !text.trim()&&!image || !currentUser) return;
+      if (!activeChat || (!text.trim() && !image) || !currentUser) return;
       const socket = getSocket();
       socket.emit("send_message", {
         chatId: activeChat._id,
@@ -280,18 +263,14 @@ export const useChat = () => {
       participantModel: "User" | "Operator" | "Admin" = "Operator",
     ) => {
       try {
-        const response = await axiosInstance.post<{result:IChat}>(
+        const response = await axiosInstance.post<{ result: IChat }>(
           APP_ROUTES.CHATS.ANY.ACCESS_CHAT,
           { targetId: participantId, targetModel: participantModel },
         );
         const chat = response.data.result;
         dispatch(setChats([...chats.filter((c) => c._id !== chat._id), chat]));
-      } catch (error: any) {
-        const message =
-          error.response?.data?.message ||
-          FEEDBACK_MESSAGES.CHATS.ERROR.START_CHAT;
-        toast.error(message);
-        console.error(message, error);
+      } catch (error: unknown) {
+        handleApiError(error);
       }
     },
     [dispatch, chats],

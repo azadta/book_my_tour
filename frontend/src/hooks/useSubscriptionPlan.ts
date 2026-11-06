@@ -1,7 +1,8 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import type { ISubscriptionPlan } from "@/interfaces/interfaces";
+import type { ISubscriptionPlan, SubscritptionPlanForm } from "@/interfaces/interfaces";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useCallback, useState } from "react";
 
 import { toast } from "react-toastify";
@@ -19,18 +20,14 @@ export const useSubscriptionPlan = () => {
         APP_ROUTES.SUBSCRIPTION_PLANS.ADMIN.LIST,
       );
       setPlans(data.result);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.ERROR.FETCH_PLANS;
-      console.error(message, error);
-      toast.error(message);
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const createPlan = async (payload: ISubscriptionPlan) => {
+  const createPlan = async (payload: SubscritptionPlanForm) => {
     setSubmitting(true);
     try {
       await axiosInstance.post(
@@ -38,28 +35,23 @@ export const useSubscriptionPlan = () => {
         payload,
       );
       toast.success(FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.SUCCESS.CREATE);
-  
     } finally {
       setSubmitting(false);
     }
   };
-  const fetchPlanDetails = async (id: string) => {
+  const fetchPlanDetails = useCallback(async (id: string) => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(
         APP_ROUTES.SUBSCRIPTION_PLANS.ADMIN.DETAIL(id),
       );
       setPlan(data.result);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.ERROR.FETCH;
-      console.error(message, error);
-      toast.error(message);
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }
-  };
+  },[]);
 
   const updatePlan = async (
     planId: string,
@@ -72,7 +64,6 @@ export const useSubscriptionPlan = () => {
         payload,
       );
       toast.success(FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.SUCCESS.UPDATE);
-  
     } finally {
       setSubmitting(false);
     }
@@ -85,12 +76,8 @@ export const useSubscriptionPlan = () => {
       );
       toast.success(FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.SUCCESS.DELETE);
       fetchPlans();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.ERROR.DELETE;
-      console.error(message, error);
-      toast.error(message);
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

@@ -23,7 +23,7 @@ const HeaderActions = ({ openDrawer }: Props) => {
     if (currentUser) {
       fetchNotifications();
     }
-  }, [currentUser]);
+  }, [currentUser, fetchNotifications]);
 
   return (
     <div>
@@ -67,7 +67,6 @@ const HeaderActions = ({ openDrawer }: Props) => {
             <NavItem to={FRONTEND_ROUTES.USER.WISHLIST}>My Wishlist</NavItem>
 
             <div className="flex items-center gap-3">
-              
               <NotificationBadgeButton unreadCount={unreadCount} />
             </div>
             <Link to={FRONTEND_ROUTES.USER.PROFILE} className="ml-5">

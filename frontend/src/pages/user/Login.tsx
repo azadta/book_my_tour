@@ -10,7 +10,9 @@ import { FcGoogle } from "react-icons/fc";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 
 const Login = () => {
-    const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<{ email: string; password: string }>(
+    { email: "", password: "" },
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state: RootState) => state.user);
@@ -25,12 +27,10 @@ const Login = () => {
 
   return (
     <div className="p-3 max-w-lg mx-auto pb-10 pt-10 ">
-   
-
       <ReUsableForm
-      heading="Login"
-         formData={formData}
-          setFormData={setFormData}
+        heading="Login"
+        formData={formData}
+        setFormData={setFormData}
         fields={userLoginfields}
         onSubmit={login}
         loading={loading}

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
-import type { IOperator } from "../redux/operator/operatorSlice";
+
 import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import type { IOperator } from "@/interfaces/IOperator";
 
 export const useAdminOperatorManagement = (page: number, limit: number) => {
   const [operators, setOperators] = useState<IOperator[]>([]);

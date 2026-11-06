@@ -2,20 +2,20 @@ import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import type { RootState } from "@/redux/store";
 import { MessageSquare } from "lucide-react";
-import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const ChatNotificationBadgeButton = () => {
   const { chats } = useSelector((state: RootState) => state.chat);
   const currentUser = useCurrentUser();
-  const totalUnreadCount = useMemo(() => {
-    if (!currentUser?.id || !chats) return 0;
-    return chats.reduce((total, chat) => {
-      const count = chat.unreadCount?.[currentUser.id] || 0;
-      return total + count;
-    }, 0);
-  }, [chats, currentUser?.id]);
+  const totalUnreadCount =
+    !currentUser?.id || !chats
+      ? 0
+      : chats.reduce((total, chat) => {
+          const count = chat.unreadCount?.[currentUser.id] || 0;
+          return total + count;
+        }, 0);
+
   if (totalUnreadCount === 0) return null;
 
   return (

@@ -19,7 +19,7 @@ const HomeImageSlide = () => {
       setCurrentImage((prev) => (prev + 1) % images.length);
     }, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
   return (
     <div className="w-full max-w-[1600px] mx-auto ">
       <div className="relative flex flex-col  md:grid grid-cols-12 items-center  rounded-[15px] overflow-hidden shadow-2xl bg-white border border-gray-100 h-[500px] lg:h-[380px]">

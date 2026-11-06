@@ -3,15 +3,17 @@ import { axiosInstance } from "../api/axiosInstance";
 import { useState } from "react";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { BaseFormData } from "@/interfaces/interfaces";
 
-export interface CategoryPayload {
+export interface ICategoryForm extends BaseFormData {
   name: string;
   description: string;
 }
 
 export const useCreatePackageCategory = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
-  const createPackageCategory = async (payload: CategoryPayload) => {
+  const createPackageCategory = async (payload: ICategoryForm) => {
     try {
       const { data } = await axiosInstance.post(
         APP_ROUTES.PACKAGE_CATEGORIES.ADMIN.CREATE,
@@ -19,17 +21,9 @@ export const useCreatePackageCategory = () => {
       );
       toast.success(FEEDBACK_MESSAGES.PACKAGE_CATEGORY.SUCCESS.CREATE);
       return data.result;
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        throw error
-      }
-      const message =
-        error?.response?.data?.message ||FEEDBACK_MESSAGES.PACKAGE_CATEGORY.ERROR.CREATE;
-      toast.error(message);
-      throw error
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
-
-  return { createPackageCategory,fieldError,setFieldError };
+  return { createPackageCategory, fieldError, setFieldError };
 };

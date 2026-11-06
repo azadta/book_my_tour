@@ -2,11 +2,11 @@ import type { BookingStatusItem } from "@/hooks/useOperatorDashboard";
 import { useState } from "react";
 import {
   Cell,
-  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
   Tooltip,
+  type TooltipContentProps
 } from "recharts";
 
 interface BookingStatusDonutChartProps {
@@ -27,10 +27,10 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 
 const DEFAULT_CONFIG = { label: "Other", color: "#9CA3AF" };
 
-const CustomToolTip = ({ active, payload }: any) => {
+const CustomToolTip = ({ active, payload }: TooltipContentProps) => {
   if (active && payload && payload.length) {
     const data = payload[0];
-    const config = STATUS_CONFIG[data.name] || DEFAULT_CONFIG;
+    const config =data.name&&STATUS_CONFIG[data.name] || DEFAULT_CONFIG;
     return (
       <div className="bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-gray-100/80 flex items-center gap-3">
         <span
@@ -122,7 +122,7 @@ const BookingStatusDonutChart = ({
                   );
                 })}
               </Pie>
-              <Tooltip content={<CustomToolTip />} />
+              <Tooltip content={CustomToolTip} />
             </PieChart>
           </ResponsiveContainer>
         </div>

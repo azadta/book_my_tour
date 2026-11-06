@@ -19,17 +19,15 @@ import { toast } from "react-toastify";
 import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
 import { useApi } from "../../hooks/useApi.js";
 import type { RootState } from "../../redux/store.ts";
-
-interface FormDataType {
-  [key: string]: any;
-}
+import type { OperatorFormType } from "@/interfaces/IOperator.ts";
+import { handleApiError } from "@/utils/axiosErrorHandler.ts";
 
 const OperatorProfile = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { currentOperator, loading } = useSelector(
     (state: RootState) => state.operator,
   );
-  const [formData, setFormData] = useState<FormDataType>({
+  const [formData, setFormData] = useState<OperatorFormType>({
     name: "",
     email: "",
     mobile: "",
@@ -66,21 +64,29 @@ const OperatorProfile = () => {
 
     setFormData((prevForm) => {
       const keys = id.split(".");
-      const newForm = { ...prevForm };
-      let prevNested = prevForm;
+      const newForm: Record<string, unknown> = {
+        ...(prevForm as Record<string, unknown>),
+      };
+
+      let prevNested = prevForm as Record<string, unknown>;
 
       let nested = newForm;
       for (let i = 0; i < keys.length - 1; i++) {
         const key = keys[i];
 
-        nested[key] = { ...(prevNested?.[key] || {}) };
-        nested = nested[key];
-        prevNested = prevNested?.[key] || {};
+        const nextVal = prevNested?.[key];
+
+        nested[key] =
+          typeof nextVal === "object" && nextVal !== null
+            ? { ...(nextVal as Record<string, unknown>) }
+            : {};
+        nested = nested[key] as Record<string, unknown>;
+        prevNested = (prevNested?.[key] as Record<string, unknown>) || {};
       }
 
       nested[keys[keys.length - 1]] = value;
 
-      return { ...newForm };
+      return newForm as OperatorFormType;
     });
   };
 
@@ -115,14 +121,9 @@ const OperatorProfile = () => {
         }),
       );
       toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
-    } catch (error: any) {
-      console.error(FEEDBACK_MESSAGES.MEDIA.ERROR.CLOUDINARY, error);
-      dispatch(
-        updateOperatorFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(updateOperatorFailure(errorMessage));
     } finally {
       setImageUploadig(false);
     }
@@ -139,20 +140,9 @@ const OperatorProfile = () => {
       dispatch(updateOperatorSuccess(updatedUser));
 
       toast.success(FEEDBACK_MESSAGES.OPERATOR.SUCCESS.UPDATE);
-    } catch (error: any) {
-      dispatch(
-        updateOperatorFailure(error.response?.data?.message || error.message),
-      );
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-
-        return;
-      }
-
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(updateOperatorFailure(errorMessage));
     }
   };
 
@@ -162,14 +152,9 @@ const OperatorProfile = () => {
       await del(APP_ROUTES.OPERATORS.OPERATOR.LOGOUT);
       dispatch(logoutOperatorSuccess());
       navigate(FRONTEND_ROUTES.OPERATOR.LOGIN, { replace: true });
-    } catch (error: any) {
-      dispatch(
-        logoutOperatorFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.OPERATOR.ERROR.LOGOUT,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(logoutOperatorFailure(errorMessage));
     }
   };
 
@@ -211,6 +196,7 @@ const OperatorProfile = () => {
       });
     }
   }, [currentOperator]);
+  if (!currentOperator) return;
 
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] gap-2  items-end py-10">

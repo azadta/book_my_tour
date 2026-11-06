@@ -3,7 +3,6 @@ import type { ICouponItem } from "@/interfaces/interfaces";
 import {
   ArrowRight,
   Building2,
-  Check,
   Info,
   PercentDiamondIcon,
   Search,
@@ -26,6 +25,7 @@ interface CouponProps {
   onApplyCoupon: (coupon: ICouponItem) => void;
   onRemoveCoupon: (type: "GENERAL" | "BANK") => void;
 }
+type OfferTabType = "ALL" | "BANK" | "GENERAL";
 
 const Coupon = ({
   isOpen,
@@ -35,7 +35,7 @@ const Coupon = ({
   onApplyCoupon,
   onRemoveCoupon,
 }: CouponProps) => {
-  const [activeTab, setActiveTab] = useState<"ALL" | "BANK" | "GENERAL">("ALL");
+  const [activeTab, setActiveTab] = useState<OfferTabType>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const { bankOffers, fetchCoupons, generalCoupons, loading } = useCoupon();
   const allCoupons = [...bankOffers, ...generalCoupons];
@@ -56,7 +56,7 @@ const Coupon = ({
     if (isOpen) {
       fetchCoupons();
     }
-  }, [isOpen]);
+  }, [isOpen, fetchCoupons]);
   if (!isOpen) return null;
 
   return (
@@ -109,7 +109,7 @@ const Coupon = ({
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as OfferTabType)}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${activeTab === tab.id ? "bg-blue-600 text-white shadow-sm" : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-100"}`}
                 >
                   {Icon && <Icon className="w-3.5 h-3.5" />} {tab.label}

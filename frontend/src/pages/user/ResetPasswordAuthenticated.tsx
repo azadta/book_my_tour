@@ -7,9 +7,15 @@ import { toast } from "react-toastify";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import type { IResetPasswordAuthenticatedForm } from "@/interfaces/interfaces";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 const ResetPasswordAuthenticated = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<IResetPasswordAuthenticatedForm>({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
 
@@ -17,27 +23,20 @@ const ResetPasswordAuthenticated = () => {
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 
-  const handleSubmit = async (formData: any) => {
-    const { oldPassword, newPassword, confirmPassword } = formData;
+  const handleSubmit = async (formData: IResetPasswordAuthenticatedForm) => {
     try {
-      await resetPassword(oldPassword, newPassword, confirmPassword);
+      await resetPassword(formData);
       toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
-      navigate( FRONTEND_ROUTES.USER.PROFILE);
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-
-        return;
-      }
-      toast.error(error.response?.data?.message || FEEDBACK_MESSAGES.AUTH.ERROR.PASSWORD_RESET);
+      navigate(FRONTEND_ROUTES.USER.PROFILE);
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
 
   return (
     <div className="w-full max-w-xl mx-auto py-10">
-   
       <ReUsableForm
-      heading="Change Password"
+        heading="Change Password"
         formData={formData}
         setFormData={setFormData}
         fields={resetAuthenticatedPasswordFields}

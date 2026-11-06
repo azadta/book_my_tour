@@ -56,45 +56,13 @@ export interface FinalBookingPayload extends BookingNavigationState {
 const TravelerDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const bookingData = location.state as BookingNavigationState | null;
-  if (!bookingData) {
-    navigate(-1);
-    return null;
-  }
-  const { pkg: packageData, packageLoading } = usePackageDetails(
-    bookingData.packageId,
-  );
-  const addedActivities =
-    packageData?.itinerary.flatMap((day) =>
-      day.optionalActivities
-        .filter((activity) =>
-          bookingData.addedActivityIds.includes(activity.id),
-        )
-        .map((activity) => ({
-          id: activity.id,
-          name: activity.name,
-        })),
-    ) ?? [];
-
-  const removedActivities = packageData?.itinerary?.flatMap(
-    (day) =>
-      day.activities
-        .filter(
-          (activity) =>
-            activity.customizable &&
-            bookingData.removedActivityIds.includes(activity.id),
-        )
-        .map((activity) => ({ id: activity.id, name: activity.name })) ?? [],
-  );
-  const { handleBooking, isSubmitting, fieldError, setFieldError } =
-    useTravelerDetailsPage();
   const [primaryContact, setPrimaryContact] = useState({
     name: "",
     email: "",
     phone: "",
   });
-
+  const bookingData = location.state as BookingNavigationState;
+  const { pkg: packageData } = usePackageDetails(bookingData.packageId);
   const [members, setMembers] = useState<TourMemberDTO[]>(() => {
     const list: TourMemberDTO[] = [];
     for (let i = 0; i < bookingData.adultCount; i++) {
@@ -119,6 +87,32 @@ const TravelerDetailsPage = () => {
     }
     return list;
   });
+
+  const { handleBooking, isSubmitting, fieldError, setFieldError } =
+    useTravelerDetailsPage();
+
+  const addedActivities =
+    packageData?.itinerary.flatMap((day) =>
+      day.optionalActivities
+        .filter((activity) =>
+          bookingData.addedActivityIds.includes(activity.id),
+        )
+        .map((activity) => ({
+          id: activity.id,
+          name: activity.name,
+        })),
+    ) ?? [];
+
+  const removedActivities = packageData?.itinerary?.flatMap(
+    (day) =>
+      day.activities
+        .filter(
+          (activity) =>
+            activity.customizable &&
+            bookingData.removedActivityIds.includes(activity.id),
+        )
+        .map((activity) => ({ id: activity.id, name: activity.name })) ?? [],
+  );
 
   const handleMemberChange = (
     index: number,
@@ -171,8 +165,6 @@ const TravelerDetailsPage = () => {
   const walletPayable = bookingData.walletDeduction ?? 0;
   const razorpayPayable = bookingData.finalPayablePrice;
   const totalBookingAmount = walletPayable + razorpayPayable;
-
-  const isFullyPaidByWallet = walletPayable > 0 && razorpayPayable === 0;
 
   return (
     <div className="min-h-[calc(100vh-19.81rem)] bg-gray-50/50 py-10  px-4 sm:px-6 lg:px-8">

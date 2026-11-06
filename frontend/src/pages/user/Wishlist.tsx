@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { IPackage } from "@/interfaces/IPackage";
 
 const Wishlist = () => {
   const {
@@ -42,7 +43,7 @@ const Wishlist = () => {
     () => async () => {},
   );
 
-  const calculateGroupTotal = (packages: any[]) => {
+  const calculateGroupTotal = (packages:IPackage[]) => {
     return packages.reduce((acc, pkg) => {
       const price = pkg.discount
         ? Math.round(pkg.amount * (1 - pkg.discount / 100))
@@ -199,7 +200,7 @@ const Wishlist = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {activeGroup.packages.map((pkg: any) => (
+                {activeGroup.packages.map((pkg) => (
                   <div
                     key={pkg._id}
                     onClick={() =>
@@ -221,7 +222,7 @@ const Wishlist = () => {
                           <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
                             <MapPin className="w-3.5 h-3.5" />
                             {pkg.destinations
-                              .map((dest: any) => dest.name)
+                              .map((dest) => dest.name)
                               .join(", ")}
                           </span>
                         )}
@@ -264,7 +265,7 @@ const Wishlist = () => {
                 </div>
 
                 <div className="space-y-2">
-                  {activeGroup.notes?.map((note: any) => {
+                  {activeGroup.notes?.map((note) => {
                     const isEditing = editingNoteId === note._id;
                     return (
                       <div
@@ -301,7 +302,7 @@ const Wishlist = () => {
                             <span className="flex-1 ">{note.text}</span>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ">
                               <button
-                                onClick={(e) => {
+                                onClick={() => {
                                   setEditingNoteId(note._id);
                                   setNoteTextInput(note.text);
                                 }}

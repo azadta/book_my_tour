@@ -11,6 +11,8 @@ import { getCreatePackageFields, type Option } from "../../formConfig/fields";
 import { useCreatePackage } from "@/hooks/useCreatePackage";
 import type { FormField, IPackageItem } from "../../interfaces/interfaces";
 import type { ItineraryDay } from "../itinerary/types";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { FormPackage } from "@/interfaces/IPackage";
 
 interface IOptions {
   category: Option[];
@@ -23,8 +25,35 @@ interface Props {
   role: "admin" | "operator";
 }
 
+const initialPackageForm:FormPackage={
+  name:'',
+  amount:'',
+  destinations:[],
+  "duration.day":'',
+  "duration.night":'',
+  startDate:'',
+  startPoint:'',
+  availableSlots:'',
+  images:[],
+  category:'',
+  itinerary:[{
+    day:1,
+    activities:[{
+      id:'',
+      name:'',
+      description:'',
+      image:'',
+      timing:{from:'',to:''},
+      cost:0,
+      customizable:false
+    }],
+    gallery:[],
+    optionalActivities:[]
+  }]
+}
+
 const PackageForm = ({ mode, packageData, role }: Props) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<FormPackage>(initialPackageForm);
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const createHook = useCreatePackage();
   const operatorHook = useOperatorEditPackage();
@@ -35,10 +64,13 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
 
   const loading = mode === "create" ? createHook.loading : hook.loading;
 
-  const options: IOptions = {
-    category: categories,
-    destinations: destinations,
-  };
+  const options: IOptions = useMemo(
+    () => ({
+      category: categories,
+      destinations: destinations,
+    }),
+    [categories, destinations],
+  );
 
   const createDefaultItinerary = (): ItineraryDay[] => {
     return [
@@ -63,30 +95,24 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
     ];
   };
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData:FormPackage) => {
     try {
       if (mode === "create") {
         await createHook.createPackage(formData);
         toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.CREATE);
-        setFormData({});
+        setFormData(initialPackageForm);
       } else {
         await operatorHook.updatePackage(packageData!._id, formData);
         toast.success(FEEDBACK_MESSAGES.PACKAGE.SUCCESS.UPDATE);
       }
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response.data.errors);
-        return;
-      }
-      toast.error(
-        error.response?.data?.message ??
-          `Failed to ${mode === "create" ? "create" : "update"} package`,
-      );
+    } catch (error: unknown) {
+      handleApiError(error, { setFieldError });
     }
   };
+
   const activeFields = useMemo(
     () => getCreatePackageFields(formData),
-    [formData?.['childPricing.enabled']],
+    [formData],
   );
 
   const enrichedFields = useMemo(
@@ -95,14 +121,14 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
         ...field,
         options: options[field.id as keyof IOptions] ?? [],
       })),
-    [activeFields, categories, destinations],
+    [activeFields, options],
   );
 
   useEffect(() => {
     if (!packageData) {
-      setFormData({ itinerary: createDefaultItinerary() });
+      setFormData({ ...initialPackageForm,itinerary: createDefaultItinerary() });
     } else {
-      setFormData(flattenObjects({ ...packageData }));
+      setFormData(flattenObjects({ ...packageData }) as FormPackage);
     }
   }, [packageData]);
 
@@ -124,7 +150,7 @@ const PackageForm = ({ mode, packageData, role }: Props) => {
             onChange={(itinerary) =>
               setFormData((prev) => ({ ...prev, itinerary }))
             }
-            value={formData.itinerary ?? []}
+            value={(formData.itinerary as ItineraryDay[]) ?? []}
             fieldError={fieldError}
             setFieldError={setFieldError}
           />

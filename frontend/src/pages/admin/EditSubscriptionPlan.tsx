@@ -1,15 +1,21 @@
+import Loading from "@/components/Loading";
 import { useSubscriptionPlan } from "@/hooks/useSubscriptionPlan";
+import type { SubscritptionPlanForm } from "@/interfaces/interfaces";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { unFlattenObject } from "../../../../backend/utils/unFlattenObject";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { subscriptionPlanFields } from "../../formConfig/fields";
-import { toast } from "react-toastify";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import Loading from "@/components/Loading";
+const initialPlan: SubscritptionPlanForm = {
+  name: "",
+  price: 0,
+  packageLimit: 0,
+  durationDays: 0,
+};
 
 const EditSubscriptionPlan = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<SubscritptionPlanForm>(initialPlan);
   const { id } = useParams<{ id: string }>();
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const navigate = useNavigate();
@@ -21,25 +27,17 @@ const EditSubscriptionPlan = () => {
     if (id) {
       fetchPlanDetails(id);
     }
-  }, [id]);
+  }, [id, fetchPlanDetails]);
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: SubscritptionPlanForm) => {
     if (!id) return;
     try {
       const nestedData = unFlattenObject(data);
 
       await updatePlan(id, nestedData);
       navigate("/admin/subscription-plans");
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
-      }
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.SUBSCRIPTION_PLANS.ERROR.UPDATE,
-      );
-      console.error(error.message);
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
 

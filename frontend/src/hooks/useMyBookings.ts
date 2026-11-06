@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPricing } from "@/interfaces/interfaces";
-import { useEffect, useState } from "react";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export interface PopulatedDestinations {
@@ -44,7 +44,7 @@ export const useMyBookings = (
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(
@@ -53,19 +53,15 @@ export const useMyBookings = (
 
       setBookings(response.data.result.bookings);
       setTotalCount(response.data.result.totalCount);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.BOOKING.ERROR.FETCH_USER_BOOKINGS;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setIsLoading(false);
     }
-  };
-
+  }, [currentPage,resultPerPage]);
   const handleOpenCancelModel = (bookingId: string) => {
-    (setSelectedBookingId(bookingId), setCancelReason(""));
+    setSelectedBookingId(bookingId);
+    setCancelReason("");
   };
   const handleCloseModal = () => {
     setSelectedBookingId(null);
@@ -84,17 +80,14 @@ export const useMyBookings = (
       handleCloseModal();
 
       fetchBookings();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || FEEDBACK_MESSAGES.BOOKING.ERROR.CANCEL;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
   };
 
   useEffect(() => {
     fetchBookings();
-  }, [currentPage]);
+  }, [currentPage,fetchBookings]);
 
   return {
     bookings,

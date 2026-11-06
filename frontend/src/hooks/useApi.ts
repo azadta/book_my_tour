@@ -1,11 +1,11 @@
 import { axiosInstance } from "../api/axiosInstance";
 
 export const useApi = () => {
-  const put = async (url: string, data: any) => {
+  const put = async (url: string, data: unknown) => {
     const res = await axiosInstance.put(url, data);
     return res.data.result;
   };
-  const post = async (url: string, data: any) => {
+  const post = async (url: string, data: unknown) => {
     const res = await axiosInstance.post(url, data);
     return res.data.result;
   };

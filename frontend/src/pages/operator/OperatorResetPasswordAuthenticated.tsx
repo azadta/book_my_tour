@@ -1,15 +1,20 @@
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { useState } from "react";
-import { useAuthenticatedPasswordReset } from "../../hooks/useAuthenticatedPasswordReset";
 import { useNavigate } from "react-router-dom";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { resetAuthenticatedPasswordFields } from "../../formConfig/fields";
-import BackToDashboard from "../../components/BackToDashboard";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { useAuthenticatedPasswordReset } from "../../hooks/useAuthenticatedPasswordReset";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { IResetPasswordAuthenticatedForm } from "@/interfaces/interfaces";
 
 const OperatorResetPasswordAuthenticated: React.FC = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<IResetPasswordAuthenticatedForm>({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -17,21 +22,17 @@ const OperatorResetPasswordAuthenticated: React.FC = () => {
   const { resetPassword, loading } = useAuthenticatedPasswordReset(endPoint);
   const navigate = useNavigate();
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: IResetPasswordAuthenticatedForm) => {
     setError(null);
     setMessage(null);
     const { oldPassword, newPassword, confirmPassword } = formData;
     try {
-      await resetPassword(oldPassword, newPassword, confirmPassword);
+      await resetPassword({ oldPassword, newPassword, confirmPassword });
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_UPDATE);
       setTimeout(() => navigate(FRONTEND_ROUTES.OPERATOR.PROFILE), 2000);
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-
-        return;
-      }
-      setError(error.response?.data?.message || error.message);
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) setError(errorMessage);
     }
   };
 

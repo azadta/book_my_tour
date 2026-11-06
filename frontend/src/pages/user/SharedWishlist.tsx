@@ -13,11 +13,13 @@ import { useParams } from "react-router-dom";
 
 const SharedWishlist = () => {
   const { shareToken } = useParams<{ shareToken: string }>();
-  if (!shareToken) return;
-  const { loading, wishlistGroup } = useSharedWishlist({ shareToken });
+
+  const { loading, wishlistGroup } = useSharedWishlist({
+    shareToken: shareToken as string,
+  });
   const packageCount = wishlistGroup?.packages?.length || 0;
   const calculateGroupTotal = wishlistGroup?.packages.reduce(
-    (acc: number, pkg: any) => {
+    (acc: number, pkg) => {
       const price = pkg.discount
         ? Math.round(pkg.amount * (1 - pkg.discount / 100))
         : pkg.amount;
@@ -89,7 +91,7 @@ const SharedWishlist = () => {
               Notes for you
             </h4>
             <div className="flex flex-wrap gap-2">
-              {wishlistGroup.notes.map((note: any, index: number) => (
+              {wishlistGroup.notes.map((note, index: number) => (
                 <div
                   key={note._id || index}
                   className="bg-amber-50/80 border border-amber-200/60 rounded-xl p-3 text-xs text-amber-900 max-w-sm"
@@ -108,7 +110,7 @@ const SharedWishlist = () => {
               Saved packages
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {wishlistGroup?.packages?.map((pkg: any) => (
+              {wishlistGroup?.packages?.map((pkg) => (
                 <article
                   key={pkg._id}
                   className="group relative bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md hover:border-slate-300 transition-all duration-200 flex flex-col justify-between "
@@ -128,9 +130,7 @@ const SharedWishlist = () => {
                       {pkg.destinations && (
                         <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
                           <MapPin className="w-3.5 h-3.5" />
-                          {pkg.destinations
-                            .map((dest: any) => dest.name)
-                            .join(", ")}
+                          {pkg.destinations.map((dest) => dest.name).join(", ")}
                         </span>
                       )}
                       <h3 className="font-bold text-lg text-slate-900 group-hover:text-indigo-600 transition-colors">

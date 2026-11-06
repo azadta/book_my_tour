@@ -31,10 +31,10 @@ const OptionalActivityEditor = ({
     ]);
   };
 
-  const updateActivity = (
+  const updateActivity =<K extends keyof OptionalActivity> (
     index: number,
-    field: keyof OptionalActivity,
-    fieldValue: any,
+    field:K,
+    fieldValue: OptionalActivity[K],
   ) => {
     const updated = [...value];
     updated[index] = { ...updated[index], [field]: fieldValue };

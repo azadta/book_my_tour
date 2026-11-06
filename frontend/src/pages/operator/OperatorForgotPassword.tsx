@@ -5,6 +5,7 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { useNavigate } from "react-router-dom";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { X } from "lucide-react";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 const OperatorForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -17,11 +18,8 @@ const OperatorForgotPassword: React.FC = () => {
     try {
       await sendResetEmail(email);
       toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.FORGOT_PASSWORD_SENT);
-    } catch (error: any) {
-      toast.error(
-        error.response.data.message ||
-          FEEDBACK_MESSAGES.AUTH.ERROR.FORGOT_PASSWORD,
-      );
+    } catch (error) {
+      handleApiError(error)
     }
   };
 

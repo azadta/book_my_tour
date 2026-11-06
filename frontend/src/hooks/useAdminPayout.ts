@@ -2,6 +2,7 @@ import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPopulatedPayout } from "@/interfaces/interfaces";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 import { loadRazorpayScript } from "@/utils/loadRazorpay";
 import { useCallback, useEffect, useState } from "react";
@@ -17,11 +18,8 @@ export const useAdminPayout = () => {
       setLoading(true);
       const { data } = await axiosInstance.get(APP_ROUTES.PAYOUT.LIST);
       setPayouts(data.result);
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || FEEDBACK_MESSAGES.PAYOUT.ERROR.FETCH;
-      toast.error(message);
-      console.error(error.message);
+    } catch (error: unknown) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }
@@ -72,12 +70,8 @@ export const useAdminPayout = () => {
 
             toast.success(FEEDBACK_MESSAGES.PAYOUT.SUCCESS.COMPLETED);
             fetchPayouts();
-          } catch (error: any) {
-            toast.error(
-              error.response?.data?.message ||
-                FEEDBACK_MESSAGES.PAYMENT.ERROR.PAYMENT_VERIFICATION,
-            );
-            console.error(error.message);
+          } catch (error: unknown) {
+            handleApiError(error);
           } finally {
             setIsSubmitting(false);
           }
@@ -101,11 +95,8 @@ export const useAdminPayout = () => {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.PAYOUT.ERROR.INITIATE,
-      );
+    } catch (error: unknown) {
+      handleApiError(error);
       setIsSubmitting(false);
     }
   };

@@ -7,6 +7,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipContentProps,
 } from "recharts";
 
 const monthNames = [
@@ -27,7 +28,7 @@ interface BookingBarChartProps {
   monthlyRevenue?: IMonthlyRevenue[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipContentProps) => {
   if (active && payload && payload.length) {
     const data = payload[0];
     return (
@@ -103,7 +104,7 @@ const BookingsBarChart = ({ monthlyRevenue = [] }: BookingBarChartProps) => {
               axisLine={false}
             />
             <Tooltip
-              content={<CustomTooltip />}
+              content={CustomTooltip}
               cursor={{ fill: "rgba(243,244,246,0.5)" }}
             />
             <Bar

@@ -14,7 +14,7 @@ export const useAdminOperatorActions = () => {
       setLoading(false);
     }
   }, []);
-  const updateOperator = useCallback(async (id: string, data: any) => {
+  const updateOperator = useCallback(async (id: string, data: unknown) => {
     setLoading(true);
     try {
       await axiosInstance.put(APP_ROUTES.OPERATORS.ADMIN.UPDATE(id), data);

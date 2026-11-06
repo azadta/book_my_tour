@@ -15,6 +15,7 @@ import {
 } from "@/redux/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 export const useNotifications = () => {
   const dispatch = useDispatch();
@@ -24,9 +25,10 @@ export const useNotifications = () => {
   );
 
   const [loading, setLoading] = useState<boolean>(false);
+  const userId=currentUser?.id
 
   const fetchNotifications = useCallback(async () => {
-    if (!currentUser) return;
+    if (!userId) return;
     setLoading(true);
     try {
       const response = await axiosInstance.get<{
@@ -38,32 +40,27 @@ export const useNotifications = () => {
           unreadCount: response.data.result.unreadCount || 0,
         }),
       );
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.FETCH;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     } finally {
       setLoading(false);
     }
-  }, [currentUser, dispatch]);
+  }, [userId, dispatch]);
 
-  const markAsRead = useCallback(async (notificationId: string) => {
-    try {
-      await axiosInstance.patch<{
-        message: string;
-        data: { unreadCount: number };
-      }>(APP_ROUTES.NOTIFICATIONS.USER.MARK_AS_READ(notificationId));
-      dispatch(markAsReadAction(notificationId));
-    } catch (error: any) {
-      const message =
-        error.response?.data?.messsage ||
-        FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.MARK_AS_READ;
-      toast.error(message);
-      console.error(message, error);
-    }
-  }, []);
+  const markAsRead = useCallback(
+    async (notificationId: string) => {
+      try {
+        await axiosInstance.patch<{
+          message: string;
+          data: { unreadCount: number };
+        }>(APP_ROUTES.NOTIFICATIONS.USER.MARK_AS_READ(notificationId));
+        dispatch(markAsReadAction(notificationId));
+      } catch (error) {
+        handleApiError(error);
+      }
+    },
+    [dispatch],
+  );
 
   const sendNotification = useCallback(
     async (data: {
@@ -80,12 +77,8 @@ export const useNotifications = () => {
         toast.success(FEEDBACK_MESSAGES.NOTIFICATIONS.SUCCESS.SEND);
 
         return response.data.result;
-      } catch (error: any) {
-        const message =
-          error.response?.data?.message ||
-          FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.SEND;
-        toast.error(message);
-        console.error(message, error);
+      } catch (error) {
+        handleApiError(error);
       }
     },
     [],
@@ -95,27 +88,19 @@ export const useNotifications = () => {
     try {
       await axiosInstance.patch(APP_ROUTES.NOTIFICATIONS.USER.MARK_ALL_AS_READ);
       dispatch(markAllAsReadAction());
-    } catch (error: any) {
-      const message =
-        error.response?.data?.messsage ||
-        FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.MARK_ALL_AS_READ;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
-  }, []);
+  }, [dispatch]);
 
   const clearAllNotifications = useCallback(async () => {
     try {
       await axiosInstance.delete(APP_ROUTES.NOTIFICATIONS.USER.CLEAR_ALL);
       dispatch(clearNotifications());
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        FEEDBACK_MESSAGES.NOTIFICATIONS.ERROR.CLEAR_ALL;
-      toast.error(message);
-      console.error(message, error);
+    } catch (error) {
+      handleApiError(error);
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -128,7 +113,7 @@ export const useNotifications = () => {
     return () => {
       socket.off("new_notification", handleNewNotification);
     };
-  }, [currentUser?.id, dispatch]);
+  }, [currentUser, dispatch]);
 
   return {
     notifications,

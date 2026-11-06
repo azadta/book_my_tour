@@ -3,18 +3,14 @@ import { axiosInstance } from "../api/axiosInstance";
 
 export const useAuthenticatedPasswordReset = (endPoint: string) => {
   const [loading, setLoading] = useState(false);
-  const resetPassword = async (
-    oldPassword: string,
-    newPassword: string,
-    confirmPassword: string,
-  ) => {
+  const resetPassword = async (data: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
     try {
       setLoading(true);
-      const res = await axiosInstance.post(endPoint, {
-        oldPassword,
-        newPassword,
-        confirmPassword,
-      });
+      const res = await axiosInstance.post(endPoint, data);
       return res.data.result;
     } finally {
       setLoading(false);

@@ -5,16 +5,23 @@ import ReUsableForm from "../../components/forms/ReUsableForm";
 import { userResetPasswordfields } from "../../formConfig/fields";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { IResetPasswordForm } from "@/interfaces/interfaces";
 
+
+const initialResetPassoword = {
+  newPassword: "",
+  confirmPassword: "",
+};
 export const ResetPassword = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<IResetPasswordForm>(initialResetPassoword);
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>();
   const { resetUserPassword, loading } = useResetPassword();
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: IResetPasswordForm) => {
     setMessage(null);
     setError(null);
     const { newPassword, confirmPassword } = formData;
@@ -27,13 +34,9 @@ export const ResetPassword = () => {
       await resetUserPassword(token as string, newPassword);
       setMessage(FEEDBACK_MESSAGES.AUTH.SUCCESS.PASSWORD_REDIRECTING);
       setTimeout(() => navigate(FRONTEND_ROUTES.USER.LOGIN), 2000);
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-
-        return;
-      }
-      setError(error.response?.data?.message || error.message);
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) setError(errorMessage);
     }
   };
 

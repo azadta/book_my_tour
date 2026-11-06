@@ -1,16 +1,16 @@
-import type { IReviewItem, IReviewStats } from "@/interfaces/interfaces";
 import type { RootState } from "@/redux/store";
 import { CheckCircle2, Edit2, MessageSquare, Star, Trash2 } from "lucide-react";
 import type React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import ConfirmationModal from "./ConfirmationModal";
-import { useState } from "react";
+import type { IReviewItem, IReviewStats } from "@/interfaces/IReview";
 
 interface PackageReviewProps {
   stats: IReviewStats | null;
   reviews: IReviewItem[];
 
-  onEditReview: (editPayload: any) => void;
+  onEditReview: (editPayload: IReviewItem) => void;
   onDeleteReview: (reviewId: string) => void;
   openCreateModal: () => void;
 }
@@ -22,14 +22,14 @@ const PackageReviews: React.FC<PackageReviewProps> = ({
   onDeleteReview,
   onEditReview,
 }) => {
-  if (!stats || !reviews || stats.totalReviews === 0) return;
+
   const { currentUser } = useSelector((state: RootState) => state.user);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => Promise<void>>(
     () => async () => {},
   );
-
+    if (!stats || !reviews || stats.totalReviews === 0) return ;
   const ratingBars = [
     { label: "5 Stars", count: stats?.fiveStar },
     { label: "4 Stars", count: stats?.fourStar },
@@ -37,7 +37,7 @@ const PackageReviews: React.FC<PackageReviewProps> = ({
     { label: "2 Stars", count: stats?.twoStar },
     { label: "1 Star", count: stats?.oneStar },
   ];
-    const openConfirmationModel = (
+  const openConfirmationModel = (
     message: string,
     action: () => Promise<void>,
   ) => {
@@ -45,6 +45,7 @@ const PackageReviews: React.FC<PackageReviewProps> = ({
     setModalAction(() => action);
     setModalOpen(true);
   };
+  
 
   return (
     <section

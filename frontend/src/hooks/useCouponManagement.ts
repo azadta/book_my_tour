@@ -1,12 +1,13 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import type { CouponFormData } from "@/interfaces/ICoupon";
 import { formatCouponPayload } from "@/utils/formatCouponPayload";
 import { useCallback, useState } from "react";
 
 export const useCouponManagement = () => {
     const [loading,setLoading]=useState(false)
  
-  const createCoupon = useCallback(async (data: any) => {
+  const createCoupon = useCallback(async (data:CouponFormData) => {
     setLoading(true);
     try {
       const payload = formatCouponPayload(data);
@@ -32,7 +33,7 @@ export const useCouponManagement = () => {
     }
   }, []);
 
-  const updateCoupon = useCallback(async (id: string, data: any) => {
+  const updateCoupon = useCallback(async (id: string, data: CouponFormData) => {
     setLoading(true);
     try {
       const payload = formatCouponPayload(data);

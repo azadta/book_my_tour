@@ -23,9 +23,10 @@ import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
 import { disconnectSocket } from "@/socket/socket";
 import { setActiveChat, setChats, setMessages } from "@/redux/chatSlice";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 
 interface FormDataType {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const Profile = () => {
@@ -51,6 +52,7 @@ const Profile = () => {
       postalCode: "",
     },
   });
+  
 
   const [imageUploading, setImageUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -103,19 +105,16 @@ const Profile = () => {
         },
       );
       const imgData = await res.json();
-      await post(APP_ROUTES.USERS.USER.UPDATE_IMAGE, { image: imgData.secure_url });
+      await post(APP_ROUTES.USERS.USER.UPDATE_IMAGE, {
+        image: imgData.secure_url,
+      });
       dispatch(
         updateUserSuccess({ ...currentUser!, image: imgData.secure_url }),
       );
       toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
-    } catch (error: any) {
-      console.error(FEEDBACK_MESSAGES.MEDIA.ERROR.CLOUDINARY, error);
-      dispatch(
-        updateUserFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.MEDIA.ERROR.UPLOAD,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(updateUserFailure(errorMessage));
     } finally {
       setImageUploading(false);
     }
@@ -132,18 +131,9 @@ const Profile = () => {
       dispatch(updateUserSuccess(updatedUser));
 
       toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.UPDATE);
-    } catch (error: any) {
-      dispatch(
-        updateUserFailure(error.response?.data?.message || error.message),
-      );
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-
-        return;
-      }
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.UPDATE,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(updateUserFailure(errorMessage));
     }
   };
   const deleteUser = async () => {
@@ -153,13 +143,9 @@ const Profile = () => {
       dispatch(deleteUserSuccess());
       toast.success(FEEDBACK_MESSAGES.USER.SUCCESS.DELETE);
       navigate(FRONTEND_ROUTES.USER.HOME, { replace: true });
-    } catch (error: any) {
-      dispatch(
-        deleteUserFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.DELETE,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(deleteUserFailure(errorMessage));
     }
   };
   const handleDeleteUser = async () => {
@@ -180,13 +166,9 @@ const Profile = () => {
       dispatch(setChats([]));
       dispatch(logoutUserSuccess());
       navigate(FRONTEND_ROUTES.USER.LOGIN, { replace: true });
-    } catch (error: any) {
-      dispatch(
-        logoutUserFailure(error.response?.data?.message || error.message),
-      );
-      toast.error(
-        error.response?.data?.message || FEEDBACK_MESSAGES.USER.ERROR.LOGOUT,
-      );
+    } catch (error) {
+      const errorMessage = handleApiError(error, { setFieldError });
+      if (errorMessage) dispatch(logoutUserFailure(errorMessage));
     }
   };
 
@@ -214,6 +196,7 @@ const Profile = () => {
       });
     }
   }, [currentUser]);
+  if (!currentUser) return;
 
   return (
     <div className="flex flex-col sm:flex-row  justify-center gap-5  ">

@@ -8,8 +8,9 @@ import Pagination from "../../components/Pagination";
 import type { ActionButton, Column } from "../../components/ReUsableTable";
 import ReUsableTable from "../../components/ReUsableTable";
 import { useAdminUserManagement } from "../../hooks/useAdminUserManagement";
-import type { IUser } from "../../redux/user/userSlice";
+
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import type { IUser } from "@/interfaces/IUser";
 
 const AdminUserDetails = () => {
   const [open, setOpen] = useState(false);

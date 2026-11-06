@@ -8,9 +8,12 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import ReusableForm from "../../components/forms/ReUsableForm";
 import { adminUpdateOperatorFields } from "../../formConfig/fields";
 import { useAdminOperatorActions } from "../../hooks/useAdminOperatorActions";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import type { IOperator } from "@/interfaces/IOperator";
+
 
 const EditOperator = () => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
   const { id } = useParams<{ id: string }>();
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const navigate = useNavigate();
@@ -21,7 +24,7 @@ const EditOperator = () => {
     loading,
     updateOperator,
   } = useAdminOperatorActions();
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<IOperator | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalAction, setModalAction] = useState<() => void>(() => () => {});
@@ -31,17 +34,14 @@ const EditOperator = () => {
       try {
         const data = await fetchOperator(id);
         setData(data);
-      } catch (error: any) {
-        toast.error(
-          error.response?.data?.message ||
-            FEEDBACK_MESSAGES.OPERATOR.ERROR.FETCH,
-        );
+      } catch (error) {
+        handleApiError(error, { setFieldError });
       }
     };
     getOperator();
   }, [id, fetchOperator]);
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: Record<string, unknown>) => {
     if (!id) return;
     try {
       const booleanFields = [
@@ -59,15 +59,8 @@ const EditOperator = () => {
       await updateOperator(id, nestedData);
 
       toast.success(FEEDBACK_MESSAGES.OPERATOR.SUCCESS.UPDATE);
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
-        setFieldError(error.response?.data?.errors);
-        return;
-      }
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE,
-      );
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
 
@@ -75,18 +68,15 @@ const EditOperator = () => {
     if (!id) return;
     try {
       setModalMessage(
-        data.isBlocked ? "Unblock this operator?" : "Block this operator?",
+        data?.isBlocked ? "Unblock this operator?" : "Block this operator?",
       );
       setModalAction(() => async () => {
-        await blockOperator(id, !data.isBlocked);
+        await blockOperator(id, !data?.isBlocked);
         navigate(FRONTEND_ROUTES.ADMIN.OPERATORS);
       });
       setModalOpen(true);
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.OPERATOR.ERROR.UPDATE_BLOCK_STATUS,
-      );
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
 
@@ -99,11 +89,8 @@ const EditOperator = () => {
         navigate(FRONTEND_ROUTES.ADMIN.OPERATORS);
       });
       setModalOpen(true);
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          FEEDBACK_MESSAGES.OPERATOR.ERROR.DELETE,
-      );
+    } catch (error) {
+      handleApiError(error, { setFieldError });
     }
   };
 
@@ -125,10 +112,10 @@ const EditOperator = () => {
         <button
           onClick={handleBlockToggle}
           className={`px-4 py-2 text-white rounded ${
-            data.isBlocked ? "bg-green-500" : "bg-yellow-500"
+            data?.isBlocked ? "bg-green-500" : "bg-yellow-500"
           }`}
         >
-          {data.isBlocked ? "unblock" : "block"}
+          {data?.isBlocked ? "unblock" : "block"}
         </button>
         <button
           onClick={handleDelete}

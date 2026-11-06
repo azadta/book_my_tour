@@ -1,13 +1,13 @@
 import type { IMonthlyRevenue } from "@/hooks/useOperatorDashboard";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipContentProps
 } from "recharts";
 
 const monthNames = [
@@ -29,7 +29,7 @@ interface RevenueLineChartProps {
   monthlyRevenue?: IMonthlyRevenue[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }:TooltipContentProps) => {
   if (active && payload && payload.length) {
     const data = payload[0];
     const formattedVal = Number(data.value || 0).toLocaleString("en-IN", {
@@ -109,7 +109,7 @@ const RevenueLineChart = ({ monthlyRevenue = [] }: RevenueLineChartProps) => {
               }
             />
 
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={CustomTooltip} />
 
             <Line
               type="monotone"

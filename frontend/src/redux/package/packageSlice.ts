@@ -1,98 +1,73 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  type PayloadAction,
-} from "@reduxjs/toolkit";
+// import {
+//   createAsyncThunk,
+//   createSlice,
+//   type PayloadAction,
+// } from "@reduxjs/toolkit";
 
-import { axiosInstance } from "../../api/axiosInstance";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
+// import { APP_ROUTES } from "@/constants/AppRoutes";
+// import type { IPackage } from "@/interfaces/IPackage";
+// import { handleApiError } from "@/utils/axiosErrorHandler";
+// import { axiosInstance } from "../../api/axiosInstance";
 
-interface Destination {
-  name: string;
-  _id: string;
-}
+// interface PackageState {
+//   data: IPackage[];
+//   totalCount: number;
+//   status: "idle" | "loading" | "succeeded" | "failed";
+//   error?: string;
+// }
 
-export interface IPackage {
-  _id: string;
-  name: string;
-  amount: number;
-  destinations: Destination[];
-  duration: {
-    day: number;
-    night: number;
-  };
-  specifications?: string[];
-  activities?: string[];
-  expiryDate?: string;
-  operatorId?: string;
-  remark?: string;
-  createdAt?: string;
-  isCustomizable?: boolean;
-  discount?: number;
-  availableSlots?: string[];
-  images: string[];
-  category?: string | { [key: string]: any };
-}
+// export const fetchPackages = createAsyncThunk<
+//   { packages: IPackage[]; totalCount: number },
+//   { page: number; limit: number },
+//   { rejectValue: string }
+// >("package/fetch", async ({ page, limit }, { rejectWithValue }) => {
+//   try {
+//     const res = await axiosInstance.get(APP_ROUTES.USER.PACKAGES_HOME, {
+//       params: {
+//         page,
+//         limit,
+//       },
+//     });
 
-interface PackageState {
-  data: IPackage[];
-  totalCount: number;
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error?: string;
-}
+//     return res.data;
+//   } catch (error) {
+//     const errorMessage = handleApiError(error);
+//     if (errorMessage) return rejectWithValue(errorMessage);
+//   }
+// });
 
-export const fetchPackages = createAsyncThunk<
-  { packages: IPackage[]; totalCount: number },
-  { page: number; limit: number },
-  { rejectValue: string }
->("package/fetch", async ({ page, limit }, { rejectWithValue }) => {
-  try {
-    const res = await axiosInstance.get(
-       APP_ROUTES.USER.PACKAGES_HOME,{params:{
-        page,limit
-       }}
-    );
+// const initialState: PackageState = {
+//   data: [],
+//   totalCount: 0,
+//   status: "idle",
+// };
 
-    return res.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message || FEEDBACK_MESSAGES.PACKAGE.ERROR.FETCH;
-    return rejectWithValue(message);
-  }
-});
+// const packageSlice = createSlice({
+//   name: "package",
+//   initialState,
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchPackages.pending, (state) => {
+//         state.status = "loading";
+//         state.error = "undefined";
+//       })
+//       .addCase(
+//         fetchPackages.fulfilled,
+//         (
+//           state,
+//           action: PayloadAction<{ packages: IPackage[]; totalCount: number }>,
+//         ) => {
+//           state.status = "succeeded";
+//           state.data = action.payload.packages;
+//           state.totalCount = action.payload.totalCount;
+//         },
+//       )
+//       .addCase(fetchPackages.rejected, (state, action) => {
+//         state.status = "failed";
+//         state.error = action.payload as string;
+//       });
+//   },
+// });
 
-const initialState: PackageState = {
-  data: [],
-  totalCount: 0,
-  status: "idle",
-};
-
-const packageSlice = createSlice({
-  name: "package",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchPackages.pending, (state) => {
-        state.status = "loading";
-        state.error = "undefined";
-      })
-      .addCase(
-        fetchPackages.fulfilled,
-        (
-          state,
-          action: PayloadAction<{ packages: IPackage[]; totalCount: number }>,
-        ) => {
-          state.status = "succeeded";
-          state.data = action.payload.packages;
-          state.totalCount = action.payload.totalCount;
-        },
-      )
-      .addCase(fetchPackages.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload as string;
-      });
-  },
-});
-
-export default packageSlice.reducer;
+// export default packageSlice.reducer;

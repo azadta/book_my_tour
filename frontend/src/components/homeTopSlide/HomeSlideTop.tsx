@@ -14,7 +14,7 @@ const HomeSlideTop = () => {
   const { packages,loadingPackages,loadingDestinationsByCategory,fetchPackages } = useHome();
   useEffect(() => {
     fetchPackages();
-  }, []);
+  }, [fetchPackages]);
   return (
     <div className="w-full relative">
       {(loadingDestinationsByCategory||loadingPackages)&&<Loading/> }

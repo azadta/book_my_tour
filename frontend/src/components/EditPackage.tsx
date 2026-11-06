@@ -1,10 +1,11 @@
-import PackageForm from "@/components/forms/PackageForm";
+
 import Loading from "@/components/Loading";
 import { useAdminEditPackage } from "@/hooks/useAdminEditPackage";
-import { useOperatorEditPackage} from "@/hooks/useOperatorEditPackage";
+import { useOperatorEditPackage } from "@/hooks/useOperatorEditPackage";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import PackageForm from "./forms/PackageForm";
 
 interface Props {
   role: "operator" | "admin";
@@ -24,7 +25,7 @@ const EditPackage = ({role}:Props) => {
       setPackageData(data);
     };
     loadPackage();
-  }, [id]);
+  }, [id,fetchPackage]);
   if (loading || !packageData) {
     return <Loading />;
   }

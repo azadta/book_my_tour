@@ -1,13 +1,30 @@
+import { IBookingStatusBreakDown, IMonthlyRevenue } from "./IBooking";
+
 export interface IDashboardService {
-  getSignupCountTodayService(): Promise<number>;
-  getPendingOperatorsCountService(): Promise<number>;
+  getAdminSummaryCountsService(): Promise<{
+    usersCount: number;
+    operatorsCount: number;
+    todaySignups: number;
+    pendingVerificationsCount: number;
+  }>;
+
   getOperatorDashboardStatsService(operatorId: string): Promise<{
     packagesCount: number;
+    monthlyRevenue: IMonthlyRevenue[];
+    bookingStatusBreakDown: IBookingStatusBreakDown[];
     totalBookings: number;
     confirmedBookings: number;
     cancelRequestedBookings: number;
     totalRevenue: number;
   }>;
-  getTotalUsersCountService(): Promise<number>;
-  getTotalOperatorsCountService(): Promise<number>;
+
+  getAdminDashboardStatsService(): Promise<{
+    packagesCount: number;
+    monthlyRevenue: IMonthlyRevenue[];
+    bookingStatusBreakDown: IBookingStatusBreakDown[];
+    totalBookings: number;
+    confirmedBookings: number;
+    cancelRequestedBookings: number;
+    totalRevenue: number;
+  }>;
 }

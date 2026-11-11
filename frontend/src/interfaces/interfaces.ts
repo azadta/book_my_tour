@@ -306,7 +306,50 @@ export interface IResetPasswordForm extends BaseFormData {
   confirmPassword: string;
 }
 export interface IResetPasswordAuthenticatedForm extends BaseFormData {
-    oldPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-  }
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface IPackageSummary {
+  _id: string;
+  name: string;
+  images: string[];
+  startDate: string;
+  duration: { day: number; night: number };
+  startPoint: string;
+  destinations: IBookingPackageDestination[];
+}
+
+export interface ITourMember {
+  type: "adult" | "child";
+  firstName: string;
+  lastName: string;
+  dob: string;
+  gender: "male" | "female" | "other";
+  passportNumber: string | null;
+}
+
+export interface ILeadContact {
+  name: string;
+  email: string;
+  phone: string;
+}
+export interface IBookingDetails {
+  _id: string;
+  userId: string;
+  packageId?: IPackageSummary;
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  addedActivityIds: string[];
+  removedActivityIds: string[];
+  primaryContact: ILeadContact;
+  members: ITourMember[];
+  status: IBookingStatus;
+  attendance: IAttendanceStatus;
+  pricing: IPricing;
+  addedActivities: IOptionalActivity[];
+  removedActivities: IActivity[];
+  createdAt: string;
+  updatedAt: string;
+}

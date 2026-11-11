@@ -2,8 +2,11 @@ import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import type { IPricing } from "@/interfaces/interfaces";
 import { handleApiError } from "@/utils/axiosErrorHandler";
+import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { unFlattenObject } from "../../../backend/utils/unFlattenObject";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export interface PopulatedDestinations {
   _id: string;
@@ -18,6 +21,7 @@ export interface PopulatedPackage {
   images?: string[];
   amount: number;
   startDate: string;
+  operatorId:string
 }
 
 export interface IBooking {
@@ -44,6 +48,12 @@ export const useMyBookings = (
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [activeBookingForReview, setActiveBookingForReview] =
+    useState<IBooking | null>(null);
+
   const fetchBookings = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -58,7 +68,7 @@ export const useMyBookings = (
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage,resultPerPage]);
+  }, [currentPage, resultPerPage]);
   const handleOpenCancelModel = (bookingId: string) => {
     setSelectedBookingId(bookingId);
     setCancelReason("");
@@ -66,6 +76,41 @@ export const useMyBookings = (
   const handleCloseModal = () => {
     setSelectedBookingId(null);
     setCancelReason("");
+  };
+  const openCreateModal = (booking: IBooking) => {
+    setActiveBookingForReview(booking);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setActiveBookingForReview(null);
+  };
+  const createReview = async (data: Record<string, unknown>) => {
+    const packageId = activeBookingForReview?.packageId._id as string
+    setSubmittingReview(true);
+    try {
+      const rawFiles = (data.images ?? []) as unknown[];
+      const imageFiles = rawFiles.filter(
+        (img): img is File => img instanceof File,
+      );
+      const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
+
+      const updatedData = {
+        ...unFlattenObject(data),
+        images: uploadedImageUrls,
+      };
+      await axiosInstance.post(
+        APP_ROUTES.PACKAGE_REVIEWS.USER.CREATE(packageId),
+        updatedData,
+      );
+
+      toast.success(FEEDBACK_MESSAGES.REVIEWS.SUCCESS.CREATE);
+      closeModal();
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setSubmittingReview(false);
+    }
   };
 
   const handleCancelBooking = async () => {
@@ -87,7 +132,7 @@ export const useMyBookings = (
 
   useEffect(() => {
     fetchBookings();
-  }, [currentPage,fetchBookings]);
+  }, [currentPage, fetchBookings]);
 
   return {
     bookings,
@@ -100,7 +145,11 @@ export const useMyBookings = (
     handleCloseModal,
     setCancelReason,
     isCancelling,
-
     handleOpenCancelModel,
+    isModalOpen,
+    submittingReview,
+    openCreateModal,
+    closeModal,
+    createReview,
   };
 };

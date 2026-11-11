@@ -110,7 +110,16 @@ export class AdminService implements IAdminService {
   ) {
     const dto = AdminRequestMapper.toUpdateProfileImageRequestDTO(body);
     const { image } = dto;
-    const updatedAdmin = this._adminRepository.updateProfieImage(id, image);
+    const updatedAdmin = await this._adminRepository.updateProfieImage(
+      id,
+      image,
+    );
+    if (!updatedAdmin) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.ADMIN.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
     return AdminResponseMapper.toAdminResponseDTO(updatedAdmin);
   }
 }

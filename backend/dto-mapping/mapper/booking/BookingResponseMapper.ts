@@ -94,6 +94,7 @@ export class BookingResponseMapper {
               images: Array.isArray(entity?.packageId?.images)
                 ? entity.packageId.images
                 : [],
+                operatorId:entity.packageId?.operatorId.toString()??''
             },
 
       razorpayOrderId: entity.razorpayOrderId ?? "",

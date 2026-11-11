@@ -1,9 +1,8 @@
 import Loading from "@/components/Loading";
 import { useOperatorSubscriptionCheckOut } from "@/hooks/useOperatorSubscriptionCheckout";
 import { useSubscriptionPlan } from "@/hooks/useSubscriptionPlan";
-import type { ISubscriptionDetails } from "@/interfaces/interfaces";
 import type { RootState } from "@/redux/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const OperatorSubscription = () => {
@@ -14,13 +13,11 @@ const OperatorSubscription = () => {
   const { plans, fetchPlans, loading: plansLoading } = useSubscriptionPlan();
   const { handleSubscribe, isSubmitting } = useOperatorSubscriptionCheckOut();
 
-  const [operatorSubscription, setOperatorSubscription] =
-    useState<ISubscriptionDetails | null>(null);
+  const operatorSubscription = currentOperator?.subscriptionDetails || null;
 
   useEffect(() => {
     fetchPlans();
-    setOperatorSubscription(currentOperator?.subscriptionDetails || null);
-  }, [fetchPlans, currentOperator]);
+  }, [fetchPlans]);
   const calculateRemainingDays = (endDate?: string) => {
     if (!endDate) {
       return 0;

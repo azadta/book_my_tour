@@ -46,13 +46,14 @@ export interface BookingResponseDTO {
         name: string;
         startDate: string;
         images: string[];
+        operatorId:string
       }
     | string;
   razorpayOrderId: string;
   razorpayPaymentId: string | null;
   addedActivityIds: string[];
   removedActivityIds: string[];
-  status: "PENDING" | "CONFIRMED" | "CANCEL_REQUESTED" | "FAILED" | "CANCELLED";
+  status: "PENDING" | "CONFIRMED" | "CANCEL_REQUESTED" | "FAILED" | "CANCELED";
   attendance: "PENDING" | "CHECKED_IN" | "NOT_SHOW" | "COMPLETED";
   checkInTime: string | null;
   cancellation: BookingCancellationDTO;

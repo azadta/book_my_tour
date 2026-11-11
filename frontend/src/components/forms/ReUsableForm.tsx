@@ -394,7 +394,7 @@ const ReUsableForm = <T extends BaseFormData, TInitialData = T>({
                     }}
                     value={
                       field.multiple
-                        ? String(formData[field.id] ?? [])
+                        ? formData[field.id] as string[] ?? []
                         : String(formData[field.id] ?? "")
                     }
                     className={`border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${field.multiple ? "min-h-[100px]" : ""}`}

@@ -1,3 +1,4 @@
+import AddUserReviewModal from "@/components/AddUserReviewModal";
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
@@ -10,6 +11,7 @@ import {
   Clock,
   HelpCircle,
   MapPin,
+  MessageSquare,
   PackageX,
   Receipt,
   Wallet,
@@ -20,7 +22,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const MyBookingsPage = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const resultPerPage = 5;
   const {
@@ -35,7 +37,17 @@ const MyBookingsPage = () => {
 
     selectedBookingId,
     handleOpenCancelModel,
+    isModalOpen,
+    submittingReview,
+    openCreateModal,
+    closeModal,
+    createReview,
   } = useMyBookings(currentPage, resultPerPage);
+
+  const handleStartChat = (operatorId: string) => {
+    navigate(`${FRONTEND_ROUTES.CHAT.USER_CHAT_PAGE}?userId=${operatorId}`);
+  };
+
   const totalPages = Math.ceil(totalCount / resultPerPage);
   const getStatusBadge = (status: IBooking["status"]) => {
     switch (status) {
@@ -121,7 +133,10 @@ const MyBookingsPage = () => {
           </p>
         </div>
 
-        <button  onClick={() => navigate(FRONTEND_ROUTES.USER.PACKAGES_LIST)} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm transition-all shadow-xs shrink-0 cursor-pointer ">
+        <button
+          onClick={() => navigate(FRONTEND_ROUTES.USER.PACKAGES_LIST)}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm transition-all shadow-xs shrink-0 cursor-pointer "
+        >
           Explore more tours
         </button>
       </div>
@@ -223,6 +238,12 @@ const MyBookingsPage = () => {
                           <Receipt className="w-3.5 h-3.5" />
                           View Reciept
                         </Link>
+                        <Link
+                          to={FRONTEND_ROUTES.USER.BOOKING_DETAILS(booking._id)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+                        >
+                          show details
+                        </Link>
                         {!isPastOrToday && (
                           <button
                             onClick={() => handleOpenCancelModel(booking._id)}
@@ -232,13 +253,37 @@ const MyBookingsPage = () => {
                             Cancel
                           </button>
                         )}
+                        <button
+                          onClick={() => openCreateModal(booking)}
+                          className="bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold px-4 py-2 rounded-xl transition-colors "
+                        >
+                          Write a Review
+                        </button>
                       </div>
                     )}
+                    <button
+                      onClick={() =>
+                        handleStartChat(booking.packageId.operatorId)
+                      }
+                      type="button"
+                      className="inline-flex items-center justify-center gap-2 px-1 py-1 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transition-all duration-200 cursor-pointer border border-emerald-500/20 shrink-0 min-w-40 "
+                    >
+                      <MessageSquare
+                        className={`w-4 h-4 transition-transform group-hover:scale-110`}
+                      />
+                      <span>Chat with Host</span>
+                    </button>
                   </div>
                 </div>
               );
             })}
           </div>
+          <AddUserReviewModal
+            isOpen={isModalOpen}
+            loading={submittingReview}
+            onClose={closeModal}
+            onSubmit={createReview}
+          />
           <Pagination
             currentPage={currentPage}
             onPageChange={setCurrentPage}

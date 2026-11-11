@@ -45,11 +45,12 @@ export class BookingController implements IBookingController {
   ) => {
     try {
       const approve = req.body?.approve;
+      const bookingId = req.params.bookingId as string;
 
       const updatedBooking =
         await this._bookingService.processAdminCancellation(
           req.body,
-          req.params,
+          bookingId,
         );
       const successMessage = approve
         ? RESPONSE_MESSAGES.BOOKING.SUCCESS.CANCEL_REQ_APPROVED_REFUND
@@ -331,6 +332,30 @@ export class BookingController implements IBookingController {
       const message = response.message;
 
       sendSuccessResponse(res, message, data, StatusCode.OK);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getBookingDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { bookingId } = req.params;
+      const userId = req.user?.id;
+      const bookingDetails =
+        await this._bookingService.getBookingDetailsService(
+          bookingId as string,
+          userId as string,
+        );
+      sendSuccessResponse(
+        res,
+        RESPONSE_MESSAGES.BOOKING.SUCCESS.FETCH_BOOKING,
+        bookingDetails,
+        StatusCode.OK,
+      );
     } catch (error) {
       next(error);
     }

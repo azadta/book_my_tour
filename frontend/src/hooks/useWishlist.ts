@@ -118,7 +118,10 @@ export const useWishlist = () => {
   };
 
   useEffect(() => {
-    fetchWishlists();
+    const listLoader = async () => {
+      await fetchWishlists();
+    };
+    listLoader();
   }, [fetchWishlists]);
 
   return {

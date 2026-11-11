@@ -10,7 +10,7 @@ interface AddReviewModalProps {
   onClose: () => void;
   onSubmit: (formData: ReviewFormData) => Promise<void>;
   loading: boolean;
-  initialData: IReviewItem | undefined;
+  initialData?: IReviewItem | undefined;
 }
 
 const AddUserReviewModal: React.FC<AddReviewModalProps> = ({

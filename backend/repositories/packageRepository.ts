@@ -132,7 +132,7 @@ export class PackageRepository
     return Package.distinct("category");
   }
 
-  async getUniqueCategoryCount(filter:QueryFilter<Ipackage>): Promise<number> {
+  async getUniqueCategoryCount(filter: QueryFilter<Ipackage>): Promise<number> {
     const categories = await Package.distinct("category", filter);
     return categories.length;
   }

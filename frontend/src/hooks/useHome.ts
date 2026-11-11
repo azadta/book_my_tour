@@ -8,6 +8,7 @@ import { axiosInstance } from "../api/axiosInstance";
 
 export const useHome = () => {
   const [packages, setPackages] = useState<IPackage[]>([]);
+
   const [destinationsByCategory, setDestinationsByCategory] = useState<
     Record<string, Destination[]>
   >({});
@@ -27,7 +28,7 @@ export const useHome = () => {
       const { data } = await axiosInstance.get(
         APP_ROUTES.PACKAGE_DESTINATIONS.PUBLIC.BY_PACKAGE_CATEGORY(category),
       );
-      console.log("data from fetchDestination:", data);
+   
       setDestinationsByCategory((prev) => ({
         ...prev,
         [category]: data.result,
@@ -43,6 +44,7 @@ export const useHome = () => {
     setLoadingPackages(true);
     try {
       const { data } = await axiosInstance.get(APP_ROUTES.PACKAGES.USER.LIST);
+  
 
       setPackages(data.result || []);
     } catch (error) {

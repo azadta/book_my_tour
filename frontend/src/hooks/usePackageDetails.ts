@@ -2,12 +2,11 @@ import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPackageItem } from "@/interfaces/interfaces";
+import type { IReviewItem, IReviewStats } from "@/interfaces/IReview";
+import { handleApiError } from "@/utils/axiosErrorHandler";
 import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { unFlattenObject } from "../../../backend/utils/unFlattenObject";
-import type { IReviewItem, IReviewStats } from "@/interfaces/IReview";
-import { handleApiError } from "@/utils/axiosErrorHandler";
 
 export const usePackageDetails = (packageId: string) => {
   const [pkg, setPkg] = useState<IPackageItem | null>(null);
@@ -15,11 +14,13 @@ export const usePackageDetails = (packageId: string) => {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewStats, setReviewStats] = useState<IReviewStats | null>(null);
   const [reviews, setReviews] = useState<IReviewItem[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [submittingReview, setSubmittingReview] = useState(false);
+
   const [editingReview, setEditingReview] = useState<IReviewItem | undefined>(
     undefined,
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isBookingLoading, setIsBookingLoading] = useState(false);
 
   const fetchPackage = useCallback(async () => {
@@ -53,11 +54,6 @@ export const usePackageDetails = (packageId: string) => {
     }
   }, [packageId]);
 
-  const openCreateModal = () => {
-    setEditingReview(undefined);
-    setIsModalOpen(true);
-  };
-
   const openEditModal = (editPayload: IReviewItem) => {
     setEditingReview(editPayload);
     setIsModalOpen(true);
@@ -66,33 +62,6 @@ export const usePackageDetails = (packageId: string) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingReview(undefined);
-  };
-
-  const createReview = async (data: Record<string, unknown>) => {
-    setSubmittingReview(true);
-    try {
-      const rawFiles = (data.images ?? []) as unknown[];
-      const imageFiles = rawFiles.filter(
-        (img): img is File => img instanceof File,
-      );
-      const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
-
-      const updatedData = {
-        ...unFlattenObject(data),
-        images: uploadedImageUrls,
-      };
-      await axiosInstance.post(
-        APP_ROUTES.PACKAGE_REVIEWS.USER.CREATE(packageId),
-        updatedData,
-      );
-      fetchReviews();
-      toast.success(FEEDBACK_MESSAGES.REVIEWS.SUCCESS.CREATE);
-      closeModal();
-    } catch (error) {
-      handleApiError(error);
-    } finally {
-      setSubmittingReview(false);
-    }
   };
 
   const updateReview = async (
@@ -151,11 +120,9 @@ export const usePackageDetails = (packageId: string) => {
     }
   };
 
-  const saveReview = async (payload: Record<string, unknown>) => {
+  const updateReviewHandler = async (payload: Record<string, unknown>) => {
     if (editingReview) {
       await updateReview(editingReview._id, payload);
-    } else {
-      await createReview(payload);
     }
   };
 
@@ -172,8 +139,11 @@ export const usePackageDetails = (packageId: string) => {
   };
 
   useEffect(() => {
-    fetchPackage();
-    fetchReviews();
+    const loadData = async () => {
+      await fetchPackage();
+      await fetchReviews();
+    };
+    loadData();
   }, [fetchPackage, fetchReviews]);
 
   return {
@@ -188,10 +158,9 @@ export const usePackageDetails = (packageId: string) => {
     deleteReview,
     editingReview,
     setEditingReview,
-    openCreateModal,
     openEditModal,
     closeModal,
-    saveReview,
+    updateReviewHandler,
     isBookingLoading,
     setIsBookingLoading,
   };

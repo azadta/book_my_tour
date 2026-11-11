@@ -14,42 +14,6 @@ export const useAdminEditPackage = () => {
     }
   }, []);
 
-  // const updatePackage = useCallback(async (id: string, data: any) => {
-  //   setLoading(true);
-  //   try {
-  //     const imageFiles = (data.images ?? []).filter(
-  //       (img: any) => img instanceof File,
-  //     );
-  //     const existingImages = (data.images ?? []).filter(
-  //       (img: any) => typeof img === "string",
-  //     );
-  //     const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
-
-  //     const uploadedItinerary = await Promise.all(
-  //       data.itinerary.map(async (day: ItineraryDay) => {
-  //         const galleryFiles = day.gallery.filter(
-  //           (img: any) => img instanceof File,
-  //         );
-  //         const existingUrls = day.gallery.filter(
-  //           (img: any) => typeof img === "string",
-  //         );
-
-  //         const uploadedUrls = await uploadImagesToCloudinary(galleryFiles);
-  //         return { ...day, gallery: [...existingUrls, ...uploadedUrls!] };
-  //       }),
-  //     );
-  //     const payload = {
-  //       ...data,
-  //       images: [...existingImages, ...(uploadedImageUrls ?? [])],
-  //       itinerary: uploadedItinerary,
-  //     };
-
-  //     await axiosInstance.put(APP_ROUTES.PACKAGES., payload);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
-
   const deletePackage = useCallback(async (id: string) => {
     setLoading(true);
     try {
@@ -61,7 +25,6 @@ export const useAdminEditPackage = () => {
   return {
     loading,
     fetchPackage,
-
 
     deletePackage,
   };

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { RESPONSE_MESSAGES } from "../constants/messages";
 import { StatusCode } from "../constants/statusCodeConstants";
-import { subscriptionPlanRequestDTO } from "../dto-mapping/dto/subscriptionPlan/SubscriptionPlanRequestDTO";
+import { SubscriptionPlanRequestDTO } from "../dto-mapping/dto/subscriptionPlan/subscriptionPlanRequestDTO";
 import type { ISubscriptionPlanRepository } from "../interfaces/ISubscriptionPlanRepository";
 import { ISubscriptionPlanService } from "../interfaces/ISubscriptionPlanService";
 import { ISubscriptionPlan } from "../models/SubscriptionPlan";
@@ -15,7 +15,7 @@ export class SubscriptionPlanService implements ISubscriptionPlanService {
     private _subscriptionPlanRepository: ISubscriptionPlanRepository,
   ) {}
 
-  async createPlan(dto: subscriptionPlanRequestDTO): Promise<ISubscriptionPlan> {
+  async createPlan(dto: SubscriptionPlanRequestDTO): Promise<ISubscriptionPlan> {
     return await this._subscriptionPlanRepository.create(dto);
   }
 
@@ -23,7 +23,7 @@ export class SubscriptionPlanService implements ISubscriptionPlanService {
     return await this._subscriptionPlanRepository.findAll();
   }
 
-  async updatePlan(id: string, dto: subscriptionPlanRequestDTO): Promise<ISubscriptionPlan | null> {
+  async updatePlan(id: string, dto: SubscriptionPlanRequestDTO): Promise<ISubscriptionPlan | null> {
     const plan = await this._subscriptionPlanRepository.updateById(id, dto);
     if (!plan) {
       throw new CustomError(

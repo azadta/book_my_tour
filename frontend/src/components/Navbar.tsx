@@ -15,7 +15,8 @@ import {
 import { navigationMenuTriggerStyle } from "./ui/navigation-menu-style";
 
 export function Navigation() {
-  const { packages } = useHome();
+  const { packages, fetchPackages } = useHome();
+
   const uniqueDestinations = Array.from(
     new Map(
       packages
@@ -23,6 +24,10 @@ export function Navigation() {
         .map((destination) => [destination._id, destination]),
     ).values(),
   );
+
+  React.useEffect(() => {
+    fetchPackages();
+  }, [fetchPackages]);
 
   return (
     <NavigationMenu>

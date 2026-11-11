@@ -54,7 +54,7 @@ const OperatorOtpVerification = () => {
 
   useEffect(() => {
     if (otp.length === 5 && timeLeft > 0) verifyOtp();
-  }, [otp,timeLeft,verifyOtp]);
+  }, [otp, timeLeft, verifyOtp]);
 
   return (
     <div className="pt-10">

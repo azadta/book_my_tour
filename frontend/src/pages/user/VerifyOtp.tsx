@@ -27,7 +27,7 @@ const VerifyOtp = () => {
       userId: userId || "",
       onSuccess: () => {
         toast.success(FEEDBACK_MESSAGES.AUTH.SUCCESS.REGISTRATION);
-        navigate( FRONTEND_ROUTES.USER.LOGIN);
+        navigate(FRONTEND_ROUTES.USER.LOGIN);
       },
       initialOtpExpire: expire,
     });
@@ -57,7 +57,7 @@ const VerifyOtp = () => {
     if (otp.length === 5 && timeLeft > 0) {
       verifyOtp();
     }
-  }, [otp,verifyOtp,timeLeft]);
+  }, [otp, verifyOtp, timeLeft]);
 
   return (
     <div className="flex max-md:flex-col justify-center items-center gap-5 ">

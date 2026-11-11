@@ -279,7 +279,9 @@ export class BookingService implements IBookingService {
         StatusCode.BAD_REQUEST,
       );
     }
-    const updateData: Partial<Pick<IBookingDocument,'attendance'|'checkInTime'>> = { attendance };
+    const updateData: Partial<
+      Pick<IBookingDocument, "attendance" | "checkInTime">
+    > = { attendance };
     if (attendance === "CHECKED_IN" || attendance === "COMPLETED") {
       updateData.checkInTime = new Date();
     }
@@ -467,7 +469,7 @@ export class BookingService implements IBookingService {
       }
       singleAdultRunning -= singleAdultGeneralDiscount;
     }
-
+    
     if (bankCouponCode?.trim()) {
       bankCoupon = await this._couponRepository.findByCode(
         bankCouponCode.trim(),
@@ -478,6 +480,7 @@ export class BookingService implements IBookingService {
           StatusCode.BAD_REQUEST,
         );
       }
+
       if (bankCoupon.type !== CouponType.BANK) {
         throw new CustomError(
           RESPONSE_MESSAGES.COUPON.ERROR.INVALID_CODE,
@@ -612,7 +615,7 @@ export class BookingService implements IBookingService {
         status: "CONFIRMED",
       });
 
-      const commissionRate = 5;
+      const commissionRate = Number(process.env.BOOKING_COMMISSION);
       const grossAmount = grandSubtotal;
       const platformCommissionAmount = (grossAmount * commissionRate) / 100;
       const netPayoutAmount = grossAmount - platformCommissionAmount;
@@ -686,7 +689,7 @@ export class BookingService implements IBookingService {
       status: "PENDING",
     });
 
-    const commissionRate = 5;
+    const commissionRate = Number(process.env.BOOKING_COMMISSION ?? 5);
     const grossAmount = grandSubtotal;
     const platformCommissionAmount = (grossAmount * commissionRate) / 100;
     const netPayoutAmount = grossAmount - platformCommissionAmount;
@@ -938,5 +941,22 @@ export class BookingService implements IBookingService {
       booking: updatedBooking,
     };
     return BookingResponseMapper.toCancelBookingResponseDTO(result);
+  }
+
+  async getBookingDetailsService(bookingId: string, userId: string) {
+    const booking = await this._bookingRepository.getBookingDetails(bookingId);
+    if (!booking) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.NOT_FOUND,
+        StatusCode.NOT_FOUND,
+      );
+    }
+    if (booking.userId.toString() !== userId) {
+      throw new CustomError(
+        RESPONSE_MESSAGES.BOOKING.ERROR.UNAUTHORIZED,
+        StatusCode.UNAUTHORIZED,
+      );
+    }
+    return booking;
   }
 }

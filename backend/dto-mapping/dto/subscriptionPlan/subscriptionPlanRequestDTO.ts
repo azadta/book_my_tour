@@ -1,4 +1,4 @@
-export interface subscriptionPlanRequestDTO {
+export interface SubscriptionPlanRequestDTO {
   name: string;
   price: number;
   packageLimit: number;

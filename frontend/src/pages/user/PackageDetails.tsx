@@ -1,4 +1,3 @@
-import AddUserReviewModal from "@/components/AddUserReviewModal";
 import { ItineraryDayCard } from "@/components/itinerary/ItineraryDayCard";
 import Loading from "@/components/Loading";
 import MemberSelectionModal from "@/components/MemberSelectionModal";
@@ -25,6 +24,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Coupon from "./Coupon";
+import AddUserReviewModal from "@/components/AddUserReviewModal";
 
 interface AppliedCouponsState {
   general?: ICouponItem | null;
@@ -41,9 +41,9 @@ const PackageDetails = () => {
     closeModal,
     editingReview,
     isModalOpen,
-    openCreateModal,
+
     openEditModal,
-    saveReview,
+    updateReviewHandler,
     submittingReview,
     deleteReview,
   } = usePackageDetails(id as string);
@@ -440,6 +440,14 @@ const PackageDetails = () => {
                   </span>
                 </div>
                 <p className="text-sm mb-2">
+                  Starts Date:{" "}
+                  <strong>
+                    {new Date(data.startDate as string).toLocaleDateString(
+                      "en-IN",
+                    )}
+                  </strong>
+                </p>
+                <p className="text-sm mb-2">
                   Starts from: <strong>{data.startPoint}</strong>
                 </p>
               </div>
@@ -798,12 +806,6 @@ const PackageDetails = () => {
                   Be the first traveler to share your experience.
                 </p>
               </div>
-              <button
-                onClick={() => openCreateModal()}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition"
-              >
-                Write a Review
-              </button>
             </div>
           </div>
         </section>
@@ -814,7 +816,6 @@ const PackageDetails = () => {
         onEditReview={openEditModal}
         stats={reviewStats}
         reviews={reviews}
-        openCreateModal={openCreateModal}
       />
       <div className="lg:hidden sticky  bottom-0 z-20  left-0 right-0  bg-white border-t border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)] px-3 py-3 pb-safe flex items-center justify-between gap-4 sm:-mx-6  ">
         <button
@@ -835,13 +836,12 @@ const PackageDetails = () => {
           </span>
         </div>
       </div>
-
       <AddUserReviewModal
         isOpen={isModalOpen}
         loading={submittingReview}
-        initialData={editingReview}
         onClose={closeModal}
-        onSubmit={saveReview}
+        onSubmit={updateReviewHandler}
+        initialData={editingReview}
       />
       <Coupon
         isOpen={isCouponModalOpen}

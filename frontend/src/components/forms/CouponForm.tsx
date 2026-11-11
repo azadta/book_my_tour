@@ -1,12 +1,12 @@
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { getCouponFields } from "@/formConfig/fields";
 import { useCouponManagement } from "@/hooks/useCouponManagement";
+import type { CouponFormData } from "@/interfaces/ICoupon";
 import type { ICouponItem } from "@/interfaces/interfaces";
-import { useEffect, useMemo, useState } from "react";
+import { isAxiosError } from "axios";
+import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import ReUsableForm from "./ReUsableForm";
-import type { CouponFormData } from "@/interfaces/ICoupon";
-import { isAxiosError } from "axios";
 
 interface CouponFormProps {
   mode: "create" | "edit";
@@ -15,7 +15,25 @@ interface CouponFormProps {
 }
 
 const CouponForm = ({ mode, couponData }: CouponFormProps) => {
-  const [formData, setFormData] = useState<CouponFormData>({});
+  const [formData, setFormData] = useState<CouponFormData>(() => {
+    if (mode === "edit" && couponData) {
+      return {
+        ...couponData,
+        validTill: couponData.validTill
+          ? new Date(couponData.validTill).toISOString().split("T")[0]
+          : "",
+        allowedBins: Array.isArray(couponData.allowedBins)
+          ? couponData.allowedBins.join(", ")
+          : couponData.allowedBins || "",
+      };
+    }
+    return {
+      type: "GENERAL",
+      discountType: "PERCENTAGE",
+      minBookingAmount: 0,
+      isActive: true,
+    };
+  });
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const hook = useCouponManagement();
   const loading = hook.loading;
@@ -62,30 +80,8 @@ const CouponForm = ({ mode, couponData }: CouponFormProps) => {
     }
   };
 
-  const activeFields = useMemo(
-    () => getCouponFields(formData),
-    [formData],
-  );
-  useEffect(() => {
-    if (couponData) {
-      setFormData({
-        ...couponData,
-        validTill: couponData.validTill
-          ? new Date(couponData.validTill).toISOString().split("T")[0]
-          : "",
-        allowedBins: Array.isArray(couponData.allowedBins)
-          ? couponData.allowedBins.join(", ")
-          : couponData.allowedBins || "",
-      });
-    } else {
-      setFormData({
-        type: "GENERAL",
-        discountType: "PERCENTAGE",
-        minBookingAmount: 0,
-        isActive: true,
-      });
-    }
-  }, [couponData]);
+  const activeFields = useMemo(() => getCouponFields(formData), [formData]);
+
   return (
     <div className="p-6 max-w-3xl  mt-10 mb-10 mx-auto">
       <ReUsableForm

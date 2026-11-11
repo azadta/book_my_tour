@@ -6,6 +6,7 @@ export const ROUTES = {
       BY_ORDER_ID: "/:orderId",
       MY_BOOKINGS: "/",
       CANCEL: "/:bookingId/cancel",
+      BOOKING_DETAILS: "/:bookingId/booking-details",
     },
     OPERATOR: {
       LIST: "/",
@@ -186,10 +187,8 @@ export const ROUTES = {
   },
   DASHBOARD: {
     ADMIN: {
-      USERS_COUNT: "/users-count",
-      SIGNUP_TODAY: "/signup-today",
-      OPERATORS_COUNT: "/operators-count",
-      OPERATORS_PENDING_COUNT: "/operators-pending-count",
+      STATS: "/",
+      SUMMARY:'/summary'
     },
     OPERATOR: {
       STATS: "/",
@@ -204,13 +203,13 @@ export const ROUTES = {
       DELETE: "/:id",
     },
   },
-  SUBSCRIPTION:{
-    CREATE_ORDER:'/create-order',
-    VERIFY_PAYMENT:'/verify-payment'
+  SUBSCRIPTION: {
+    CREATE_ORDER: "/create-order",
+    VERIFY_PAYMENT: "/verify-payment",
   },
-  PAYOUT:{
-    LIST:'/',
-    CREATE_ORDER:'/create-order',
-    VERIFY_PAYMENT:'/verify-payment'
-  }
+  PAYOUT: {
+    LIST: "/",
+    CREATE_ORDER: "/create-order",
+    VERIFY_PAYMENT: "/verify-payment",
+  },
 } as const;

@@ -176,10 +176,8 @@ export const ProfileForm = <T extends FormDataType, TUser extends UserProfile>({
             >
               <img
                 src={
-                  typeof formData?.image === "string"
-                    ? formData.image
-                    : currentUser?.image ||
-                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  currentUser?.image ||
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 }
                 alt="Profile"
                 className="w-full h-full object-cover"

@@ -6,11 +6,13 @@ import {
 } from "../models/Booking";
 import { IBaseRepository } from "./IBaseRepository";
 import {
+  IAdminBookingStats,
   IBookingStatusBreakDown,
   IMonthlyRevenue,
   IOperatorBookingDetails,
   IOperatorBookingFilter,
   IOperatorBookingStats,
+  IPopulatedBookingDetails,
 } from "./IBooking";
 import { IBookingPricing } from "./IBookingPricing";
 
@@ -83,4 +85,10 @@ export interface IBookingRepository extends IBaseRepository<IBookingDocument> {
   getBookingStatusBreakDown(
     operatorId: string,
   ): Promise<IBookingStatusBreakDown[]>;
+  getAdminStats(): Promise<IAdminBookingStats>;
+  getAdminMonthlyRevenue(): Promise<IMonthlyRevenue[]>;
+  getAdminBookingStatusBreakDown(): Promise<IBookingStatusBreakDown[]>;
+  getBookingDetails(
+    bookingId: string,
+  ): Promise<IPopulatedBookingDetails | null>;
 }

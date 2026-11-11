@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { operatorProfileFields } from "../../formConfig/fields";
+import { operatorProfileFields } from "../../../formConfig/fields.ts";
 
 import {
   logoutOperatorFailure,
@@ -10,46 +10,54 @@ import {
   updateOperatorFailure,
   updateOperatorStart,
   updateOperatorSuccess,
-} from "../../redux/operator/operatorSlice.ts";
+} from "../../../redux/operator/operatorSlice.ts";
 
 import { APP_ROUTES } from "@/constants/AppRoutes.ts";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.ts";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.ts";
-import { toast } from "react-toastify";
-import { ProfileForm } from "../../components/forms/ProfileForm.tsx";
-import { useApi } from "../../hooks/useApi.js";
-import type { RootState } from "../../redux/store.ts";
-import type { OperatorFormType } from "@/interfaces/IOperator.ts";
+import type { IOperator, OperatorFormType } from "@/interfaces/IOperator.ts";
 import { handleApiError } from "@/utils/axiosErrorHandler.ts";
+import { toast } from "react-toastify";
+import { ProfileForm } from "../../../components/forms/ProfileForm.tsx";
+import { useApi } from "../../../hooks/useApi.js";
+import type { RootState } from "../../../redux/store.ts";
+
+const getInitialFormData = (operator: IOperator | null) => {
+  return {
+    name: operator?.name || "",
+
+    email: operator?.email || "",
+    mobile: operator?.mobile || "",
+    image: operator?.image || "",
+    isPremium: operator?.isPremium || false,
+    isBlocked: operator?.isBlocked || false,
+
+    referralCode: operator?.referralCode || "",
+    referredBy: operator?.referredBy || "",
+    verificationDetails: {
+      companyName: operator?.verificationDetails?.companyName || "",
+      licenseNo: operator?.verificationDetails?.licenseNo || "",
+      businessAddress: {
+        buildingNo:
+          operator?.verificationDetails?.businessAddress?.buildingNo || "",
+        landmark:
+          operator?.verificationDetails?.businessAddress?.landmark || "",
+        city: operator?.verificationDetails?.businessAddress?.city || "",
+        state: operator?.verificationDetails?.businessAddress?.state || "",
+        country: operator?.verificationDetails?.businessAddress?.country || "",
+        postalCode:
+          operator?.verificationDetails?.businessAddress?.postalCode || "",
+      },
+    },
+  };
+};
 
 const OperatorProfile = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { currentOperator, loading } = useSelector(
     (state: RootState) => state.operator,
   );
-  const [formData, setFormData] = useState<OperatorFormType>({
-    name: "",
-    email: "",
-    mobile: "",
-    image: "",
-    isPremium: false,
-    isBlocked: false,
-
-    referralCode: "",
-    referredBy: "",
-    verificationDetails: {
-      companyName: "",
-      licenseNo: "",
-      businessAddress: {
-        buildingNo: "",
-        landmark: "",
-        city: "",
-        state: "",
-        country: "",
-        postalCode: "",
-      },
-    },
-  });
+  const [formData, setFormData] = useState<OperatorFormType>(getInitialFormData(currentOperator));
 
   const [imageUploading, setImageUploadig] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -158,44 +166,7 @@ const OperatorProfile = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentOperator) {
-      setFormData({
-        name: currentOperator?.name || "",
-
-        email: currentOperator?.email || "",
-        mobile: currentOperator?.mobile || "",
-        image: currentOperator?.image || "",
-        isPremium: currentOperator?.isPremium || false,
-        isBlocked: currentOperator?.isBlocked || false,
-
-        referralCode: currentOperator?.referralCode || "",
-        referredBy: currentOperator?.referredBy || "",
-        verificationDetails: {
-          companyName: currentOperator.verificationDetails?.companyName || "",
-          licenseNo: currentOperator.verificationDetails?.licenseNo || "",
-          businessAddress: {
-            buildingNo:
-              currentOperator.verificationDetails?.businessAddress
-                ?.buildingNo || "",
-            landmark:
-              currentOperator.verificationDetails?.businessAddress?.landmark ||
-              "",
-            city:
-              currentOperator.verificationDetails?.businessAddress?.city || "",
-            state:
-              currentOperator.verificationDetails?.businessAddress?.state || "",
-            country:
-              currentOperator.verificationDetails?.businessAddress?.country ||
-              "",
-            postalCode:
-              currentOperator.verificationDetails?.businessAddress
-                ?.postalCode || "",
-          },
-        },
-      });
-    }
-  }, [currentOperator]);
+  
   if (!currentOperator) return;
 
   return (

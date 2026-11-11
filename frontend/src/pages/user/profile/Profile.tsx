@@ -1,58 +1,64 @@
-import { useEffect, useRef, useState } from "react";
+import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
+import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
+import type { IUser } from "@/interfaces/IUser";
+import { setActiveChat, setChats, setMessages } from "@/redux/chatSlice";
+import { disconnectSocket } from "@/socket/socket";
+import { handleApiError } from "@/utils/axiosErrorHandler";
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmationModel from "../../../components/ConfirmationModal";
+import { ProfileForm } from "../../../components/forms/ProfileForm";
+import { userFields } from "../../../formConfig/fields";
+import { useApi } from "../../../hooks/useApi";
+import type { RootState } from "../../../redux/store";
 import {
-  updateUserStart,
-  updateUserSuccess,
-  updateUserFailure,
+  deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure,
+  logoutUserFailure,
   logoutUserStart,
   logoutUserSuccess,
-  logoutUserFailure,
-} from "../../redux/user/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
-import { useApi } from "../../hooks/useApi";
-import { ProfileForm } from "../../components/forms/ProfileForm";
-import { userFields } from "../../formConfig/fields";
-import ConfirmationModel from "../../components/ConfirmationModal";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
-import { APP_ROUTES } from "@/constants/AppRoutes";
-import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes";
-import { disconnectSocket } from "@/socket/socket";
-import { setActiveChat, setChats, setMessages } from "@/redux/chatSlice";
-import { handleApiError } from "@/utils/axiosErrorHandler";
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../../../redux/user/userSlice";
 
 interface FormDataType {
   [key: string]: unknown;
 }
+
+const getInitialFormData = (user: IUser | null): FormDataType => ({
+  name: user?.name || "",
+
+  email: user?.email || "",
+  mobile: user?.mobile || "",
+  image: user?.image || "",
+  isPremium: user?.isPremium || false,
+  isBlocked: user?.isBlocked || false,
+  coinsEarned: user?.coinsEarned || 0,
+  referralCode: user?.referralCode || "",
+  referredBy: user?.referredBy || "",
+  address: {
+    houseNo: user?.address?.houseNo || "",
+    landmark: user?.address?.landmark || "",
+    city: user?.address?.city || "",
+    state: user?.address?.state || "",
+    country: user?.address?.country || "",
+    postalCode: user?.address?.postalCode || "",
+  },
+});
 
 const Profile = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { currentUser, loading } = useSelector(
     (state: RootState) => state.user,
   );
-  const [formData, setFormData] = useState<FormDataType>({
-    name: "",
-    email: "",
-    mobile: "",
-    isPremium: false,
-    isBlocked: false,
-    coinsEarned: 0,
-    referralCode: "",
-    referredBy: "",
-    address: {
-      houseNo: "",
-      landmark: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-    },
-  });
-  
+  const [formData, setFormData] = useState<FormDataType>(() =>
+    getInitialFormData(currentUser),
+  );
 
   const [imageUploading, setImageUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -172,30 +178,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      setFormData({
-        name: currentUser?.name || "",
-
-        email: currentUser?.email || "",
-        mobile: currentUser?.mobile || "",
-        image: currentUser?.image || "",
-        isPremium: currentUser?.isPremium || false,
-        isBlocked: currentUser?.isBlocked || false,
-        coinsEarned: currentUser?.coinsEarned || 0,
-        referralCode: currentUser?.referralCode || "",
-        referredBy: currentUser?.referredBy || "",
-        address: {
-          houseNo: currentUser?.address?.houseNo || "",
-          landmark: currentUser?.address?.landmark || "",
-          city: currentUser?.address?.city || "",
-          state: currentUser?.address?.state || "",
-          country: currentUser?.address?.country || "",
-          postalCode: currentUser?.address?.postalCode || "",
-        },
-      });
-    }
-  }, [currentUser]);
   if (!currentUser) return;
 
   return (

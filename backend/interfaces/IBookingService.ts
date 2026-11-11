@@ -17,6 +17,7 @@ import {
   VerifyPamentResponseDTO,
 } from "../dto-mapping/dto/booking/bookingResponseDTO";
 import { IPackageResponseDTO } from "../dto-mapping/dto/package/packageResponseDTO";
+import { IPopulatedBookingDetails } from "./IBooking";
 
 export interface IBookingService {
   getPendingCancelationRequests(): Promise<
@@ -29,7 +30,7 @@ export interface IBookingService {
 
   getOperatorBookingsService(
     operatorId: string,
-    query:  GetOperatorBookingsQuery,
+    query: GetOperatorBookingsQuery,
   ): Promise<OperatorBookingListResponseDTO>;
   getOperatorBookingDetailsService(
     bookingId: string,
@@ -77,4 +78,8 @@ export interface IBookingService {
     bookingId: string,
     body: CancelBookingBody,
   ): Promise<cancelBookingResponseDTO>;
+  getBookingDetailsService(
+    bookingId: string,
+    userId: string,
+  ): Promise<IPopulatedBookingDetails>;
 }

@@ -10,7 +10,7 @@ interface AdminAddress {
   postalCode?: string;
 }
 
-interface IAdmin {
+export interface IAdmin {
   _id: string;
   name: string;
   email: string;

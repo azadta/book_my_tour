@@ -15,9 +15,10 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminOperatorDetails from "./pages/admin/AdminOperatorDetails";
 import AdminOperatorVerification from "./pages/admin/AdminOperatorVerification";
 import AdminPackageDetails from "./pages/admin/AdminPackageDetails";
-import AdminProfile from "./pages/admin/AdminProfile";
 import AdminResetPasswordAuthenticated from "./pages/admin/AdminResetPasswordAuthenticated";
 
+import AdminPayoutList from "./pages/admin/AdminPayoutList";
+import AdminSubscriptionPlanList from "./pages/admin/AdminSubscriptionPlanList";
 import AdminUserDetails from "./pages/admin/AdminUserDetails";
 import CreateDestination from "./pages/admin/CreateDestination";
 import CreatePackageCategory from "./pages/admin/CreatePackageCategory";
@@ -25,6 +26,7 @@ import CreateSubscriptionPlan from "./pages/admin/CreateSubscriptionPlan";
 import EditOperator from "./pages/admin/EditOperator";
 import EditSubscriptionPlan from "./pages/admin/EditSubscriptionPlan";
 import EditUser from "./pages/admin/EditUser";
+import AdminProfilePage from "./pages/admin/profile/AdminProfilePage";
 import ChatPage from "./pages/chat/ChatPage";
 import CouponList from "./pages/operator/CouponList";
 import CreateCoupon from "./pages/operator/CreateCoupon";
@@ -38,10 +40,11 @@ import OperatorForgotPassword from "./pages/operator/OperatorForgotPassword";
 import OperatorLogin from "./pages/operator/OperatorLogin";
 import OperatorOtpVerification from "./pages/operator/OperatorOtpVerification";
 import OperatorPackagesList from "./pages/operator/OperatorPackagesList";
-import OperatorProfile from "./pages/operator/OperatorProfile";
 import OperatorRegister from "./pages/operator/OperatorRegister";
 import OperatorResetPassword from "./pages/operator/OperatorResetPassword";
 import OperatorResetPasswordAuthenticated from "./pages/operator/OperatorResetPasswordAuthenticated";
+import OperatorSubscription from "./pages/operator/OperatorSubscription";
+import OperatorProfilePage from "./pages/operator/profile.tsx/OperatorProfilePage";
 import { About } from "./pages/user/About";
 import BookingSuccessPage from "./pages/user/BookingSuccessPage";
 import ForgotPassword from "./pages/user/ForgotPassword";
@@ -51,7 +54,7 @@ import MyBookingsPage from "./pages/user/MyBookingsPage";
 import NotificationList from "./pages/user/NotificationList";
 import PackageDetails from "./pages/user/PackageDetails";
 import PackagesList from "./pages/user/PackagesList";
-import Profile from "./pages/user/Profile";
+import ProfilePage from "./pages/user/profile/ProfilePage";
 import Register from "./pages/user/Register";
 import { ResetPassword } from "./pages/user/ResetPassword";
 import ResetPasswordAuthenticated from "./pages/user/ResetPasswordAuthenticated";
@@ -63,9 +66,7 @@ import Wishlist from "./pages/user/Wishlist";
 import type { RootState } from "./redux/store";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import PublicRoute from "./Routes/PublicRoute";
-import AdminSubscriptionPlanList from "./pages/admin/AdminSubscriptionPlanList";
-import OperatorSubscription from "./pages/operator/OperatorSubscription";
-import AdminPayoutList from "./pages/admin/AdminPayoutList";
+import BookingDetailsPage from "./pages/user/BookingDetailsPage";
 
 const App = () => {
   useGlobalChatSocket();
@@ -130,7 +131,10 @@ const App = () => {
               />
             }
           >
-            <Route path={FRONTEND_ROUTES.USER.PROFILE} element={<Profile />} />
+            <Route
+              path={FRONTEND_ROUTES.USER.PROFILE}
+              element={<ProfilePage />}
+            />
             <Route
               path={FRONTEND_ROUTES.USER.WISHLIST}
               element={<Wishlist />}
@@ -156,6 +160,10 @@ const App = () => {
             <Route
               path={`/booking/traveler-details`}
               element={<TravelerDetailsPage />}
+            />
+            <Route
+              path={FRONTEND_ROUTES.USER.BOOKING_DETAILS_PATTERN}
+              element={<BookingDetailsPage />}
             />
           </Route>
         </Route>
@@ -205,7 +213,7 @@ const App = () => {
           >
             <Route
               path={FRONTEND_ROUTES.OPERATOR.PROFILE}
-              element={<OperatorProfile />}
+              element={<OperatorProfilePage />}
             />
             <Route
               path={FRONTEND_ROUTES.OPERATOR.DASHBOARD}
@@ -285,7 +293,7 @@ const App = () => {
           >
             <Route
               path={FRONTEND_ROUTES.ADMIN.PROFILE}
-              element={<AdminProfile />}
+              element={<AdminProfilePage />}
             />
             <Route
               path={FRONTEND_ROUTES.ADMIN.RESET_PASSWORD_AUTH}
@@ -341,7 +349,7 @@ const App = () => {
             />
             <Route
               path={FRONTEND_ROUTES.ADMIN.OPERATOR_PAYOUTS}
-              element={<AdminPayoutList/>}
+              element={<AdminPayoutList />}
             />
           </Route>
         </Route>

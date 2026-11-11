@@ -23,19 +23,22 @@ export const useWallet = (limit: number = 5) => {
   const [totalPages, setTotalPages] = useState(1);
   const { currentUser } = useSelector((state: RootState) => state.user);
 
-  const fetchWallet = useCallback(async (page: number = currentPage) => {
-    try {
-      const { data } = await axiosInstance.get(
-        `${APP_ROUTES.WALLETS.USER.LIST}?page=${page}&limit=${limit}`,
-      );
+  const fetchWallet = useCallback(
+    async (page: number = currentPage) => {
+      try {
+        const { data } = await axiosInstance.get(
+          `${APP_ROUTES.WALLETS.USER.LIST}?page=${page}&limit=${limit}`,
+        );
 
-      setBalance(data.result.balance);
-      setTransactions(data.result.transactions);
-      setTotalPages(data.result.totalPages);
-    } catch (error) {
-      handleApiError(error);
-    }
-  },[currentPage,limit])
+        setBalance(data.result.balance);
+        setTransactions(data.result.transactions);
+        setTotalPages(data.result.totalPages);
+      } catch (error) {
+        handleApiError(error);
+      }
+    },
+    [currentPage, limit],
+  );
 
   const handleTopup = async (amountToTopup: number) => {
     if (!amountToTopup || amountToTopup <= 0) {
@@ -84,7 +87,7 @@ export const useWallet = (limit: number = 5) => {
         },
         theme: { color: "#2563eb" },
       };
-       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const razorpayObj = new (window as any).Razorpay(options);
       razorpayObj.open();
     } catch (error) {
@@ -93,10 +96,13 @@ export const useWallet = (limit: number = 5) => {
     }
   };
   useEffect(() => {
-    if (currentUser) {
-      fetchWallet(currentPage);
-    }
-  }, [currentUser,fetchWallet,currentPage]);
+    const walletLoader = async () => {
+      if (currentUser) {
+        await fetchWallet(currentPage);
+      }
+    };
+    walletLoader();
+  }, [currentUser, fetchWallet, currentPage]);
 
   return {
     handleTopup,

@@ -24,20 +24,31 @@ export class DashboardService implements IDashboardService {
     @inject(Types.OperatorService)
     private _operatorService: IOperatorService,
   ) {}
-  async getSignupCountTodayService() {
+  async getAdminSummaryCountsService() {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
-    const [users, operators] = await Promise.all([
+    const [
+      usersSignups,
+      operatorsSignups,
+      pendingVerificationsCount,
+      usersCount,
+      operatorsCount,
+    ] = await Promise.all([
       this._userRepository.countUsersByDateRange(startOfDay, endOfDay),
       this._operatorRepository.countOperatorsByDateRange(startOfDay, endOfDay),
+      this._operatorRepository.getPendingOperatorsCount(),
+      this._userService.getTotalUsersCount(),
+      this._operatorService.getTotalOperatorsCount(),
     ]);
-    return users + operators;
-  }
-
-  async getPendingOperatorsCountService() {
-    return await this._operatorRepository.getPendingOperatorsCount();
+    const todaySignups = usersSignups + operatorsSignups;
+    return {
+      usersCount,
+      operatorsCount,
+      todaySignups,
+      pendingVerificationsCount,
+    };
   }
 
   async getOperatorDashboardStatsService(operatorId: string) {
@@ -49,14 +60,18 @@ export class DashboardService implements IDashboardService {
         this._bookingRepository.getBookingStatusBreakDown(operatorId),
       ]);
 
-     
     return { ...stats, packagesCount, monthlyRevenue, bookingStatusBreakDown };
   }
 
-  async getTotalUsersCountService() {
-    return await this._userService.getTotalUsersCount();
-  }
-  async getTotalOperatorsCountService() {
-    return await this._operatorService.getTotalOperatorsCount();
+  async getAdminDashboardStatsService() {
+    const [stats, packagesCount, monthlyRevenue, bookingStatusBreakDown] =
+      await Promise.all([
+        this._bookingRepository.getAdminStats(),
+        this._packageRepository.countDocuments(),
+        this._bookingRepository.getAdminMonthlyRevenue(),
+        this._bookingRepository.getAdminBookingStatusBreakDown(),
+      ]);
+
+    return { ...stats, packagesCount, monthlyRevenue, bookingStatusBreakDown };
   }
 }

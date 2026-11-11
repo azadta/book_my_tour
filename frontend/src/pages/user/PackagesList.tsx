@@ -399,9 +399,16 @@ const PackagesList = () => {
                             </div>
                           ) : null}
                         </div>
-                        <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-4">
+                        <div className="flex gap-3 items-center justify-start mb-2">
+                          {pkg.startDate&&(<div className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 text-xs font-semibold px-2.5 py-1  rounded-md border border-slate-200/60">
+                          <Calendar className="w-3.5 h-3.5 text-blue-600"/>
+                          <span>Departs: {new Date(pkg.startDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</span>
+                          
+                          </div>)}
+                        <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md ">
                           <Clock className="w-3.5 h-3.5 " />
                           {pkg.duration.day} Days / {pkg.duration.night} Nights
+                        </div>
                         </div>
                         <div className="mb-4">
                           <span className="block text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">

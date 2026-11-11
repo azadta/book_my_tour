@@ -206,6 +206,7 @@ export const RESPONSE_MESSAGES = {
       START_DATE_MISSING: "New start date is required",
       NOT_CANCEL_REQUESTED_STATUS: "Booking is not in CANCEL_REQUESTED status",
       INVALID_ACTION: "Invalid action type",
+      UNAUTHORIZED:'Unauthorized access to booking'
     },
   },
   PAYMENT: {
@@ -334,7 +335,8 @@ export const RESPONSE_MESSAGES = {
       FETCH_OPERATORS_COUNT: "Operators count fetched successfully",
       FETCH_TODAY_SIGNUP_COUNT: "Today signup count fetched successfully",
       FETCH_PENDING_OPERATORS_COUNT:'Pending operators count fetched successfully',
-      FETCH_OPERATORS_DATA:'Operators dashboard data fetched successfully'
+      FETCH_OPERATORS_DATA:'Operators dashboard data fetched successfully',
+      FETCH_ADMIN_SUMMARY:'Admin summary fetched successfully'
     },
   },
 } as const;

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { adminProfileFields } from "../../formConfig/fields";
+import { adminProfileFields } from "../../../formConfig/fields.js";
 
 import {
   adminLogoutFailure,
@@ -10,40 +10,48 @@ import {
   updateAdminFailure,
   updateAdminStart,
   updateAdminSuccess,
-} from "../../redux/admin/adminSlice.js";
+} from "../../../redux/admin/adminSlice.js";
 
 import { APP_ROUTES } from "@/constants/AppRoutes.js";
 import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages.js";
 import { FRONTEND_ROUTES } from "@/constants/frontEndRoutes.js";
-import { toast } from "react-toastify";
-import { ProfileForm } from "../../components/forms/ProfileForm.js";
-import { useApi } from "../../hooks/useApi.js";
-import type { RootState } from "../../redux/store.js";
 import { handleApiError } from "@/utils/axiosErrorHandler.js";
+import { toast } from "react-toastify";
+import { ProfileForm } from "../../../components/forms/ProfileForm.js";
+import { useApi } from "../../../hooks/useApi.js";
+import type { IAdmin } from "../../../redux/admin/adminSlice.js";
+import type { RootState } from "../../../redux/store.js";
 
 interface FormDataType {
   [key: string]: unknown;
 }
+const getInitialFormData = (admin: IAdmin | null) => {
+  return {
+    name: admin?.name || "",
+
+    email: admin?.email || "",
+    mobile: admin?.mobile || "",
+    image: admin?.image || "",
+
+    address: {
+      houseNo: admin?.address?.houseNo || "",
+      landmark: admin?.address?.landmark || "",
+      city: admin?.address?.city || "",
+      state: admin?.address?.state || "",
+      country: admin?.address?.country || "",
+      postalCode: admin?.address?.postalCode || "",
+    },
+  };
+};
 
 const AdminProfile = () => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const { currentAdmin, loading } = useSelector(
     (state: RootState) => state.admin,
   );
-  const [formData, setFormData] = useState<FormDataType>({
-    name: "",
-    email: "",
-    mobile: "",
-
-    address: {
-      houseNo: "",
-      landmark: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-    },
-  });
+  const [formData, setFormData] = useState<FormDataType>(
+    getInitialFormData(currentAdmin),
+  );
 
   const [imageUploading, setImageUploading] = useState(false);
   const dispatch = useDispatch();
@@ -128,26 +136,6 @@ const AdminProfile = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentAdmin) {
-      setFormData({
-        name: currentAdmin?.name || "",
-
-        email: currentAdmin?.email || "",
-        mobile: currentAdmin?.mobile || "",
-        image: currentAdmin?.image || "",
-
-        address: {
-          houseNo: currentAdmin?.address?.houseNo || "",
-          landmark: currentAdmin?.address?.landmark || "",
-          city: currentAdmin?.address?.city || "",
-          state: currentAdmin?.address?.state || "",
-          country: currentAdmin?.address?.country || "",
-          postalCode: currentAdmin?.address?.postalCode || "",
-        },
-      });
-    }
-  }, [currentAdmin]);
   if (!currentAdmin) return;
 
   return (

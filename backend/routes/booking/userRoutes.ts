@@ -35,6 +35,11 @@ userRouter.get(
   authMiddleware.verifyRole("user"),
   bookingController.findBookingByOrderId,
 );
+userRouter.get(
+  ROUTES.BOOKINGS.USER.BOOKING_DETAILS,
+  authMiddleware.verifyRole("user"),
+  bookingController.getBookingDetails,
+);
 
 export { userRouter };
 

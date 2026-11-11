@@ -6,6 +6,7 @@ export const APP_ROUTES = {
       BY_ORDER_ID: (orderId: string) => `/booking/${orderId}`,
       MY_BOOKINGS: "/booking",
       CANCEL: (bookingId: string) => `/booking/${bookingId}/cancel`,
+      BOOKING_DETAILS:(bookingId:string)=>`/booking/${bookingId}/booking-details`
     },
     OPERATOR: {
       LIST: "/booking/operator",
@@ -214,10 +215,8 @@ export const APP_ROUTES = {
   },
   DASHBOARD: {
     ADMIN: {
-      USERS_COUNT: "/dashboard/admin/users-count",
-      SIGNUP_TODAY: "/dashboard/admin/signup-today",
-      OPERATORS_COUNT: "/dashboard/admin/operators-count",
-      OPERATORS_PENDING_COUNT: "/dashboard/admin/operators-pending-count",
+      SUMMARY:'/dashboard/admin/summary',
+      STATS: "/dashboard/admin"
     },
     OPERATOR: {
       STATS: "/dashboard",

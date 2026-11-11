@@ -28,6 +28,8 @@ export const FRONTEND_ROUTES = {
       `/booking/success/?order_id=${encodeURIComponent(orderId)}`,
     MY_BOOKINGS: "/user/my-bookings",
     WALLET: "/user/wallet",
+    BOOKING_DETAILS_PATTERN:'/user/booking-details/:bookingId',
+    BOOKING_DETAILS:(bookingId:string)=>`/user/booking-details/${bookingId}`
   },
 
   OPERATOR: {

@@ -57,7 +57,7 @@ export class BookingRequestMapper {
         generalCouponCode: body.generalCouponCode,
       }),
       ...(body.bankCouponCode !== undefined && {
-        bankCouponCode: body.generalCouponCode,
+        bankCouponCode: body.bankCouponCode,
       }),
       isWalletApplied:
         body.isWalletApplied === true || body.isWalletApplied === "true",

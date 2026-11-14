@@ -365,7 +365,7 @@ const PackageDetails = () => {
                     {galleryImages?.slice(0, 3).map((image, index) => (
                       <div
                         key={index}
-                        className="w-full h-[165px] rounded-2xl overflow-hidden shadow-sm border border-gray-100 group shrink-0 "
+                        className="w-full h-[155px] rounded-2xl overflow-hidden shadow-sm border border-gray-100 group shrink-0 "
                       >
                         <img
                           src={image}
@@ -376,11 +376,11 @@ const PackageDetails = () => {
                     ))}
                   </div>
 
-                  <div className="flex justify-start pt-1">
+                  <div className="flex justify-start pt-1 ">
                     <button
                       onClick={handleStartChat}
                       type="button"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transition-all duration-200 cursor-pointer border border-emerald-500/20 shrink-0 min-w-40 "
+                      className="inline-flex items-center justify-center gap-2 px-5 py-2  rounded-xl text-sm font-semibold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] shadow-md shadow-emerald-900/10 hover:shadow-lg transition-all duration-200 cursor-pointer border border-emerald-500/20 shrink-0 min-w-40 "
                     >
                       <MessageSquare
                         className={`w-4 h-4 transition-transform group-hover:scale-110`}
@@ -694,7 +694,7 @@ const PackageDetails = () => {
 
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
                     <div className="font-bold text-[16px] text-gray-800">
-                      Total booking Amount
+                      Total  Amount
                     </div>
                     <div className="text-right">
                       <span className="text-xl font-black text-blue-600">

@@ -17,11 +17,11 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         await axios.post(
-          `http://localhost:4000/api/auth/refresh`,
+          import.meta.env.REFRESH_URL,
           {},
           { withCredentials: true },
         );
-        return axiosInstance(originalRequest)
+        return axiosInstance(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
       }

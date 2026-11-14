@@ -7,29 +7,31 @@ import { socketService } from "./config/container";
 import { connectDb } from "./config/database";
 import errorHandler from "./middlewares/errorHandler";
 import { morganMiddleware } from "./middlewares/morgan";
+import adminRouter from "./routes/admin/routes";
 import bookingRouter from "./routes/booking/routes";
-import packageRouter from "./routes/package/routes";
-import userRouter from "./routes/user/routes";
+import chatRouter from "./routes/chat/routes";
+import commonAuthRouter from "./routes/common-authentication/routes";
+import couponRouter from "./routes/coupon/routes";
+import dashboardRouter from "./routes/dashboard/routes";
+import notificationRouter from "./routes/notification/routes";
+import operatorRouter from "./routes/operator/routes";
 import packageCategoryRouter from "./routes/package-category/routes";
 import packageDestinationRouter from "./routes/package-destination/routes";
-import wishlistRouter from "./routes/wishlist/routes";
 import packageReviewRouter from "./routes/package-review/routes";
-import chatRouter from "./routes/chat/routes";
-import notificationRouter from "./routes/notification/routes";
-import adminRouter from "./routes/admin/routes";
-import dashboardRouter from "./routes/dashboard/routes";
-import commonAuthRouter from "./routes/common-authentication/routes";
-import walletRouter from "./routes/wallet/routes";
-import operatorRouter from "./routes/operator/routes";
-import couponRouter from "./routes/coupon/routes";
+import packageRouter from "./routes/package/routes";
+import payoutRouter from "./routes/payout/routes";
 import subscriptionPlanRouter from "./routes/subscription-plan/routes";
 import subscriptionRouter from "./routes/subscription/routes";
-import payoutRouter from "./routes/payout/routes";
+import userRouter from "./routes/user/routes";
+import walletRouter from "./routes/wallet/routes";
+import wishlistRouter from "./routes/wishlist/routes";
+import { setupPromethues } from "./config/metrics";
 
 dotenv.config();
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT;
+setupPromethues(app);
 app.use(
   cors({
     origin: process.env.ORIGIN,

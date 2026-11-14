@@ -212,6 +212,7 @@ export const APP_ROUTES = {
   },
   COMMON_AUTH: {
     REFRESH_TOKEN: "/auth/refresh",
+    
   },
   DASHBOARD: {
     ADMIN: {

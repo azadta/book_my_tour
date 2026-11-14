@@ -33,6 +33,7 @@ import { CouponType, ICouponDocument } from "../models/Coupon";
 import { Types } from "../types/types";
 import { bookingConfirmationMessage } from "../utils/bookingConfirmationMessage";
 import { CustomError } from "../utils/customError";
+import { tourbookingCounter } from "../config/metrics";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -469,7 +470,7 @@ export class BookingService implements IBookingService {
       }
       singleAdultRunning -= singleAdultGeneralDiscount;
     }
-    
+
     if (bankCouponCode?.trim()) {
       bankCoupon = await this._couponRepository.findByCode(
         bankCouponCode.trim(),
@@ -614,6 +615,8 @@ export class BookingService implements IBookingService {
         members,
         status: "CONFIRMED",
       });
+
+      tourbookingCounter.inc({ package_id: packageId, status: "success" });
 
       const commissionRate = Number(process.env.BOOKING_COMMISSION);
       const grossAmount = grandSubtotal;
@@ -778,6 +781,10 @@ export class BookingService implements IBookingService {
         StatusCode.NOT_FOUND,
       );
     }
+    tourbookingCounter.inc({
+      package_id: booking.packageId._id.toString(),
+      status: "success",
+    });
     const user = await this._userRepository.findById(userId);
 
     if (!user) {

@@ -12,7 +12,7 @@ export const httpRequestDurationMicroseconds = new client.Histogram({
   buckets: [50, 100, 200, 300, 500, 1000, 2000, 5000],
 });
 
-const tourbookingCounter = new client.Counter({
+export const tourbookingCounter = new client.Counter({
   name: "tour_bookings_total",
   help: "Total number of tour packages booked via Razorpay",
   labelNames: ["package_id", "status"],

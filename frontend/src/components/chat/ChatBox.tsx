@@ -2,7 +2,7 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import type { IChat, IMessage } from "@/interfaces/IChat";
 import { getSocket } from "@/socket/socket";
-import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
+import { uploadImagesToS3 } from "@/utils/uploadImagesToS3";
 import { Image } from "lucide-react";
 import { useRef, useState } from "react";
 import MessageStatusIcon from "./MessageStatusIcon";
@@ -74,7 +74,7 @@ const ChatBox = ({
       setIsUploading(true);
       let imageUrl = "";
       if (imageFile) {
-        const urls = await uploadImagesToCloudinary([imageFile]);
+        const urls = await uploadImagesToS3([imageFile], "chats");
         if (urls && urls.length > 0) {
           imageUrl = urls[0];
         }
@@ -135,7 +135,7 @@ const ChatBox = ({
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white/900">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white/90">
         {messages.map((msg) => {
           const isMe = msg.senderId === currentUser?.id;
           return (
@@ -208,7 +208,7 @@ const ChatBox = ({
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="text-sky-200 hover:text-white py-2.5 p-2.5 bg-sky-200/50 border border-sky-400/50 rounded-xl transition-colors cursor-point"
+          className="text-sky-200 hover:text-white py-2.5 p-2.5 bg-sky-200/50 border border-sky-400/50 rounded-xl transition-colors cursor-pointer"
           title="Attach Image"
         >
           <Image />

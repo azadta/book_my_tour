@@ -21,6 +21,7 @@ import { ProfileForm } from "../../../components/forms/ProfileForm.js";
 import { useApi } from "../../../hooks/useApi.js";
 import type { IAdmin } from "../../../redux/admin/adminSlice.js";
 import type { RootState } from "../../../redux/store.js";
+import { uploadImagesToS3 } from "@/utils/uploadImagesToS3.js";
 
 interface FormDataType {
   [key: string]: unknown;
@@ -80,27 +81,12 @@ const AdminProfile = () => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
     setImageUploading(true);
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    formData.append(
-      "upload_preset",
-      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-    );
+
     try {
-      const res = await fetch(
-        APP_ROUTES.EXTERNAL.CLOUDINARY(
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-        ),
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-      const imgData = await res.json();
-      await post(APP_ROUTES.ADMINS.UPDATE_IMAGE, { image: imgData.secure_url });
-      dispatch(
-        updateAdminSuccess({ ...currentAdmin!, image: imgData.secure_url }),
-      );
+      const [imageUrl] = await uploadImagesToS3([selectedFile], "avatars");
+      if (!imageUrl) return;
+      await post(APP_ROUTES.ADMINS.UPDATE_IMAGE, { image: imageUrl });
+      dispatch(updateAdminSuccess({ ...currentAdmin!, image: imageUrl }));
       toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
     } catch (error) {
       const errorMessage = handleApiError(error, { setFieldError });

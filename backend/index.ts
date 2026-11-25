@@ -25,6 +25,7 @@ import subscriptionRouter from "./routes/subscription/routes";
 import userRouter from "./routes/user/routes";
 import walletRouter from "./routes/wallet/routes";
 import wishlistRouter from "./routes/wishlist/routes";
+import uploadRouter from "./routes/upload/routes";
 import { setupPromethues } from "./config/metrics";
 
 dotenv.config();
@@ -62,6 +63,7 @@ app.use("/api/auth", commonAuthRouter);
 app.use("/api/subscription-plan", subscriptionPlanRouter);
 app.use("/api/subscription", subscriptionRouter);
 app.use("/api/payout", payoutRouter);
+app.use("/api/upload", uploadRouter);
 app.use(errorHandler);
 
 const httpServer = createServer(app);

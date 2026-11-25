@@ -48,14 +48,14 @@ export const RESPONSE_MESSAGES = {
       BLOCKED: "user is blocked",
       UNBLOCKED: "user unblocked",
       DELETED: "User deleted successfully",
-      LOGGED_IN:'User logged in successfully',
-      OTP_SENT:'Password reset OTP sent to user mail',
-      RESET_PASSWORD:'Password reset successfully',
-      LOGGED_OUT:'User logged out successfully',
-      UPDATE:'User updated successfully',
-      UPDATE_PROFILE_IMAGE:'User profile image updated successfully',
-      FETCH_ALL:'Users fetched successfully',
-      FETCH:'User fetched successfully',
+      LOGGED_IN: "User logged in successfully",
+      OTP_SENT: "Password reset OTP sent to user mail",
+      RESET_PASSWORD: "Password reset successfully",
+      LOGGED_OUT: "User logged out successfully",
+      UPDATE: "User updated successfully",
+      UPDATE_PROFILE_IMAGE: "User profile image updated successfully",
+      FETCH_ALL: "Users fetched successfully",
+      FETCH: "User fetched successfully",
     },
     ERROR: {
       NOT_FOUND: "User not found",
@@ -206,7 +206,7 @@ export const RESPONSE_MESSAGES = {
       START_DATE_MISSING: "New start date is required",
       NOT_CANCEL_REQUESTED_STATUS: "Booking is not in CANCEL_REQUESTED status",
       INVALID_ACTION: "Invalid action type",
-      UNAUTHORIZED:'Unauthorized access to booking'
+      UNAUTHORIZED: "Unauthorized access to booking",
     },
   },
   PAYMENT: {
@@ -283,7 +283,7 @@ export const RESPONSE_MESSAGES = {
       MARKED_AS_READ: "Notification marked as read ",
       MARKED_ALL_AS_READ: "All notifications marked as read ",
       CLEARED_ALL: "All notifications cleared",
-      FETCH_USER_NOTIFICATIONS:'User notifications fetched successfully'
+      FETCH_USER_NOTIFICATIONS: "User notifications fetched successfully",
     },
     ERROR: {
       SEND: "Socket send_notification error",
@@ -292,10 +292,10 @@ export const RESPONSE_MESSAGES = {
   SUBSCRIPTION_PLAN: {
     SUCCESS: {
       DELETED: "Subscription plan deleted successfully",
-      CREATE:'Subscription plan created successfully',
-      FETCH_ALL:'Subscription plans fetched successfully',
-      UPDATE:'Subscription plan updated successfully',
-      FETCH:'Subscription plan fetched successfully'
+      CREATE: "Subscription plan created successfully",
+      FETCH_ALL: "Subscription plans fetched successfully",
+      UPDATE: "Subscription plan updated successfully",
+      FETCH: "Subscription plan fetched successfully",
     },
     ERROR: {
       NOT_FOUND: "Subscription plan not found",
@@ -305,7 +305,7 @@ export const RESPONSE_MESSAGES = {
     SUCCESS: {
       CREATE_ORDER: "Subscription order created successfully",
       ACTIVATE: "Your subscription has been successfully activated",
-      VERIFY_PAYMENT:'Subscription payment verified successfully'
+      VERIFY_PAYMENT: "Subscription payment verified successfully",
     },
     ERROR: {
       UPDATE: "Failed to update subscription",
@@ -316,9 +316,9 @@ export const RESPONSE_MESSAGES = {
   PAYOUT: {
     SUCCESS: {
       TRANSFERRED: "Payout transferred and recorded successfully",
-      FETCH_ELIGIBLE:'Eligible payouts are fetched successfully',
-      CREATE_ORDER:'Payout order created successfully',
-      VERIFY:'Payment verified successfully'
+      FETCH_ELIGIBLE: "Eligible payouts are fetched successfully",
+      CREATE_ORDER: "Payout order created successfully",
+      VERIFY: "Payment verified successfully",
     },
     ERROR: {
       NOT_FOUND: "Payout item not found",
@@ -334,9 +334,21 @@ export const RESPONSE_MESSAGES = {
       FETCH_USERS_COUNT: "Users count fetched successfully",
       FETCH_OPERATORS_COUNT: "Operators count fetched successfully",
       FETCH_TODAY_SIGNUP_COUNT: "Today signup count fetched successfully",
-      FETCH_PENDING_OPERATORS_COUNT:'Pending operators count fetched successfully',
-      FETCH_OPERATORS_DATA:'Operators dashboard data fetched successfully',
-      FETCH_ADMIN_SUMMARY:'Admin summary fetched successfully'
+      FETCH_PENDING_OPERATORS_COUNT:
+        "Pending operators count fetched successfully",
+      FETCH_OPERATORS_DATA: "Operators dashboard data fetched successfully",
+      FETCH_ADMIN_SUMMARY: "Admin summary fetched successfully",
+    },
+  },
+  S3_BUCKET: {
+    SUCCESS:{
+      CREATE_PRESIGNED_URL:'Presigned URL created successfully'
+    },
+    ERROR: {
+      MISSING_REGION: "Missing AWS_REGION environment variable",
+      MISSING_BUCKET: "Missing AWS_BUCKET environment variable",
+      UNSUPPORTED_IMAGE_TYPE: "Unsupported image type.",
+      FILE_NAME_AND_FILE_TYPE_REQUIRED: "File name and file type are required",
     },
   },
 } as const;

@@ -4,11 +4,11 @@ import { io, Socket } from "socket.io-client";
 
 let socket: Socket | null = null;
 let isRefreshingSocket = false;
-const SOCKET_URL = "http://localhost:4000";
+
 
 export const getSocket = (): Socket => {
   if (!socket) {
-    socket = io(SOCKET_URL, {
+    socket = io(import.meta.env.VITE_SOCKET_URL, {
       withCredentials: true,
       autoConnect: false,
       transports: ["websocket"],

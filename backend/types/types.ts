@@ -60,4 +60,6 @@ export const Types = {
   PayoutRepository: Symbol.for("PayoutRepository"),
   PayoutService: Symbol.for("PayoutService"),
   PayoutController: Symbol.for("PayoutController"),
+  S3Service: Symbol.for("S3Service"),
+  UploadController: Symbol.for("UploadController"),
 };

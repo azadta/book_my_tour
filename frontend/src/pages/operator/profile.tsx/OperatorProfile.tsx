@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { ProfileForm } from "../../../components/forms/ProfileForm.tsx";
 import { useApi } from "../../../hooks/useApi.js";
 import type { RootState } from "../../../redux/store.ts";
+import { uploadImagesToS3 } from "@/utils/uploadImagesToS3.ts";
 
 const getInitialFormData = (operator: IOperator | null) => {
   return {
@@ -57,7 +58,9 @@ const OperatorProfile = () => {
   const { currentOperator, loading } = useSelector(
     (state: RootState) => state.operator,
   );
-  const [formData, setFormData] = useState<OperatorFormType>(getInitialFormData(currentOperator));
+  const [formData, setFormData] = useState<OperatorFormType>(
+    getInitialFormData(currentOperator),
+  );
 
   const [imageUploading, setImageUploadig] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -102,30 +105,18 @@ const OperatorProfile = () => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
     setImageUploadig(true);
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    formData.append(
-      "upload_preset",
-      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-    );
+
     try {
-      const res = await fetch(
-        APP_ROUTES.EXTERNAL.CLOUDINARY(
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-        ),
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-      const imgData = await res.json();
+      const [imageUrl] = await uploadImagesToS3([selectedFile], "avatars");
+      if (!imageUrl) return;
+
       await post(APP_ROUTES.OPERATORS.OPERATOR.UPDATE_IMAGE, {
-        image: imgData.secure_url,
+        image: imageUrl,
       });
       dispatch(
         updateOperatorSuccess({
           ...currentOperator!,
-          image: imgData.secure_url,
+          image: imageUrl,
         }),
       );
       toast.success(FEEDBACK_MESSAGES.MEDIA.SUCCESSS.UPLOAD);
@@ -166,7 +157,6 @@ const OperatorProfile = () => {
     }
   };
 
-  
   if (!currentOperator) return;
 
   return (

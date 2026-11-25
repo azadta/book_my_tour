@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import { axiosInstance } from "../api/axiosInstance";
 import { toast } from "react-toastify";
@@ -6,7 +5,7 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import { APP_ROUTES } from "@/constants/AppRoutes";
 import { handleApiError } from "@/utils/axiosErrorHandler";
 import type { BaseFormData } from "@/interfaces/interfaces";
-
+import { uploadImagesToS3 } from "../utils/uploadImagesToS3";
 
 export interface CreateDestinationFormData extends BaseFormData {
   name: string;
@@ -26,22 +25,6 @@ export const useCreateDestination = (onSuccess?: () => void) => {
   const [fieldError, setFieldError] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const uploadToCloudinary = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append(
-      "upload_preset",
-      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-    );
-    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-    const { data } = await axios.post(
-      APP_ROUTES.EXTERNAL.CLOUDINARY(cloudName),
-      formData,
-    );
-
-    return data.secure_url;
-  };
-
   const createDestination = async (formData: CreateDestinationFormData) => {
     setLoading(true);
     try {
@@ -50,7 +33,7 @@ export const useCreateDestination = (onSuccess?: () => void) => {
       let uploadedImages: string[] = [];
       if (formData.images && formData.images.length > 0) {
         const files = Array.from(formData.images);
-        uploadedImages = await Promise.all(files.map(uploadToCloudinary));
+        uploadedImages = await uploadImagesToS3(files, "destinations");
       }
       const payload: DestinationPayload = {
         name: formData.name.trim(),

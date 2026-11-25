@@ -7,7 +7,7 @@ import type {
 } from "@/interfaces/IPackage";
 
 import { handleApiError } from "@/utils/axiosErrorHandler";
-import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
+import { uploadImagesToS3 } from "@/utils/uploadImagesToS3";
 import { useEffect, useState } from "react";
 import type {
   IActivityDTO,
@@ -59,7 +59,7 @@ export const useCreatePackage = () => {
       const existingImageUrls = rawImages.filter(
         (img): img is string => typeof img === "string",
       );
-      const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
+      const uploadedImageUrls = await uploadImagesToS3(imageFiles, "packages");
       const finalPackageImages = [
         ...existingImageUrls,
         ...(uploadedImageUrls ?? []),
@@ -73,15 +73,18 @@ export const useCreatePackage = () => {
             (img) => typeof img === "string",
           );
 
-          const uploadedGalleryUrls =
-            await uploadImagesToCloudinary(galleryFiles);
+          const uploadedGalleryUrls = await uploadImagesToS3(
+            galleryFiles,
+            "packages",
+          );
 
           const processedActivities: IActivityDTO[] = await Promise.all(
             (day.activities ?? []).map(async (activity) => {
               if (activity.image instanceof File) {
-                const uploaded = await uploadImagesToCloudinary([
-                  activity.image,
-                ]);
+                const uploaded = await uploadImagesToS3(
+                  [activity.image],
+                  "packages",
+                );
                 return { ...activity, image: uploaded?.[0] || "" };
               }
               return { ...activity, image: activity.image };
@@ -91,7 +94,10 @@ export const useCreatePackage = () => {
           const processedOptionals: IOptionalActivityDTO[] = await Promise.all(
             (day.optionalActivities ?? []).map(async (opt) => {
               if (opt.image instanceof File) {
-                const uploaded = await uploadImagesToCloudinary([opt.image]);
+                const uploaded = await uploadImagesToS3(
+                  [opt.image],
+                  "packages",
+                );
                 return { ...opt, image: uploaded?.[0] || "" };
               }
               return { ...opt, image: opt.image };

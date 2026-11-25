@@ -128,6 +128,9 @@ import { SubscriptionPlanService } from "../services/subscriptionPlanService";
 import { SubscriptionService } from "../services/SubscriptionService";
 import { UserService } from "../services/userService";
 import { WishlistService } from "../services/wishlistService";
+import { IS3Service } from "../interfaces/IS3Service";
+import { S3Service } from "../services/s3Service";
+import { UploadController } from "../controllers/uploadController";
 
 const container = new Container();
 
@@ -378,6 +381,8 @@ container
   .bind<IPayoutController>(Types.PayoutController)
   .to(PayoutController)
   .inSingletonScope();
+container.bind<IS3Service>(Types.S3Service).to(S3Service).inSingletonScope();
+container.bind<UploadController>(Types.UploadController).to(UploadController).inSingletonScope();
 
 export const userController = container.get<IUserController>(
   Types.UserController,
@@ -437,4 +442,7 @@ export const subscriptionController = container.get<ISubscriptionController>(
 );
 export const payoutController = container.get<IPayoutController>(
   Types.PayoutController,
+);
+export const uploadController = container.get<UploadController>(
+  Types.UploadController,
 );

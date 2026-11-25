@@ -212,4 +212,7 @@ export const ROUTES = {
     CREATE_ORDER: "/create-order",
     VERIFY_PAYMENT: "/verify-payment",
   },
+  UPLOAD:{
+    PRESIGN:'/presign'
+  }
 } as const;

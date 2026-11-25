@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         await axios.post(
-          import.meta.env.REFRESH_URL,
+          import.meta.env.VITE_REFRESH_URL,
           {},
           { withCredentials: true },
         );

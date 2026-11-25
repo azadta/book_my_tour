@@ -4,7 +4,7 @@ import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPackageItem } from "@/interfaces/interfaces";
 import type { IReviewItem, IReviewStats } from "@/interfaces/IReview";
 import { handleApiError } from "@/utils/axiosErrorHandler";
-import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
+import { uploadImagesToS3 } from "@/utils/uploadImagesToS3";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -93,7 +93,7 @@ export const usePackageDetails = (packageId: string) => {
       const newFiles = rawFiles.filter((img) => img instanceof File);
       const uploadedImageUrls =
         newFiles.length > 0
-          ? ((await uploadImagesToCloudinary(newFiles)) ?? [])
+          ? ((await uploadImagesToS3(newFiles, "reviews")) ?? [])
           : [];
 
       const payload = {

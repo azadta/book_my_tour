@@ -1,5 +1,4 @@
 import axios from "axios";
-import { handleApiError } from "./axiosErrorHandler";
 
 export const uploadImagesToCloudinary = async (files: File[]) => {
   const urls: string[] = [];
@@ -23,6 +22,6 @@ export const uploadImagesToCloudinary = async (files: File[]) => {
     }
     return urls;
   } catch (error) {
-     handleApiError(error)
+     throw error
   }
 };

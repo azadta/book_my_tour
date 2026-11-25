@@ -133,6 +133,7 @@ export class SocketService implements ISocketService {
             image: data.image || null,
             status: isReciepentOnline ? "DELIVERED" : "SENT",
           });
+          
           await this._chatRepository.incrementUnreadCount(
             data.chatId,
             data.recipientId,

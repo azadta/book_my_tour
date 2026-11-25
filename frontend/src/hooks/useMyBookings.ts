@@ -1,12 +1,12 @@
 import { axiosInstance } from "@/api/axiosInstance";
 import { APP_ROUTES } from "@/constants/AppRoutes";
+import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 import type { IPricing } from "@/interfaces/interfaces";
 import { handleApiError } from "@/utils/axiosErrorHandler";
-import { uploadImagesToCloudinary } from "@/utils/uploadImagesToCloudinary";
+import { uploadImagesToS3 } from "@/utils/uploadImagesToS3";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { unFlattenObject } from "../../../backend/utils/unFlattenObject";
-import { FEEDBACK_MESSAGES } from "@/constants/feedbackMessages";
 
 export interface PopulatedDestinations {
   _id: string;
@@ -93,7 +93,7 @@ export const useMyBookings = (
       const imageFiles = rawFiles.filter(
         (img): img is File => img instanceof File,
       );
-      const uploadedImageUrls = await uploadImagesToCloudinary(imageFiles);
+      const uploadedImageUrls = await uploadImagesToS3(imageFiles,'reviews');
 
       const updatedData = {
         ...unFlattenObject(data),

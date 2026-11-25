@@ -238,4 +238,9 @@ export const FEEDBACK_MESSAGES = {
       INITIATE: "Failed to initiate payout payment",
     },
   },
+  UPLOAD: {
+    ERROR: {
+      MISSING_PRESIGNED_URL: "Failed to get presigned upload URL",
+    },
+  },
 } as const;
